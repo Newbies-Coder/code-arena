@@ -9,7 +9,7 @@ const path = require('path');
 const fs = require('fs');
 const originalResolveFilename = Module._resolveFilename;
 const distPath = __dirname;
-const manifest = [];
+const manifest = [{"module":"@/middlewares/*","pattern":"middlewares/*"},{"module":"@/utils/*","pattern":"utils/*"},{"module":"~/*","pattern":"src/*"}];
 
 Module._resolveFilename = function(request, parent) {
   let found;

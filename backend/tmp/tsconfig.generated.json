@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "~/*": [
+        "src/*"
+      ],
+      "@/utils/*": [
+        "utils/*"
+      ],
+      "@/middlewares/*": [
+        "middlewares/*"
+      ]
+    }
+  },
+  "extends": "..\\tsconfig.app.json"
+}
