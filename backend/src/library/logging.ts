@@ -14,7 +14,7 @@ class Logging {
 
     try {
       if (!fs.existsSync(path.join(config.server.log_path, date))) {
-        await fsPromises.mkdir(path.join(config.server.log_path, date))
+        await fsPromises.mkdir(path.join(config.server.log_path, date), { recursive: true })
       }
       await fsPromises.appendFile(path.join(config.server.log_path, date, logFileName), logItem)
     } catch (error) {
