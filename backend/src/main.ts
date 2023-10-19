@@ -11,7 +11,7 @@ import Logging from './library/logging'
 
 const app = express()
 const httpServer = createServer(app)
-// app.use(Logging.logger)
+app.use(Logging.logger)
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -30,6 +30,7 @@ app.use(
     }
   })
 )
+
 app.use(compression())
 app.use(cors())
 app.use(morgan('dev'))

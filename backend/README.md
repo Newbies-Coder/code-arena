@@ -4,4 +4,4 @@
 
 ## Start the app
 
-To start the development server change directory to backend and run `yarn dev`. Open your browser and navigate to http://localhost:8080/. Happy coding!
+To start the development server change directory to `backend` and run `yarn dev`. Open your browser and navigate to http://localhost:8080/. Happy coding!
