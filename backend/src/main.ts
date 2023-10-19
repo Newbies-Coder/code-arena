@@ -7,9 +7,11 @@ import cors from 'cors'
 import morgan from 'morgan'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
+import Logging from './library/logging'
 
 const app = express()
 const httpServer = createServer(app)
+// app.use(Logging.logger)
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -48,8 +50,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next()
 })
 
-app.get('/', (req, res) => {
-  res.send({ message: 'Hello API' })
+app.get('/hi', (req, res) => {
+  return res.status(200).json({
+    statusCode: 200,
+    content: 'Hello',
+    dateTime: new Date()
+  })
 })
 
 httpServer.listen(config.server.port, config.server.host, () => {
