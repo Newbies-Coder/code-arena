@@ -8,6 +8,7 @@ import morgan from 'morgan'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import Logging from './library/logging'
+import { sendResponse } from './config/response.config'
 
 const app = express()
 const httpServer = createServer(app)
@@ -51,12 +52,17 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next()
 })
 
-app.get('/hi', (req, res) => {
-  return res.status(200).json({
-    statusCode: 200,
-    content: 'Hello',
-    dateTime: new Date()
-  })
+app.get('/hi', (req: Request, res: Response) => {
+  return sendResponse.success(
+    res,
+    [
+      {
+        id: 1234,
+        fullName: 'DuongQuocNam'
+      }
+    ],
+    'succesfully'
+  )
 })
 
 httpServer.listen(config.server.port, config.server.host, () => {
