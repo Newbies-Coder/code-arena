@@ -9,6 +9,7 @@ import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import Logging from './library/logging'
 import { sendResponse } from './config/response.config'
+import rootRouter from './routes'
 
 const app = express()
 const httpServer = createServer(app)
@@ -42,6 +43,7 @@ app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }))
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(cookieParser())
 app.use(express.static('.'))
+app.use('/api', rootRouter)
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
