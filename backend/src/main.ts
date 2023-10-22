@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express'
-import { config } from './config/env.config'
+import { env } from './config/environment.config'
 import { createServer } from 'http'
 import helmet from 'helmet'
 import compression from 'compression'
@@ -8,7 +8,6 @@ import morgan from 'morgan'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import Logging from './library/logging'
-import { sendResponse } from './config/response.config'
 import rootRouter from './routes'
 
 const app = express()
@@ -54,19 +53,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next()
 })
 
-app.get('/hi', (req: Request, res: Response) => {
-  return sendResponse.success(
-    res,
-    [
-      {
-        id: 1234,
-        fullName: 'DuongQuocNam'
-      }
-    ],
-    'succesfully'
-  )
-})
-
-httpServer.listen(config.server.port, config.server.host, () => {
-  console.log(`🚀 Server Running On Port ${config.server.port}`)
+httpServer.listen(env.server.port, env.server.host, () => {
+  console.log(`🚀 Server Running On Port ${env.server.port}`)
 })
