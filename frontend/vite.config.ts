@@ -1,26 +1,26 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import visualizer from 'rollup-plugin-visualizer';
 
 export default defineConfig({
+  plugins: [react(), nxViteTsPaths(), visualizer()] as any,
+
   cacheDir: './node_modules/.vite/frontend',
 
   server: {
-    port: 4200,
+    open: '/index.html',
+    port: 3000,
     host: 'localhost',
   },
 
   preview: {
-    port: 4300,
+    port: 3000,
     host: 'localhost',
   },
-
-  plugins: [react(), nxViteTsPaths()],
-
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [ nxViteTsPaths() ],
-  // },
+  css: {
+    devSourcemap: true,
+  },
 
   test: {
     globals: true,

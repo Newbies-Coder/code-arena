@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import fs from 'fs'
 import path from 'path'
 import fsPromises from 'fs/promises'
-import { env } from '../config/environment.config'
+import { USER_LOGS_DIR } from '~/constants/dir'
 
 class Logging {
   public static logEvents = async (message: string, logFileName: string) => {
@@ -13,10 +13,10 @@ class Logging {
     const logItem = `${uuidv4()}\t${now}\t${message}\n`
 
     try {
-      if (!fs.existsSync(path.join(env.server.log_path, date))) {
-        await fsPromises.mkdir(path.join(env.server.log_path, date), { recursive: true })
+      if (!fs.existsSync(path.join(USER_LOGS_DIR, date))) {
+        await fsPromises.mkdir(path.join(USER_LOGS_DIR, date), { recursive: true })
       }
-      await fsPromises.appendFile(path.join(env.server.log_path, date, logFileName), logItem)
+      await fsPromises.appendFile(path.join(USER_LOGS_DIR, date, logFileName), logItem)
     } catch (error) {
       console.error(error)
     }
