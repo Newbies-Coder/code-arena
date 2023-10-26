@@ -13,7 +13,7 @@ const mongoClient = new MongoClient(url);
 
 (async () =>  await mongoClient.connect())()
 
-const errorLogger = winston.createLogger({
+const requestLogger = winston.createLogger({
   transports: [
     new winston.transports.Console({format: winston.format.json()}),
     new winston.transports.File({ filename: path.join(USER_LOGS_DIR, 'reqLog.log') }),
@@ -23,9 +23,9 @@ const errorLogger = winston.createLogger({
 
 
 const logger = (req: Request, res: Response, next: NextFunction) => {
-  errorLogger.info({
+  requestLogger.info({
     id : uuidv4(),
-    timetamp:moment(new Date()).format('DD-MM-YYYY\\tHH:mm:ssSSS'),
+    dateTime: moment(new Date()).format('DD-MM-YYYY\\tHH:mm:ssSSS'),
     method: req.method,
     url: req.url,
     headers: req.headers.origin,
