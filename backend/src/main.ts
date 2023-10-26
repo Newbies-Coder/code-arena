@@ -1,18 +1,19 @@
 import express, { Request, Response, NextFunction } from 'express'
 import { env } from './config/environment.config'
 import { createServer } from 'http'
+import { requestLogger } from './library/logger'
 import helmet from 'helmet'
 import compression from 'compression'
 import cors from 'cors'
 import morgan from 'morgan'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
-import Logging from './library/logging'
 import rootRouter from './routes'
+
 
 const app = express()
 const httpServer = createServer(app)
-app.use(Logging.logger)
+app.use(requestLogger)
 app.use(
   helmet({
     contentSecurityPolicy: {
