@@ -7,12 +7,13 @@ import cors from 'cors'
 import morgan from 'morgan'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
-import Logging from './library/logging'
+import logger from './library/logger'
 import rootRouter from './routes'
+
 
 const app = express()
 const httpServer = createServer(app)
-app.use(Logging.logger)
+app.use(logger)
 app.use(
   helmet({
     contentSecurityPolicy: {
