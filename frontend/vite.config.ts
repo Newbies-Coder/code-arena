@@ -1,7 +1,7 @@
-import { defineConfig } from 'vitest/config';
-import react from '@vitejs/plugin-react';
-import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
-import visualizer from 'rollup-plugin-visualizer';
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
+import visualizer from 'rollup-plugin-visualizer'
 
 export default defineConfig({
   plugins: [react(), nxViteTsPaths(), visualizer()] as any,
@@ -10,12 +10,12 @@ export default defineConfig({
 
   server: {
     open: '/index.html',
-    port: 3000,
+    port: 4200,
     host: 'localhost',
   },
 
   preview: {
-    port: 3000,
+    port: 4200,
     host: 'localhost',
   },
   css: {
@@ -28,4 +28,4 @@ export default defineConfig({
     environment: 'jsdom',
     include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
   },
-});
+})
