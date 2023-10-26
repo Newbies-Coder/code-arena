@@ -11,4 +11,20 @@ const userRouter = Router()
  */
 userRouter.post('/login', userController.login)
 
+/**
+ * Description: Register a user
+ * Path: /register
+ * Method: POST
+ * Body:
+ */
+
+userRouter.post('/register', userController.register)
+
+/**
+ * Description: Register a user
+ * Path: /register
+ * Method: POST
+ * Body:
+ */
+
 export default userRouter

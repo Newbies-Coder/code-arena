@@ -8,6 +8,13 @@ const userController = {
     } catch (error) {
       return sendResponse.error(res, 'Internal Server Error')
     }
+  },
+  register: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      sendResponse.success(res, '', 'Register successfully!')
+    } catch (error) {
+      return sendResponse.error(res, 'Internal Server Error')
+    }
   }
 }
 
