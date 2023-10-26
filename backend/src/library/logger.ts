@@ -17,7 +17,7 @@ const requestLogger = winston.createLogger({
   transports: [
     new winston.transports.Console({format: winston.format.json()}),
     new winston.transports.File({ filename: path.join(USER_LOGS_DIR, 'reqLog.log') }),
-    new mongo.MongoDB({db: Promise.resolve(mongoClient), collection: 'log'})
+    new mongo.MongoDB({db: Promise.resolve(mongoClient), collection: 'log', capped: true, cappedMax: 10000})
   ],
 }); 
 
