@@ -9,7 +9,9 @@ const envSchema = Joi.object({
   APP_HOST: Joi.string().required().description('App host'),
   NODE_ENV: Joi.string().valid('development', 'production', 'test').default('development'),
   DATABASE_USER_LOGS: Joi.string().required().description('Collection name users log'),
-  PWD_USER_LOGS: Joi.string().required().description('Collection password users log')
+  PWD_USER_LOGS: Joi.string().required().description('Collection password users log'),
+  RATE_POINT: Joi.number().required().description('Maximum number of points can be consumed over duration'),
+  RATE_DURATION: Joi.number().required().description('Number of seconds before consumed points are reset.')
 })
   .unknown()
   .required()
@@ -25,7 +27,9 @@ export const env = {
   client: {},
   server: {
     port: envVars.APP_PORT || 5000,
-    host: envVars.APP_HOST
+    host: envVars.APP_HOST,
+    rate_point: envVars.RATE_POINT,
+    rate_duration: envVars.RATE_POINT
   },
   database: {
     log_name: envVars.DATABASE_USER_LOGS,
