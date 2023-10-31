@@ -11,6 +11,8 @@ import cookieParser from 'cookie-parser'
 import rootRouter from './routes'
 import { rateLimiterMiddleware } from './middlewares/rateLimiter.middleware'
 
+import logger from 'src/library/logger'
+
 const app = express()
 const httpServer = createServer(app)
 app.use(requestLogger)
