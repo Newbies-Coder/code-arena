@@ -10,7 +10,6 @@ import { Request, Response, NextFunction } from 'express'
 
 const url = `mongodb+srv://${env.database.log_name}:${env.database.log_pwd}@cluster0.j1wu9d8.mongodb.net/?retryWrites=true&w=majority`
 const mongoClient = new MongoClient(url)
-
 ;(async () => await mongoClient.connect())()
 
 const logger = winston.createLogger({
@@ -30,7 +29,6 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
     headers: req.headers.origin,
     statusCode: res.statusCode
   })
-
   next()
 }
 

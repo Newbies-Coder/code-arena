@@ -84,6 +84,14 @@ export const sendResponse = {
       messageConstants: note
     })
   },
+  tooManyRequest: (res: Response, message: string, note?: null) => {
+    res.status(StatusCodes.TOO_MANY_REQUESTS).json({
+      statusCode: StatusCodes.TOO_MANY_REQUESTS,
+      message,
+      dateTime: moment(new Date()).format('DD-MM-YYYY\\tHH:mm:ssSSS'),
+      messageConstants: note
+    })
+  },
   error: (res: Response, message: string, note?: null) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       statusCode: StatusCodes.INTERNAL_SERVER_ERROR,

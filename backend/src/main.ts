@@ -9,6 +9,7 @@ import morgan from 'morgan'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import rootRouter from './routes'
+import { rateLimiterMiddleware } from './middlewares/rateLimiter.middleware'
 
 import logger from 'src/library/logger'
 
@@ -44,6 +45,10 @@ app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }))
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(cookieParser())
 app.use(express.static('.'))
+// Rate limit request from client
+if (env.node_env == 'production') {
+  app.use('/api', rateLimiterMiddleware)
+}
 app.use('/api', rootRouter)
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.header('Access-Control-Allow-Origin', '*')

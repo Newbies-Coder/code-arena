@@ -1,0 +1,34 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.Bắt đầu": {
+    "message": "Bắt đầu",
+    "description": "The label for category Bắt đầu in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Bắt đầu.link.generated-index.description": {
+    "message": "Kiến thức cơ bản để viết tài liệu sử dụng Docusasaurus",
+    "description": "The generated-index page description for category Bắt đầu in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Frontend": {
+    "message": "Frontend",
+    "description": "The label for category Frontend in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Frontend.link.generated-index.description": {
+    "message": "5 minutes to learn the most important Docusaurus concepts.",
+    "description": "The generated-index page description for category Frontend in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Backend": {
+    "message": "Backend",
+    "description": "The label for category Backend in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.API": {
+    "message": "API",
+    "description": "The label for category API in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.API.link.generated-index.description": {
+    "message": "5 minutes to learn the most important Docusaurus concepts.",
+    "description": "The generated-index page description for category API in sidebar tutorialSidebar"
+  }
+}
