@@ -10,6 +10,7 @@ import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import rootRouter from './routes'
 
+import logger from 'src/library/logger'
 
 const app = express()
 const httpServer = createServer(app)

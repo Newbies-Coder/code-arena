@@ -1,0 +1,8 @@
+{
+  "label": "Bắt đầu",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Kiến thức cơ bản để viết tài liệu sử dụng Docusasaurus"
+  }
+}
