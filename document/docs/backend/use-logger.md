@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Cách sử dụng logger
+# How to use Logger
 
 ## Import logger
 
@@ -10,14 +10,14 @@ sidebar_position: 1
 import logger from 'src/library/logger'
 ```
 
-## Các mức độ của log
+## Log levels
 
-- info: dùng để ghi lại một sự kiện, thông báo không quá quan trọng
-- warn: dùng để thông báo rằng có gì đó bất thường xảy ra
-- error: dùng để thông báo rẳng đã có một lỗi xảy ra
-- debug: dùng trong quá trình sửa lỗi
+- info: Used to record an event, a notification.
+- warn: Used to notify that something unusual has occurred.
+- error: Used to indicate that an error has occurred.
+- debug: Used during the process of debugging.
 
-## Ví dụ
+## Example
 
 ```jsx
 logger.info("There is a user logged in")

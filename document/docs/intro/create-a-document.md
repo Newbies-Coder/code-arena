@@ -1,36 +1,32 @@
----
-sidebar_position: 2
----
+# How to create a new document
 
-# Cách tạo một tài liệu mới
+A document is a collection of pages connected through:
 
-Tài liệu là **tập hợp các trang** được kết nối thông qua:
+- Sidebar
+- Previous/Next buttons
 
-- **Sidebar**
-- **Nút previous/next**
+## Creating a document
 
-## Tạo tài liệu
+To create a document, first create a new folder inside the docs folder.
 
-Để tạo một tài liệu thì trước tiên tạo một thư mục mới bên trong thư mục folder `docs`
+Create a new .md file inside the newly created folder.
 
-Tạo một tệp **.md** bên trong thư mục mới tạo
+For example:
 
-Ví dụ:
+```md
+# Hello
 
-```md title="docs/hello.md"
-# Xin chào
-
-Đây là tài liệu đầu tiên được viết bằng **Docusaurus**!
+This is the first document written with **Docusaurus**!
+The document can be accessed at <http://localhost:3000/docs/hello>.
 ```
 
-Tài liệu sẽ có thể truy cập ở đường dẫn [http://localhost:3000/docs/hello](http://localhost:3000/docs/hello).
+## Adjusting the Sidebar
 
-## Điều chỉnh Sidebar
+Add metadata to adjust the name and position displayed in the Sidebar:
 
-Thêm metadata để điều chỉnh tên và vị trí được hiển thị trên Sidebar:
-
-```md title="docs/hello.md" {1-4}
+```md
 ---
+
 sidebar_label: 'Hi!'
 sidebar_position: 3
 ---
@@ -38,65 +34,71 @@ sidebar_position: 3
 # Hello
 
 This is my **first Docusaurus document**!
+Markdown
+Documents in Docusaurus are written in markdown (.md or .mdx). You can refer to the GitHub Markdown for reference.
 ```
 
-## Markdown
-
-Tài liệu trong Docusasaurus được viết bằng markdown (.md hoặc .mdx), tài liệu tham khảo có thể xem ở [Github Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
-
-## Các markdown cơ bản
+## Basic markdown syntax
 
 ### Heading
 
-Sử dụng dấu # để đánh dấu văn bản là đầu mục
+Use the # symbol to mark text as a heading.
 
 ```md
-`#` Là đầu mục lớn nhất của tài liệu, mỗi tài liệu chỉ tồn tại một
-`##` Nhỏ đầu mục nhỏ hơn `#`
-`###` Nhỏ hơn `##` và tương tự
+`#` is the largest heading of the document, and each document can only have one.
+`##` is a smaller heading than `#`.
+`###` is smaller than `##` and so on.
 ```
 
-### *Chữ in nghiêng*
+### Italic text
 
 ```md
-Sửa dụng *Văn bản được in nghiêng* để in nghiêng văn bản
+Copy
+Use *Italic text* to italicize text.
 ```
 
-### **Chữ in đậm**
+### Bold text
 
 ```md
-Sửa dụng **Văn bản được in đậm** để in đậm văn bản
+Copy
+Use **Bold text** to make text bold.
 ```
 
-### ***Chữ in đậm và nghiêng***
+### Bold and italic text
 
 ```md
-Sửa dụng ***Văn bản được in đậm và nghiêng*** để in đậm và nghiêng văn bản 
+Copy
+Use ***Bold and italic text*** to make text bold and italic.
 ```
 
-### Đường dẫn liên kết
+### Link
 
 ```md
-Sửa dụng [Chữ được hiển thị](Đường dẫn) để tạo đường dẫn 
+Copy
+Use [Displayed text](URL) to create a link.
 ```
 
-### Hình ảnh
+### Image
 
 ```md
-Sửa dụng ![Chữ được hiển thị khi ảnh chưa được tải](Đường dẫn đến ảnh) để tạo ảnh 
+Copy
+Use ![Displayed text when the image is not loaded](Path to the image) to insert an image.
 ```
 
-### Dòng code
+### Inline code
 
 ```md
-Sửa dụng dấu `` để đánh dẫu văn bản là một dòng code
+Copy
+Use backticks to mark text as inline code.
 `console.log('Hello world')`
 ```
 
-### Đoạn code
+### Code block
 
-```md
-    Sửa dụng dấu `````` để đánh dẫu văn bản là đoạn code và jsx hoặc bất kỳ ngôn ngữ để thêm ngôn ngữ cho đoạn code 
+``` md
+Copy
+Use triple backticks to mark text as a code block, and specify the language (e.g., jsx) to add syntax highlighting.
+
     ```jsx
     console.log('Hello world')
     console.log('Hi')

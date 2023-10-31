@@ -2,13 +2,13 @@
 sidebar_position: 1
 ---
 
-# Trước khi bắt đầu
+# Before you start
 
-Tài liệu tham khảo **[Docusasaurus](https://docusaurus.io/docs/category/getting-started)**
+Reference document **[Docusasaurus](https://docusaurus.io/docs/category/getting-started)**
 
-Trước khi bắt đầu hãy chắn là các dependencies đã được tải sử dụng `yarn install`
+Make sure you have all the dependencies installed using `yarn install`
 
-Chạy Web sửa dụng `yarn start` ở trong thư mục `document`
+Using `yarn start` inside `document` directory to start the development server
 
 ```bash
 cd document
