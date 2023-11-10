@@ -16,6 +16,7 @@ const userController = {
       return sendResponse.error(res, 'Internal Server Error')
     }
   }
+
 }
 
 export default userController
