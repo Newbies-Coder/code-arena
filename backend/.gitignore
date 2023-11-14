@@ -6,8 +6,10 @@ tmp
 /out-tsc
 
 # dependencies
-node_modules
-.env
+node_modules/
+*.env
+*.env.local
+*.env.staging
 
 # IDEs and editors
 /.idea
