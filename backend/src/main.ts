@@ -60,6 +60,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next()
 })
 
+//Connect Database Code Arena
+
+// Connect Database Logs
+
 httpServer.listen(env.server.port, env.server.host, () => {
   console.log(`🚀 Server Running On Port ${env.server.port}`)
 })
