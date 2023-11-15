@@ -13,100 +13,159 @@ const userRouter = Router()
 userRouter.post('/login/password', wrapRequestHandler(userController.login))
 
 /**
- * Description: Login a user with github
- * Path: /login/github
- * Method: GET
- * Body:
+ * Description. Register a new user
+ * Path: /register
+ * Method: POST
+ * Body: { name: string, email: string, password: string, confirm_password: string, date_of_birth: ISO8601 }
  */
-userRouter.get('/login/github')
+userRouter.post('/register', wrapRequestHandler(userController.register))
 
 /**
- * Description: Login a user with google
- * Path: /login/google
+ * Description. OAuth with github
+ * Path: /oauth/github
  * Method: GET
- * Body:
+ * Query: { code: string }
  */
-userRouter.get('/login/google')
+userRouter.get('/oauh/github', wrapRequestHandler(userController.githubLogin))
 
 /**
- * Description: Login a user with facebook
- * Path: /login/facebook
+ * Description. OAuth with Google
+ * Path: /oauth/google
  * Method: GET
- * Body:
+ * Query: { code: string }
  */
-userRouter.get('/login/facebook')
+userRouter.get('/oauh/google', wrapRequestHandler(userController.googleLogin))
+
+/**
+ * Description. OAuth with Facebook
+ * Path: /oauth/facebook
+ * Method: GET
+ * Query: { code: string }
+ */
+userRouter.get('/oauh/facebook', wrapRequestHandler(userController.facebookLogin))
 
 /**
  * Description: Login a user with linkin
- * Path: /login/linkin
+ * Path: /oauh/linkin
  * Method: GET
  * Body:
  */
-userRouter.get('/login/linkin')
+userRouter.get('/oauh/linkin', wrapRequestHandler(userController.linkedinLogin))
 
 /**
- * Description: Logout a user
+ * Description. Logout a user
  * Path: /logout
  * Method: POST
- * Body:
- * Header: { Authorization: Bearer token }
+ * Header: { Authorization: Bearer <access_token> }
+ * Body: { refresh_token: string }
  */
 
-userRouter.post('/logout')
+userRouter.post('/logout', wrapRequestHandler(userController.logout))
 
 /**
- * Description: Register a user
- * Path: /register
+ * Description. Refresh Token
+ * Path: /refresh-token
  * Method: POST
- * Body: {email: string, password: string}
+ * Body: { refresh_token: string }
  */
-
-userRouter.post('/register', userController.register)
+userRouter.post('/refresh-token', wrapRequestHandler(userController.refreshToken))
 
 /**
- * Description: Change user password
+ * Description. Verify otp when user client
+ * Path: /verify-otp
+ * Method: POST
+ * Body: {otp: string}
+ */
+userRouter.post('/verify-otp', wrapRequestHandler(userController.verifyOTP))
+
+/**
+ * Description. Verify otp when user client click on the button resend otp
+ * Path: /resend-verify-email
+ * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ * Body: {}
+ */
+userRouter.post('/resend-verify-otp', wrapRequestHandler(userController.resendVerifyOTP))
+
+/**
+ * Description. Submit email to reset password, send email to user
+ * Path: /forgot-password
+ * Method: POST
+ * Body: {email: string}
+ */
+userRouter.post('/forgot-password', wrapRequestHandler(userController.forgotPassword))
+
+/**
+ * Description. Verify link in email to reset password
+ * Path: /verify-forgot-password
+ * Method: POST
+ * Body: {forgot_password_token: string}
+ */
+userRouter.post('/verify-forgot-password', wrapRequestHandler(userController.verifyForgotPassword))
+
+/**
+ * Description: Reset password
+ * Path: /reset-password
+ * Method: POST
+ * Body: {forgot_password_token: string, password: string, confirm_password: string}
+ */
+userRouter.post('/reset-password', wrapRequestHandler(userController.resetPassword))
+
+/**
+ * Description: Change password
  * Path: /change-password
  * Method: PUT
- * Body: {email: string, password: string}
+ * Header: { Authorization: Bearer <access_token> }
+ * Body: { old_password: string, password: string, confirm_password: string }
  */
 
-userRouter.post('/change-password', userController.register)
+userRouter.post('/change-password', userController.register, wrapRequestHandler(userController.changePassword))
 
 /**
- * Description: Follow a user
- * Path: /follow/:userId
+ * Description: Follow someone
+ * Path: /follow
  * Method: POST
- * Body:
+ * Header: { Authorization: Bearer <access_token> }
+ * Body: { followed_user_id: string }
  */
 
-userRouter.post('/follow/:userId')
+userRouter.post('/follow/:userId', wrapRequestHandler(userController.follow))
 
 /**
- * Description: Unfollow a user
- * Path: /unfollow/:userId
- * Method: POST
- * Body:
+ * Description: unfollow someone
+ * Path: /follow/user_id
+ * Method: DELETE
+ * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.post('/unfollow/:userId')
+userRouter.post('/unfollow/:userId', wrapRequestHandler(userController.unfollow))
+
+/**
+ * Description: Get all user by admin
+ * Path: '/'
+ * Method: GET
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
+userRouter.get('/', wrapRequestHandler(userController.getAllUser))
 
 /**
  * Description: Get user profile
  * Path: /:userId/profile
  * Method: GET
- * Body:
+ * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.get('/:userId/profile')
+userRouter.get('/:userId/profile', wrapRequestHandler(userController.getUser))
 
 /**
- * Description: Get self profile
+ * Description: Get my profile
  * Path: /@me/profile
  * Method: GET
- * Body:
+ * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.get('/@me/profile')
+userRouter.get('/@me/profile', wrapRequestHandler(userController.getMe))
 
 /**
  * Description: Update self profile
@@ -115,16 +174,57 @@ userRouter.get('/@me/profile')
  * Body:
  */
 
-userRouter.put('/@me/profile')
+userRouter.put('/@me/profile', wrapRequestHandler(userController.updateMe))
 
 /**
  * Description: Search user with name, return 10 matched users
  * Path: /
  * Method: GET
  * Body:
- * PARAM: { userName: string }
+ * param: { userName: string }
  */
 
-userRouter.get('/@me/profile')
+userRouter.get('/@me/profile', wrapRequestHandler(userController.search))
+
+/**
+ * Description: Delete user when user request user from section client
+ * Path: /:userId
+ * Method: DELETE
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
+userRouter.delete('/:userId', wrapRequestHandler(userController.delete))
+
+/**
+ * Description: Delete a lot of user when user is admin send request list user want to delete
+ * Path: /delete-users
+ * Method: DELETE
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
+userRouter.delete('/delete-users', wrapRequestHandler(userController.deleteManyUser))
+
+/**
+ * Description: Get user pagination
+ * Path: /pagination?page=1&limit=2&keyword=
+ * Method: GET
+ * Header: { Authorization: Bearer <access_token> }
+ * Param: {
+ * 	page,
+ *  limit,
+ *  keyword
+ * }
+ */
+
+userRouter.get('/pagination', wrapRequestHandler(userController.pagination))
+
+/**
+ * Description: Test token
+ * Path: /test-token
+ * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
+userRouter.post('/test-token', wrapRequestHandler(userController.testToken))
 
 export default userRouter
