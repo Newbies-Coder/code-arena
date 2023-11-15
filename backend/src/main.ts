@@ -1,7 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express'
 import { env } from './config/environment.config'
 import { createServer } from 'http'
-import { requestLogger } from './library/logger'
 import helmet from 'helmet'
 import compression from 'compression'
 import cors from 'cors'
@@ -10,12 +9,13 @@ import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import rootRouter from './routes'
 import { rateLimiterMiddleware } from './middlewares/rateLimiter.middleware'
-
-import logger from 'src/library/logger'
+import { logServices } from './services/connectLogs.service'
+import { databaseService } from './services/connectDB.service'
 
 const app = express()
 const httpServer = createServer(app)
-app.use(requestLogger)
+logServices.connect()
+app.use((req, res, next) => logServices.logRequest(req, res, next))
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -46,7 +46,7 @@ app.use(bodyParser.json({ limit: '50mb' }))
 app.use(cookieParser())
 app.use(express.static('.'))
 // Rate limit request from client
-if (env.node_env == 'production') {
+if (env.node_env === 'production') {
   app.use('/api', rateLimiterMiddleware)
 }
 app.use('/api', rootRouter)
@@ -61,8 +61,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 })
 
 //Connect Database Code Arena
-
-// Connect Database Logs
+databaseService.connect()
 
 httpServer.listen(env.server.port, env.server.host, () => {
   console.log(`🚀 Server Running On Port ${env.server.port}`)
