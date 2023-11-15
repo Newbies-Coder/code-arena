@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import userController from '~/controllers/users.controllers'
+import { wrapRequestHandler } from '~/utils/handler'
 
 const userRouter = Router()
 
@@ -9,8 +10,7 @@ const userRouter = Router()
  * Method: POST
  * Body: { email: string, password: string }
  */
-userRouter.post('/login/password', userController.login)
-
+userRouter.post('/login/password', wrapRequestHandler(userController.login))
 
 /**
  * Description: Login a user with github
@@ -44,17 +44,15 @@ userRouter.get('/login/facebook')
  */
 userRouter.get('/login/linkin')
 
-
 /**
  * Description: Logout a user
  * Path: /logout
  * Method: POST
- * Body: 
+ * Body:
  * Header: { Authorization: Bearer token }
  */
 
-userRouter.post("/logout")
-
+userRouter.post('/logout')
 
 /**
  * Description: Register a user
@@ -82,7 +80,6 @@ userRouter.post('/change-password', userController.register)
  */
 
 userRouter.post('/follow/:userId')
-
 
 /**
  * Description: Unfollow a user
@@ -129,6 +126,5 @@ userRouter.put('/@me/profile')
  */
 
 userRouter.get('/@me/profile')
-
 
 export default userRouter

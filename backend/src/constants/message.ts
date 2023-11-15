@@ -31,4 +31,6 @@ export const CLIENT_MESSAGE = {
   REQ_DURATION: 'Number of seconds before consumed points are reset.'
 } as const
 
-export const USER_VALIDATOR_MESSAGES = {} as const
+export const USER_VALIDATOR_MESSAGES = {
+  TITLE: 'Validation error'
+} as const

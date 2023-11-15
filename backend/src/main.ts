@@ -11,6 +11,7 @@ import rootRouter from './routes'
 import { rateLimiterMiddleware } from './middlewares/rateLimiter.middleware'
 import { logServices } from './services/connectLogs.service'
 import { databaseService } from './services/connectDB.service'
+import { defaultErrorHandler } from './middlewares/errors.middleware'
 
 const app = express()
 const httpServer = createServer(app)
@@ -62,7 +63,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 //Connect Database Code Arena
 databaseService.connect()
-
+// Error handling
+app.use(defaultErrorHandler)
 httpServer.listen(env.server.port, env.server.host, () => {
   console.log(`🚀 Server Running On Port ${env.server.port}`)
 })
