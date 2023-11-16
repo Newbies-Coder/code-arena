@@ -22,6 +22,13 @@ class DatabaseServices {
       console.log(`⛔️ Unable to Connect MongoDB: ${error}`)
     }
   }
+  async disConnect() {
+    try {
+      await this.client.close()
+    } catch (error) {
+      console.log(`⛔️ Unable to Connect MongoDB: ${error}`)
+    }
+  }
 }
 
 export const databaseService = new DatabaseServices()

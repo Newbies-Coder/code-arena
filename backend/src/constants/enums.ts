@@ -1,18 +1,25 @@
 export enum UserVerifyStatus {
-  Unverified,
-  Verified,
-  Banned
+  Unverified = 'Unverified',
+  Verified = 'Verified',
+  Celerity = 'Celerity',
+  Banned = 'Banned'
+}
+
+export enum UserGenderType {
+  Male = 'Male',
+  Female = 'Female',
+  Other = 'Other'
 }
 
 export enum TokenType {
-  AccessToken,
-  RefreshToken,
-  ForgotPasswordToken,
-  EmailVerifyToken
+  AccessToken = 'AccessToken',
+  RefreshToken = 'RefreshToken',
+  ForgotPasswordToken = 'ForgotPasswordToken',
+  OTPVerify = 'OTPVerifyToken'
 }
 
 export enum UserRole {
-  Admin,
-  Moderator,
-  User
+  Admin = 'Admin',
+  Moderator = 'Moderator',
+  User = 'User'
 }

@@ -4,14 +4,14 @@ export const DATABASE_MESSAGE = {
     USERNAME: 'Username credentials to access the database user logs',
     PASSWORD: 'Passwrod credentials to access the database user logs ',
     CONNECT: '📒 Connected to DB User Logs successfully!',
-    DICONNECT: '⛔️ Disconnected from the database the user logs in successfully!'
+    DICONNECT: '⛔️ Disconnected from the database user logs successfully!'
   },
   DB_MAIN: {
     NAME: 'Database access name in the ',
     USERNAME: 'Username credentials to access the database main',
     PASSWORD: 'Passwrod credentials to access the database main ',
     CONNECT: '🌱 Connected to DB Code Arena successfully!',
-    DICONNECT: '⛔️ Disconnected from MongoDB successfully!',
+    DICONNECT: '⛔️ Disconnected from the database main successfully!',
     USER_COLLECTION: 'The table holds user information in the database.'
   }
 } as const

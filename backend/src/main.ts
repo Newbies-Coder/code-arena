@@ -12,6 +12,8 @@ import { rateLimiterMiddleware } from './middlewares/rateLimiter.middleware'
 import { logServices } from './services/connectLogs.service'
 import { databaseService } from './services/connectDB.service'
 import { defaultErrorHandler } from './middlewares/errors.middleware'
+import exitHook from 'async-exit-hook'
+import { DATABASE_MESSAGE } from './constants/message'
 
 const app = express()
 const httpServer = createServer(app)
@@ -67,4 +69,11 @@ databaseService.connect()
 app.use(defaultErrorHandler)
 httpServer.listen(env.server.port, env.server.host, () => {
   console.log(`🚀 Server Running On Port ${env.server.port}`)
+})
+// Close db and close db_logs
+exitHook(() => {
+  databaseService.disConnect()
+  console.log(DATABASE_MESSAGE.DB_MAIN.DICONNECT)
+  logServices.disConnectLogs()
+  console.log(DATABASE_MESSAGE.DB_LOGS.DICONNECT)
 })
