@@ -26,7 +26,7 @@ const Login = () => {
         <p className="">Signin with Others</p>
       </div>
 
-      <div className="">
+      <div className="flex">
         <ul className="flex justify-between">
           <li className=""></li>
           <li className=""></li>
