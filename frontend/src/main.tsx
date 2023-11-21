@@ -7,8 +7,6 @@ import 'antd/dist/reset.css'
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <StrictMode>
-    <>
-      <span className="font-smooch text-xl text-red-500">Hello</span>
-    </>
+    <></>
   </StrictMode>,
 )
