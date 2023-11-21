@@ -15,12 +15,12 @@ module.exports = {
     colors: {
       transparent: 'transparent',
       white: '#ffffff',
-      black: '#000000',
+      black: '#1C1C1C',
       gray: {
         50: '#f9fafb',
         100: '#f4f5f7',
         200: '#e5e7eb',
-        300: '#d5d6d7',
+        300: '#F2F2F2',
         400: '#9e9e9e',
         500: '#707275',
         600: '#4c4f52',
@@ -48,7 +48,7 @@ module.exports = {
         400: '#f98080',
         500: '#f05252',
         600: '#e02424',
-        700: '#c81e1e',
+        700: '#F70505',
         800: '#9b1c1c',
         900: '#771d1d',
       },

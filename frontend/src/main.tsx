@@ -3,11 +3,12 @@ import * as ReactDOM from 'react-dom/client'
 import './index.scss'
 import 'normalize.css'
 import 'antd/dist/reset.css'
-import Login from './container/Auth/pages/Login'
+
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <StrictMode>
-    <></>
+    <>
+    </>
   </StrictMode>,
 )
