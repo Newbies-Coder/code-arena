@@ -1,9 +1,27 @@
-import React from 'react'
+import './Loading.scss'
 
-type Props = {}
-
-const Loading = (props: Props) => {
-  return <div>Loading</div>
+const Loading = () => {
+  return (
+    <div className="loader">
+      <div className="loader-inner">
+        <div className="loader-wrap">
+          <div className="loader-line" />
+        </div>
+        <div className="loader-wrap">
+          <div className="loader-line" />
+        </div>
+        <div className="loader-wrap">
+          <div className="loader-line" />
+        </div>
+        <div className="loader-wrap">
+          <div className="loader-line" />
+        </div>
+        <div className="loader-wrap">
+          <div className="loader-line" />
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default Loading

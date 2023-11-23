@@ -2,3 +2,9 @@
 {"level":"info","message":{"dateTime":"18-11-2023t15:24:15511","id":"41fb1f12-5cac-432e-a388-cfd56472a3c2","method":"POST","statusCode":200,"url":"/api/v1/users/login"}}
 {"level":"info","message":{"dateTime":"18-11-2023t15:24:49625","id":"e2dfc3ef-27c2-4a74-b3c3-5df96099bc8b","method":"POST","statusCode":200,"url":"/api/v1/users/login/password"}}
 {"level":"info","message":{"dateTime":"18-11-2023t15:24:58781","id":"62536289-48c6-44c4-a339-94948069b651","method":"POST","statusCode":200,"url":"/api/v1/users/login"}}
+{"level":"info","message":{"dateTime":"23-11-2023t15:55:37846","id":"ac99ddac-15c9-4b3b-b6f8-b58ffdac98b6","method":"POST","statusCode":200,"url":"/api/v1/users/register"}}
+{"level":"info","message":{"dateTime":"23-11-2023t15:55:59619","id":"349771ca-4ae6-4408-a77b-612f56bb22b4","method":"POST","statusCode":200,"url":"/api/v1/users/register"}}
+{"level":"info","message":{"dateTime":"23-11-2023t15:56:05725","id":"9781d642-2722-4818-98b2-61a3af420280","method":"POST","statusCode":200,"url":"/api/v1/users/register"}}
+{"level":"info","message":{"dateTime":"23-11-2023t15:57:47267","id":"ca0dea01-d216-403b-8b69-82c57fa2858b","method":"POST","statusCode":200,"url":"/api/v1/users/register"}}
+{"level":"info","message":{"dateTime":"23-11-2023t15:58:02473","id":"235ef386-083d-4a70-8cb1-33184c654f80","method":"POST","statusCode":200,"url":"/api/v1/users/register"}}
+{"level":"info","message":{"dateTime":"23-11-2023t15:58:09031","id":"d00bd858-2d05-4ede-84f1-fee6ce60eced","method":"POST","statusCode":200,"url":"/api/v1/users/register"}}

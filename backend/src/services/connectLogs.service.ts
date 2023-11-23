@@ -44,6 +44,13 @@ class DatabaseLogServices {
       console.log(`⛔️ Unable to Connect MongoDB: ${error}`)
     }
   }
+  async disConnectLogs() {
+    try {
+      await this.client.close()
+    } catch (error) {
+      console.log(`⛔️ Unable to Connect MongoDB: ${error}`)
+    }
+  }
   public logRequest(req: Request, res: Response, next: NextFunction): void {
     this.logger.info({
       id: uuidv4(),

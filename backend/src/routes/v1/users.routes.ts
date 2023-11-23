@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import userController from '~/controllers/users.controllers'
+import { registerValidator } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
 
 const userRouter = Router()
@@ -10,7 +11,7 @@ const userRouter = Router()
  * Method: POST
  * Body: { email: string, password: string }
  */
-userRouter.post('/login/password', wrapRequestHandler(userController.login))
+userRouter.post('/login', wrapRequestHandler(userController.login))
 
 /**
  * Description. Register a new user
@@ -18,7 +19,7 @@ userRouter.post('/login/password', wrapRequestHandler(userController.login))
  * Method: POST
  * Body: { name: string, email: string, password: string, confirm_password: string, date_of_birth: ISO8601 }
  */
-userRouter.post('/register', wrapRequestHandler(userController.register))
+userRouter.post('/register', registerValidator, wrapRequestHandler(userController.register))
 
 /**
  * Description. OAuth with github

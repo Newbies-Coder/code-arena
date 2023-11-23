@@ -13,9 +13,6 @@
     "lib": ["es2020", "DOM", "DOM.Iterable", "ESNext"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "resolveJsonModule": true,
-    "baseUrl": ".",
-    "paths": {},
     "noEmit": true,
     "jsx": "react-jsx",
     "allowJs": false,
@@ -23,6 +20,16 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@assets/*": ["src/assets/*"],
+      "@config/*": ["src/config/*"],
+      "@components/*": ["src/components/*"],
+      "@container/*": ["src/container/*"],
+      "@constants/*": ["src/constants/*"],
+      "@redux/*": ["src/redux/*"]
+    },
     "types": ["vite/client", "vitest"]
   },
   "files": [],
