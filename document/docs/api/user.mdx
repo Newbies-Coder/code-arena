@@ -1,0 +1,32 @@
+---
+sidebar_position: 1
+---
+
+# User API
+
+## Login
+
+### Login with email and password
+
+<span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span> \users\login\password <br />
+<br />
+
+Return `accessToken` and `refreshToken` from account, if tokens not exists create new one.
+
+**REQUEST BODY**
+
+| FIELD    | TYPE   | DESCRIPTION        |
+| -------- | ------ | ------------------ |
+| email    | string | Max 100 characters |
+| password | string | Max 100 characters |
+
+**EXAMPLE RESPONSE**
+
+```json
+{
+	"data": {
+		"accessToken": "JWT Access token",
+		"refreshToken": "JWT Refresh token"
+	}
+}
+```
