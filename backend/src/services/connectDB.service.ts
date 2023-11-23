@@ -1,6 +1,7 @@
-import { Db, MongoClient, ServerApiVersion } from 'mongodb'
+import { Db, MongoClient, ServerApiVersion, Collection } from 'mongodb'
 import { env } from '~/config/environment.config'
 import { DATABASE_MESSAGE } from '~/constants/message'
+import User from '~/models/schemas/Users.schema'
 class DatabaseServices {
   private client: MongoClient | undefined
   private db: Db
@@ -28,6 +29,10 @@ class DatabaseServices {
     } catch (error) {
       console.log(`⛔️ Unable to Connect MongoDB: ${error}`)
     }
+  }
+  // Get collection user
+  get users(): Collection<User> {
+    return this.db.collection(env.database.main.collection.users as string)
   }
 }
 
