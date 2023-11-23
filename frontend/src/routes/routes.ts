@@ -1,15 +1,15 @@
 import React from 'react'
-import config from '../config'
+import config from '@config/index'
 
-const HomePage = React.lazy(() => import('../container/Home/pages/MainHome'))
-const LoginPage = React.lazy(() => import('../container/Auth/pages/Login'))
-const RegisterPage = React.lazy(() => import('../container/Auth/pages/Register'))
-const ForgotPasswordPage = React.lazy(() => import('../container/Auth/pages/ForgotPassword'))
-const NewPasswordPage = React.lazy(() => import('../container/Auth/pages/NewPassword'))
-const VerificationPage = React.lazy(() => import('../container/Auth/pages/Verification'))
-const CongratulationPage = React.lazy(() => import('../components/Congratulation'))
-const PasswordResetSuccessPage = React.lazy(() => import('../container/Auth/pages/ForgotPassword'))
-const NotFoundPage = React.lazy(() => import('../components/NotFound'))
+const HomePage = React.lazy(() => import('@container/Home/pages/MainHome'))
+const LoginPage = React.lazy(() => import('@container/Auth/pages/Login'))
+const RegisterPage = React.lazy(() => import('@container/Auth/pages/Register'))
+const ForgotPasswordPage = React.lazy(() => import('@container/Auth/pages/ForgotPassword'))
+const NewPasswordPage = React.lazy(() => import('@container/Auth/pages/NewPassword'))
+const VerificationPage = React.lazy(() => import('@container/Auth/pages/Verification'))
+const CongratulationPage = React.lazy(() => import('@components/Congratulation'))
+const PasswordResetSuccessPage = React.lazy(() => import('@container/Auth/pages/ForgotPassword'))
+const NotFoundPage = React.lazy(() => import('@components/NotFound'))
 
 const publicRoute = [
   {

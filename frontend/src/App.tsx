@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { publicRoute } from './routes'
-import Loading from './components/Loading'
+import Loading from '@components/Loading'
 
 const App = () => {
   return (

@@ -1,4 +1,6 @@
-const routes = {
+import { routeTypes } from '@/@types/global'
+
+const routes: routeTypes = {
   home: '/',
   profile: '/profile',
   login: '/login',
@@ -9,6 +11,6 @@ const routes = {
   congratulation: '/congratulation',
   passwordResetSuccess: '/password-reset-success',
   notFound: '*',
-}
+} as const
 
 export default routes
