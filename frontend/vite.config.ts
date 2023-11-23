@@ -9,7 +9,7 @@ export default defineConfig({
   cacheDir: './node_modules/.vite/frontend',
 
   server: {
-    open: '/index.html',
+    open: '/',
     port: 4200,
     host: 'localhost',
   },

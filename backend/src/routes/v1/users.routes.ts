@@ -10,7 +10,7 @@ const userRouter = Router()
  * Method: POST
  * Body: { email: string, password: string }
  */
-userRouter.post('/login/password', wrapRequestHandler(userController.login))
+userRouter.post('/login', wrapRequestHandler(userController.login))
 
 /**
  * Description. Register a new user
