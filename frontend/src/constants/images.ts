@@ -1,4 +1,4 @@
-import Logo from '@assets/images/logo/logo.svg'
+import Logo from '@assets/images/logo/logo.png'
 import Background from '@assets/images/background/background_image.svg'
 import ResetSuccesfully from '@assets/images/svg/resetpassword.svg'
 import Congratulation from '@assets/images/svg/congratulation.svg'

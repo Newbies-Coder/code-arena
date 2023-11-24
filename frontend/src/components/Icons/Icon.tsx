@@ -269,16 +269,16 @@ export const ShowEyeIcon: React.FC<IconPropsType> = ({ width = '1.5rem', height 
     <path
       d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"
       stroke="black"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
     <path
       d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"
       stroke="black"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 )
@@ -296,11 +296,11 @@ export const GmailIcon: React.FC<IconPropsType> = ({ width = '1.5rem', height = 
     <path
       d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z"
       stroke="black"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
-    <path d="M22 6L12 13L2 6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M22 6L12 13L2 6" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 
@@ -416,12 +416,33 @@ export const DateOfBirthIcon: React.FC<IconPropsType> = ({ width = '1.25rem', he
     <path
       d="M17 3H3C1.89543 3 1 3.89543 1 5V19C1 20.1046 1.89543 21 3 21H17C18.1046 21 19 20.1046 19 19V5C19 3.89543 18.1046 3 17 3Z"
       stroke="black"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
-    <path d="M14 1V5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M6 1V5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M1 9H19" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M14 1V5" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M6 1V5" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M1 9H19" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
+export const WarningIcon: React.FC<IconPropsType> = ({ width = '1.375rem', height = '1.375rem', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 22 22"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M10.5399 19.5971C15.3901 19.5971 19.3219 15.7147 19.3219 10.9255C19.3219 6.13631 15.3901 2.25391 10.5399 2.25391C5.68967 2.25391 1.75781 6.13631 1.75781 10.9255C1.75781 15.7147 5.68967 19.5971 10.5399 19.5971Z"
+      stroke="#F70505"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path d="M10.5391 14.3945H10.5478" stroke="#F70505" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M10.5391 7.45703V10.9257" stroke="#F70505" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
