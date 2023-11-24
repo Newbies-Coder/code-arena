@@ -5,3 +5,4 @@
 {"level":"info","message":{"dateTime":"23-11-2023t15:57:47267","id":"ca0dea01-d216-403b-8b69-82c57fa2858b","method":"POST","statusCode":200,"url":"/api/v1/users/register"}}
 {"level":"info","message":{"dateTime":"23-11-2023t15:58:02473","id":"235ef386-083d-4a70-8cb1-33184c654f80","method":"POST","statusCode":200,"url":"/api/v1/users/register"}}
 {"level":"info","message":{"dateTime":"23-11-2023t15:58:09031","id":"d00bd858-2d05-4ede-84f1-fee6ce60eced","method":"POST","statusCode":200,"url":"/api/v1/users/register"}}
+{"level":"info","message":{"dateTime":"24-11-2023t19:28:30660","id":"f5c71740-d29b-4906-adee-015f3aad628f","method":"POST","statusCode":200,"url":"/api/v1/users/register"}}
