@@ -5,7 +5,7 @@ import { UserRole, UserVerifyStatus, UserGenderType } from '~/constants/enums'
 //  - Number(moment('2000-02-22T00:00:00.000Z').format('YYYY'))
 interface UserType {
   _id?: ObjectId
-  fullname: string
+  fullName: string
   username?: string
   email: string
   phone?: string
@@ -30,7 +30,7 @@ interface UserType {
 
 export default class User {
   _id?: ObjectId
-  fullname: string
+  fullName: string
   username: string
   email: string
   phone: string
@@ -56,7 +56,7 @@ export default class User {
     this._id = user._id
     this.website = user.website || ''
     this.username = user.username || ''
-    this.fullname = user.fullname || ''
+    this.fullName = user.fullName
     this.email = user.email
     this.phone = user.phone || ''
     this.age = user.age || null

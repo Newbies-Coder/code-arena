@@ -12,11 +12,20 @@ export const DATABASE_MESSAGE = {
     PASSWORD: 'Passwrod credentials to access the database main ',
     CONNECT: '🌱 Connected to DB Code Arena successfully!',
     DICONNECT: '⛔️ Disconnected from the database main successfully!',
-    USER_COLLECTION: 'The table holds user information in the database.'
+    USER_COLLECTION: 'The table holds user information in the database.',
+    REFRESH_TOKEN_COLLECTION: 'The table holds refresh-token information in the database.'
   }
 } as const
 
-export const JT_MESSAGES = {} as const
+export const JWT_MESSAGES = {
+  JWT_SECRECT_KEY:
+    'This “Secret” string is unique to the application and must be prioritized and carefully stored securely on the server side.',
+  JWT_REFRESH_TOKEN_KEY:
+    'This “Secret” string is unique to the application and must be prioritized and carefully stored securely on the server side.',
+  ACCESS_TOKEN_EXPIRES_IN: 'Duration of existence of access_token',
+  REFRESH_TOKEN_EXPIRES_IN: 'Duration of existence of access_token',
+  JWT_ALGORITHM: 'List of strings with the names of the allowed algorithms'
+} as const
 
 export const ENV_MESSAGE = {
   PORT: 'Port server is using',
@@ -28,7 +37,10 @@ export const ENV_MESSAGE = {
 
 export const CLIENT_MESSAGE = {
   REQ_POINT: 'Maximum number of points can be consumed over duration',
-  REQ_DURATION: 'Number of seconds before consumed points are reset.'
+  REQ_DURATION: 'Number of seconds before consumed points are reset.',
+  PASSWORD_SECRET: 'String of numeric or character values ​​used in security systems',
+  COOKIES_EXPIRESIN: 'Cookie expires in the system',
+  SECRET_COOKIE_NAME: 'Cookies_name when user login and register success and save local'
 } as const
 
 export const RESULT_RESPONSE_MESSAGES = {
