@@ -1,0 +1,64 @@
+---
+sidebar_position: 1
+---
+
+# Cơ bản
+
+## API
+
+**Base URL**:
+
+```url
+http://localhost:8080/api
+```
+
+## Phiên bản API
+
+| PHIÊN BẢN | TRẠNG THÁI        |
+| --------- | ----------------- |
+| v1        | Hoạt động         |
+| v2        | Đang lên kế hoạch |
+
+## Mẫu phản hồi của API
+
+```json
+{
+	"statusCode": "200|404|500",
+	"message": "Nội dung phản hồi từ API",
+	"data": "Dữ liệu phản hồi từ API",
+	"dateTime": " Thời gian dưới dạng DD-MM-YYYY\\tHH:mm:ssSSS",
+	"messageConstants": "Ghi chú"
+}
+```
+
+## Một số mã HTTP phổ biến
+
+- 200 Thành công.
+- 200 Tạo thành công.
+- 400 Yêu cầu không hợp lệ.
+- 404 Không tìm thấy tài nguyên.
+- 422 Yêu cầu không hợp lệ.
+- 500 Lỗi của API.
+
+:::tip
+
+Tài liệu đến [Tất cả các mã HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
+
+:::
+
+## Xác thực
+
+REST API sử dụng JSON Web Token (JWT) để xác thực. Để xác thực các yêu cầu, bạn phải thêm HTTP header `Authorization` với giáo trị
+`Bearer <accessToken>`.
+
+- Access token sử dụng để định dang trên từng yêu cầu đến máy chủ
+- Refresh token sử dụng để tạo một accessToken mới khi nó hết hạn
+
+OTP (Mật khẩu dùng một lần) làm một số gồm 6 chữ số. Được sủ dụng để cài lại mật khẩu, xác nhận tài khoản.
+
+:::note
+
+- Access token có thời hạn là 15 phút.
+- Refresh token có thời hạn là 7 ngày.
+
+:::

@@ -1,0 +1,185 @@
+---
+sidebar_position: 1
+---
+
+# User API
+
+## Login
+
+### Login with email and password
+
+<span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span>
+<b style={{ fontSize: '1.5rem' }}> \users\login\password </b>
+
+<br />
+<br />
+
+Return `accessToken` and `refreshToken` from account, if tokens not exists create new one.
+
+**REQUEST BODY**
+
+| FIELD    | TYPE   | DESCRIPTION        |
+| -------- | ------ | ------------------ |
+| email    | string | Max 100 characters |
+| password | string | Max 100 characters |
+
+**EXAMPLE RESPONSE**
+
+```json
+{
+	"data": {
+		"accessToken": "JWT Access token",
+		"refreshToken": "JWT Refresh token"
+	}
+}
+```
+
+<br />
+
+## Register
+
+<span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span> <b style={{ fontSize: '1.5rem' }}>
+	\users\register
+</b>
+<br />
+<br />
+
+Create a new account with provided `email` and `passwrd`. Return newly created `accessToken` and `refreshToken`.
+
+**REQUEST BODY**
+
+| FIELD    | TYPE   | DESCRIPTION        |
+| -------- | ------ | ------------------ |
+| email    | string | Max 100 characters |
+| password | string | Max 100 characters |
+
+**EXAMPLE RESPONSE**
+
+```json
+{
+	"data": {
+		"accessToken": "JWT Access token",
+		"refreshToken": "JWT Refresh token"
+	}
+}
+```
+
+<br />
+
+## Verify account
+
+<span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span>
+<b style={{ fontSize: '1.5rem' }}> \users\verify-otp </b> <br />
+<br />
+
+Verify the account with OPT.
+
+**REQUEST BODY**
+
+| FIELD | TYPE   | DESCRIPTION     |
+| ----- | ------ | --------------- |
+| OTP   | number | 6 digits number |
+
+<br />
+
+## Resend verify account
+
+<span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span>
+<b style={{ fontSize: '1.5rem' }}> \users\resend-verify-otp</b> <br />
+<br />
+
+Resend OTP to email.
+
+**REQUEST HEADER**
+
+| FIELD       | TYPE   | DESCRIPTION |
+| ----------- | ------ | ----------- |
+| accessToken | string | JWT Token   |
+
+<br />
+
+## Forgot password
+
+<span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span>
+<b style={{ fontSize: '1.5rem' }}> \users\forgot-password </b>
+<br />
+<br />
+
+Send a email contain OTP to `email`.
+
+**REQUEST BODY**
+
+| FIELD | TYPE   | DESCRIPTION        |
+| ----- | ------ | ------------------ |
+| email | string | Max 100 characters |
+
+**EXAMPLE RESPONSE**
+
+```json
+{
+	"data": {
+		"forgotPassworkToken": "JWT Token"
+	}
+}
+```
+
+<br />
+
+## Verify forgot password
+
+<span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span>
+<b style={{ fontSize: '1.5rem' }}> \users\verify-forgot-password</b> <br />
+<br />
+
+Verify that account owner forgot the password.
+
+**REQUEST BODY**
+
+| FIELD               | TYPE   | DESCRIPTION |
+| ------------------- | ------ | ----------- |
+| forgotPassworkToken | string | JWT string  |
+
+<br />
+
+## Reset password
+
+<span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span>
+<b style={{ fontSize: '1.5rem' }}> \users\reset-password </b>
+<br />
+<br />
+
+Change the password to new password when forgot password.
+
+**REQUEST BODY**
+
+| FIELD               | TYPE   | DESCRIPTION                                           |
+| ------------------- | ------ | ----------------------------------------------------- |
+| forgotPassworkToken | string | JWT Token                                             |
+| password            | string | Max 100 characters                                    |
+| confirm_password    | string | Max 100 characters and must be the same as `password` |
+
+<br />
+
+## Change password
+
+<span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span> <b style={{ fontSize: '1.5rem' }}>
+	\users\change-password
+</b>
+<br />
+<br />
+
+Change the password to new password.
+
+**REQUEST HEADER**
+
+| FIELD       | TYPE   | DESCRIPTION |
+| ----------- | ------ | ----------- |
+| accessToken | string | JWT Token   |
+
+**REQUEST BODY**
+
+| FIELD            | TYPE   | DESCRIPTION                                           |
+| ---------------- | ------ | ----------------------------------------------------- |
+| oldPassword      | string | Max 100 characters                                    |
+| password         | string | Max 100 characters                                    |
+| confirm_password | string | Max 100 characters and must be the same as `password` |
