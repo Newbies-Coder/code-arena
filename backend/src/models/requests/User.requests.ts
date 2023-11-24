@@ -4,7 +4,7 @@ export interface LoginBody {
 }
 
 export interface RegisterBody {
-  name: string
+  fullName: string
   email: string
   password: string
   confirm_password: string

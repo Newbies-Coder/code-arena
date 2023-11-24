@@ -1,6 +1,7 @@
 import { Db, MongoClient, ServerApiVersion, Collection } from 'mongodb'
 import { env } from '~/config/environment.config'
 import { DATABASE_MESSAGE } from '~/constants/message'
+import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import User from '~/models/schemas/Users.schema'
 class DatabaseServices {
   private client: MongoClient | undefined
@@ -33,6 +34,11 @@ class DatabaseServices {
   // Get collection user
   get users(): Collection<User> {
     return this.db.collection(env.database.main.collection.users as string)
+  }
+
+  // Get collection user
+  get refreshTokens(): Collection<RefreshToken> {
+    return this.db.collection(env.database.main.collection.refresh_tokens as string)
   }
 }
 

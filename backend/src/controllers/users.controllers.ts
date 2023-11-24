@@ -3,6 +3,9 @@ import { sendResponse } from '~/config/response.config'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { LoginBody, RegisterBody } from '~/models/requests/User.requests'
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
+import userServices from '~/services/users.service'
+import { omit } from 'lodash'
+import { env } from '~/config/environment.config'
 
 const userController = {
   login: async (req: Request<ParamsDictionary, any, LoginBody>, res: Response, next: NextFunction) => {
@@ -26,8 +29,19 @@ const userController = {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.LOGIN_LINKEDIN_SUCCESS)
   },
   register: async (req: Request<ParamsDictionary, any, RegisterBody>, res: Response, next: NextFunction) => {
+    const result = await userServices.register(req.body)
+    const { cookies_name, cookies_exp } = env.client
+    const { refresh_token } = result
+    // Save refresh_token in cookies
+    res.cookie(cookies_name, refresh_token, {
+      httpOnly: true,
+      secure: false,
+      path: '/',
+      sameSite: 'strict',
+      maxAge: Number(cookies_exp)
+    })
     // Message register successfully!
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.REGISTER_SUCCESS)
+    return sendResponse.success(res, omit(result, ['refresh_token']), RESULT_RESPONSE_MESSAGES.REGISTER_SUCCESS)
   },
   logout: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!
