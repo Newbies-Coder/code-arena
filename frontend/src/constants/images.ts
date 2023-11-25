@@ -1,7 +1,10 @@
 import Logo from '@assets/images/logo/logo.png'
 import Background from '@assets/images/background/background_image.svg'
 import ResetSuccesfully from '@assets/images/svg/resetpassword.svg'
-import Congratulation from '@assets/images/svg/congratulation.svg'
+
+import Congratulation from '@assets/images/congratulation.png'
+import GmailIcon from '@assets/images/svg/mail.svg'
+
 import GithubIcon from '@assets/images/svg/github.svg'
 import FacebookIcon from '@assets/images/svg/facebook.svg'
 import LinkedinIcon from '@assets/images/svg/linkedin.svg'

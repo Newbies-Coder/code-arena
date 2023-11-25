@@ -1,0 +1,64 @@
+---
+sidebar_position: 1
+---
+
+# Reference
+
+## API Reference
+
+**Base URL**:
+
+```url
+http://localhost:8080/api
+```
+
+## API Versioning
+
+| VERSION | STATUS   |
+| ------- | -------- |
+| v1      | Active   |
+| v2      | Planning |
+
+## API Response template
+
+```json
+{
+	"statusCode": "200|404|500 and so on",
+	"message": "Some message from API",
+	"data": "Data that API sent back",
+	"dateTime": " date and time in DD-MM-YYYY\\tHH:mm:ssSSS format",
+	"messageConstants": "Some note"
+}
+```
+
+## Some common status codes
+
+- 200 Susscess.
+- 200 Created.
+- 400 Bad request.
+- 404 Resource not found.
+- 422 Validation error.
+- 500 Internal server error.
+
+:::tip
+
+Reference to [All HTTP Code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
+
+:::
+
+## Authentication
+
+The REST API uses JSON Web Token (JWT) for authentication. To authenticate your requests, you must include an HTTP header of `Authorization`
+with the value `Bearer <token>`.
+
+- Access token is used for authentication per request 
+- Refresh token is used to generate new access token when it's stale 
+
+OTP (One time password) is a number consits of 6 digits. Mainly used for reset password, verify account.
+
+:::note
+
+- Access token stale after 15 minutes.
+- Refresh token stale after 7 days.
+
+:::
