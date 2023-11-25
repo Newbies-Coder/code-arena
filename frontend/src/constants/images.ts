@@ -1,8 +1,10 @@
 import Logo from '@assets/images/logo/logo.png'
 import Background from '@assets/images/background/background_image.svg'
 import ResetSuccesfully from '@assets/images/svg/resetpassword.svg'
-import Congratulation from '@assets/images/svg/congratulation.svg'
+
+import Congratulation from '@assets/images/congratulation.png'
 import GmailIcon from '@assets/images/svg/mail.svg'
+
 import GithubIcon from '@assets/images/svg/github.svg'
 import FacebookIcon from '@assets/images/svg/facebook.svg'
 import LinkedinIcon from '@assets/images/svg/linkedin.svg'
@@ -13,6 +15,7 @@ import dateOfBirthIcon from '@assets/images/svg/dateOfBirth.svg'
 import lockIcon from '@assets/images/svg/lock.svg'
 import userIcon from '@assets/images/svg/user.svg'
 import noAvatarImage from '@assets/images/svg/no-image.svg'
+import Google from '@assets/images/svg/google.svg'
 
 export const LOGO = {
   APP_LOGO: Logo,
@@ -35,7 +38,7 @@ export const GLOBAL_ICON = {
 }
 
 export const SOCIAL_ICON = {
-  GMAIL: GmailIcon,
+  GMAIL: Google,
   GITHUB: GithubIcon,
   FACEBOOK: FacebookIcon,
   LINKEDIN: LinkedinIcon,

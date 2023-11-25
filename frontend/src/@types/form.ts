@@ -5,3 +5,10 @@ export type FieldType = {
   confirmPassword?: string
   date?: string
 }
+
+export type FormItemPropsType = {
+  name: string
+  placeholder: string
+  Icon: React.ElementType
+  inputType?: string
+}
