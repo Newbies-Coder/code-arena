@@ -52,18 +52,16 @@ const Login = () => {
             <Form.Item>
               <Button
                 htmlType="submit"
-                className="mt-3 w-full h-14 bg-black text-white text-lg font-bold rounded-xl border-0"
+                className="w-full h-14 bg-black text-white text-lg font-bold rounded-xl border-0"
               >
                 SIGN IN
               </Button>
             </Form.Item>
           </Form>
-          <div className=" justify-center">
-            <Divider orientation="center" plain className="text-lg">
-              <strong>Sign in&nbsp;</strong>
-              with Others
-            </Divider>
-          </div>
+          <Divider orientation="center" plain className="text-lg">
+            <strong>Sign in&nbsp;</strong>
+            with Others
+          </Divider>
           <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
             {socialMediaLogin.map((button) => (
               <Col key={button.key} className="gutter-row" span={6}>
