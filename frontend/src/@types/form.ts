@@ -19,3 +19,10 @@ export type SocialMediaType = {
   alt?: string
   icon?: React.ElementType
 }
+
+export type OTPType = {
+  type: string
+  maxLength: number
+  min: number
+  max: number
+}
