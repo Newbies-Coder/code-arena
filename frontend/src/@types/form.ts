@@ -12,3 +12,17 @@ export type FormItemPropsType = {
   Icon: React.ElementType
   inputType?: string
 }
+
+export type SocialMediaType = {
+  key: string
+  url?: string
+  alt?: string
+  icon?: React.ElementType
+}
+
+export type OTPType = {
+  type: string
+  maxLength: number
+  min: number
+  max: number
+}

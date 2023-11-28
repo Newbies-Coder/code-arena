@@ -1,35 +1,22 @@
-import { FacebookIcon, GmailIcon, LinkedinIcon, LockIcon } from '@/components/Icons'
-import { Input, Form, Button, Row, Col, Alert, Divider } from 'antd'
+import { Form, Button, Row, Col, Divider } from 'antd'
 import './style.scss'
-import { LOGO, SOCIAL_ICON } from '@/constants/images'
+import { LOGO, BG } from '@/constants/images'
 import { Link } from 'react-router-dom'
-
-const formItemLayout = {
-  className: 'bg-gray-300 w-full py-2 px-4 text-base font-normal border-0 h-14',
-  classNames: { input: 'ml-2 bg-gray-300 text-xs font-normal font-popins' },
-}
-
-const validationRule = (message: string) => ({
-  required: true,
-  message: <Alert className="ml-2 bg-transparent text-base text-red-700" message={message} banner type="error" />,
-})
+import { inputsLogin, socialMediaLogin } from '@/mocks/auth.data'
+import FormItem from '../../components/FormItem'
+import { SocialMediaType } from '@/@types/form'
 
 const Login = () => {
-  const renderFormItem = (name: string, placeholder: string, Icon: React.ElementType, inputType?: string) => (
-    <Form.Item name={name} rules={[validationRule(`Please input your ${name}!`)]}>
-      {inputType === 'password' ? (
-        <Input.Password
-          placeholder={placeholder}
-          prefix={<Icon />}
-          {...formItemLayout}
-          styles={{ suffix: { fontSize: '23px' } }}
-        />
-      ) : (
-        <Input placeholder={placeholder} prefix={<Icon />} {...formItemLayout} />
-      )}
-    </Form.Item>
-  )
-
+  const renderButtonContent = (button: SocialMediaType) => {
+    if (button.url) {
+      return <img src={button.url} alt={button.alt} className={button.key === 'github' ? 'h-11 w-11' : ''} />
+    }
+    if (typeof button.icon === 'function') {
+      const Icon = button.icon
+      return <Icon />
+    }
+    return null
+  }
   return (
     <Row className="min-h-screen login ">
       <Col xs={{ span: 24 }} lg={{ span: 12 }} className="py-8 flex justify-center relative">
@@ -45,57 +32,49 @@ const Login = () => {
             Welcome to the Code Arena free coding learning page!
           </p>
           <Form name="basic" className="mt-3 w-full">
-            {renderFormItem('email', 'Email', GmailIcon, 'email')}
-            {renderFormItem('password', 'Password', LockIcon, 'password')}
+            {inputsLogin.map((input, id) => (
+              <FormItem
+                key={id}
+                name={input.name}
+                placeholder={input.placeholder}
+                Icon={input.Icon}
+                inputType={input.inputType}
+              />
+            ))}
             <p className="text-right cursor-pointer">
               <Button type="link" className="text-gray-700 p-0">
                 Forgot password?
               </Button>
               <Button type="link" className="text-gray-700 font-bold p-0">
-                Sign Up now
+                Sign up now
               </Button>
             </p>
             <Form.Item>
               <Button
                 htmlType="submit"
-                className="mt-3 w-full h-14 bg-black text-white text-lg font-bold rounded-xl border-0"
+                className="w-full h-14 bg-black text-white text-lg font-bold rounded-xl border-0"
               >
                 SIGN IN
               </Button>
             </Form.Item>
           </Form>
-          <div className=" justify-center">
-            <Divider orientation="center" plain className="text-lg">
-              <strong>Sign In&nbsp;</strong>
-              with Others
-            </Divider>
-          </div>
+          <Divider orientation="center" plain className="text-lg">
+            <strong>Sign in&nbsp;</strong>
+            with Others
+          </Divider>
           <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-            <Col className="gutter-row" span={6}>
-              <Button className="border-0 h-full w-full social-button">
-                <img src={SOCIAL_ICON.GMAIL} alt="gmail" />
-              </Button>
-            </Col>
-            <Col className="gutter-row" span={6}>
-              <Button className="border-0 h-full w-full social-button">
-                <FacebookIcon />
-              </Button>
-            </Col>
-            <Col className="gutter-row" span={6}>
-              <Button className="border-0 h-full w-full social-button">
-                <img src={SOCIAL_ICON.GITHUB} alt="github" className="h-11 w-11" />
-              </Button>
-            </Col>
-            <Col className="gutter-row" span={6}>
-              <Button className="border-0 h-full w-full social-button">
-                <LinkedinIcon />
-              </Button>
-            </Col>
+            {socialMediaLogin.map((button) => (
+              <Col key={button.key} className="gutter-row" span={6}>
+                <Button className="flex justify-center items-center p-0 border-0 h-full w-full social-button">
+                  {renderButtonContent(button)}
+                </Button>
+              </Col>
+            ))}
           </Row>
         </div>
       </Col>
       <Col xs={{ span: 0 }} lg={{ span: 12 }}>
-        <img src="https://i.imgur.com/en3BKmy.png" alt="boys" className="w-full h-screen" />
+        <img src={BG.APP_BG} alt="boys" className="w-full h-screen object-cover" />
       </Col>
     </Row>
   )

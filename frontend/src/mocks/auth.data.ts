@@ -1,5 +1,6 @@
-import { FormItemPropsType } from '@/@types/form'
-import { DateOfBirthIcon, GmailIcon, LockIcon, UserIcon } from '@/components/Icons'
+import { FormItemPropsType, OTPType, SocialMediaType } from '@/@types/form'
+import { DateOfBirthIcon, FacebookIcon, GmailIcon, LinkedinIcon, LockIcon, UserIcon } from '@/components/Icons'
+import { SOCIAL_ICON } from '@/constants/images'
 
 export const inputsRegister: FormItemPropsType[] = [
   {
@@ -30,4 +31,34 @@ export const inputsRegister: FormItemPropsType[] = [
     placeholder: 'yyyy/mm/dd',
     Icon: DateOfBirthIcon,
   },
+]
+
+export const inputsLogin: FormItemPropsType[] = [
+  {
+    name: 'email',
+    placeholder: 'Email',
+    Icon: GmailIcon,
+    inputType: 'email',
+  },
+  {
+    name: 'password',
+    placeholder: 'Password',
+    Icon: LockIcon,
+    inputType: 'password',
+  },
+]
+
+export const socialMediaLogin: SocialMediaType[] = [
+  { key: 'gmail', url: SOCIAL_ICON.GMAIL, alt: 'gmail' },
+  { key: 'facebook', icon: FacebookIcon },
+  { key: 'github', url: SOCIAL_ICON.GITHUB, alt: 'github' },
+  { key: 'linkedin', icon: LinkedinIcon },
+]
+
+export const inputOTP: OTPType[] = [
+  { type: 'text', maxLength: 1, min: 0, max: 9 },
+  { type: 'text', maxLength: 1, min: 0, max: 9 },
+  { type: 'text', maxLength: 1, min: 0, max: 9 },
+  { type: 'text', maxLength: 1, min: 0, max: 9 },
+  { type: 'text', maxLength: 1, min: 0, max: 9 },
 ]
