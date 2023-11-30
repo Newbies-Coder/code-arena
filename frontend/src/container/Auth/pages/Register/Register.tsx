@@ -8,8 +8,8 @@ import { inputsRegister } from '@/mocks/auth.data'
 const Register = () => {
   return (
     <Row className="min-h-screen register">
-      <Col xs={{ span: 24 }} lg={{ span: 12 }} className="py-8 flex justify-center relative">
-        <div className="mx-4 mt-16 lg:w-[450px]">
+      <Col xs={{ span: 24 }} lg={{ span: 12 }} className="flex items-center justify-center relative">
+        <div className="mx-4 lg:w-[450px]">
           <Link
             to={'/'}
             className="absolute top-2 left-2 w-14 h-14 rounded-full bg-gray-300 flex justify-center items-center border-none"

@@ -6,14 +6,14 @@ import { unstable_HistoryRouter as HistoryBrowserRouter } from 'react-router-dom
 import { createBrowserHistory } from 'history'
 import { Provider } from 'react-redux'
 import { store } from '@redux/config'
-import MainHome from './container/Home/pages/MainHome'
+import App from './App'
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 export const history: any = createBrowserHistory()
 
 root.render(
   <Provider store={store}>
     <HistoryBrowserRouter history={history}>
-      <MainHome />
+      <App />
     </HistoryBrowserRouter>
   </Provider>,
 )
