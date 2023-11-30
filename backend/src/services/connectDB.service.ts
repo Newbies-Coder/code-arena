@@ -1,6 +1,7 @@
 import { Db, MongoClient, ServerApiVersion, Collection } from 'mongodb'
 import { env } from '~/config/environment.config'
 import { DATABASE_MESSAGE } from '~/constants/message'
+import OTP from '~/models/schemas/Otps.schema'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import User from '~/models/schemas/Users.schema'
 class DatabaseServices {
@@ -39,6 +40,10 @@ class DatabaseServices {
   // Get collection user
   get refreshTokens(): Collection<RefreshToken> {
     return this.db.collection(env.database.main.collection.refresh_tokens as string)
+  }
+
+  get otps(): Collection<OTP> {
+    return this.db.collection(env.database.main.collection.otps as string)
   }
 }
 

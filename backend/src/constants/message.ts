@@ -13,7 +13,8 @@ export const DATABASE_MESSAGE = {
     CONNECT: '🌱 Connected to DB Code Arena successfully!',
     DICONNECT: '⛔️ Disconnected from the database main successfully!',
     USER_COLLECTION: 'The table holds user information in the database.',
-    REFRESH_TOKEN_COLLECTION: 'The table holds refresh-token information in the database.'
+    REFRESH_TOKEN_COLLECTION: 'The table holds refresh-token information in the database.',
+    OTP_COLLECTION: 'The table holds otp information in the database.'
   }
 } as const
 
@@ -26,6 +27,12 @@ export const JWT_MESSAGES = {
   REFRESH_TOKEN_EXPIRES_IN: 'Duration of existence of access_token',
   JWT_ALGORITHM: 'List of strings with the names of the allowed algorithms'
 } as const
+
+export const OTP_EMAIL_MESSAGES = {
+  OTP_EMAIL_NAME: 'Display name of the gmail account that send OTP',
+  OTP_EMAIL_ACCOUNT: 'Email of the gmail account that send OTP',
+  OTP_EMAIL_PASSWORD: 'Email password of the gmail account that send OTP'
+}
 
 export const ENV_MESSAGE = {
   PORT: 'Port server is using',
@@ -110,6 +117,14 @@ export const VALIDATION_MESSAGES = {
       CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Confirm_password must be between 8 and 16 characters long',
       DATE_OF_BIRTH_IS_REQUIRED: 'Date of birth is required',
       DATE_OF_BIRTH_IS_ISO8601: 'Date of birth must be a YYYY-MM-DDTHH:mm:ss.ssssZ'
+    },
+    VERIFY_OTP: {
+      OTP_IS_REQUIRED: 'OTP is required',
+      OTP_MUST_BE_A_STRING: 'OTP must be a string',
+      OPT_LENGTH_MUST_BE_6: 'OTP length must be 6 characters long',
+      OTP_IS_NOT_EXIST: 'OTP is not exist',
+      OTP_IS_EXPIRED: 'OTP is not exist',
+      OTP_EMAIL_IS_VERIFIED_OR_NOT_EXIST: 'OTP with email is verified or not exist'
     }
   },
   TOKEN: {

@@ -1,13 +1,17 @@
 import { signToken } from '~/utils/jwt'
 import { databaseService } from './connectDB.service'
-import { TokenType, UserRole } from '~/constants/enums'
+import { TokenType, UserRole, UserVerifyStatus } from '~/constants/enums'
 import { env } from '~/config/environment.config'
-import { RegisterBody } from '~/models/requests/User.requests'
+import { RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
 import { ResultRegisterType } from '~/@types/reponse.type'
 import { hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
+import OPTService from '~/services/opt.service'
+import { ErrorWithStatus } from '~/models/errors/Errors.schema'
+import { StatusCodes } from 'http-status-codes'
+import { VALIDATION_MESSAGES } from '~/constants/message'
 
 class UserService {
   // Check email exist in dat abase
@@ -76,6 +80,24 @@ class UserService {
     )
     let content: ResultRegisterType = { _id: user_id, fullName, email, access_token, refresh_token }
     return content
+  }
+
+  async verifyOTP(payload: VerifyOTPBody) {
+    let { otp } = payload
+    const { email } = await OPTService.findOTP(otp)
+    const result = await databaseService.users.updateOne(
+      { email, verify: UserVerifyStatus.Unverified },
+      { verify: UserVerifyStatus.Verified },
+      { upsert: false }
+    )
+
+    //TODO: Custom message for user not found when verify OTP
+    if (result.modifiedCount === 0) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_EMAIL_IS_VERIFIED_OR_NOT_EXIST
+      })
+    }
   }
 }
 

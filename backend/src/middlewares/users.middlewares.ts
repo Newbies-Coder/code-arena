@@ -4,6 +4,7 @@ import validate from '~/utils/validate'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import { StatusCodes } from 'http-status-codes'
 import userServices from '~/services/users.service'
+import OPTService from '~/services/opt.service'
 
 // Validation register feature
 export const registerValidator = validate(
@@ -118,6 +119,44 @@ export const registerValidator = validate(
             strictSeparator: true
           },
           errorMessage: VALIDATION_MESSAGES.USER.REGISTER.DATE_OF_BIRTH_IS_ISO8601
+        }
+      }
+    },
+    ['body']
+  )
+)
+
+export const verifyOTPValidator = validate(
+  checkSchema(
+    {
+      otp: {
+        trim: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_MUST_BE_A_STRING
+        },
+        isLength: {
+          options: {
+            min: 6,
+            max: 6
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.VERIFY_OTP.OPT_LENGTH_MUST_BE_6
+        },
+        custom: {
+          options: async (value) => {
+            const otp = await OPTService.findOTP(value)
+            if (!otp) {
+              throw new Error(VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_NOT_EXIST)
+            }
+
+            if (otp.expiredIn > new Date()) {
+              throw new Error(VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_EXPIRED)
+            }
+
+            return true
+          }
         }
       }
     },
