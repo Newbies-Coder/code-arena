@@ -6,7 +6,7 @@ dotenv.config()
 
 let { PORT, HOST } = ENV_MESSAGE
 let { DB_LOGS, DB_MAIN } = DATABASE_MESSAGE
-let { REQ_DURATION, REQ_POINT, COOKIES_EXPIRESIN, SECRET_COOKIE_NAME, PASSWORD_SECRET } = CLIENT_MESSAGE
+let { REQ_DURATION, REQ_POINT, COOKIES_EXPIRESIN, SECRET_COOKIE_NAME, PASSWORD_SECRET, OTP_SECRET } = CLIENT_MESSAGE
 let { JWT_SECRECT_KEY, JWT_ALGORITHM, JWT_REFRESH_TOKEN_KEY, ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } =
   JWT_MESSAGES
 let { OTP_EMAIL_ACCOUNT, OTP_EMAIL_PASSWORD, OTP_EMAIL_NAME } = OTP_EMAIL_MESSAGES
@@ -37,7 +37,8 @@ const envSchema = Joi.object({
   SECRET_COOKIE_NAME: Joi.string().required().description(SECRET_COOKIE_NAME),
   OTP_EMAIL: Joi.string().required().description(OTP_EMAIL_ACCOUNT),
   OTP_EMAIL_PASSWORD: Joi.string().required().description(OTP_EMAIL_PASSWORD),
-  OTP_EMAIL_NAME: Joi.string().required().description(OTP_EMAIL_NAME)
+  OTP_EMAIL_NAME: Joi.string().required().description(OTP_EMAIL_NAME),
+  OTP_SECRET: Joi.string().required().description(OTP_SECRET)
 })
   .unknown()
   .required()
@@ -59,7 +60,8 @@ export const env = {
     host: envVars.APP_HOST,
     rate_point: envVars.RATE_POINT,
     rate_duration: envVars.RATE_POINT,
-    password_secret: envVars.PASSWORD_SECRET
+    password_secret: envVars.PASSWORD_SECRET,
+    otp_secret: envVars.OTP_SECRET
   },
   database: {
     main: {

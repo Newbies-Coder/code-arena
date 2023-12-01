@@ -1,6 +1,7 @@
+import { GenerateOTPResult } from '~/@types/auth.type'
 import OTP from '~/models/schemas/Otps.schema'
 import { databaseService } from '~/services/connectDB.service'
-import { generateOTPCode } from '~/utils/crypto'
+import { generateOTPCode, hashOTP } from '~/utils/crypto'
 
 class OTPService {
   async findOTP(otp: string) {
@@ -8,13 +9,16 @@ class OTPService {
   }
 
   async generateOTP(email: string) {
+    const otpCode = generateOTPCode()
     const otp = new OTP({
       email,
-      otp: generateOTPCode()
+      otp: hashOTP(otpCode),
+      expiredIn: new Date()
     })
 
     await databaseService.otps.insertOne(otp)
-    return otp
+    const result: GenerateOTPResult = { code: otpCode, email: email }
+    return result
   }
 }
 

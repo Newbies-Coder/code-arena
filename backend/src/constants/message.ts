@@ -31,7 +31,7 @@ export const JWT_MESSAGES = {
 export const OTP_EMAIL_MESSAGES = {
   OTP_EMAIL_NAME: 'Display name of the gmail account that send OTP',
   OTP_EMAIL_ACCOUNT: 'Email of the gmail account that send OTP',
-  OTP_EMAIL_PASSWORD: 'Email password of the gmail account that send OTP'
+  OTP_EMAIL_PASSWORD: 'Email password of the gmail account that send OTP',
 }
 
 export const ENV_MESSAGE = {
@@ -46,6 +46,7 @@ export const CLIENT_MESSAGE = {
   REQ_POINT: 'Maximum number of points can be consumed over duration',
   REQ_DURATION: 'Number of seconds before consumed points are reset.',
   PASSWORD_SECRET: 'String of numeric or character values ​​used in security systems',
+  OTP_SECRET: "String of numeric or character values ​​used in security systems",
   COOKIES_EXPIRESIN: 'Cookie expires in the system',
   SECRET_COOKIE_NAME: 'Cookies_name when user login and register success and save local'
 } as const

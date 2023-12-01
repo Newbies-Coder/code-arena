@@ -6,7 +6,7 @@ import { RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/models/requests
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
 import { ResultRefreshTokenType, ResultRegisterType } from '~/@types/reponse.type'
-import { hashPassword } from '~/utils/crypto'
+import { hashOTP, hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
 import emailService from '~/services/email.service'
 import otpService from '~/services/otp.service'
@@ -77,7 +77,7 @@ class UserService {
     )
 
     const otp = await otpService.generateOTP(email)
-    await emailService.sendMail(otp.email, 'YOUR OTP', otp.otp)
+    await emailService.sendMail(otp.email, 'YOUR OTP', otp.code)
 
     let content: ResultRegisterType = { _id: user_id, username, email, access_token, refresh_token }
     return content
@@ -85,7 +85,7 @@ class UserService {
 
   async verifyOTP(payload: VerifyOTPBody) {
     let { otp } = payload
-    const { email } = await otpService.findOTP(otp)
+    const { email } = await otpService.findOTP(hashOTP(otp))
     await databaseService.users.updateOne(
       { email, verify: UserVerifyStatus.Unverified },
       { $set: { verify: UserVerifyStatus.Verified } },
