@@ -96,16 +96,23 @@ class UserService {
     const { refresh_token } = payload
     const { refresh_token_key } = env.jwt
 
-    const { _id, email, role } = await verifyToken({
+    const { _id, role, email } = await verifyToken({
       token: refresh_token,
       secretOrPublicKey: refresh_token_key
     })
 
-    const [newAccessToken, newRefreshToken] = await this.signAccessAndRefreshToken(_id, email, role)
-    await databaseService.refreshTokens.updateOne(
-      { user_id: _id, email: email },
-      { token: newRefreshToken },
-      { upsert: false }
+    const deleteRefreshToken = databaseService.refreshTokens.deleteOne({ user_id: _id })
+    const signToken = this.signAccessAndRefreshToken(_id, email, role)
+    
+    const [tokens] = await Promise.all([signToken, deleteRefreshToken])
+
+    const [newAccessToken, newRefreshToken] = tokens
+
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({
+        token: refresh_token,
+        user_id: new ObjectId(_id)
+      })
     )
 
     const result: ResultRefreshTokenType = { access_token: newAccessToken, refresh_token: newRefreshToken }
