@@ -2,12 +2,16 @@ import { signToken, verifyToken } from '~/utils/jwt'
 import { databaseService } from './connectDB.service'
 import { TokenType, UserRole, UserVerifyStatus } from '~/constants/enums'
 import { env } from '~/config/environment.config'
-import { RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
+import { LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
 import { ResultRefreshTokenType, ResultRegisterType } from '~/@types/reponse.type'
-import { hashOTP, hashPassword } from '~/utils/crypto'
+import { hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
+import { ErrorWithStatus } from '~/models/errors/Errors.schema'
+import { StatusCodes } from 'http-status-codes'
+import { VALIDATION_MESSAGES } from '~/constants/message'
+
 import emailService from '~/services/email.service'
 import otpService from '~/services/otp.service'
 class UserService {
@@ -16,6 +20,37 @@ class UserService {
     const user = await databaseService.users.findOne({ email })
     return Boolean(user)
   }
+
+  // Check password exist in database
+  async validatePassword(email: string, password: string) {
+    const user = await databaseService.users.findOne({ email: email, password: hashPassword(password) })
+    return Boolean(user)
+  }
+
+  // Check account was verified
+  async validateAccountAccessibility(email: string) {
+    const user = await databaseService.users.findOne({ email })
+    if (user.verify === 'Unverified') {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.FORBIDDEN,
+        message: VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_UNVERIFIED
+      })
+    }
+    if (user.verify === 'Banned') {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.FORBIDDEN,
+        message: VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_BANNED
+      })
+    }
+    return true
+  }
+
+  // Check refresh_token exist in database
+  async validateRefreshToken(refresh_token: string) {
+    const token = await databaseService.refreshTokens.findOne({ token: refresh_token })
+    return Boolean(token)
+  }
+
   // Sign JWT access token
   private signAccessToken(_id: string, email: string, role: UserRole) {
     let { access_token_exp, jwt_algorithm, secret_key } = env.jwt
@@ -106,9 +141,37 @@ class UserService {
     return content
   }
 
+  async login(payload: LoginBody) {
+    let email = payload.email
+    const { username, _id, role } = await databaseService.users.findOne({ email: email })
+    const [access_token, refresh_token] = await this.signAccessAndRefreshToken(_id.toString(), email, role)
+    // if user is logged in but still login again
+    await databaseService.refreshTokens.deleteOne({ user_id: _id })
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({
+        token: refresh_token,
+        user_id: _id
+      })
+    )
+    const content: ResultRegisterType = {
+      _id: _id.toString(),
+      username: username,
+      email,
+      access_token,
+      refresh_token
+    }
+    return content
+  }
+
+  async logout(payload: LogoutBody) {
+    let refresh_token = payload.refresh_token
+    await databaseService.refreshTokens.deleteOne({ token: refresh_token })
+    return true
+  }
+
   async verifyOTP(payload: VerifyOTPBody) {
     let { otp } = payload
-    const { email } = await otpService.findOTP(hashOTP(otp))
+    const { email } = await otpService.findOTP(otp)
     await databaseService.users.updateOne(
       { email, verify: UserVerifyStatus.Unverified },
       { $set: { verify: UserVerifyStatus.Verified } },

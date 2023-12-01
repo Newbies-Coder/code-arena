@@ -5,7 +5,7 @@ import { generateOTPCode, hashOTP } from '~/utils/crypto'
 
 class OTPService {
   async findOTP(otp: string) {
-    return await databaseService.otps.findOne({ otp: otp })
+    return await databaseService.otps.findOne<OTP>({ otp: hashOTP(otp) })
   }
 
   async generateOTP(email: string) {
