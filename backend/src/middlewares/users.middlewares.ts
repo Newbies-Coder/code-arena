@@ -247,12 +247,6 @@ export const refreshTokenValidator = validate(
   )
 )
 
-// Validation logout feature
-export const logoutValidator = () => {
-  accessTokenValidator
-  registerValidator
-}
-
 // Validation forgot password feature
 export const forgotPasswordValidator = validate(
   checkSchema(
