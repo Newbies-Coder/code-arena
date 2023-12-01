@@ -5,6 +5,9 @@ import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import { StatusCodes } from 'http-status-codes'
 import userServices from '~/services/users.service'
 import OPTService from '~/services/otp.service'
+import { databaseService } from '~/services/connectDB.service'
+import { JsonWebTokenError } from 'jsonwebtoken'
+import { capitalize } from 'lodash'
 
 // Validation register feature
 export const registerValidator = validate(
@@ -169,11 +172,34 @@ export const refreshTokenValidator = validate(
     {
       refresh_token: {
         trim: true,
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.REFRESH_TOKEN_IS_REQUIRED
-        },
-        isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.REFRESH_TOKEN_MUST_BE_A_STRING
+        custom: {
+          options: async (value) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.UNAUTHORIZED,
+                message: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.REFRESH_TOKEN_IS_REQUIRED
+              })
+            }
+
+            try {
+              const result = await databaseService.refreshTokens.findOne({ token: value })
+              if (!result) {
+                throw new ErrorWithStatus({
+                  message: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.REFRESH_TOKEN_IS_NOT_EXIST,
+                  statusCode: StatusCodes.UNAUTHORIZED
+                })
+              }
+            } catch (error) {
+              if (error instanceof JsonWebTokenError) {
+                throw new ErrorWithStatus({
+                  message: capitalize(error.message),
+                  statusCode: StatusCodes.UNAUTHORIZED
+                })
+              }
+              throw error
+            }
+            return true
+          }
         }
       }
     },

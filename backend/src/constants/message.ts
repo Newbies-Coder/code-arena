@@ -127,7 +127,7 @@ export const VALIDATION_MESSAGES = {
     },
     REFRESH_TOKEN: {
       REFRESH_TOKEN_IS_REQUIRED: 'Refresh token is required',
-      REFRESH_TOKEN_MUST_BE_A_STRING: 'Refresh token must be a string'
+      REFRESH_TOKEN_IS_NOT_EXIST: 'Refresh token is not exist'
     }
   },
   TOKEN: {
