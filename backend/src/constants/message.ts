@@ -115,6 +115,9 @@ export const VALIDATION_MESSAGES = {
     },
     LOGOUT: {
       HEADER_AUTHORIZATION_IS_INVALID: 'Header authorization is invalid'
+    },
+    FORGOT_PASSWORD: {
+      EMAIL_IS_NOT_EXIT: 'Email is not exit'
     }
   },
   TOKEN: {

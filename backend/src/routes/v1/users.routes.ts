@@ -2,6 +2,7 @@ import { Router } from 'express'
 import userController from '~/controllers/users.controllers'
 import {
   accessTokenValidator,
+  forgotPasswordValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator
@@ -99,7 +100,7 @@ userRouter.post('/resend-verify-otp', wrapRequestHandler(userController.resendVe
  * Method: POST
  * Body: {email: string}
  */
-userRouter.post('/forgot-password', wrapRequestHandler(userController.forgotPassword))
+userRouter.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(userController.forgotPassword))
 
 /**
  * Description. Verify link in email to reset password

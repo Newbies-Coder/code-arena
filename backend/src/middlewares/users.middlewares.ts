@@ -252,3 +252,34 @@ export const logoutValidator = () => {
   accessTokenValidator
   registerValidator
 }
+
+// Validation forgot password feature
+export const forgotPasswordValidator = validate(
+  checkSchema(
+    {
+      email: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.LOGIN.EMAIL_IS_REQUIRED
+        },
+        isEmail: {
+          errorMessage: VALIDATION_MESSAGES.USER.LOGIN.EMAIL_MUST_BE_A_STRING
+        },
+        trim: true,
+        custom: {
+          options: async (value) => {
+            const isExistEmail = await userServices.validateEmailAccessibility(value)
+            if (!isExistEmail) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.FORGOT_PASSWORD.EMAIL_IS_NOT_EXIT
+              })
+            }
+            await userServices.validateAccountAccessibility(value)
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
