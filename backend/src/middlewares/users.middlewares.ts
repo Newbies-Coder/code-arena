@@ -4,13 +4,13 @@ import validate from '~/utils/validate'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import { StatusCodes } from 'http-status-codes'
 import userServices from '~/services/users.service'
-import OPTService from '~/services/opt.service'
+import OPTService from '~/services/otp.service'
 
 // Validation register feature
 export const registerValidator = validate(
   checkSchema(
     {
-      name: {
+      username: {
         notEmpty: {
           errorMessage: VALIDATION_MESSAGES.USER.REGISTER.NAME_IS_REQUIRED
         },

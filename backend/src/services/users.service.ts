@@ -8,11 +8,8 @@ import { ObjectId } from 'mongodb'
 import { ResultRefreshTokenType, ResultRegisterType } from '~/@types/reponse.type'
 import { hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
-import OPTService from '~/services/opt.service'
-import { ErrorWithStatus } from '~/models/errors/Errors.schema'
-import { StatusCodes } from 'http-status-codes'
-import { VALIDATION_MESSAGES } from '~/constants/message'
-
+import emailService from '~/services/email.service'
+import otpService from '~/services/otp.service'
 class UserService {
   // Check email exist in dat abase
   async validateEmailAccessibility(email: string) {
@@ -61,7 +58,7 @@ class UserService {
 
   // User register
   async register(payload: RegisterBody) {
-    let { email, fullName } = payload
+    let { email, username } = payload
     let role = UserRole.User
     const result = await databaseService.users.insertOne(
       new User({
@@ -78,16 +75,20 @@ class UserService {
         user_id: new ObjectId(user_id)
       })
     )
-    let content: ResultRegisterType = { _id: user_id, fullName, email, access_token, refresh_token }
+
+    const otp = await otpService.generateOTP(email)
+    await emailService.sendMail(otp.email, 'YOUR OTP', otp.otp)
+
+    let content: ResultRegisterType = { _id: user_id, username, email, access_token, refresh_token }
     return content
   }
 
   async verifyOTP(payload: VerifyOTPBody) {
     let { otp } = payload
-    const { email } = await OPTService.findOTP(otp)
+    const { email } = await otpService.findOTP(otp)
     await databaseService.users.updateOne(
       { email, verify: UserVerifyStatus.Unverified },
-      { verify: UserVerifyStatus.Verified },
+      { $set: { verify: UserVerifyStatus.Verified } },
       { upsert: false }
     )
   }
@@ -103,7 +104,7 @@ class UserService {
 
     const deleteRefreshToken = databaseService.refreshTokens.deleteOne({ user_id: _id })
     const signToken = this.signAccessAndRefreshToken(_id, email, role)
-    
+
     const [tokens] = await Promise.all([signToken, deleteRefreshToken])
 
     const [newAccessToken, newRefreshToken] = tokens
