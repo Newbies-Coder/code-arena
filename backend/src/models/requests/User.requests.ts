@@ -15,6 +15,10 @@ export interface LogoutBody {
   refresh_token: string
 }
 
+export interface ForgotPasswordBody {
+  email: string
+}
+
 export interface VerifyOTPBody {
   otp: string
 }

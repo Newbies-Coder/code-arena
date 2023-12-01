@@ -6,6 +6,7 @@ import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
 import { env } from '~/config/environment.config'
 import { omit } from 'lodash'
+import otpService from '~/services/otp.service'
 
 const userController = {
   login: async (req: Request<ParamsDictionary, any, LoginBody>, res: Response, next: NextFunction) => {
@@ -67,6 +68,7 @@ const userController = {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_OTP_SUCCESS)
   },
   forgotPassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    await userServices.forgotPassword(req.body)
     // Message register successfully!
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.FORGOT_PASSWORD_SUCCESS)
   },

@@ -2,7 +2,14 @@ import { signToken, verifyToken } from '~/utils/jwt'
 import { databaseService } from './connectDB.service'
 import { TokenType, UserRole, UserVerifyStatus } from '~/constants/enums'
 import { env } from '~/config/environment.config'
-import { LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
+import {
+  ForgotPasswordBody,
+  LoginBody,
+  LogoutBody,
+  RefreshTokenBody,
+  RegisterBody,
+  VerifyOTPBody
+} from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
 import { ResultRefreshTokenType, ResultRegisterType } from '~/@types/reponse.type'
@@ -91,26 +98,7 @@ class UserService {
     return Promise.all([this.signAccessToken(user_id, email, role), this.signRefreshToken(user_id, email, role)])
   }
 
-  // User register
-  async register(payload: RegisterBody) {
-    let { email, username } = payload
-    let role = UserRole.User
-    const result = await databaseService.users.insertOne(
-      new User({
-        ...payload,
-        date_of_birth: new Date(payload.date_of_birth),
-        password: hashPassword(payload.password)
-      })
-    )
-    let user_id = result.insertedId.toString()
-    const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id, email, role)
-    await databaseService.refreshTokens.insertOne(
-      new RefreshToken({
-        token: refresh_token,
-        user_id: new ObjectId(user_id)
-      })
-    )
-
+  async sendOTP(email: string) {
     const otp = await otpService.generateOTP(email)
     await emailService.sendMail(
       otp.email,
@@ -136,6 +124,29 @@ class UserService {
           </div>
         </div>`
     )
+  }
+
+  // User register
+  async register(payload: RegisterBody) {
+    let { email, username } = payload
+    let role = UserRole.User
+    const result = await databaseService.users.insertOne(
+      new User({
+        ...payload,
+        date_of_birth: new Date(payload.date_of_birth),
+        password: hashPassword(payload.password)
+      })
+    )
+    let user_id = result.insertedId.toString()
+    const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id, email, role)
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({
+        token: refresh_token,
+        user_id: new ObjectId(user_id)
+      })
+    )
+
+    await this.sendOTP(email)
 
     let content: ResultRegisterType = { _id: user_id, username, email, access_token, refresh_token }
     return content
@@ -167,6 +178,11 @@ class UserService {
     let refresh_token = payload.refresh_token
     await databaseService.refreshTokens.deleteOne({ token: refresh_token })
     return true
+  }
+
+  async forgotPassword(payload: ForgotPasswordBody) {
+    const email = payload.email
+    await userServices.sendOTP(email)
   }
 
   async verifyOTP(payload: VerifyOTPBody) {
