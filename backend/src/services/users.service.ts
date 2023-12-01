@@ -2,7 +2,7 @@ import { signToken } from '~/utils/jwt'
 import { databaseService } from './connectDB.service'
 import { TokenType, UserRole } from '~/constants/enums'
 import { env } from '~/config/environment.config'
-import { RegisterBody } from '~/models/requests/User.requests'
+import { LoginBody, RegisterBody } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
 import { ResultRegisterType } from '~/@types/reponse.type'
@@ -102,6 +102,32 @@ class UserService {
       })
     )
     let content: ResultRegisterType = { _id: user_id, fullName, email, access_token, refresh_token }
+    return content
+  }
+
+  async login(payload: LoginBody) {
+    let email = payload.email
+    const user = await databaseService.users.findOne({ email: email })
+    const [access_token, refresh_token] = await this.signAccessAndRefreshToken(
+      user._id.toString(),
+      user.email,
+      user.role
+    )
+    // if user is logged in but still login again
+    await databaseService.refreshTokens.deleteOne({ user_id: user._id })
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({
+        token: refresh_token,
+        user_id: user._id
+      })
+    )
+    const content: ResultRegisterType = {
+      _id: user._id.toString(),
+      fullName: user.fullName,
+      email,
+      access_token,
+      refresh_token
+    }
     return content
   }
 }

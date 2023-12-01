@@ -9,8 +9,18 @@ import { env } from '~/config/environment.config'
 
 const userController = {
   login: async (req: Request<ParamsDictionary, any, LoginBody>, res: Response, next: NextFunction) => {
-    // Message login successfully!
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.LOGIN_SUCCESS)
+    const result = await userServices.login(req.body)
+    const { cookies_name, cookies_exp } = env.client
+    const { refresh_token } = result
+    // Save refresh_token in cookies
+    res.cookie(cookies_name, refresh_token, {
+      httpOnly: true,
+      secure: false,
+      path: '/',
+      sameSite: 'strict',
+      maxAge: Number(cookies_exp)
+    })
+    return sendResponse.success(res, omit(result, ['refresh_token']), RESULT_RESPONSE_MESSAGES.LOGIN_SUCCESS)
   },
   googleLogin: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!
