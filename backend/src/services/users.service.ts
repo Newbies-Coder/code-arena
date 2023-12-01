@@ -33,7 +33,8 @@ class UserService {
         statusCode: StatusCodes.FORBIDDEN,
         message: VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_UNVERIFIED
       })
-    } else if (user.verify === 'Banned') {
+    }
+    if (user.verify === 'Banned') {
       throw new ErrorWithStatus({
         statusCode: StatusCodes.FORBIDDEN,
         message: VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_BANNED
