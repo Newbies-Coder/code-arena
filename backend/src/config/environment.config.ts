@@ -1,14 +1,16 @@
 import dotenv from 'dotenv'
 import Joi from 'joi'
-import { CLIENT_MESSAGE, DATABASE_MESSAGE, ENV_MESSAGE, JWT_MESSAGES } from '~/constants/message'
+import { CLIENT_MESSAGE, DATABASE_MESSAGE, OTP_EMAIL_MESSAGES, ENV_MESSAGE, JWT_MESSAGES } from '~/constants/message'
 
 dotenv.config()
 
 let { PORT, HOST } = ENV_MESSAGE
 let { DB_LOGS, DB_MAIN } = DATABASE_MESSAGE
-let { REQ_DURATION, REQ_POINT, COOKIES_EXPIRESIN, SECRET_COOKIE_NAME, PASSWORD_SECRET } = CLIENT_MESSAGE
+let { REQ_DURATION, REQ_POINT, COOKIES_EXPIRESIN, SECRET_COOKIE_NAME, PASSWORD_SECRET, OTP_SECRET } = CLIENT_MESSAGE
 let { JWT_SECRECT_KEY, JWT_ALGORITHM, JWT_REFRESH_TOKEN_KEY, ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } =
   JWT_MESSAGES
+let { OTP_EMAIL_ACCOUNT, OTP_EMAIL_PASSWORD, OTP_EMAIL_NAME } = OTP_EMAIL_MESSAGES
+
 // Validation schema env
 const envSchema = Joi.object({
   APP_PORT: Joi.number().required().description(PORT),
@@ -18,6 +20,7 @@ const envSchema = Joi.object({
   DB_NAME_USER_LOGS: Joi.string().required().description(DB_LOGS.NAME),
   DB_USER_COLLECTION: Joi.string().required().description(DB_MAIN.USER_COLLECTION),
   DB_REFRESH_TOKEN_COLLECTION: Joi.string().required().description(DB_MAIN.REFRESH_TOKEN_COLLECTION),
+  DB_OTP_COLLECTION: Joi.string().required().description(DB_MAIN.OTP_COLLECTION),
   DATABASE_USER_LOGS: Joi.string().required().description(DB_LOGS.USERNAME),
   PASSWORD_USER_LOGS: Joi.string().required().description(DB_LOGS.PASSWORD),
   DATABASE_CODE_ARENA: Joi.string().required().description(DB_MAIN.USERNAME),
@@ -31,7 +34,11 @@ const envSchema = Joi.object({
   REFRESH_TOKEN_EXPIRESIN: Joi.string().required().description(REFRESH_TOKEN_EXPIRES_IN),
   JWT_ALGORITHM: Joi.string().required().description(JWT_ALGORITHM),
   COOKIES_EXPIRESIN: Joi.number().required().description(COOKIES_EXPIRESIN),
-  SECRET_COOKIE_NAME: Joi.string().required().description(SECRET_COOKIE_NAME)
+  SECRET_COOKIE_NAME: Joi.string().required().description(SECRET_COOKIE_NAME),
+  OTP_EMAIL: Joi.string().required().description(OTP_EMAIL_ACCOUNT),
+  OTP_EMAIL_PASSWORD: Joi.string().required().description(OTP_EMAIL_PASSWORD),
+  OTP_EMAIL_NAME: Joi.string().required().description(OTP_EMAIL_NAME),
+  OTP_SECRET: Joi.string().required().description(OTP_SECRET)
 })
   .unknown()
   .required()
@@ -53,7 +60,8 @@ export const env = {
     host: envVars.APP_HOST,
     rate_point: envVars.RATE_POINT,
     rate_duration: envVars.RATE_POINT,
-    password_secret: envVars.PASSWORD_SECRET
+    password_secret: envVars.PASSWORD_SECRET,
+    otp_secret: envVars.OTP_SECRET
   },
   database: {
     main: {
@@ -61,7 +69,8 @@ export const env = {
       name: envVars.DB_NAME,
       collection: {
         users: envVars.DB_USER_COLLECTION,
-        refresh_tokens: envVars.DB_REFRESH_TOKEN_COLLECTION
+        refresh_tokens: envVars.DB_REFRESH_TOKEN_COLLECTION,
+        otps: envVars.DB_OTP_COLLECTION
       }
     },
     logs: {
@@ -78,5 +87,10 @@ export const env = {
     access_token_exp: envVars.ACCESS_TOKEN_EXPIRESIN,
     refresh_token_exp: envVars.REFRESH_TOKEN_EXPIRESIN,
     jwt_algorithm: envVars.JWT_ALGORITHM
+  },
+  email: {
+    account: envVars.OTP_EMAIL,
+    password: envVars.OTP_EMAIL_PASSWORD,
+    name: envVars.OTP_EMAIL_NAME
   }
 }

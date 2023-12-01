@@ -5,7 +5,8 @@ import {
   forgotPasswordValidator,
   loginValidator,
   refreshTokenValidator,
-  registerValidator
+  registerValidator,
+  verifyOTPValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
 
@@ -75,7 +76,7 @@ userRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapRequ
  * Method: POST
  * Body: { refresh_token: string }
  */
-userRouter.post('/refresh-token', wrapRequestHandler(userController.refreshToken))
+userRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(userController.refreshToken))
 
 /**
  * Description. Verify otp when user client
@@ -83,7 +84,7 @@ userRouter.post('/refresh-token', wrapRequestHandler(userController.refreshToken
  * Method: POST
  * Body: {otp: string}
  */
-userRouter.post('/verify-otp', wrapRequestHandler(userController.verifyOTP))
+userRouter.post('/verify-otp', verifyOTPValidator, wrapRequestHandler(userController.verifyOTP))
 
 /**
  * Description. Verify otp when user client click on the button resend otp
