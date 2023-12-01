@@ -18,7 +18,7 @@ class EmailService {
       from: env.email.name,
       to: toEmail,
       subject: subject,
-      text: content
+      html: content
     }
 
     return await transporter.sendMail(mailOptions)

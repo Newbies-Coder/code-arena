@@ -77,7 +77,30 @@ class UserService {
     )
 
     const otp = await otpService.generateOTP(email)
-    await emailService.sendMail(otp.email, 'YOUR OTP', otp.code)
+    await emailService.sendMail(
+      otp.email,
+      'Code Arena',
+      ` <div style="font-family:Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+          <div style="margin:50px auto;width:70%;padding:20px 0">
+            <div style="border-bottom:1px solid #eee">
+              <a href="" style="font-size:1.4em;color:#00466a;text-decoration:none;font-weight:600">Code Arena</a>
+            </div>
+            <p style="font-size:1.1em">Hi,</p>
+            <p>You requested a one-time password for accessing your account. Please use the following OTP to proceed:</p>
+            <h2 style="background:#00466a;margin:0 auto;width:max-content;padding:0 10px;color:#fff;border-radius:4px">${otp.code}</h2>
+            <p>This OTP is valid for only 5 minutes and can be used only once. If you did not request this, please ignore this email or contact support if you have concerns.</p>
+            <p style="font-size:.9em">Regards,
+              <br>
+              Code Arena</p>
+            <hr style="border:none;border-top:1px solid #eee">
+            <div style="float:right;padding:8px 0;color:#aaa;font-size:.8em;line-height:1;font-weight:300">
+              <p>Code Arena Inc</p>
+              <p>475A Dien Bien Phu, Binh Thanh, Ho Chi Minh</p>
+              <p>Viet Nam</p>
+            </div>
+          </div>
+        </div>`
+    )
 
     let content: ResultRegisterType = { _id: user_id, username, email, access_token, refresh_token }
     return content
