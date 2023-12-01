@@ -5,3 +5,8 @@ export type ResultRegisterType = {
   access_token: string
   refresh_token: string
 }
+
+export type ResultRefreshTokenType = {
+  access_token: string
+  refresh_token: string
+}

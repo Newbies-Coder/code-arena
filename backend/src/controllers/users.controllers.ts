@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { sendResponse } from '~/config/response.config'
 import { ParamsDictionary } from 'express-serve-static-core'
-import { LoginBody, RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
+import { LoginBody, RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
 
@@ -36,9 +36,11 @@ const userController = {
     // Message register successfully!
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.LOGOUT_SUCCESS)
   },
-  refreshToken: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+  refreshToken: async (req: Request<ParamsDictionary, any, RefreshTokenBody>, res: Response, next: NextFunction) => {
+    const result = await userServices.refreshToken(req.body)
+
     // Message register successfully!
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.REFRESH_TOKEN_SUCCESS)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.REFRESH_TOKEN_SUCCESS)
   },
   verifyOTP: async (req: Request<ParamsDictionary, any, VerifyOTPBody>, res: Response, next: NextFunction) => {
     await userServices.verifyOTP(req.body)
@@ -46,7 +48,7 @@ const userController = {
     // Message verify successfully!
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_OTP_SUCCESS)
   },
-  resendVerifyOTP: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => { 
+  resendVerifyOTP: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_OTP_SUCCESS)
   },

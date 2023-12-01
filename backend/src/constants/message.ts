@@ -123,8 +123,11 @@ export const VALIDATION_MESSAGES = {
       OTP_MUST_BE_A_STRING: 'OTP must be a string',
       OPT_LENGTH_MUST_BE_6: 'OTP length must be 6 characters long',
       OTP_IS_NOT_EXIST: 'OTP is not exist',
-      OTP_IS_EXPIRED: 'OTP is not exist',
-      OTP_EMAIL_IS_VERIFIED_OR_NOT_EXIST: 'OTP with email is verified or not exist'
+      OTP_IS_EXPIRED: 'OTP is not exist'
+    },
+    REFRESH_TOKEN: {
+      REFRESH_TOKEN_IS_REQUIRED: 'Refresh token is required',
+      REFRESH_TOKEN_MUST_BE_A_STRING: 'Refresh token must be a string'
     }
   },
   TOKEN: {

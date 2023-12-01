@@ -11,7 +11,10 @@ export interface RegisterBody {
   date_of_birth: string
 }
 
-
 export interface VerifyOTPBody {
   otp: string
+}
+
+export interface RefreshTokenBody {
+  refresh_token: string
 }

@@ -1,11 +1,11 @@
-import { signToken } from '~/utils/jwt'
+import { signToken, verifyToken } from '~/utils/jwt'
 import { databaseService } from './connectDB.service'
 import { TokenType, UserRole, UserVerifyStatus } from '~/constants/enums'
 import { env } from '~/config/environment.config'
-import { RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
+import { RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
-import { ResultRegisterType } from '~/@types/reponse.type'
+import { ResultRefreshTokenType, ResultRegisterType } from '~/@types/reponse.type'
 import { hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
 import OPTService from '~/services/opt.service'
@@ -85,19 +85,31 @@ class UserService {
   async verifyOTP(payload: VerifyOTPBody) {
     let { otp } = payload
     const { email } = await OPTService.findOTP(otp)
-    const result = await databaseService.users.updateOne(
+    await databaseService.users.updateOne(
       { email, verify: UserVerifyStatus.Unverified },
       { verify: UserVerifyStatus.Verified },
       { upsert: false }
     )
+  }
 
-    //TODO: Custom message for user not found when verify OTP
-    if (result.modifiedCount === 0) {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.BAD_REQUEST,
-        message: VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_EMAIL_IS_VERIFIED_OR_NOT_EXIST
-      })
-    }
+  async refreshToken(payload: RefreshTokenBody) {
+    const { refresh_token } = payload
+    const { refresh_token_key } = env.jwt
+
+    const { _id, email, role } = await verifyToken({
+      token: refresh_token,
+      secretOrPublicKey: refresh_token_key
+    })
+
+    const [newAccessToken, newRefreshToken] = await this.signAccessAndRefreshToken(_id, email, role)
+    await databaseService.refreshTokens.updateOne(
+      { user_id: _id, email: email },
+      { token: newRefreshToken },
+      { upsert: false }
+    )
+
+    const result: ResultRefreshTokenType = { access_token: newAccessToken, refresh_token: newRefreshToken }
+    return result
   }
 }
 

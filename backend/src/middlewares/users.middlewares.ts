@@ -163,3 +163,20 @@ export const verifyOTPValidator = validate(
     ['body']
   )
 )
+
+export const refreshTokenValidator = validate(
+  checkSchema(
+    {
+      refresh_token: {
+        trim: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.REFRESH_TOKEN_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.REFRESH_TOKEN_MUST_BE_A_STRING
+        }
+      }
+    },
+    ['body']
+  )
+)

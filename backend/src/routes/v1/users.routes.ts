@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import userController from '~/controllers/users.controllers'
-import { registerValidator, verifyOTPValidator } from '~/middlewares/users.middlewares'
+import { refreshTokenValidator, registerValidator, verifyOTPValidator } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
 
 const userRouter = Router()
@@ -69,7 +69,7 @@ userRouter.post('/logout', wrapRequestHandler(userController.logout))
  * Method: POST
  * Body: { refresh_token: string }
  */
-userRouter.post('/refresh-token', wrapRequestHandler(userController.refreshToken))
+userRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(userController.refreshToken))
 
 /**
  * Description. Verify otp when user client
