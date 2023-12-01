@@ -8,6 +8,9 @@ import { ObjectId } from 'mongodb'
 import { ResultRegisterType } from '~/@types/reponse.type'
 import { hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
+import { ErrorWithStatus } from '~/models/errors/Errors.schema'
+import { StatusCodes } from 'http-status-codes'
+import { VALIDATION_MESSAGES } from '~/constants/message'
 
 class UserService {
   // Check email exist in dat abase
@@ -15,6 +18,30 @@ class UserService {
     const user = await databaseService.users.findOne({ email })
     return Boolean(user)
   }
+
+  // Check password exist in database
+  async validatePassword(email: string, password: string) {
+    const user = await databaseService.users.findOne({ email: email, password: hashPassword(password) })
+    return Boolean(user)
+  }
+
+  // Check account was verified
+  async validateAccountAccessibility(email: string) {
+    const user = await databaseService.users.findOne({ email })
+    if (user.verify === 'Unverified') {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.FORBIDDEN,
+        message: VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_UNVERIFIED
+      })
+    } else if (user.verify === 'Banned') {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.FORBIDDEN,
+        message: VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_BANNED
+      })
+    }
+    return true
+  }
+
   // Sign JWT access token
   private signAccessToken(_id: string, email: string, role: UserRole) {
     let { access_token_exp, jwt_algorithm, secret_key } = env.jwt

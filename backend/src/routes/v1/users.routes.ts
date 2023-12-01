@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import userController from '~/controllers/users.controllers'
-import { registerValidator } from '~/middlewares/users.middlewares'
+import { loginValidator, registerValidator } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
 
 const userRouter = Router()
@@ -11,7 +11,7 @@ const userRouter = Router()
  * Method: POST
  * Body: { email: string, password: string }
  */
-userRouter.post('/login', wrapRequestHandler(userController.login))
+userRouter.post('/login', loginValidator, wrapRequestHandler(userController.login))
 
 /**
  * Description. Register a new user
