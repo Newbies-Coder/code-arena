@@ -112,6 +112,9 @@ export const VALIDATION_MESSAGES = {
       CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Confirm_password must be between 8 and 16 characters long',
       DATE_OF_BIRTH_IS_REQUIRED: 'Date of birth is required',
       DATE_OF_BIRTH_IS_ISO8601: 'Date of birth must be a YYYY-MM-DDTHH:mm:ss.ssssZ'
+    },
+    LOGOUT: {
+      HEADER_AUTHORIZATION_IS_INVALID: 'Header authorization is invalid'
     }
   },
   TOKEN: {

@@ -1,6 +1,11 @@
 import { Router } from 'express'
 import userController from '~/controllers/users.controllers'
-import { loginValidator, registerValidator } from '~/middlewares/users.middlewares'
+import {
+  accessTokenValidator,
+  loginValidator,
+  refreshTokenValidator,
+  registerValidator
+} from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
 
 const userRouter = Router()
@@ -61,7 +66,7 @@ userRouter.get('/oauh/linkin', wrapRequestHandler(userController.linkedinLogin))
  * Body: { refresh_token: string }
  */
 
-userRouter.post('/logout', wrapRequestHandler(userController.logout))
+userRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapRequestHandler(userController.logout))
 
 /**
  * Description. Refresh Token

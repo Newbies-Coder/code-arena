@@ -2,7 +2,7 @@ import { signToken } from '~/utils/jwt'
 import { databaseService } from './connectDB.service'
 import { TokenType, UserRole } from '~/constants/enums'
 import { env } from '~/config/environment.config'
-import { LoginBody, RegisterBody } from '~/models/requests/User.requests'
+import { LoginBody, LogoutBody, RegisterBody } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
 import { ResultRegisterType } from '~/@types/reponse.type'
@@ -41,6 +41,12 @@ class UserService {
       })
     }
     return true
+  }
+
+  // Check refresh_token exist in database
+  async validateRefreshToken(refresh_token: string) {
+    const token = await databaseService.refreshTokens.findOne({ token: refresh_token })
+    return Boolean(token)
   }
 
   // Sign JWT access token
@@ -130,6 +136,12 @@ class UserService {
       refresh_token
     }
     return content
+  }
+
+  async logout(payload: LogoutBody) {
+    let refresh_token = payload.refresh_token
+    await databaseService.refreshTokens.deleteOne({ token: refresh_token })
+    return true
   }
 }
 

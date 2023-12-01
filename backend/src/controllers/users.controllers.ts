@@ -54,7 +54,9 @@ const userController = {
     return sendResponse.success(res, omit(result, ['refresh_token']), RESULT_RESPONSE_MESSAGES.REGISTER_SUCCESS)
   },
   logout: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    // Message register successfully!
+    await userServices.logout(req.body)
+    const cookies_names = env.client.cookies_name
+    res.clearCookie(cookies_names)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.LOGOUT_SUCCESS)
   },
   refreshToken: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {

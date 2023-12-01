@@ -4,7 +4,8 @@ import validate from '~/utils/validate'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import { StatusCodes } from 'http-status-codes'
 import userServices from '~/services/users.service'
-import { LoginBody } from '~/models/requests/User.requests'
+import { verifyAccessToken } from '~/utils/jwt'
+import { env } from '~/config/environment.config'
 
 // Validation register feature
 export const registerValidator = validate(
@@ -196,9 +197,58 @@ export const loginValidator = validate(
   )
 )
 
-// Validation logout feature
-export const logoutValidator = validate(
-  checkSchema({
-    refresh_token: {}
-  })
+export const accessTokenValidator = validate(
+  checkSchema(
+    {
+      Authorization: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.TOKEN.ACCESS_TOKEN_IS_REQUIRED
+        },
+        custom: {
+          options: async (value: string) => {
+            const bearerPrefix = 'Bearer '
+            if (!value.startsWith(bearerPrefix)) {
+              throw new Error(VALIDATION_MESSAGES.USER.LOGOUT.HEADER_AUTHORIZATION_IS_INVALID)
+            }
+            const access_token = value.substring(bearerPrefix.length)
+            const secret_key = env.jwt.secret_key
+            await verifyAccessToken({ token: access_token, secretOrPublicKey: secret_key })
+            return true
+          }
+        }
+      }
+    },
+    ['headers']
+  )
 )
+
+export const refreshTokenValidator = validate(
+  checkSchema(
+    {
+      refresh_token: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.TOKEN.REFRESH_TOKEN_IS_REQUIRED
+        },
+        custom: {
+          options: async (value) => {
+            const isExitRefreshToken = await userServices.validateRefreshToken(value)
+            if (!isExitRefreshToken) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.UNAUTHORIZED,
+                message: VALIDATION_MESSAGES.TOKEN.REFRESH_TOKEN_USED_OR_NOT_EXIST
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
+
+// Validation logout feature
+export const logoutValidator = () => {
+  accessTokenValidator
+  registerValidator
+}
