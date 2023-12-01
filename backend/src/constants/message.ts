@@ -88,7 +88,9 @@ export const VALIDATION_MESSAGES = {
       PASSWORD_MUST_BE_STRONG:
         'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
       PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Password must be between 8 and 16 characters long',
-      PASSWORD_IS_INCORRECT: 'Password is incorrect'
+      PASSWORD_IS_INCORRECT: 'Password is incorrect',
+      ACCOUNT_IS_UNVERIFIED: 'Account is unverified',
+      ACCOUNT_IS_BANNED: 'Account is banned'
     },
     REGISTER: {
       NAME_IS_REQUIRED: 'Username is required',
@@ -110,6 +112,12 @@ export const VALIDATION_MESSAGES = {
       CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Confirm_password must be between 8 and 16 characters long',
       DATE_OF_BIRTH_IS_REQUIRED: 'Date of birth is required',
       DATE_OF_BIRTH_IS_ISO8601: 'Date of birth must be a YYYY-MM-DDTHH:mm:ss.ssssZ'
+    },
+    LOGOUT: {
+      HEADER_AUTHORIZATION_IS_INVALID: 'Header authorization is invalid'
+    },
+    FORGOT_PASSWORD: {
+      EMAIL_IS_NOT_EXIT: 'Email is not exit'
     }
   },
   TOKEN: {
