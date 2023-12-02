@@ -100,10 +100,9 @@ paths:
             schema:
               type: object
               properties:
-                message:
-                  example: Logout successfully
-                result:
-                  $ref: '#/components/schemas/LogoutBody'
+                refresh_token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTcwMDAyMzIyNn0.bFnaBfxWl-Q48HCwAeMpNzZwTO9LEjcBd7Zyipjqr64
         required: true
       responses:
         default:
@@ -129,7 +128,7 @@ paths:
       responses:
         default:
           description: successful operation
-  /api/users/refresh-token:
+  /api/v1/users/refresh-token:
     post:
       tags:
         - user
@@ -160,7 +159,7 @@ paths:
                     example: Refresh token success
                   result:
                     $ref: '#/components/schemas/RegisterSuccessAuth'
-  /api/users/forgot-password:
+  /api/v1/users/forgot-password:
     post:
       tags:
         - user
