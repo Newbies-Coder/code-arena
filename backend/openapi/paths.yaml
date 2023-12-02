@@ -1,0 +1,263 @@
+openapi: 3.0.3
+info:
+  title: Code Arena Newbies Coder
+  description: |-
+    Welcome to the Code Arena API! This API allows developers to access and integrate the functionality of Code Arena with other applications and to create new applications.
+    ## Overview
+    The Code Arena API provides programmatic access to our coding challenges platform. It allows you to:
+    - Fetch a list of coding challenges
+    - Submit solutions and get real-time feedback
+    - Access user profiles and statistics
+    - Participate in real-time coding battles
+
+    Some useful links:
+    - [Code Arena repository](https://github.com/swagger-api/swagger-petstore)
+  contact:
+    email: duongquocnam224400@gmail.com
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: user
+    description: Operations about user
+    externalDocs:
+      description: Feature user
+      url: http://localhost:8080/api/v1/users
+paths:
+  /api/v1/users/login:
+    post:
+      tags:
+        - user
+      summary: User login
+      description: User login into the system
+      operationId: loginUser
+      requestBody:
+        description: Login information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginBody'
+        required: true
+      responses:
+        '200':
+          description: Login successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    example: Login successfully
+                  result:
+                    $ref: '#/components/schemas/LoginSuccessAuth'
+        '400':
+          description: Invalid username/password supplied
+  /api/v1/users/register:
+    post:
+      tags:
+        - user
+      summary: User register
+      description: User login into the system
+      operationId: loginUser
+      requestBody:
+        description: Login information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: Login successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    example: Register successfully
+                  result:
+                    $ref: '#/components/schemas/RegisterSuccessAuth'
+        '400':
+          description: Invalid username/password supplied
+  /api/v1/users/logout:
+    post:
+      tags:
+        - user
+      summary: Logs out current logged in user session
+      description: 'User logout'
+      operationId: logoutUser
+      parameters: []
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Auth logout
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  example: Logout successfully
+                result:
+                  $ref: '#/components/schemas/LogoutBody'
+        required: true
+      responses:
+        default:
+          description: successful operation
+  /api/v1/users/verify-otp:
+    post:
+      tags:
+        - user
+      summary: user verify OTP
+      description: 'User verify OTP'
+      operationId: verifyUserOTP
+      requestBody:
+        description: Auth verify OTP
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otp:
+                  type: string
+                  example: '123456'
+        required: true
+      responses:
+        default:
+          description: successful operation
+  /api/users/refresh-token:
+    post:
+      tags:
+        - user
+      summary: Get back the access token
+      description: Get back the access token
+      operationId: refreshToken
+      requestBody:
+        description: Information to retrieve access token
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTcwMDAyMzIyNn0.bFnaBfxWl-Q48HCwAeMpNzZwTO9LEjcBd7Zyipjqr64
+        required: true
+      responses:
+        '200':
+          description: Successfully retrieved access token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Refresh token success
+                  result:
+                    $ref: '#/components/schemas/RegisterSuccessAuth'
+  /api/users/forgot-password:
+    post:
+      tags:
+        - user
+      summary: Forgot-password
+      description: Forgot-password
+      operationId: forgotPassword
+      requestBody:
+        description: Forgot password information
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: user123@gmail.com
+        required: true
+      responses:
+        '200':
+          description: Receive a password reset email
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Check your email to reset your password
+components:
+  schemas:
+    LoginBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: user1234@gmail.com
+        password:
+          type: string
+          example: User@123
+    LoginSuccessAuth:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 656b0bbd3b0e9defe34fca1a
+        email:
+          type: string
+          example: john@email.com
+        username:
+          type: string
+          example: user123
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
+    RegisterSuccessAuth:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 656b0bbd3b0e9defe34fca1a
+        email:
+          type: string
+          example: john@email.com
+        username:
+          type: string
+          example: user123
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
+        refresh_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
+    LogoutBody:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+          example: 'user123'
+        email:
+          type: string
+          example: john@email.com
+        password:
+          type: string
+          example: 'admin@123'
+        date_of_birth:
+          type: string
+          example: '2000-02-22T00:00:00.000Z'
+      xml:
+        name: user
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
