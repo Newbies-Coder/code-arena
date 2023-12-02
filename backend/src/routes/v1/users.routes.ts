@@ -6,7 +6,8 @@ import {
   loginValidator,
   refreshTokenValidator,
   registerValidator,
-  verifyOTPValidator
+  verifyOTPValidator,
+  changePasswordValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
 
@@ -127,7 +128,12 @@ userRouter.post('/reset-password', wrapRequestHandler(userController.resetPasswo
  * Body: { old_password: string, password: string, confirm_password: string }
  */
 
-userRouter.post('/change-password', userController.register, wrapRequestHandler(userController.changePassword))
+userRouter.post(
+  '/change-password',
+  accessTokenValidator,
+  changePasswordValidator,
+  wrapRequestHandler(userController.changePassword)
+)
 
 /**
  * Description: Follow someone

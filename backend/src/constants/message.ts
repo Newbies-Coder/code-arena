@@ -31,7 +31,7 @@ export const JWT_MESSAGES = {
 export const OTP_EMAIL_MESSAGES = {
   OTP_EMAIL_NAME: 'Display name of the gmail account that send OTP',
   OTP_EMAIL_ACCOUNT: 'Email of the gmail account that send OTP',
-  OTP_EMAIL_PASSWORD: 'Email password of the gmail account that send OTP',
+  OTP_EMAIL_PASSWORD: 'Email password of the gmail account that send OTP'
 }
 
 export const ENV_MESSAGE = {
@@ -46,7 +46,7 @@ export const CLIENT_MESSAGE = {
   REQ_POINT: 'Maximum number of points can be consumed over duration',
   REQ_DURATION: 'Number of seconds before consumed points are reset.',
   PASSWORD_SECRET: 'String of numeric or character values ​​used in security systems',
-  OTP_SECRET: "String of numeric or character values ​​used in security systems",
+  OTP_SECRET: 'String of numeric or character values ​​used in security systems',
   COOKIES_EXPIRESIN: 'Cookie expires in the system',
   SECRET_COOKIE_NAME: 'Cookies_name when user login and register success and save local'
 } as const
@@ -137,6 +137,19 @@ export const VALIDATION_MESSAGES = {
     },
     FORGOT_PASSWORD: {
       EMAIL_IS_NOT_EXIT: 'Email is not exit'
+    },
+    CHANGE_PASSWORD: {
+      // old_password: string, password: string, confirm_password: string
+      OLD_PASSWORD_IS_REQUIRED: 'Old password is required',
+      OLD_PASSWORD_IS_INCORRECT: 'Old password is incorrect',
+      PASSWORD_IS_REQUIRED: 'Password is required',
+      CONFIRM_PASSWORD_IS_REQUIRED: 'Confirm password is required',
+      PASSWORD_MUST_BE_STRONG:
+        'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
+      PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Password must be between 8 and 16 characters long',
+      PASSWORD_IS_INCORRECT: 'Password is incorrect',
+      PASSWORD_MUST_BE_A_STRING: 'Password must be a string',
+      CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD: 'Confirm password must be the same as password'
     }
   },
   TOKEN: {

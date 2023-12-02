@@ -209,14 +209,15 @@ export const accessTokenValidator = validate(
           errorMessage: VALIDATION_MESSAGES.TOKEN.ACCESS_TOKEN_IS_REQUIRED
         },
         custom: {
-          options: async (value: string) => {
+          options: async (value: string, { req }) => {
             const bearerPrefix = 'Bearer '
             if (!value.startsWith(bearerPrefix)) {
               throw new Error(VALIDATION_MESSAGES.USER.LOGOUT.HEADER_AUTHORIZATION_IS_INVALID)
             }
             const access_token = value.substring(bearerPrefix.length)
             const secret_key = env.jwt.secret_key
-            await verifyToken({ token: access_token, secretOrPublicKey: secret_key })
+            const payload = await verifyToken({ token: access_token, secretOrPublicKey: secret_key })
+            req.body.payload = payload
             return true
           }
         }
@@ -325,6 +326,117 @@ export const refreshTokenValidator = validate(
                 })
               }
               throw error
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
+
+// Validation change password feature
+export const changePasswordValidator = validate(
+  checkSchema(
+    {
+      // old_password: string, password: string, confirm_password: string
+      old_password: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.CHANGE_PASSWORD.OLD_PASSWORD_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.CHANGE_PASSWORD.PASSWORD_MUST_BE_A_STRING
+        },
+        escape: true,
+        trim: true,
+        isStrongPassword: {
+          options: {
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.CHANGE_PASSWORD.PASSWORD_MUST_BE_STRONG
+        },
+        isLength: {
+          options: {
+            min: 8,
+            max: 16
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16
+        },
+        custom: {
+          options: async (value, { req }) => {
+            const isExistPassword = await userServices.validatePassword(req.body.payload.email, value)
+            if (!isExistPassword) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.CHANGE_PASSWORD.OLD_PASSWORD_IS_INCORRECT
+              })
+            }
+            return true
+          }
+        }
+      },
+      password: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.CHANGE_PASSWORD.PASSWORD_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.CHANGE_PASSWORD.PASSWORD_MUST_BE_A_STRING
+        },
+        escape: true,
+        trim: true,
+        isStrongPassword: {
+          options: {
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.CHANGE_PASSWORD.PASSWORD_MUST_BE_STRONG
+        },
+        isLength: {
+          options: {
+            min: 8,
+            max: 16
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16
+        }
+      },
+      confirm_password: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.CHANGE_PASSWORD.CONFIRM_PASSWORD_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.CHANGE_PASSWORD.PASSWORD_MUST_BE_A_STRING
+        },
+        escape: true,
+        trim: true,
+        isStrongPassword: {
+          options: {
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.CHANGE_PASSWORD.PASSWORD_MUST_BE_STRONG
+        },
+        isLength: {
+          options: {
+            min: 8,
+            max: 16
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16
+        },
+        custom: {
+          options: async (value, { req }) => {
+            if (value !== req.body.password) {
+              throw new Error(VALIDATION_MESSAGES.USER.CHANGE_PASSWORD.CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD)
             }
             return true
           }
