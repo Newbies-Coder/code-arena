@@ -12,7 +12,7 @@ export const signToken = ({ payload, privateKey, options }: SignTokenType): Prom
   })
 }
 
-export const verifyAccessToken = ({ token, secretOrPublicKey }: VerifyTokenType) => {
+export const verifyToken = ({ token, secretOrPublicKey }: VerifyTokenType) => {
   return new Promise<jwt.JwtPayload>((resolve, reject) => {
     jwt.verify(token, secretOrPublicKey, function (err, decoded) {
       if (err) {

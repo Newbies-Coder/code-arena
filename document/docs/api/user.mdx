@@ -13,7 +13,7 @@ sidebar_position: 1
 <br />
 <br />
 
-Return `accessToken` and `refreshToken` from account, if tokens not exists create new one.
+Return `access_token` and `refresh_token` from account, if tokens not exists create new one.
 
 **REQUEST BODY**
 
@@ -27,8 +27,8 @@ Return `accessToken` and `refreshToken` from account, if tokens not exists creat
 ```json
 {
 	"data": {
-		"accessToken": "JWT Access token",
-		"refreshToken": "JWT Refresh token"
+		"access_token": "JWT Access token",
+		"refresh_token": "JWT Refresh token"
 	}
 }
 ```
@@ -42,7 +42,7 @@ Return `accessToken` and `refreshToken` from account, if tokens not exists creat
 <br />
 <br />
 
-Create a new account with provided `email` and `passwrd`. Return newly created `accessToken` and `refreshToken`.
+Create a new account with provided `email` and `passwrd`. Return newly created `access_token` and `refresh_token`.
 
 **REQUEST BODY**
 
@@ -56,8 +56,8 @@ Create a new account with provided `email` and `passwrd`. Return newly created `
 ```json
 {
 	"data": {
-		"accessToken": "JWT Access token",
-		"refreshToken": "JWT Refresh token"
+		"access_token": "JWT Access token",
+		"refresh_token": "JWT Refresh token"
 	}
 }
 ```
@@ -77,7 +77,7 @@ Verify the account with OPT.
 
 | FIELD | TYPE   | DESCRIPTION     |
 | ----- | ------ | --------------- |
-| OTP   | number | 6 digits number |
+| OTP   | string | 6 digits number |
 
 <br />
 
@@ -92,9 +92,9 @@ Resend OTP to email.
 
 **REQUEST HEADER**
 
-| FIELD       | TYPE   | DESCRIPTION |
-| ----------- | ------ | ----------- |
-| accessToken | string | JWT Token   |
+| FIELD        | TYPE   | DESCRIPTION |
+| ------------ | ------ | ----------- |
+| access_token | string | JWT Token   |
 
 <br />
 
@@ -118,7 +118,7 @@ Send a email contain OTP to `email`.
 ```json
 {
 	"data": {
-		"forgotPassworkToken": "JWT Token"
+		"forgot_password_token": "JWT Token"
 	}
 }
 ```
@@ -136,9 +136,9 @@ Verify that account owner forgot the password.
 
 **REQUEST BODY**
 
-| FIELD               | TYPE   | DESCRIPTION |
-| ------------------- | ------ | ----------- |
-| forgotPassworkToken | string | JWT string  |
+| FIELD                 | TYPE   | DESCRIPTION |
+| --------------------- | ------ | ----------- |
+| forgot_password_token | string | JWT string  |
 
 <br />
 
@@ -153,11 +153,11 @@ Change the password to new password when forgot password.
 
 **REQUEST BODY**
 
-| FIELD               | TYPE   | DESCRIPTION                                           |
-| ------------------- | ------ | ----------------------------------------------------- |
-| forgotPassworkToken | string | JWT Token                                             |
-| password            | string | Max 100 characters                                    |
-| confirm_password    | string | Max 100 characters and must be the same as `password` |
+| FIELD                 | TYPE   | DESCRIPTION                                           |
+| --------------------- | ------ | ----------------------------------------------------- |
+| forgot_passwork_token | string | JWT Token                                             |
+| password              | string | Max 100 characters                                    |
+| confirm_password      | string | Max 100 characters and must be the same as `password` |
 
 <br />
 
@@ -172,14 +172,40 @@ Change the password to new password.
 
 **REQUEST HEADER**
 
-| FIELD       | TYPE   | DESCRIPTION |
-| ----------- | ------ | ----------- |
-| accessToken | string | JWT Token   |
+| FIELD        | TYPE   | DESCRIPTION |
+| ------------ | ------ | ----------- |
+| access_token | string | JWT Token   |
 
 **REQUEST BODY**
 
 | FIELD            | TYPE   | DESCRIPTION                                           |
 | ---------------- | ------ | ----------------------------------------------------- |
-| oldPassword      | string | Max 100 characters                                    |
+| old_password     | string | Max 100 characters                                    |
 | password         | string | Max 100 characters                                    |
 | confirm_password | string | Max 100 characters and must be the same as `password` |
+
+# Refresh token
+
+<span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span>
+<b style={{ fontSize: '1.5rem' }}>\users\refresh_token</b>
+<br />
+<br />
+
+Get a new `access_token` and `refresh_token`.
+
+**REQUEST BODY**
+
+| FIELD         | TYPE   | DESCRIPTION |
+| ------------- | ------ | ----------- |
+| refresh_token | string | JWT Token   |
+
+**EXAMPLE RESPONSE**
+
+```json
+{
+	"data": {
+		"access_token": "JWT Access token",
+		"refresh_token": "JWT Refresh token"
+	}
+}
+```

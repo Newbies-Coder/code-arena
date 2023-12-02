@@ -1,6 +1,13 @@
 import { Router } from 'express'
 import userController from '~/controllers/users.controllers'
-import { registerValidator } from '~/middlewares/users.middlewares'
+import {
+  accessTokenValidator,
+  forgotPasswordValidator,
+  loginValidator,
+  refreshTokenValidator,
+  registerValidator,
+  verifyOTPValidator
+} from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
 
 const userRouter = Router()
@@ -11,7 +18,7 @@ const userRouter = Router()
  * Method: POST
  * Body: { email: string, password: string }
  */
-userRouter.post('/login', wrapRequestHandler(userController.login))
+userRouter.post('/login', loginValidator, wrapRequestHandler(userController.login))
 
 /**
  * Description. Register a new user
@@ -61,7 +68,7 @@ userRouter.get('/oauh/linkin', wrapRequestHandler(userController.linkedinLogin))
  * Body: { refresh_token: string }
  */
 
-userRouter.post('/logout', wrapRequestHandler(userController.logout))
+userRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapRequestHandler(userController.logout))
 
 /**
  * Description. Refresh Token
@@ -69,7 +76,7 @@ userRouter.post('/logout', wrapRequestHandler(userController.logout))
  * Method: POST
  * Body: { refresh_token: string }
  */
-userRouter.post('/refresh-token', wrapRequestHandler(userController.refreshToken))
+userRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(userController.refreshToken))
 
 /**
  * Description. Verify otp when user client
@@ -77,7 +84,7 @@ userRouter.post('/refresh-token', wrapRequestHandler(userController.refreshToken
  * Method: POST
  * Body: {otp: string}
  */
-userRouter.post('/verify-otp', wrapRequestHandler(userController.verifyOTP))
+userRouter.post('/verify-otp', verifyOTPValidator, wrapRequestHandler(userController.verifyOTP))
 
 /**
  * Description. Verify otp when user client click on the button resend otp
@@ -94,7 +101,7 @@ userRouter.post('/resend-verify-otp', wrapRequestHandler(userController.resendVe
  * Method: POST
  * Body: {email: string}
  */
-userRouter.post('/forgot-password', wrapRequestHandler(userController.forgotPassword))
+userRouter.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(userController.forgotPassword))
 
 /**
  * Description. Verify link in email to reset password

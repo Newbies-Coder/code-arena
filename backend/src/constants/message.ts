@@ -13,7 +13,8 @@ export const DATABASE_MESSAGE = {
     CONNECT: '🌱 Connected to DB Code Arena successfully!',
     DICONNECT: '⛔️ Disconnected from the database main successfully!',
     USER_COLLECTION: 'The table holds user information in the database.',
-    REFRESH_TOKEN_COLLECTION: 'The table holds refresh-token information in the database.'
+    REFRESH_TOKEN_COLLECTION: 'The table holds refresh-token information in the database.',
+    OTP_COLLECTION: 'The table holds otp information in the database.'
   }
 } as const
 
@@ -27,6 +28,12 @@ export const JWT_MESSAGES = {
   JWT_ALGORITHM: 'List of strings with the names of the allowed algorithms'
 } as const
 
+export const OTP_EMAIL_MESSAGES = {
+  OTP_EMAIL_NAME: 'Display name of the gmail account that send OTP',
+  OTP_EMAIL_ACCOUNT: 'Email of the gmail account that send OTP',
+  OTP_EMAIL_PASSWORD: 'Email password of the gmail account that send OTP',
+}
+
 export const ENV_MESSAGE = {
   PORT: 'Port server is using',
   HOST: 'Host server is using',
@@ -39,6 +46,7 @@ export const CLIENT_MESSAGE = {
   REQ_POINT: 'Maximum number of points can be consumed over duration',
   REQ_DURATION: 'Number of seconds before consumed points are reset.',
   PASSWORD_SECRET: 'String of numeric or character values ​​used in security systems',
+  OTP_SECRET: "String of numeric or character values ​​used in security systems",
   COOKIES_EXPIRESIN: 'Cookie expires in the system',
   SECRET_COOKIE_NAME: 'Cookies_name when user login and register success and save local'
 } as const
@@ -88,7 +96,9 @@ export const VALIDATION_MESSAGES = {
       PASSWORD_MUST_BE_STRONG:
         'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
       PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Password must be between 8 and 16 characters long',
-      PASSWORD_IS_INCORRECT: 'Password is incorrect'
+      PASSWORD_IS_INCORRECT: 'Password is incorrect',
+      ACCOUNT_IS_UNVERIFIED: 'Account is unverified',
+      ACCOUNT_IS_BANNED: 'Account is banned'
     },
     REGISTER: {
       NAME_IS_REQUIRED: 'Username is required',
@@ -110,6 +120,23 @@ export const VALIDATION_MESSAGES = {
       CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Confirm_password must be between 8 and 16 characters long',
       DATE_OF_BIRTH_IS_REQUIRED: 'Date of birth is required',
       DATE_OF_BIRTH_IS_ISO8601: 'Date of birth must be a YYYY-MM-DDTHH:mm:ss.ssssZ'
+    },
+    VERIFY_OTP: {
+      OTP_IS_REQUIRED: 'OTP is required',
+      OTP_MUST_BE_A_STRING: 'OTP must be a string',
+      OPT_LENGTH_MUST_BE_6: 'OTP length must be 6 characters long',
+      OTP_IS_NOT_EXIST: 'OTP is not exist',
+      OTP_IS_EXPIRED: 'OTP is not exist'
+    },
+    REFRESH_TOKEN: {
+      REFRESH_TOKEN_IS_REQUIRED: 'Refresh token is required',
+      REFRESH_TOKEN_IS_NOT_EXIST: 'Refresh token is not exist'
+    },
+    LOGOUT: {
+      HEADER_AUTHORIZATION_IS_INVALID: 'Header authorization is invalid'
+    },
+    FORGOT_PASSWORD: {
+      EMAIL_IS_NOT_EXIT: 'Email is not exit'
     }
   },
   TOKEN: {

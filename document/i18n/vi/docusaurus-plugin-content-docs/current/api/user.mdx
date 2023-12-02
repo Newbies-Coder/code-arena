@@ -6,7 +6,7 @@ sidebar_position: 1
 
 ## Login
 
-### Login with email and password
+### Đăng nhập với email và mật khẩu
 
 <span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span>
 <b style={{ fontSize: '1.5rem' }}> \users\login\password </b>
@@ -14,58 +14,58 @@ sidebar_position: 1
 <br />
 <br />
 
-Return `accessToken` and `refreshToken` from account, if tokens not exists create new one.
+Trả về `access_token` và `refresh_token` trong cơ sở dữ liệu, Nếu tokens không tồn tại thì tạo mới.
 
 **REQUEST BODY**
 
-| FIELD    | TYPE   | DESCRIPTION        |
-| -------- | ------ | ------------------ |
-| email    | string | Max 100 characters |
-| password | string | Max 100 characters |
+| THUỘC TÍNH | KIỂU  | MÔ TẢ            |
+| ---------- | ----- | ---------------- |
+| email      | chuỗi | Tối đa 100 ký tự |
+| password   | chuỗi | Tối đa 100 ký tự |
 
 **EXAMPLE RESPONSE**
 
 ```json
 {
 	"data": {
-		"accessToken": "JWT Access token",
-		"refreshToken": "JWT Refresh token"
+		"access_token": "JWT Access token",
+		"refresh_token": "JWT Refresh token"
 	}
 }
 ```
 
 <br />
 
-## Register
+## Đăng ký
 
 <span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span>
 <b style={{ fontSize: '1.5rem' }}>\users\register</b>
 <br />
 <br />
 
-Create a new account with provided `email` and `passwrd`. Return newly created `accessToken` and `refreshToken`.
+Tạo một tài khoản mới với `email` and `passwrd`. Trả về `access_token` và `refresh_token`.
 
 **REQUEST BODY**
 
-| FIELD    | TYPE   | DESCRIPTION        |
-| -------- | ------ | ------------------ |
-| email    | string | Max 100 characters |
-| password | string | Max 100 characters |
+| THUỘC TÍNH | KIỂU  | MÔ TẢ            |
+| ---------- | ----- | ---------------- |
+| email      | chuỗi | Tối đa 100 ký tự |
+| password   | chuỗi | Tối đa 100 ký tự |
 
 **EXAMPLE RESPONSE**
 
 ```json
 {
 	"data": {
-		"accessToken": "JWT Access token",
-		"refreshToken": "JWT Refresh token"
+		"access_token": "JWT Access token",
+		"refresh_token": "JWT Refresh token"
 	}
 }
 ```
 
 <br />
 
-## Verify account
+## Xác nhận tài khoản
 
 <span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span>
 <b style={{ fontSize: '1.5rem' }}> \users\verify-otp </b>{' '}
@@ -73,17 +73,17 @@ Create a new account with provided `email` and `passwrd`. Return newly created `
 <br />
 <br />
 
-Verify the account with OPT.
+Xác nhận tài khoản chính chủ thông qua email OTP.
 
 **REQUEST BODY**
 
-| FIELD | TYPE   | DESCRIPTION     |
-| ----- | ------ | --------------- |
-| OTP   | number | 6 digits number |
+| THUỘC TÍNH | KIỂU   | MÔ TẢ                    |
+| ---------- | ------ | ------------------------ |
+| OTP        | string | Một chuỗi gồm ký tự 6 số |
 
 <br />
 
-## Resend verify account
+## Gửi tại mã OTP xác nhận tài khoản
 
 <span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span>
 <b style={{ fontSize: '1.5rem' }}> \users\resend-verify-otp</b>{' '}
@@ -91,17 +91,17 @@ Verify the account with OPT.
 <br />
 <br />
 
-Resend OTP to email.
+Gửi lại email OTP xác nhận tài khoản chính chủ
 
 **REQUEST HEADER**
 
-| FIELD       | TYPE   | DESCRIPTION |
-| ----------- | ------ | ----------- |
-| accessToken | string | JWT Token   |
+| THUỘC TÍNH   | KIỂU  | MÔ TẢ     |
+| ------------ | ----- | --------- |
+| access_token | chuỗi | JWT Token |
 
 <br />
 
-## Forgot password
+## Quên mật khẩu
 
 <span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span>
 <b style={{ fontSize: '1.5rem' }}> \users\forgot-password </b>
@@ -109,27 +109,27 @@ Resend OTP to email.
 <br />
 <br />
 
-Send a email contain OTP to `email`.
+Gửi một email OTP đến email của tài khoản để xác nhận cài lại mật khẩu.
 
 **REQUEST BODY**
 
-| FIELD | TYPE   | DESCRIPTION        |
-| ----- | ------ | ------------------ |
-| email | string | Max 100 characters |
+| THUỘC TÍNH | KIỂU  | MÔ TẢ            |
+| ---------- | ----- | ---------------- |
+| email      | chuỗi | Tối đa 100 ký tự |
 
 **EXAMPLE RESPONSE**
 
 ```json
 {
 	"data": {
-		"forgotPassworkToken": "JWT Token"
+		"forgot_password_token": "JWT Token"
 	}
 }
 ```
 
 <br />
 
-## Verify forgot password
+## Xác nhận quên mật khẩu
 
 <span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span>
 <b style={{ fontSize: '1.5rem' }}> \users\verify-forgot-password</b>{' '}
@@ -137,17 +137,17 @@ Send a email contain OTP to `email`.
 <br />
 <br />
 
-Verify that account owner forgot the password.
+Xác nhận chủ tài khoản quên mật khẩu, yêu cầu cài lại mật khẩu
 
 **REQUEST BODY**
 
-| FIELD               | TYPE   | DESCRIPTION |
-| ------------------- | ------ | ----------- |
-| forgotPassworkToken | string | JWT string  |
+| THUỘC TÍNH            | KIỂU  | MÔ TẢ     |
+| --------------------- | ----- | --------- |
+| forgot_password_token | chuỗi | JWT chuỗi |
 
 <br />
 
-## Reset password
+## Cài lại mâth khẩu
 
 <span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span>
 <b style={{ fontSize: '1.5rem' }}> \users\reset-password </b>
@@ -155,19 +155,19 @@ Verify that account owner forgot the password.
 <br />
 <br />
 
-Change the password to new password when forgot password.
+Cài lại mật khẩu mới cho tài khoản khi chủ tài khoản quên mật khẩu
 
 **REQUEST BODY**
 
-| FIELD               | TYPE   | DESCRIPTION                                           |
-| ------------------- | ------ | ----------------------------------------------------- |
-| forgotPassworkToken | string | JWT Token                                             |
-| password            | string | Max 100 characters                                    |
-| confirm_password    | string | Max 100 characters and must be the same as `password` |
+| THUỘC TÍNH            | KIỂU  | MÔ TẢ                                               |
+| --------------------- | ----- | --------------------------------------------------- |
+| forgot_password_token | chuỗi | JWT Token                                           |
+| password              | chuỗi | Tối đa 100 ký tự                                    |
+| confirm_password      | chuỗi | Tối đa 100 ký tự and must be the same as `password` |
 
 <br />
 
-## Change password
+## Thay đổi mật khẩu
 
 <span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span>
 <b style={{ fontSize: '1.5rem' }}>\users\change-password</b>
@@ -175,18 +175,44 @@ Change the password to new password when forgot password.
 <br />
 <br />
 
-Change the password to new password.
+Thay đổi mật khẩu cho tài khoản khi chủ tài khoản nhớ mật khẩu
 
 **REQUEST HEADER**
 
-| FIELD       | TYPE   | DESCRIPTION |
-| ----------- | ------ | ----------- |
-| accessToken | string | JWT Token   |
+| THUỘC TÍNH   | KIỂU  | MÔ TẢ     |
+| ------------ | ----- | --------- |
+| access_token | chuỗi | JWT Token |
 
 **REQUEST BODY**
 
-| FIELD            | TYPE   | DESCRIPTION                                           |
-| ---------------- | ------ | ----------------------------------------------------- |
-| oldPassword      | string | Max 100 characters                                    |
-| password         | string | Max 100 characters                                    |
-| confirm_password | string | Max 100 characters and must be the same as `password` |
+| THUỘC TÍNH       | KIỂU  | MÔ TẢ                                               |
+| ---------------- | ----- | --------------------------------------------------- |
+| old_password     | chuỗi | Tối đa 100 ký tự                                    |
+| password         | chuỗi | Tối đa 100 ký tự                                    |
+| confirm_password | chuỗi | Tối đa 100 ký tự and must be the same as `password` |
+
+# Làm mới refresh token
+
+<span style={{ backgroundColor: '#49CC90', borderRadius: '10px', padding: '1px 6px' }}>POST</span>
+<b style={{ fontSize: '1.5rem' }}>\users\refresh_token</b>
+<br />
+<br />
+
+Lấy một `access_token` và `refresh_token` mới khi `access_token` cũ hết hạn.
+
+**REQUEST BODY**
+
+| THUỘC TÍNH    | KIỂU  | MÔ TẢ     |
+| ------------- | ----- | --------- |
+| refresh_token | chuỗi | JWT Token |
+
+**EXAMPLE RESPONSE**
+
+```json
+{
+	"data": {
+		"access_token": "JWT Access token",
+		"refresh_token": "JWT Refresh token"
+	}
+}
+```
