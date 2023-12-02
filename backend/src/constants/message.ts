@@ -149,7 +149,8 @@ export const VALIDATION_MESSAGES = {
       PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Password must be between 8 and 16 characters long',
       PASSWORD_IS_INCORRECT: 'Password is incorrect',
       PASSWORD_MUST_BE_A_STRING: 'Password must be a string',
-      CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD: 'Confirm password must be the same as password'
+      CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD: 'Confirm password must be the same as password',
+      PASSWORD_NOT_SAME_OLD_PASSWORD: 'New password must be not same as old password'
     }
   },
   TOKEN: {
@@ -161,5 +162,8 @@ export const VALIDATION_MESSAGES = {
     REFRESH_TOKEN_IS_NOT_EXIST_IN_COOKIES: 'No refresh token in cookies!',
     EMAIL_VERIFY_TOKEN_IS_REQUIRED: 'Email verify token is required',
     EMAIL_VERIFY_TOKEN_MUST_BE_A_STRING: 'Email verify token must be a string'
+  },
+  AUTHORIZATION: {
+    HEADER_AUTHORIZATION_IS_INVALID: 'Header authorization is invalid'
   }
 } as const

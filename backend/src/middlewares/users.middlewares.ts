@@ -10,6 +10,7 @@ import OPTService from '~/services/otp.service'
 import { databaseService } from '~/services/connectDB.service'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import { capitalize } from 'lodash'
+import { TokenPayloadType } from '~/@types/tokenPayload.type'
 
 // Validation register feature
 export const registerValidator = validate(
@@ -212,12 +213,25 @@ export const accessTokenValidator = validate(
           options: async (value: string, { req }) => {
             const bearerPrefix = 'Bearer '
             if (!value.startsWith(bearerPrefix)) {
-              throw new Error(VALIDATION_MESSAGES.USER.LOGOUT.HEADER_AUTHORIZATION_IS_INVALID)
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.UNAUTHORIZED,
+                message: VALIDATION_MESSAGES.AUTHORIZATION.HEADER_AUTHORIZATION_IS_INVALID
+              })
             }
             const access_token = value.substring(bearerPrefix.length)
             const secret_key = env.jwt.secret_key
-            const payload = await verifyToken({ token: access_token, secretOrPublicKey: secret_key })
-            req.body.payload = payload
+            try {
+              const payload = (await verifyToken({
+                token: access_token,
+                secretOrPublicKey: secret_key
+              })) as TokenPayloadType
+              req.body.email = payload.email
+            } catch (error) {
+              throw new ErrorWithStatus({
+                message: capitalize(error.message),
+                statusCode: StatusCodes.UNAUTHORIZED
+              })
+            }
             return true
           }
         }
@@ -369,10 +383,10 @@ export const changePasswordValidator = validate(
         },
         custom: {
           options: async (value, { req }) => {
-            const isExistPassword = await userServices.validatePassword(req.body.payload.email, value)
+            const isExistPassword = await userServices.validatePassword(req.body.email, value)
             if (!isExistPassword) {
               throw new ErrorWithStatus({
-                statusCode: StatusCodes.BAD_REQUEST,
+                statusCode: StatusCodes.NOT_FOUND,
                 message: VALIDATION_MESSAGES.USER.CHANGE_PASSWORD.OLD_PASSWORD_IS_INCORRECT
               })
             }
@@ -405,6 +419,14 @@ export const changePasswordValidator = validate(
             max: 16
           },
           errorMessage: VALIDATION_MESSAGES.USER.REGISTER.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16
+        },
+        custom: {
+          options: async (value, { req }) => {
+            if (value === req.body.old_password) {
+              throw new Error(VALIDATION_MESSAGES.USER.CHANGE_PASSWORD.PASSWORD_NOT_SAME_OLD_PASSWORD)
+            }
+            return true
+          }
         }
       },
       confirm_password: {

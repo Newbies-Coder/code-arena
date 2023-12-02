@@ -70,7 +70,7 @@ const userController = {
   },
   changePassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!
-    await userServices.sendOTP(req.body.payload.email)
+    await userServices.changePassword(req.body)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.CHANGE_PASSWORD_SUCCESS)
   },
   // Use AI to generate avatar

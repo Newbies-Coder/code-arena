@@ -3,6 +3,7 @@ import { databaseService } from './connectDB.service'
 import { TokenType, UserRole, UserVerifyStatus } from '~/constants/enums'
 import { env } from '~/config/environment.config'
 import {
+  ChangePasswordBody,
   ForgotPasswordBody,
   LoginBody,
   LogoutBody,
@@ -220,6 +221,13 @@ class UserService {
 
     const result: ResultRefreshTokenType = { access_token: newAccessToken, refresh_token: newRefreshToken }
     return result
+  }
+
+  async changePassword(payload: ChangePasswordBody) {
+    await databaseService.users.findOneAndUpdate(
+      { email: payload.email },
+      { $set: { password: hashPassword(payload.password) } }
+    )
   }
 }
 
