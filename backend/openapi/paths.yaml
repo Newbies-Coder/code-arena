@@ -251,6 +251,9 @@ components:
         password:
           type: string
           example: 'admin@123'
+        confirm_password:
+          type: string
+          example: 'admin@123'
         date_of_birth:
           type: string
           example: '2000-02-22T00:00:00.000Z'
