@@ -19,8 +19,8 @@ const Login = () => {
   }
   return (
     <Row className="min-h-screen login ">
-      <Col xs={{ span: 24 }} lg={{ span: 12 }} className="py-8 flex justify-center relative">
-        <div className="mx-4 mt-16 lg:w-[450px]">
+      <Col xs={{ span: 24 }} lg={{ span: 12 }} className="flex justify-center items-center relative">
+        <div className="mx-4 mt-16 pb-16 lg:w-[450px]">
           <Link
             to={'/'}
             className="absolute top-2 left-2 w-14 h-14 rounded-full bg-gray-300 flex justify-center items-center border-none"
