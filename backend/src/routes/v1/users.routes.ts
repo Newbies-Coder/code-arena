@@ -94,7 +94,7 @@ userRouter.post('/verify-otp', verifyOTPValidator, wrapRequestHandler(userContro
  * Header: { Authorization: Bearer <access_token> }
  * Body: {}
  */
-userRouter.post('/resend-verify-otp', wrapRequestHandler(userController.resendVerifyOTP))
+userRouter.post('/resend-verify-otp', accessTokenValidator, wrapRequestHandler(userController.resendVerifyOTP))
 
 /**
  * Description. Submit email to reset password, send email to user

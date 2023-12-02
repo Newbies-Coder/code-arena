@@ -33,3 +33,7 @@ export interface ChangePasswordBody {
   password: string
   confirm_password: string
 }
+
+export interface ResendVerifyOTPBody {
+  email: string
+}

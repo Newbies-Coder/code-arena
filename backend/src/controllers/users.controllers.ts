@@ -1,7 +1,14 @@
 import { Request, Response, NextFunction } from 'express'
 import { sendResponse } from '~/config/response.config'
 import { ParamsDictionary } from 'express-serve-static-core'
-import { LoginBody, RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
+import {
+  LoginBody,
+  LogoutBody,
+  RefreshTokenBody,
+  RegisterBody,
+  ResendVerifyOTPBody,
+  VerifyOTPBody
+} from '~/models/requests/User.requests'
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
 import { env } from '~/config/environment.config'
@@ -33,7 +40,7 @@ const userController = {
     // Message register successfully!
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.REGISTER_SUCCESS)
   },
-  logout: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+  logout: async (req: Request<ParamsDictionary, any, LogoutBody>, res: Response, next: NextFunction) => {
     await userServices.logout(req.body)
     const cookies_names = env.client.cookies_name
     res.clearCookie(cookies_names)
@@ -51,8 +58,13 @@ const userController = {
     // Message verify successfully!
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_OTP_SUCCESS)
   },
-  resendVerifyOTP: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+  resendVerifyOTP: async (
+    req: Request<ParamsDictionary, any, ResendVerifyOTPBody>,
+    res: Response,
+    next: NextFunction
+  ) => {
     // Message register successfully!
+    await userServices.sendOTP(req.body.email)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_OTP_SUCCESS)
   },
   forgotPassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
