@@ -7,7 +7,8 @@ import {
   refreshTokenValidator,
   registerValidator,
   verifyOTPValidator,
-  changePasswordValidator
+  changePasswordValidator,
+  resetPasswordValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
 
@@ -105,20 +106,12 @@ userRouter.post('/resend-verify-otp', accessTokenValidator, wrapRequestHandler(u
 userRouter.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(userController.forgotPassword))
 
 /**
- * Description. Verify link in email to reset password
- * Path: /verify-forgot-password
- * Method: POST
- * Body: {forgot_password_token: string}
- */
-userRouter.post('/verify-forgot-password', wrapRequestHandler(userController.verifyForgotPassword))
-
-/**
  * Description: Reset password
  * Path: /reset-password
  * Method: POST
- * Body: {forgot_password_token: string, password: string, confirm_password: string}
+ * Body: {email: string, password: string, confirm_password: string}
  */
-userRouter.post('/reset-password', wrapRequestHandler(userController.resetPassword))
+userRouter.post('/reset-password', resetPasswordValidator, wrapRequestHandler(userController.resetPassword))
 
 /**
  * Description: Change password

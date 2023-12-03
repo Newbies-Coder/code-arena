@@ -13,7 +13,6 @@ interface UserType {
   age?: number
   password: string
   role?: UserRole
-  forgot_password_token?: string
   gender?: UserGenderType
   verify?: UserVerifyStatus
   bio?: string
@@ -38,7 +37,6 @@ export default class User {
   age: number
   password: string
   role: UserRole
-  forgot_password_token: string
   gender: UserGenderType
   verify: UserVerifyStatus
   bio: string
@@ -64,7 +62,6 @@ export default class User {
     this.date_of_birth = user.date_of_birth || new Date()
     this.password = user.password
     this.role = user.role || UserRole.User
-    this.forgot_password_token = user.forgot_password_token || ''
     this.verify = user.verify || UserVerifyStatus.Unverified
     this.bio = user.bio || ''
     this.address = user.address || ''

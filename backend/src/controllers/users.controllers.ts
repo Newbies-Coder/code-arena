@@ -2,11 +2,13 @@ import { Request, Response, NextFunction } from 'express'
 import { sendResponse } from '~/config/response.config'
 import { ParamsDictionary } from 'express-serve-static-core'
 import {
+  ChangePasswordBody,
   LoginBody,
   LogoutBody,
   RefreshTokenBody,
   RegisterBody,
   ResendVerifyOTPBody,
+  ResetPasswordBody,
   VerifyOTPBody
 } from '~/models/requests/User.requests'
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
@@ -76,8 +78,9 @@ const userController = {
     // Message register successfully!
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_FORGOT_PASSWORD_SUCCESS)
   },
-  resetPassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+  resetPassword: async (req: Request<ParamsDictionary, any, ResetPasswordBody>, res: Response, next: NextFunction) => {
     // Message register successfully!
+    await userServices.changePassword({ email: req.body.email, password: req.body.password } as ChangePasswordBody)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.RESET_PASSWORD_SUCCESS)
   },
   changePassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
