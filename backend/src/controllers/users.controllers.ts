@@ -14,6 +14,7 @@ import {
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
 import { env } from '~/config/environment.config'
+import { ObjectId } from 'mongodb'
 
 const userController = {
   login: async (req: Request<ParamsDictionary, any, LoginBody>, res: Response, next: NextFunction) => {
@@ -111,7 +112,11 @@ const userController = {
   },
   getUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_USER_SUCCESS)
+    const result = await userServices.getUserByID(new ObjectId(req.params.userId))
+    if (!result) {
+      return sendResponse.notFound(res, '', RESULT_RESPONSE_MESSAGES.USER_NOT_FOUND)
+    }
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_USER_SUCCESS)
   },
   getMe: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!

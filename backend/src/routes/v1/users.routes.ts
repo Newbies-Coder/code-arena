@@ -8,7 +8,8 @@ import {
   registerValidator,
   verifyOTPValidator,
   changePasswordValidator,
-  resetPasswordValidator
+  resetPasswordValidator,
+  userProfileValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
 
@@ -163,7 +164,12 @@ userRouter.get('/', wrapRequestHandler(userController.getAllUser))
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.get('/:userId/profile', wrapRequestHandler(userController.getUser))
+userRouter.get(
+  '/:userId/profile',
+  accessTokenValidator,
+  userProfileValidator,
+  wrapRequestHandler(userController.getUser)
+)
 
 /**
  * Description: Get my profile

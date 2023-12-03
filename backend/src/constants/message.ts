@@ -77,7 +77,8 @@ export const RESULT_RESPONSE_MESSAGES = {
   DETELE_USER_SUCCESS: 'Delete user successfully!',
   DELETE_MANY_USER_SUCCESS: 'Delete many user successfully!',
   PAGINATION_USER_SUCCESS: 'Pagination user successfully!',
-  TEST_TOKEN_SUCCESS: 'Test token successfully!'
+  TEST_TOKEN_SUCCESS: 'Test token successfully!',
+  USER_NOT_FOUND: 'User not found'
 } as const
 
 export const USER_VALIDATOR_MESSAGES = {
@@ -134,6 +135,11 @@ export const VALIDATION_MESSAGES = {
       EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
       EMAIL_ACCESSABILITY: "The email address doesn't exist. Please try the valid one or simply register",
       EMAIL_IS_NOT_EXIT: 'Email is not exit'
+    },
+    USER_PROFILE: {
+      USER_ID_IS_REQUIRED: 'User id is required',
+      USER_ID_NOT_FOUND: 'User id not found',
+      USER_ID_IS_INVALID: 'User id is invalid'
     }
   },
   TOKEN: {

@@ -229,6 +229,12 @@ class UserService {
       { $set: { password: hashPassword(payload.password) } }
     )
   }
+
+  // Get user by id
+  async getUserByID(id: ObjectId) {
+    const user = await databaseService.users.findOne(id)
+    return user
+  }
 }
 
 const userServices = new UserService()

@@ -11,6 +11,7 @@ import { databaseService } from '~/services/connectDB.service'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import { capitalize } from 'lodash'
 import { TokenPayloadType } from '~/@types/tokenPayload.type'
+import { ObjectId } from 'mongodb'
 
 // Validation register feature
 export const registerValidator = validate(
@@ -560,5 +561,27 @@ export const resetPasswordValidator = validate(
       }
     },
     ['body']
+  )
+)
+
+export const userProfileValidator = validate(
+  checkSchema(
+    {
+      userId: {
+        trim: true,
+        escape: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_REQUIRED
+        },
+        custom: {
+          options: async (value) => {
+            if (!ObjectId.isValid(value)) {
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_INVALID)
+            }
+          }
+        }
+      }
+    },
+    ['params']
   )
 )
