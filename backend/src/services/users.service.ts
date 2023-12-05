@@ -233,6 +233,12 @@ class UserService {
   // Get user by id
   async getUserByID(id: ObjectId) {
     const user = await databaseService.users.findOne(id)
+    if (!user) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.NOT_FOUND,
+        message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
+      })
+    }
     return user
   }
 }
