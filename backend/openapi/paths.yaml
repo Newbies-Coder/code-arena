@@ -11,7 +11,7 @@ info:
     - Participate in real-time coding battles
 
     Some useful links:
-    - [Code Arena repository](https://github.com/swagger-api/swagger-petstore)
+    - [Code Arena repository](https://github.com)
   contact:
     email: duongquocnam224400@gmail.com
   version: 1.0.11
@@ -31,7 +31,7 @@ paths:
     post:
       tags:
         - user
-      summary: User login
+      summary: Login user into the system
       description: User login into the system
       operationId: loginUser
       requestBody:
@@ -39,7 +39,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginBody'
+              $ref: '#/components/schemas/LoginSchema'
         required: true
       responses:
         '200':
@@ -59,19 +59,19 @@ paths:
     post:
       tags:
         - user
-      summary: User register
-      description: User login into the system
-      operationId: loginUser
+      summary: Register user into the system
+      description: Register user into the system
+      operationId: registerUser
       requestBody:
-        description: Login information
+        description: Register information
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserSchema'
         required: true
       responses:
         '200':
-          description: Login successfully
+          description: Register successfully
           content:
             application/json:
               schema:
@@ -82,13 +82,13 @@ paths:
                   result:
                     $ref: '#/components/schemas/RegisterSuccessAuth'
         '400':
-          description: Invalid username/password supplied
+          description: Invalid request data
   /api/v1/users/logout:
     post:
       tags:
         - user
       summary: Logs out current logged in user session
-      description: 'User logout'
+      description: Logs out current logged in user session
       operationId: logoutUser
       parameters: []
       security:
@@ -111,8 +111,8 @@ paths:
     post:
       tags:
         - user
-      summary: user verify OTP
-      description: 'User verify OTP'
+      summary: User verify OTP
+      description: User verify OTP
       operationId: verifyUserOTP
       requestBody:
         description: Auth verify OTP
@@ -190,7 +190,7 @@ paths:
                     example: Check your email to reset your password
 components:
   schemas:
-    LoginBody:
+    LoginSchema:
       type: object
       properties:
         email:
@@ -238,7 +238,7 @@ components:
         refresh_token:
           type: string
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
-    User:
+    UserSchema:
       type: object
       properties:
         username:

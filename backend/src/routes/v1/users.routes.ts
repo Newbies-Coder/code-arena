@@ -235,4 +235,14 @@ userRouter.get('/pagination', wrapRequestHandler(userController.pagination))
 
 userRouter.post('/test-token', wrapRequestHandler(userController.testToken))
 
+/**
+ * Description: Test token
+ * Path: /favorites
+ * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ * Body: { user_id: string }
+ */
+
+userRouter.post('/favorite', wrapRequestHandler(userController.testToken))
+
 export default userRouter
