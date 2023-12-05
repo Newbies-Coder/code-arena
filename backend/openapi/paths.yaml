@@ -128,6 +128,19 @@ paths:
       responses:
         default:
           description: successful operation
+  /api/v1/users/resend-verify-otp:
+    post:
+      tags:
+        - user
+      summary: User verification OTP resent
+      description: Send again to confirm the OTP user
+      operationId: resendVerifyOTP
+      parameters: []
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Resend verify OTP successfully
   /api/v1/users/refresh-token:
     post:
       tags:
@@ -163,7 +176,7 @@ paths:
     post:
       tags:
         - user
-      summary: Forgot-password
+      summary: Forgot password
       description: Forgot-password
       operationId: forgotPassword
       requestBody:
@@ -188,6 +201,73 @@ paths:
                   message:
                     type: string
                     example: Check your email to reset your password
+  /api/v1/users/reset-password:
+    post:
+      tags:
+        - user
+      summary: Reset password
+      description: Reset
+      operationId: resetPassword
+      requestBody:
+        description: Reset password imformation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordSchema'
+        required: true
+      responses:
+        '200':
+          description: Reset-password successfully
+        '400':
+          description: Invalid request data
+  /api/v1/users/change-password:
+    post:
+      tags:
+        - user
+      summary: Change password
+      description: User change-passowrd
+      operationId: changePassword
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Change password imformation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordSchema'
+        required: true
+      responses:
+        '200':
+          description: Change password successfully
+        '400':
+          description: Invalid request data
+  /api/v1/users/profile/{userId}:
+    get:
+      tags:
+        - user
+      summary: Get user by user_id
+      description: Get user by user_id
+      operationId: getUserByID
+      parameters:
+        - name: userId
+          in: path
+          description: 'The name that needs to be fetched. Use user1 for testing.'
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileUserSchema'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
 components:
   schemas:
     LoginSchema:
@@ -238,6 +318,30 @@ components:
         refresh_token:
           type: string
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
+    ResetPasswordSchema:
+      type: object
+      properties:
+        email:
+          type: string
+          example: john@email.com
+        password:
+          type: string
+          example: 'admin@123'
+        confirm_password:
+          type: string
+          example: 'admin@123'
+    ChangePasswordSchema:
+      type: object
+      properties:
+        old_password:
+          type: string
+          example: 'admin@1234'
+        password:
+          type: string
+          example: 'admin@123'
+        confirm_password:
+          type: string
+          example: 'admin@123'
     UserSchema:
       type: object
       properties:
@@ -256,6 +360,87 @@ components:
         date_of_birth:
           type: string
           example: '2000-02-22T00:00:00.000Z'
+    ProfileUserSchema:
+      type: object
+      properties:
+        _id:
+          type: integer
+          format: int64
+          example: 656b0bbd3b0e9defe34fca1a
+        fullname:
+          type: string
+          example: 'User A'
+        username:
+          type: string
+          example: 'user123'
+        email:
+          type: string
+          example: john@email.com
+        password:
+          type: string
+          example: '53d71cd4a299ee96e3b1e899698f8767716bc00a80ec10b1d0d71e17'
+        phone:
+          type: string
+          example: '0779381232'
+        date_of_birth:
+          type: string
+          example: '2000-02-22T00:00:00.000Z'
+        role:
+          type: string
+          example: USER
+        forgot_password_token":
+          type: string
+          example: '2000-02-22T00:00:00.000Z'
+        gender:
+          type: string
+          description: Gender Type
+          example: Male
+          enum:
+            - Male
+            - Female
+            - Other
+        verify:
+          type: string
+          description: Gender Type
+          example: Male
+          enum:
+            - Unverify
+            - Verify
+            - Celebrity
+            - Banned
+        bio:
+          type: string
+          example: ''
+        address:
+          type: string
+          example: ''
+        website:
+          type: string
+          example: ''
+        avatar:
+          type: string
+          example: ''
+        cover_photo:
+          type: string
+          example: ''
+        isOnline:
+          type: boolean
+          example: true
+        _destroy:
+          type: boolean
+          example: false
+        password_change_at:
+          type: string
+          format: date-time
+          example: '2023-11-01T00:00:00.000Z'
+        created_at:
+          type: string
+          format: date-time
+          example: '2023-12-01T00:00:00.000Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2023-12-02T00:00:00.000Z'
       xml:
         name: user
   securitySchemes:
