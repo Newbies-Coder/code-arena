@@ -5,23 +5,11 @@ import { LoginBody, RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/mode
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
 import { env } from '~/config/environment.config'
-import { omit } from 'lodash'
-import otpService from '~/services/otp.service'
 
 const userController = {
   login: async (req: Request<ParamsDictionary, any, LoginBody>, res: Response, next: NextFunction) => {
     const result = await userServices.login(req.body)
-    const { cookies_name, cookies_exp } = env.client
-    const { refresh_token } = result
-    // Save refresh_token in cookies
-    res.cookie(cookies_name, refresh_token, {
-      httpOnly: true,
-      secure: false,
-      path: '/',
-      sameSite: 'strict',
-      maxAge: Number(cookies_exp)
-    })
-    return sendResponse.success(res, omit(result, ['refresh_token']), RESULT_RESPONSE_MESSAGES.LOGIN_SUCCESS)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.LOGIN_SUCCESS)
   },
   googleLogin: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!
