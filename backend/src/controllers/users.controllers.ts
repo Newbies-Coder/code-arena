@@ -1,10 +1,20 @@
 import { Request, Response, NextFunction } from 'express'
 import { sendResponse } from '~/config/response.config'
 import { ParamsDictionary } from 'express-serve-static-core'
-import { LoginBody, RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
+import {
+  ChangePasswordBody,
+  LoginBody,
+  LogoutBody,
+  RefreshTokenBody,
+  RegisterBody,
+  ResendVerifyOTPBody,
+  ResetPasswordBody,
+  VerifyOTPBody
+} from '~/models/requests/User.requests'
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
 import { env } from '~/config/environment.config'
+import { ObjectId } from 'mongodb'
 
 const userController = {
   login: async (req: Request<ParamsDictionary, any, LoginBody>, res: Response, next: NextFunction) => {
@@ -33,7 +43,7 @@ const userController = {
     // Message register successfully!
     return sendResponse.created(res, result, RESULT_RESPONSE_MESSAGES.REGISTER_SUCCESS)
   },
-  logout: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+  logout: async (req: Request<ParamsDictionary, any, LogoutBody>, res: Response, next: NextFunction) => {
     await userServices.logout(req.body)
     const cookies_names = env.client.cookies_name
     res.clearCookie(cookies_names)
@@ -51,8 +61,13 @@ const userController = {
     // Message verify successfully!
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_OTP_SUCCESS)
   },
-  resendVerifyOTP: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+  resendVerifyOTP: async (
+    req: Request<ParamsDictionary, any, ResendVerifyOTPBody>,
+    res: Response,
+    next: NextFunction
+  ) => {
     // Message register successfully!
+    await userServices.sendOTP(req.body.email)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_OTP_SUCCESS)
   },
   forgotPassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
@@ -64,12 +79,14 @@ const userController = {
     // Message register successfully!
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_FORGOT_PASSWORD_SUCCESS)
   },
-  resetPassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+  resetPassword: async (req: Request<ParamsDictionary, any, ResetPasswordBody>, res: Response, next: NextFunction) => {
     // Message register successfully!
+    await userServices.changePassword({ email: req.body.email, password: req.body.password } as ChangePasswordBody)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.RESET_PASSWORD_SUCCESS)
   },
   changePassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!
+    await userServices.changePassword(req.body)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.CHANGE_PASSWORD_SUCCESS)
   },
   // Use AI to generate avatar
@@ -95,7 +112,8 @@ const userController = {
   },
   getUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_USER_SUCCESS)
+    const result = await userServices.getUserByID(new ObjectId(req.params.userId))
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_USER_SUCCESS)
   },
   getMe: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!

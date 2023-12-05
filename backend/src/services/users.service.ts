@@ -3,6 +3,7 @@ import { databaseService } from './connectDB.service'
 import { TokenType, UserRole, UserVerifyStatus } from '~/constants/enums'
 import { env } from '~/config/environment.config'
 import {
+  ChangePasswordBody,
   ForgotPasswordBody,
   LoginBody,
   LogoutBody,
@@ -220,6 +221,25 @@ class UserService {
 
     const result: ResultRefreshTokenType = { access_token: newAccessToken, refresh_token: newRefreshToken }
     return result
+  }
+
+  async changePassword(payload: ChangePasswordBody) {
+    await databaseService.users.findOneAndUpdate(
+      { email: payload.email },
+      { $set: { password: hashPassword(payload.password) } }
+    )
+  }
+
+  // Get user by id
+  async getUserByID(id: ObjectId) {
+    const user = await databaseService.users.findOne(id)
+    if (!user) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.NOT_FOUND,
+        message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
+      })
+    }
+    return user
   }
 }
 
