@@ -1,16 +1,21 @@
 import { Router } from 'express'
+import { UserRole } from '~/constants/enums'
 import userController from '~/controllers/users.controllers'
+import { requireLoginMiddleware, requireRoleMiddleware } from '~/middlewares/auth.middlewares'
+import { uploadFile } from '~/middlewares/uploadFile.middleware'
 import {
   accessTokenValidator,
+  changePasswordValidator,
+  followUserValidator,
   forgotPasswordValidator,
+  getAllUserValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator,
-  verifyOTPValidator,
-  changePasswordValidator,
   resetPasswordValidator,
+  unfollowUserValidator,
   userProfileValidator,
-  checkTokenValidator
+  verifyOTPValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
 
@@ -31,38 +36,6 @@ userRouter.post('/login', loginValidator, wrapRequestHandler(userController.logi
  * Body: { name: string, email: string, password: string, confirm_password: string, date_of_birth: ISO8601 }
  */
 userRouter.post('/register', registerValidator, wrapRequestHandler(userController.register))
-
-/**
- * Description. OAuth with github
- * Path: /oauth/github
- * Method: GET
- * Query: { code: string }
- */
-userRouter.get('/oauh/github', wrapRequestHandler(userController.githubLogin))
-
-/**
- * Description. OAuth with Google
- * Path: /oauth/google
- * Method: GET
- * Query: { code: string }
- */
-userRouter.get('/oauh/google', wrapRequestHandler(userController.googleLogin))
-
-/**
- * Description. OAuth with Facebook
- * Path: /oauth/facebook
- * Method: GET
- * Query: { code: string }
- */
-userRouter.get('/oauh/facebook', wrapRequestHandler(userController.facebookLogin))
-
-/**
- * Description: Login a user with linkin
- * Path: /oauh/linkin
- * Method: GET
- * Body:
- */
-userRouter.get('/oauh/linkin', wrapRequestHandler(userController.linkedinLogin))
 
 /**
  * Description. Logout a user
@@ -123,12 +96,7 @@ userRouter.post('/reset-password', resetPasswordValidator, wrapRequestHandler(us
  * Body: { old_password: string, password: string, confirm_password: string }
  */
 
-userRouter.post(
-  '/change-password',
-  accessTokenValidator,
-  changePasswordValidator,
-  wrapRequestHandler(userController.changePassword)
-)
+userRouter.post('/change-password', accessTokenValidator, changePasswordValidator, wrapRequestHandler(userController.changePassword))
 
 /**
  * Description: Follow someone
@@ -138,7 +106,7 @@ userRouter.post(
  * Body: { followed_user_id: string }
  */
 
-userRouter.post('/follow/:userId', wrapRequestHandler(userController.follow))
+userRouter.post('/follow/:userId', wrapRequestHandler(requireLoginMiddleware), followUserValidator, wrapRequestHandler(userController.follow))
 
 /**
  * Description: unfollow someone
@@ -147,7 +115,7 @@ userRouter.post('/follow/:userId', wrapRequestHandler(userController.follow))
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.post('/unfollow/:userId', wrapRequestHandler(userController.unfollow))
+userRouter.delete('/unfollow/:userId', wrapRequestHandler(requireLoginMiddleware), unfollowUserValidator, wrapRequestHandler(userController.unfollow))
 
 /**
  * Description: Get all user by admin
@@ -156,7 +124,7 @@ userRouter.post('/unfollow/:userId', wrapRequestHandler(userController.unfollow)
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.get('/', wrapRequestHandler(userController.getAllUser))
+userRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), getAllUserValidator, wrapRequestHandler(userController.getAllUser))
 
 /**
  * Description: Get user profile
@@ -165,12 +133,7 @@ userRouter.get('/', wrapRequestHandler(userController.getAllUser))
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.get(
-  '/:userId/profile',
-  accessTokenValidator,
-  userProfileValidator,
-  wrapRequestHandler(userController.getUser)
-)
+userRouter.get('/:userId/profile', accessTokenValidator, userProfileValidator, wrapRequestHandler(userController.getUser))
 
 /**
  * Description: Get my profile
@@ -189,6 +152,16 @@ userRouter.get('/@me/profile', wrapRequestHandler(userController.getMe))
  */
 
 userRouter.put('/@me/profile', wrapRequestHandler(userController.updateMe))
+
+/**
+ * Description: Search user with name, return 10 matched users
+ * Path: /
+ * Method: GET
+ * Body:
+ * param: { userName: string }
+ */
+
+userRouter.post('/@me/avatar', wrapRequestHandler(requireLoginMiddleware), uploadFile.single('image'), wrapRequestHandler(userController.updateMeAvatar))
 
 /**
  * Description: Search user with name, return 10 matched users
@@ -219,36 +192,12 @@ userRouter.delete('/:userId', wrapRequestHandler(userController.delete))
 userRouter.delete('/delete-users', wrapRequestHandler(userController.deleteManyUser))
 
 /**
- * Description: Get user pagination
- * Path: /pagination?page=1&limit=2&keyword=
- * Method: GET
- * Header: { Authorization: Bearer <access_token> }
- * Param: {
- * 	page,
- *  limit,
- *  keyword
- * }
- */
-
-userRouter.get('/pagination', wrapRequestHandler(userController.pagination))
-
-/**
  * Description: Test token
  * Path: /test-token
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.post('/test-token', checkTokenValidator, wrapRequestHandler(userController.testToken))
-
-/**
- * Description: Test token
- * Path: /favorites
- * Method: POST
- * Header: { Authorization: Bearer <access_token> }
- * Body: { user_id: string }
- */
-
-userRouter.post('/favorite', wrapRequestHandler(userController.testToken))
+userRouter.post('/test-token', wrapRequestHandler(userController.testToken))
 
 export default userRouter
