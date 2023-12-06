@@ -133,18 +133,64 @@ paths:
         required: true
       responses:
         '200':
-          description: Register successfully
+          description: Send verification email register successfully
           content:
             application/json:
               schema:
                 type: object
                 properties:
+                  statusCode:
+                    type: integer
+                    example: 200
                   message:
-                    example: Register successfully
-                  result:
+                    example: Create account successfully. Please check email verify OTP!
+                  data:
                     $ref: '#/components/schemas/RegisterSuccessAuth'
-        '400':
-          description: Invalid request data
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '404':
+          description: Compare user data to the database.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    example: This email address is already in use. Please register with a different email address!
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '422':
+          description: Please provide complete input info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    example: Validation error
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Please fill all required details.
+                      path:
+                        type: string
+                        example: register
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /api/v1/users/logout:
     post:
       tags:
