@@ -1,10 +1,11 @@
 import { Avatar, Button, Card, Col, Menu } from 'antd'
 import { HomeIcon, LibraryIcon, NewsIcon, SettingIcon, StoreIcon, UserIcon } from '../Icons'
 import Sider from 'antd/es/layout/Sider'
+import { useState } from 'react'
 
 const SidebarLeft = () => {
   return (
-    <Col>
+    <Col style={{ width: '100%' }}>
       <Sider
         className="mt-16 h-screen left-0 border-r lg:block z-10"
         style={{

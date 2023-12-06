@@ -1,8 +1,8 @@
 import { Header } from 'antd/es/layout/layout'
 import { HomeIcon, LettersIcon, NoNotiIcon, SearchIcon, UserIcon } from '../Icons'
 import { DownOutlined } from '@ant-design/icons'
-import { Avatar, Button, Dropdown, Input, MenuProps, Popover, Row, Space, message } from 'antd'
-import { HOME_ICON } from '@/constants/images'
+import { Avatar, Button, Card, Dropdown, Input, MenuProps, Popover, Row, Space, message } from 'antd'
+import { HOME_ICON, LOGO } from '@/constants/images'
 import { useState } from 'react'
 
 const onClick: MenuProps['onClick'] = ({ key }) => {
@@ -55,9 +55,10 @@ const HeaderItem = () => {
     setOpen(newOpen)
   }
   return (
-    <Header className="fixed h-16 top-0 w-full bg-blue-900 z-10 px-6" style={{ width: '100%' }}>
-      <div className="flex justify-between items-center">
-        <img src={HOME_ICON.LOGO_TEXT} alt="logo" className="sm:w-32 lg:w-44" />
+    <Header className="fixed h-16 top-0 w-full bg-blue-900 z-10 px-4" style={{ width: '100%' }}>
+      <div className="flex justify-between items-center pt-2">
+        <img src={HOME_ICON.LOGO_TEXT} alt="logo" className="xs:hidden xl:block" />
+        <img src={LOGO.APP_LOGO} className="xl:hidden xs:block" />
         <div className="flex justify-between items-center relative w-full md:w-auto">
           <SearchIcon className="absolute z-10 ml-2 " />
           <Input
@@ -67,13 +68,13 @@ const HeaderItem = () => {
         </div>
         <div className="flex items-center">
           <div>
-            <ul className="flex justify-between items-center pt-4">
+            <ul className="md:flex md:justify-between md:items-center pt-4 xs:hidden ">
               <li className="flex justify-center items-center w-28 h-10 mx-2 bg-purple-900 rounded-full border border-gray-500">
                 <img src={HOME_ICON.GOLD} alt="gold" />
                 <span className="text-white font-popins">100.000</span>
               </li>
               <li className="flex justify-center items-center w-24 h-10 mx-2 bg-purple-900 rounded-full border border-gray-500">
-                <img src={HOME_ICON.FLAG} alt="flag" />
+                <img src={HOME_ICON.FLAG} alt="flag" className="md:hidden lg:block" />
                 <Dropdown menu={{ items: items, onClick }} className="text-gray-500 pl-2">
                   <a onClick={(e) => e.preventDefault()}>
                     <Space>
@@ -104,7 +105,7 @@ const HeaderItem = () => {
               <LettersIcon />
             </Button>
           </Popover>
-          <div className="flex justify-between items-center w-32 h-10 bg-blue-900 rounded-full border border-gray-500">
+          <div className="flex justify-between items-center w-28 h-10 bg-blue-900 rounded-full border border-gray-500">
             <Avatar size={36} className="flex justify-between items-center bg-gray-300">
               <UserIcon />
             </Avatar>
@@ -112,7 +113,7 @@ const HeaderItem = () => {
               <Dropdown menu={{ items: menuItems }} trigger={['click']} className="text-white">
                 <a onClick={(e) => e.preventDefault()}>
                   <Space>
-                    N UYEN
+                    UYEN
                     <DownOutlined />
                   </Space>
                 </a>

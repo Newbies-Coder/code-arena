@@ -1,11 +1,12 @@
-import { BackendIcon, DesignIcon, FrontendIcon } from '@/components/Icons'
-import { Card, Col, Layout, Row } from 'antd'
+import { BackendIcon, DesignIcon, FrontendIcon, HomeIcon, NewsIcon } from '@/components/Icons'
+import { Button, Card, Col, Layout, Row } from 'antd'
 import './style.scss'
 import CarouselItem from '@/components/CarouselItem'
 import SliderItem from '@/components/SliderItem'
 import SidebarLeft from '@/components/SidebarLeft'
 import SidebarRight from '@/components/SidebarRight'
 import HeaderItem from '@/components/HeaderItem'
+import { useState } from 'react'
 const { Content } = Layout
 
 const MainHome = () => {
@@ -16,10 +17,10 @@ const MainHome = () => {
       </div>
       <Layout>
         <Row>
-          <Col style={{ height: '100%' }} xs={{ span: 0 }} md={{ span: 0 }} lg={{ span: 3 }}>
+          <Col style={{ height: '100%' }} xs={{ span: 0 }} xl={{ span: 3 }}>
             <SidebarLeft />
           </Col>
-          <Col style={{ height: '100%', marginTop: '64px' }} xs={{ span: 24 }} md={{ span: 24 }} lg={{ span: 18 }}>
+          <Col style={{ height: '100%', marginTop: '64px' }} xs={{ span: 24 }} xl={{ span: 18 }}>
             <Content style={{ width: '100%', overflow: 'initial', height: '100%' }}>
               <div style={{ padding: 24, backgroundColor: '#0e1820', height: '100%' }}>
                 <CarouselItem />
@@ -36,7 +37,7 @@ const MainHome = () => {
                       <div className="flex justify-center items-center">
                         <DesignIcon />
                         <div className="text-white ml-2">
-                          <span>6/12 watched</span>
+                          <span className="xs:hidden xs:text-xs lg:block">6/12 watched</span>
                           <h2 className="mb-0 text-base">UI/UX DESIGN</h2>
                         </div>
                       </div>
@@ -51,7 +52,7 @@ const MainHome = () => {
                       <div className="flex justify-center items-center">
                         <FrontendIcon className="h-10 w-10" />
                         <div className="text-white ml-2">
-                          <span>6/12 watched</span>
+                          <span className="xs:hidden xs:text-xs lg:block">6/12 watched</span>
                           <h2 className="mb-0 text-base">FRONTEND</h2>
                         </div>
                       </div>
@@ -66,7 +67,7 @@ const MainHome = () => {
                       <div className="flex justify-center items-center">
                         <BackendIcon className="h-10 w-10" />
                         <div className="text-white ml-2">
-                          <span>6/12 watched</span>
+                          <span className="xs:hidden xs:text-xs lg:block">6/12 watched</span>
                           <h2 className="mb-0 text-base">BACKEND</h2>
                         </div>
                       </div>
@@ -81,7 +82,7 @@ const MainHome = () => {
               </div>
             </Content>
           </Col>
-          <Col style={{ height: '100%' }} xs={{ span: 0 }} md={{ span: 0 }} lg={{ span: 3 }}>
+          <Col style={{ height: '100%' }} xs={{ span: 0 }} xl={{ span: 3 }}>
             <SidebarRight />
           </Col>
         </Row>
