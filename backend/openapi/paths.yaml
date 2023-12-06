@@ -101,7 +101,7 @@ paths:
                 properties:
                   statusCode:
                     type: integer
-                    example: 404
+                    example: 422
                   message:
                     example: Validation error
                   data:
@@ -132,7 +132,7 @@ paths:
               $ref: '#/components/schemas/UserSchema'
         required: true
       responses:
-        '200':
+        '201':
           description: Send verification email register successfully
           content:
             application/json:
@@ -141,7 +141,7 @@ paths:
                 properties:
                   statusCode:
                     type: integer
-                    example: 200
+                    example: 201
                   message:
                     example: Create account successfully. Please check email verify OTP!
                   data:
@@ -268,8 +268,50 @@ paths:
                   example: '123456'
         required: true
       responses:
-        default:
-          description: successful operation
+        '200':
+          description: Successful user authentication
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: You have successfully registered after completing the authentication procedure!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '422':
+          description: Please provide complete input info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  message:
+                    example: Validation error
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Please fill all required details.
+                      path:
+                        type: string
+                        example: verify-otp
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /api/v1/users/resend-verify-otp:
     post:
       tags:
@@ -277,12 +319,51 @@ paths:
       summary: User verification OTP resent
       description: Send again to confirm the OTP user
       operationId: resendVerifyOTP
-      parameters: []
       security:
         - BearerAuth: []
       responses:
-        default:
-          description: Resend verify OTP successfully
+        '200':
+          description: Successfully resend verify OTP
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Resend verify OTP successfully
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please check refresh token!
+                  data:
+                    type: object
+                    properties:
+                      refresh-token:
+                        type: string
+                        example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /api/v1/users/refresh-token:
     post:
       tags:
