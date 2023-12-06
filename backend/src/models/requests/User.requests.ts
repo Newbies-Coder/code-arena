@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb'
+
 export interface LoginBody {
   email: string
   password: string
@@ -25,4 +27,30 @@ export interface VerifyOTPBody {
 
 export interface RefreshTokenBody {
   refresh_token: string
+}
+
+export interface ChangePasswordBody {
+  email: string
+  old_password: string
+  password: string
+  confirm_password: string
+}
+
+export interface ResendVerifyOTPBody {
+  email: string
+}
+
+export interface ResetPasswordBody {
+  email: string
+  password: string
+  confirm_password: string
+}
+
+export interface InfoTokenType {
+  _id: ObjectId
+  email: string
+  role: string
+  token_type: string
+  iat: number
+  exp: number
 }

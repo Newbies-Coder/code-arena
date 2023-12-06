@@ -16,7 +16,6 @@ interface UserType {
   providerId?: string
   provider?: AuthProvider
   role?: UserRole
-  forgot_password_token?: string
   gender?: UserGenderType
   verify?: UserVerifyStatus
   bio?: string
@@ -43,7 +42,6 @@ export default class User {
   providerId?: string
   provider?: AuthProvider
   role: UserRole
-  forgot_password_token: string
   gender: UserGenderType
   verify: UserVerifyStatus
   bio: string
@@ -71,7 +69,6 @@ export default class User {
     this.provider = user.provider
     this.providerId = user.providerId
     this.role = user.role || UserRole.User
-    this.forgot_password_token = user.forgot_password_token || ''
     this.verify = user.verify || UserVerifyStatus.Unverified
     this.bio = user.bio || ''
     this.address = user.address || ''

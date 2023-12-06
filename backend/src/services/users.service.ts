@@ -2,7 +2,7 @@ import { signToken, verifyToken } from '~/utils/jwt'
 import { databaseService } from './connectDB.service'
 import { TokenType, UserRole, UserVerifyStatus } from '~/constants/enums'
 import { env } from '~/config/environment.config'
-import { ForgotPasswordBody, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
+import { ChangePasswordBody, ForgotPasswordBody, InfoTokenType, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
 import { ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
@@ -11,7 +11,7 @@ import User from '~/models/schemas/Users.schema'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import { StatusCodes } from 'http-status-codes'
 import { VALIDATION_MESSAGES } from '~/constants/message'
-
+import moment from 'moment'
 import emailService from '~/services/email.service'
 import otpService from '~/services/otp.service'
 import { ParsedUrlQuery } from 'querystring'
@@ -278,6 +278,31 @@ class UserService {
     )
     const result: UploadAvatarType = { avatarUrl: url }
     return result
+  }
+
+  async changePassword(payload: ChangePasswordBody) {
+    await databaseService.users.findOneAndUpdate({ email: payload.email }, { $set: { password: hashPassword(payload.password) } })
+  }
+
+  // Get user by id
+  async getUserByID(id: ObjectId) {
+    const user = await databaseService.users.findOne(id)
+    if (!user) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.NOT_FOUND,
+        message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
+      })
+    }
+    return user
+  }
+  async checkToken(payload: InfoTokenType) {
+    let { iat, exp, ...item } = payload
+    let userInfo = {
+      ...item,
+      iat: moment(iat * 1000).format(),
+      exp: moment(exp * 1000).format()
+    }
+    return userInfo
   }
 }
 

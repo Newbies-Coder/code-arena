@@ -76,7 +76,8 @@ export const RESULT_RESPONSE_MESSAGES = {
   DETELE_USER_SUCCESS: 'Delete user successfully!',
   DELETE_MANY_USER_SUCCESS: 'Delete many user successfully!',
   PAGINATION_USER_SUCCESS: 'Pagination user successfully!',
-  TEST_TOKEN_SUCCESS: 'Test token successfully!'
+  TEST_TOKEN_SUCCESS: 'Test token successfully!',
+  USER_NOT_FOUND: 'User not found'
 } as const
 
 export const USER_VALIDATOR_MESSAGES = {
@@ -143,11 +144,34 @@ export const VALIDATION_MESSAGES = {
     LOGOUT: {
       HEADER_AUTHORIZATION_IS_INVALID: 'Header authorization is invalid'
     },
-    FORGOT_PASSWORD: {
+    PASSWORD: {
+      PASSWORD_IS_REQUIRED: 'Password is required',
+      PASSWORD_MUST_BE_STRONG: 'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
+      PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Password must be between 8 and 16 characters long',
+      PASSWORD_IS_INCORRECT: 'Password is incorrect',
+      PASSWORD_MUST_BE_A_STRING: 'Password must be a string',
+      CONFIRM_PASSWORD_IS_REQUIRED: 'Confirm password is required',
+      CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD: 'Confirm password must be the same as password',
+      CONFIRM_PASSWORD_MUST_BE_A_STRING: 'Confirm password must be a string',
+      CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Confirm password must be between 8 and 16 characters long',
+      CONFIRM_PASSWORD_MUST_BE_STRONG: 'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
+      OLD_PASSWORD_IS_REQUIRED: 'Old password is required',
+      OLD_PASSWORD_IS_INCORRECT: 'Old password is incorrect',
+      PASSWORD_NOT_SAME_OLD_PASSWORD: 'New password must be not same as old password'
+    },
+    EMAIL: {
+      EMAIL_IS_REQUIRED: 'Email is required',
+      EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
+      EMAIL_ACCESSABILITY: "The email address doesn't exist. Please try the valid one or simply register",
       EMAIL_IS_NOT_EXIT: 'Email is not exit'
     },
     UPLOAD_AVATAR: {
       INVALID_AVATAR_EXTENSION: 'Avatar image extension is invalid'
+    },
+    USER_PROFILE: {
+      USER_ID_IS_REQUIRED: 'User id is required',
+      USER_ID_NOT_FOUND: 'User id not found',
+      USER_ID_IS_INVALID: 'User id is invalid'
     }
   },
   TOKEN: {
@@ -160,6 +184,9 @@ export const VALIDATION_MESSAGES = {
     REFRESH_TOKEN_IS_NOT_EXIST_IN_COOKIES: 'No refresh token in cookies!',
     EMAIL_VERIFY_TOKEN_IS_REQUIRED: 'Email verify token is required',
     EMAIL_VERIFY_TOKEN_MUST_BE_A_STRING: 'Email verify token must be a string'
+  },
+  AUTHORIZATION: {
+    HEADER_AUTHORIZATION_IS_INVALID: 'Header authorization is invalid'
   }
 } as const
 

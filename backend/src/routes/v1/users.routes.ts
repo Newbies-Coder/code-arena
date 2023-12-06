@@ -5,13 +5,16 @@ import { requireLoginMiddleware, requireRoleMiddleware } from '~/middlewares/aut
 import { uploadFile } from '~/middlewares/uploadFile.middleware'
 import {
   accessTokenValidator,
+  changePasswordValidator,
   followUserValidator,
   forgotPasswordValidator,
   getAllUserValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator,
+  resetPasswordValidator,
   unfollowUserValidator,
+  userProfileValidator,
   verifyOTPValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
@@ -33,38 +36,6 @@ userRouter.post('/login', loginValidator, wrapRequestHandler(userController.logi
  * Body: { name: string, email: string, password: string, confirm_password: string, date_of_birth: ISO8601 }
  */
 userRouter.post('/register', registerValidator, wrapRequestHandler(userController.register))
-
-/**
- * Description. OAuth with github
- * Path: /oauth/github
- * Method: GET
- * Query: { code: string }
- */
-userRouter.get('/oauh/github', wrapRequestHandler(userController.githubLogin))
-
-/**
- * Description. OAuth with Google
- * Path: /oauth/google
- * Method: GET
- * Query: { code: string }
- */
-userRouter.get('/oauh/google', wrapRequestHandler(userController.googleLogin))
-
-/**
- * Description. OAuth with Facebook
- * Path: /oauth/facebook
- * Method: GET
- * Query: { code: string }
- */
-userRouter.get('/oauh/facebook', wrapRequestHandler(userController.facebookLogin))
-
-/**
- * Description: Login a user with linkin
- * Path: /oauh/linkin
- * Method: GET
- * Body:
- */
-userRouter.get('/oauh/linkin', wrapRequestHandler(userController.linkedinLogin))
 
 /**
  * Description. Logout a user
@@ -99,7 +70,7 @@ userRouter.post('/verify-otp', verifyOTPValidator, wrapRequestHandler(userContro
  * Header: { Authorization: Bearer <access_token> }
  * Body: {}
  */
-userRouter.post('/resend-verify-otp', wrapRequestHandler(userController.resendVerifyOTP))
+userRouter.post('/resend-verify-otp', accessTokenValidator, wrapRequestHandler(userController.resendVerifyOTP))
 
 /**
  * Description. Submit email to reset password, send email to user
@@ -110,20 +81,12 @@ userRouter.post('/resend-verify-otp', wrapRequestHandler(userController.resendVe
 userRouter.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(userController.forgotPassword))
 
 /**
- * Description. Verify link in email to reset password
- * Path: /verify-forgot-password
- * Method: POST
- * Body: {forgot_password_token: string}
- */
-userRouter.post('/verify-forgot-password', wrapRequestHandler(userController.verifyForgotPassword))
-
-/**
  * Description: Reset password
  * Path: /reset-password
  * Method: POST
- * Body: {forgot_password_token: string, password: string, confirm_password: string}
+ * Body: {email: string, password: string, confirm_password: string}
  */
-userRouter.post('/reset-password', wrapRequestHandler(userController.resetPassword))
+userRouter.post('/reset-password', resetPasswordValidator, wrapRequestHandler(userController.resetPassword))
 
 /**
  * Description: Change password
@@ -133,7 +96,7 @@ userRouter.post('/reset-password', wrapRequestHandler(userController.resetPasswo
  * Body: { old_password: string, password: string, confirm_password: string }
  */
 
-userRouter.post('/change-password', userController.register, wrapRequestHandler(userController.changePassword))
+userRouter.post('/change-password', accessTokenValidator, changePasswordValidator, wrapRequestHandler(userController.changePassword))
 
 /**
  * Description: Follow someone
@@ -170,7 +133,7 @@ userRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), g
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.get('/:userId/profile', wrapRequestHandler(userController.getUser))
+userRouter.get('/:userId/profile', accessTokenValidator, userProfileValidator, wrapRequestHandler(userController.getUser))
 
 /**
  * Description: Get my profile
@@ -229,15 +192,10 @@ userRouter.delete('/:userId', wrapRequestHandler(userController.delete))
 userRouter.delete('/delete-users', wrapRequestHandler(userController.deleteManyUser))
 
 /**
- * Description: Get user pagination
- * Path: /pagination?page=1&limit=2&keyword=
- * Method: GET
+ * Description: Test token
+ * Path: /test-token
+ * Method: POST
  * Header: { Authorization: Bearer <access_token> }
- * Param: {
- * 	page,
- *  limit,
- *  keyword
- * }
  */
 
 userRouter.post('/test-token', wrapRequestHandler(userController.testToken))

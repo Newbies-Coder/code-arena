@@ -24,7 +24,9 @@ class AuthService {
             let user = await databaseService.users.findOne({ provider: 'facebook', providerId: profile.id })
             if (!user) {
               const newUser = new User({
-                email: profile.emails.values[1],
+                // @ts-ignore
+                email: profile.email,
+                username: profile.displayName,
                 provider: 'facebook',
                 providerId: profile.id
               })
