@@ -6,7 +6,10 @@ import {
   loginValidator,
   refreshTokenValidator,
   registerValidator,
-  verifyOTPValidator
+  verifyOTPValidator,
+  changePasswordValidator,
+  resetPasswordValidator,
+  userProfileValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
 
@@ -93,7 +96,7 @@ userRouter.post('/verify-otp', verifyOTPValidator, wrapRequestHandler(userContro
  * Header: { Authorization: Bearer <access_token> }
  * Body: {}
  */
-userRouter.post('/resend-verify-otp', wrapRequestHandler(userController.resendVerifyOTP))
+userRouter.post('/resend-verify-otp', accessTokenValidator, wrapRequestHandler(userController.resendVerifyOTP))
 
 /**
  * Description. Submit email to reset password, send email to user
@@ -104,20 +107,12 @@ userRouter.post('/resend-verify-otp', wrapRequestHandler(userController.resendVe
 userRouter.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(userController.forgotPassword))
 
 /**
- * Description. Verify link in email to reset password
- * Path: /verify-forgot-password
- * Method: POST
- * Body: {forgot_password_token: string}
- */
-userRouter.post('/verify-forgot-password', wrapRequestHandler(userController.verifyForgotPassword))
-
-/**
  * Description: Reset password
  * Path: /reset-password
  * Method: POST
- * Body: {forgot_password_token: string, password: string, confirm_password: string}
+ * Body: {email: string, password: string, confirm_password: string}
  */
-userRouter.post('/reset-password', wrapRequestHandler(userController.resetPassword))
+userRouter.post('/reset-password', resetPasswordValidator, wrapRequestHandler(userController.resetPassword))
 
 /**
  * Description: Change password
@@ -127,7 +122,12 @@ userRouter.post('/reset-password', wrapRequestHandler(userController.resetPasswo
  * Body: { old_password: string, password: string, confirm_password: string }
  */
 
-userRouter.post('/change-password', userController.register, wrapRequestHandler(userController.changePassword))
+userRouter.post(
+  '/change-password',
+  accessTokenValidator,
+  changePasswordValidator,
+  wrapRequestHandler(userController.changePassword)
+)
 
 /**
  * Description: Follow someone
@@ -164,7 +164,12 @@ userRouter.get('/', wrapRequestHandler(userController.getAllUser))
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.get('/:userId/profile', wrapRequestHandler(userController.getUser))
+userRouter.get(
+  '/:userId/profile',
+  accessTokenValidator,
+  userProfileValidator,
+  wrapRequestHandler(userController.getUser)
+)
 
 /**
  * Description: Get my profile
@@ -234,5 +239,15 @@ userRouter.get('/pagination', wrapRequestHandler(userController.pagination))
  */
 
 userRouter.post('/test-token', wrapRequestHandler(userController.testToken))
+
+/**
+ * Description: Test token
+ * Path: /favorites
+ * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ * Body: { user_id: string }
+ */
+
+userRouter.post('/favorite', wrapRequestHandler(userController.testToken))
 
 export default userRouter

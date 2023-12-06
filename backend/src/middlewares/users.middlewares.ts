@@ -10,6 +10,8 @@ import OPTService from '~/services/otp.service'
 import { databaseService } from '~/services/connectDB.service'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import { capitalize } from 'lodash'
+import { TokenPayloadType } from '~/@types/tokenPayload.type'
+import { ObjectId } from 'mongodb'
 
 // Validation register feature
 export const registerValidator = validate(
@@ -33,10 +35,10 @@ export const registerValidator = validate(
       },
       email: {
         notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.EMAIL_IS_REQUIRED
+          errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_REQUIRED
         },
         isEmail: {
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.EMAIL_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_MUST_BE_A_STRING
         },
         trim: true,
         custom: {
@@ -45,7 +47,7 @@ export const registerValidator = validate(
             if (isExistEmail) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.REGISTER.EMAIL_ACCESSBILITY
+                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
               })
             }
             return true
@@ -54,10 +56,10 @@ export const registerValidator = validate(
       },
       password: {
         notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.PASSWORD_IS_REQUIRED
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_REQUIRED
         },
         isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.PASSWORD_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_A_STRING
         },
         isStrongPassword: {
           options: {
@@ -67,12 +69,12 @@ export const registerValidator = validate(
             minNumbers: 1,
             minSymbols: 1
           },
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.PASSWORD_MUST_BE_STRONG
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_STRONG
         },
         trim: true,
         escape: true,
         isLength: {
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16,
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16,
           options: {
             min: 8,
             max: 16
@@ -81,10 +83,10 @@ export const registerValidator = validate(
       },
       confirm_password: {
         notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.CONFIRM_PASSWORD_IS_REQUIRED
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_IS_REQUIRED
         },
         isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.CONFIRM_PASSWORD_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_MUST_BE_A_STRING
         },
         escape: true,
         trim: true,
@@ -96,12 +98,12 @@ export const registerValidator = validate(
             minNumbers: 1,
             minSymbols: 1
           },
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.CONFIRM_PASSWORD_MUST_BE_STRONG
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_MUST_BE_STRONG
         },
         custom: {
           options: (value, { req }) => {
             if (value !== req.body.password) {
-              throw new Error(VALIDATION_MESSAGES.USER.REGISTER.CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD)
+              throw new Error(VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD)
             }
             return true
           }
@@ -111,7 +113,7 @@ export const registerValidator = validate(
             min: 8,
             max: 16
           },
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16
         }
       },
       date_of_birth: {
@@ -137,10 +139,10 @@ export const loginValidator = validate(
     {
       email: {
         notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.LOGIN.EMAIL_IS_REQUIRED
+          errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_REQUIRED
         },
         isEmail: {
-          errorMessage: VALIDATION_MESSAGES.USER.LOGIN.EMAIL_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_MUST_BE_A_STRING
         },
         trim: true,
         custom: {
@@ -148,8 +150,8 @@ export const loginValidator = validate(
             const isExistEmail = await userServices.validateEmailAccessibility(value)
             if (!isExistEmail) {
               throw new ErrorWithStatus({
-                statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.LOGIN.EMAIL_ACCESSBILITY
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
               })
             }
             await userServices.validateAccountAccessibility(value)
@@ -159,10 +161,10 @@ export const loginValidator = validate(
       },
       password: {
         notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.LOGIN.PASSWORD_IS_REQUIRED
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_REQUIRED
         },
         isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.LOGIN.PASSWORD_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_A_STRING
         },
         isStrongPassword: {
           options: {
@@ -172,12 +174,12 @@ export const loginValidator = validate(
             minNumbers: 1,
             minSymbols: 1
           },
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.PASSWORD_MUST_BE_STRONG
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_STRONG
         },
         trim: true,
         escape: true,
         isLength: {
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16,
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16,
           options: {
             min: 8,
             max: 16
@@ -189,7 +191,7 @@ export const loginValidator = validate(
             if (!isExistPassword) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.LOGIN.PASSWORD_IS_INCORRECT
+                message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT
               })
             }
             return true
@@ -209,14 +211,29 @@ export const accessTokenValidator = validate(
           errorMessage: VALIDATION_MESSAGES.TOKEN.ACCESS_TOKEN_IS_REQUIRED
         },
         custom: {
-          options: async (value: string) => {
+          options: async (value: string, { req }) => {
             const bearerPrefix = 'Bearer '
             if (!value.startsWith(bearerPrefix)) {
-              throw new Error(VALIDATION_MESSAGES.USER.LOGOUT.HEADER_AUTHORIZATION_IS_INVALID)
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.UNAUTHORIZED,
+                message: VALIDATION_MESSAGES.AUTHORIZATION.HEADER_AUTHORIZATION_IS_INVALID
+              })
             }
             const access_token = value.substring(bearerPrefix.length)
             const secret_key = env.jwt.secret_key
-            await verifyToken({ token: access_token, secretOrPublicKey: secret_key })
+            try {
+              const payload = (await verifyToken({
+                token: access_token,
+                secretOrPublicKey: secret_key
+              })) as TokenPayloadType
+              req.body.email = payload.email
+              req.body.role = payload.role
+            } catch (error) {
+              throw new ErrorWithStatus({
+                message: capitalize(error.message),
+                statusCode: StatusCodes.UNAUTHORIZED
+              })
+            }
             return true
           }
         }
@@ -232,10 +249,10 @@ export const forgotPasswordValidator = validate(
     {
       email: {
         notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.LOGIN.EMAIL_IS_REQUIRED
+          errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_REQUIRED
         },
         isEmail: {
-          errorMessage: VALIDATION_MESSAGES.USER.LOGIN.EMAIL_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_MUST_BE_A_STRING
         },
         trim: true,
         custom: {
@@ -244,7 +261,7 @@ export const forgotPasswordValidator = validate(
             if (!isExistEmail) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.FORGOT_PASSWORD.EMAIL_IS_NOT_EXIT
+                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_NOT_EXIT
               })
             }
             await userServices.validateAccountAccessibility(value)
@@ -332,5 +349,239 @@ export const refreshTokenValidator = validate(
       }
     },
     ['body']
+  )
+)
+
+// Validation change password feature
+export const changePasswordValidator = validate(
+  checkSchema(
+    {
+      // old_password: string, password: string, confirm_password: string
+      old_password: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.OLD_PASSWORD_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_A_STRING
+        },
+        escape: true,
+        trim: true,
+        isStrongPassword: {
+          options: {
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_STRONG
+        },
+        isLength: {
+          options: {
+            min: 8,
+            max: 16
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16
+        },
+        custom: {
+          options: async (value, { req }) => {
+            const isExistPassword = await userServices.validatePassword(req.body.email, value)
+            if (!isExistPassword) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.PASSWORD.OLD_PASSWORD_IS_INCORRECT
+              })
+            }
+            return true
+          }
+        }
+      },
+      password: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_A_STRING
+        },
+        escape: true,
+        trim: true,
+        isStrongPassword: {
+          options: {
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_STRONG
+        },
+        isLength: {
+          options: {
+            min: 8,
+            max: 16
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16
+        },
+        custom: {
+          options: async (value, { req }) => {
+            if (value === req.body.old_password) {
+              throw new Error(VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_NOT_SAME_OLD_PASSWORD)
+            }
+            return true
+          }
+        }
+      },
+      confirm_password: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_A_STRING
+        },
+        escape: true,
+        trim: true,
+        isStrongPassword: {
+          options: {
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_STRONG
+        },
+        isLength: {
+          options: {
+            min: 8,
+            max: 16
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16
+        },
+        custom: {
+          options: async (value, { req }) => {
+            if (value !== req.body.password) {
+              throw new Error(VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD)
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
+
+// Validation reset password feature
+export const resetPasswordValidator = validate(
+  checkSchema(
+    {
+      email: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_REQUIRED
+        },
+        isEmail: {
+          errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_MUST_BE_A_STRING
+        },
+        trim: true,
+        custom: {
+          options: async (value) => {
+            const isExistEmail = await userServices.validateEmailAccessibility(value)
+            if (!isExistEmail) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
+              })
+            }
+            await userServices.validateAccountAccessibility(value)
+            return true
+          }
+        }
+      },
+      password: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_A_STRING
+        },
+        escape: true,
+        trim: true,
+        isStrongPassword: {
+          options: {
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_STRONG
+        },
+        isLength: {
+          options: {
+            min: 8,
+            max: 16
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16
+        }
+      },
+      confirm_password: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_A_STRING
+        },
+        escape: true,
+        trim: true,
+        isStrongPassword: {
+          options: {
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_STRONG
+        },
+        isLength: {
+          options: {
+            min: 8,
+            max: 16
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16
+        },
+        custom: {
+          options: async (value, { req }) => {
+            if (value !== req.body.password) {
+              throw new Error(VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD)
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
+
+export const userProfileValidator = validate(
+  checkSchema(
+    {
+      userId: {
+        trim: true,
+        escape: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_REQUIRED
+        },
+        custom: {
+          options: async (value) => {
+            if (!ObjectId.isValid(value)) {
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_INVALID)
+            }
+          }
+        }
+      }
+    },
+    ['params']
   )
 )

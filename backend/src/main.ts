@@ -44,7 +44,7 @@ const options: swaggerJSDoc.Options = {
 }
 
 const app = express()
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(options)))
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(options)))
 const httpServer = createServer(app)
 logServices.connect()
 app.use((req, res, next) => logServices.logRequest(req, res, next))
