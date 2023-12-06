@@ -680,7 +680,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/profile/{userId}:
+  /api/v1/users/{userId}/profile:
     get:
       tags:
         - user

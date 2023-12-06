@@ -165,7 +165,7 @@ userRouter.get('/', wrapRequestHandler(userController.getAllUser))
  */
 
 userRouter.get(
-  '/profile/:userId',
+  '/:userId/profile',
   accessTokenValidator,
   userProfileValidator,
   wrapRequestHandler(userController.getUser)
