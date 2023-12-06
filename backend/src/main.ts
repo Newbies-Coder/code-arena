@@ -16,6 +16,7 @@ import exitHook from 'async-exit-hook'
 import { DATABASE_MESSAGE } from './constants/message'
 import swaggerJSDoc from 'swagger-jsdoc'
 import swaggerUi from 'swagger-ui-express'
+import passport from 'passport'
 
 const options: swaggerJSDoc.Options = {
   definition: {
@@ -54,12 +55,7 @@ app.use(
       directives: {
         defaultSrc: ['*'],
         scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-        styleSrc: [
-          "'self'",
-          "'unsafe-inline'",
-          'https://fonts.googleapis.com/css',
-          'https://use.fontawesome.com/releases/v5.12.0/css/all.css'
-        ],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com/css', 'https://use.fontawesome.com/releases/v5.12.0/css/all.css'],
         objectSrc: ["'none'"],
         upgradeInsecureRequests: []
       }

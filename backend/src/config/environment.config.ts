@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import Joi from 'joi'
-import { CLIENT_MESSAGE, DATABASE_MESSAGE, OTP_EMAIL_MESSAGES, ENV_MESSAGE, JWT_MESSAGES, REQUEST_QUERY_MESSAGES, CLOUDINARY_MESSAGES } from '~/constants/message'
+import { CLIENT_MESSAGE, DATABASE_MESSAGE, OTP_EMAIL_MESSAGES, ENV_MESSAGE, JWT_MESSAGES, REQUEST_QUERY_MESSAGES, CLOUDINARY_MESSAGES, AUTH_MESSAGES, URL_MESSAGES } from '~/constants/message'
 
 dotenv.config()
 
@@ -11,6 +11,8 @@ let { JWT_SECRECT_KEY, JWT_ALGORITHM, JWT_REFRESH_TOKEN_KEY, ACCESS_TOKEN_EXPIRE
 let { OTP_EMAIL_ACCOUNT, OTP_EMAIL_PASSWORD, OTP_EMAIL_NAME } = OTP_EMAIL_MESSAGES
 let { MAX_ITEM_PER_PAGE } = REQUEST_QUERY_MESSAGES
 let { CLOUDINARY_KEY, CLOUDINARY_SECRET, CLOUDINARY_NAME, CLOUDINARY_AVATAR_FOLDER } = CLOUDINARY_MESSAGES
+let { FACEBOOK, GITHUB } = AUTH_MESSAGES
+let { AUTH_SUCCESS_URL, AUTH_FAIL_URL } = URL_MESSAGES
 
 // Validation schema env
 const envSchema = Joi.object({
@@ -45,7 +47,15 @@ const envSchema = Joi.object({
   CLOUDINARY_KEY: Joi.string().required().description(CLOUDINARY_KEY),
   CLOUDINARY_SECRET: Joi.string().required().description(CLOUDINARY_SECRET),
   CLOUDINARY_NAME: Joi.string().required().description(CLOUDINARY_NAME),
-  CLOUDINARY_AVATAR_FOLDER: Joi.string().required().description(CLOUDINARY_AVATAR_FOLDER)
+  CLOUDINARY_AVATAR_FOLDER: Joi.string().required().description(CLOUDINARY_AVATAR_FOLDER),
+  FACEBOOK_AUTH_CLIENT_ID: Joi.string().required().description(FACEBOOK.CLIENT_ID),
+  FACEBOOK_AUTH_CLIENT_SECRET: Joi.string().required().description(FACEBOOK.CLIENT_SECRET),
+  FACEBOOK_AUTH_CALLBACK_URL: Joi.string().required().description(FACEBOOK.CALLBACK_URL),
+  GITHUB_AUTH_CLIENT_ID: Joi.string().required().description(GITHUB.CLIENT_ID),
+  GITHUB_AUTH_CLIENT_SECRET: Joi.string().required().description(GITHUB.CLIENT_SECRET),
+  GITHUB_AUTH_CALLBACK_URL: Joi.string().required().description(GITHUB.CALLBACK_URL),
+  AUTH_SUCCESS_URL: Joi.string().required().description(AUTH_SUCCESS_URL),
+  AUTH_FAIL_URL: Joi.string().required().description(AUTH_FAIL_URL)
 })
   .unknown()
   .required()
@@ -109,5 +119,21 @@ export const env = {
     key: envVars.CLOUDINARY_KEY,
     cloud_name: envVars.CLOUDINARY_NAME,
     avatar_folder: envVars.CLOUDINARY_AVATAR_FOLDER
+  },
+  auth: {
+    facebook: {
+      client_id: envVars.FACEBOOK_AUTH_CLIENT_ID,
+      client_secret: envVars.FACEBOOK_AUTH_CLIENT_SECRET,
+      callback_url: envVars.FACEBOOK_AUTH_CALLBACK_URL
+    },
+    github: {
+      client_id: envVars.GITHUB_AUTH_CLIENT_ID,
+      client_secret: envVars.GITHUB_AUTH_CLIENT_SECRET,
+      callback_url: envVars.GITHUB_AUTH_CALLBACK_URL
+    }
+  },
+  url: {
+    auth_success: envVars.AUTH_SUCCESS_URL,
+    auth_fail: envVars.AUTH_FAIL_URL
   }
 }

@@ -63,7 +63,7 @@ class UserService {
   }
 
   // Sign JWT access token
-  private signAccessToken(_id: string, email: string, role: UserRole) {
+  signAccessToken(_id: string, email: string, role: UserRole) {
     let { access_token_exp, jwt_algorithm, secret_key } = env.jwt
     return signToken({
       payload: {
@@ -81,7 +81,7 @@ class UserService {
   }
 
   //Sign JWT refresh token
-  private signRefreshToken(_id: string, email: string, role: UserRole) {
+  signRefreshToken(_id: string, email: string, role: UserRole) {
     let { refresh_token_exp, jwt_algorithm, refresh_token_key } = env.jwt
     return signToken({
       payload: {
@@ -98,7 +98,7 @@ class UserService {
     })
   }
   // Create access_token and refresh_token
-  private signAccessAndRefreshToken(user_id: string, email: string, role: UserRole) {
+  signAccessAndRefreshToken(user_id: string, email: string, role: UserRole) {
     return Promise.all([this.signAccessToken(user_id, email, role), this.signRefreshToken(user_id, email, role)])
   }
 

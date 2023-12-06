@@ -173,3 +173,21 @@ export const CLOUDINARY_MESSAGES = {
   CLOUDINARY_NAME: 'Cloud name of current cloudinary account',
   CLOUDINARY_AVATAR_FOLDER: 'Folder that contain avatar images on cloudinary'
 }
+
+export const AUTH_MESSAGES = {
+  FACEBOOK: {
+    CLIENT_ID: 'ID to login with facebook and oauth2',
+    CLIENT_SECRET: 'Password to login with facebook and oauth2',
+    CALLBACK_URL: 'Url that facebook callback when authenticate'
+  },
+  GITHUB: {
+    CLIENT_ID: 'ID to login with github and oauth2',
+    CLIENT_SECRET: 'Password to login with github and oauth2',
+    CALLBACK_URL: 'Url that github callback when authenticate'
+  }
+}
+
+export const URL_MESSAGES = {
+  AUTH_SUCCESS_URL: 'URL that user get redirected when authenticate success',
+  AUTH_FAIL_URL: 'URL that user get redirected when authenticate fail'
+}
