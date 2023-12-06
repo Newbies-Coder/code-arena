@@ -150,7 +150,7 @@ export const loginValidator = validate(
             const isExistEmail = await userServices.validateEmailAccessibility(value)
             if (!isExistEmail) {
               throw new ErrorWithStatus({
-                statusCode: StatusCodes.BAD_REQUEST,
+                statusCode: StatusCodes.NOT_FOUND,
                 message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
               })
             }
