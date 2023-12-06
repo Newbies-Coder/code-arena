@@ -9,7 +9,8 @@ import {
   verifyOTPValidator,
   changePasswordValidator,
   resetPasswordValidator,
-  userProfileValidator
+  userProfileValidator,
+  checkTokenValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
 
@@ -238,7 +239,7 @@ userRouter.get('/pagination', wrapRequestHandler(userController.pagination))
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.post('/test-token', wrapRequestHandler(userController.testToken))
+userRouter.post('/test-token', checkTokenValidator, wrapRequestHandler(userController.testToken))
 
 /**
  * Description: Test token

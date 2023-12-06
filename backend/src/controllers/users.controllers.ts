@@ -116,7 +116,8 @@ const userController = {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.PAGINATION_USER_SUCCESS)
   },
   testToken: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.TEST_TOKEN_SUCCESS)
+    const result = await userServices.checkToken(req.body)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.TEST_TOKEN_SUCCESS)
   }
 }
 

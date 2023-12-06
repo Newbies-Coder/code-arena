@@ -5,6 +5,7 @@ import { env } from '~/config/environment.config'
 import {
   ChangePasswordBody,
   ForgotPasswordBody,
+  InfoTokenType,
   LoginBody,
   LogoutBody,
   RefreshTokenBody,
@@ -19,7 +20,7 @@ import User from '~/models/schemas/Users.schema'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import { StatusCodes } from 'http-status-codes'
 import { VALIDATION_MESSAGES } from '~/constants/message'
-
+import moment from 'moment'
 import emailService from '~/services/email.service'
 import otpService from '~/services/otp.service'
 class UserService {
@@ -240,6 +241,15 @@ class UserService {
       })
     }
     return user
+  }
+  async checkToken(payload: InfoTokenType) {
+    let { iat, exp, ...item } = payload
+    let userInfo = {
+      ...item,
+      iat: moment(iat * 1000).format(),
+      exp: moment(exp * 1000).format()
+    }
+    return userInfo
   }
 }
 

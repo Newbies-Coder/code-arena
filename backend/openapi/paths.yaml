@@ -198,7 +198,6 @@ paths:
       summary: Logs out current logged in user session
       description: Logs out current logged in user session
       operationId: logoutUser
-      parameters: []
       security:
         - BearerAuth: []
       requestBody:
@@ -759,6 +758,52 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+  /api/v1/users/test-token:
+    post:
+      tags:
+        - user
+      summary: Test token user into the system
+      description: Test token user into the system
+      operationId: testToken
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Get token user successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Test token successfully
+                  data:
+                    $ref: '#/components/schemas/TokenSchema'
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: Header authorization is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You are not currently logged in to the system!
+                  data:
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
 components:
   schemas:
     LoginSchema:
@@ -849,6 +894,35 @@ components:
           type: string
           example: 'admin@123'
         date_of_birth:
+          type: string
+          example: '2000-02-22T00:00:00.000Z'
+    TokenSchema:
+      type: object
+      properties:
+        _id:
+          type: integer
+          format: int64
+          example: 656b0bbd3b0e9defe34fca1a
+        email:
+          type: string
+          example: user123@gmail.com
+        role:
+          type: string
+          example: 'USER'
+          enum:
+            - USER
+            - MODERATOR
+            - ADMIN
+        token_type:
+          type: string
+          example: 'AccessToken'
+          enum:
+            - AccesToken
+            - RefreshToken
+        iat:
+          type: string
+          example: '2000-02-22T00:00:00.000Z'
+        exp:
           type: string
           example: '2000-02-22T00:00:00.000Z'
     ProfileUserSchema:
