@@ -25,6 +25,7 @@ interface UserType {
   password_change_at?: Date
   created_at?: Date
   updated_at?: Date
+  google_id?: string
 }
 
 export default class User {
@@ -49,6 +50,7 @@ export default class User {
   password_change_at: Date
   created_at: Date
   updated_at: Date
+  google_id: string
 
   constructor(user: UserType) {
     this._id = user._id
@@ -72,5 +74,6 @@ export default class User {
     this.password_change_at = user.password_change_at || null
     this.created_at = user.created_at || new Date()
     this.updated_at = user.updated_at || null
+    this.google_id = user.google_id || ''
   }
 }

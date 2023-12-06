@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import passport from 'passport'
 import userController from '~/controllers/users.controllers'
 import {
   accessTokenValidator,
@@ -45,7 +46,17 @@ userRouter.get('/oauh/github', wrapRequestHandler(userController.githubLogin))
  * Method: GET
  * Query: { code: string }
  */
-userRouter.get('/oauh/google', wrapRequestHandler(userController.googleLogin))
+userRouter.get(
+  '/oauth/google',
+  passport.authenticate('google', {
+    scope: ['email', 'profile']
+  })
+)
+userRouter.get(
+  '/oauth/google/callback',
+  passport.authenticate('google'),
+  wrapRequestHandler(userController.googleLoginCallback)
+)
 
 /**
  * Description. OAuth with Facebook

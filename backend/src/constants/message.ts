@@ -34,6 +34,15 @@ export const OTP_EMAIL_MESSAGES = {
   OTP_EMAIL_PASSWORD: 'Email password of the gmail account that send OTP'
 }
 
+export const OAUTH_MESSAGE = {
+  GOOGLE_CLIENT_ID: 'Google client id',
+  GOOGLE_SECRET_ID: 'Google secret id',
+  GOOGLE_CALLBACK_URL: 'Google callback url',
+  LINKEDIN_CLIENT_ID: 'Linkedin client id',
+  LINKEDIN_SECRET_ID: 'Linkedin secret id',
+  LINKEDIN_CALLBACK_URL: 'Linkedin callback url'
+}
+
 export const ENV_MESSAGE = {
   PORT: 'Port server is using',
   HOST: 'Host server is using',

@@ -15,6 +15,9 @@ import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
 import { env } from '~/config/environment.config'
 import { ObjectId } from 'mongodb'
+import passport from 'passport'
+import User from '~/models/schemas/Users.schema'
+import { RequestType } from '~/@types/request.type'
 
 const userController = {
   login: async (req: Request<ParamsDictionary, any, LoginBody>, res: Response, next: NextFunction) => {
@@ -23,7 +26,14 @@ const userController = {
   },
   googleLogin: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.LOGIN_GOOGLE_SUCCESS)
+    passport.authenticate('google', {
+      scope: ['email', 'profile']
+    })
+  },
+  googleLoginCallback: async (req: RequestType, res: Response, next: NextFunction) => {
+    const result = await userServices.authenticate(req.user._id.toString(), req.user.email, req.user.role)
+    // Message register successfully!
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.LOGIN_GOOGLE_SUCCESS)
   },
   githubLogin: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!
@@ -33,9 +43,10 @@ const userController = {
     // Message register successfully!
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.LOGIN_FACEBOOK_SUCCESS)
   },
-  linkedinLogin: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+  linkedinLogin: async (req: RequestType, res: Response, next: NextFunction) => {
+    const result = await userServices.authenticate(req.user._id.toString(), req.user.email, req.user.role)
     // Message register successfully!
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.LOGIN_LINKEDIN_SUCCESS)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.LOGIN_LINKEDIN_SUCCESS)
   },
   register: async (req: Request<ParamsDictionary, any, RegisterBody>, res: Response, next: NextFunction) => {
     const result = await userServices.register(req.body)

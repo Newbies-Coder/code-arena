@@ -13,7 +13,7 @@ import {
 } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
-import { ResultRefreshTokenType, ResultRegisterType } from '~/@types/reponse.type'
+import { ResultLoginType, ResultOAuthType, ResultRefreshTokenType, ResultRegisterType } from '~/@types/reponse.type'
 import { hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
@@ -165,7 +165,7 @@ class UserService {
         user_id: _id
       })
     )
-    const content: ResultRegisterType = {
+    const content: ResultLoginType = {
       _id: _id.toString(),
       username: username,
       email,
@@ -240,6 +240,19 @@ class UserService {
       })
     }
     return user
+  }
+
+  async authenticate(user_id: string, email: string, role: UserRole) {
+    const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id, email, role)
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({
+        token: refresh_token,
+        user_id: new ObjectId(user_id)
+      })
+    )
+
+    let content: ResultOAuthType = { _id: user_id, access_token, refresh_token }
+    return content
   }
 }
 

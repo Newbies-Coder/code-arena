@@ -1,6 +1,13 @@
 import dotenv from 'dotenv'
 import Joi from 'joi'
-import { CLIENT_MESSAGE, DATABASE_MESSAGE, OTP_EMAIL_MESSAGES, ENV_MESSAGE, JWT_MESSAGES } from '~/constants/message'
+import {
+  CLIENT_MESSAGE,
+  DATABASE_MESSAGE,
+  OTP_EMAIL_MESSAGES,
+  ENV_MESSAGE,
+  JWT_MESSAGES,
+  OAUTH_MESSAGE
+} from '~/constants/message'
 
 dotenv.config()
 
@@ -10,6 +17,14 @@ let { REQ_DURATION, REQ_POINT, COOKIES_EXPIRESIN, SECRET_COOKIE_NAME, PASSWORD_S
 let { JWT_SECRECT_KEY, JWT_ALGORITHM, JWT_REFRESH_TOKEN_KEY, ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } =
   JWT_MESSAGES
 let { OTP_EMAIL_ACCOUNT, OTP_EMAIL_PASSWORD, OTP_EMAIL_NAME } = OTP_EMAIL_MESSAGES
+let {
+  GOOGLE_CLIENT_ID,
+  GOOGLE_SECRET_ID,
+  GOOGLE_CALLBACK_URL,
+  LINKEDIN_CLIENT_ID,
+  LINKEDIN_SECRET_ID,
+  LINKEDIN_CALLBACK_URL
+} = OAUTH_MESSAGE
 
 // Validation schema env
 const envSchema = Joi.object({
@@ -38,7 +53,13 @@ const envSchema = Joi.object({
   OTP_EMAIL: Joi.string().required().description(OTP_EMAIL_ACCOUNT),
   OTP_EMAIL_PASSWORD: Joi.string().required().description(OTP_EMAIL_PASSWORD),
   OTP_EMAIL_NAME: Joi.string().required().description(OTP_EMAIL_NAME),
-  OTP_SECRET: Joi.string().required().description(OTP_SECRET)
+  OTP_SECRET: Joi.string().required().description(OTP_SECRET),
+  GOOGLE_CLIENT_ID: Joi.string().required().description(GOOGLE_CLIENT_ID),
+  GOOGLE_SECRET_ID: Joi.string().required().description(GOOGLE_SECRET_ID),
+  GOOGLE_CALLBACK_URL: Joi.string().required().description(GOOGLE_CALLBACK_URL),
+  LINKEDIN_CLIENT_ID: Joi.string().required().description(LINKEDIN_CLIENT_ID),
+  LINKEDIN_SECRET_ID: Joi.string().required().description(LINKEDIN_SECRET_ID),
+  LINKEDIN_CALLBACK_URL: Joi.string().required().description(LINKEDIN_CALLBACK_URL)
 })
   .unknown()
   .required()
@@ -92,5 +113,17 @@ export const env = {
     account: envVars.OTP_EMAIL,
     password: envVars.OTP_EMAIL_PASSWORD,
     name: envVars.OTP_EMAIL_NAME
+  },
+  oauth: {
+    google: {
+      client_id: envVars.GOOGLE_CLIENT_ID,
+      secret_id: envVars.GOOGLE_SECRET_ID,
+      callback_url: envVars.GOOGLE_CALLBACK_URL
+    },
+    linkedin: {
+      client_id: envVars.LINKEDIN_CLIENT_ID,
+      secret_id: envVars.LINKEDIN_SECRET_ID,
+      callback_url: envVars.LINKEDIN_CALLBACK_URL
+    }
   }
 }

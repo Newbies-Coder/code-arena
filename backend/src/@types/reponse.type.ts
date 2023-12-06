@@ -1,7 +1,7 @@
 export type ResultRegisterType = {
   _id: string
   username: string
-  email: string 
+  email: string
   access_token: string
   refresh_token: string
 }
@@ -13,8 +13,14 @@ export type ResultRefreshTokenType = {
 
 export type ResultLoginType = {
   _id: string
-  fullName: string
+  username: string
   email: string
+  access_token: string
+  refresh_token: string
+}
+
+export type ResultOAuthType = {
+  _id: string
   access_token: string
   refresh_token: string
 }
