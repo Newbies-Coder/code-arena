@@ -256,6 +256,14 @@ class UserService {
   }
 
   async updateMeAvatar({ _id }: AuthUser, file: Express.Multer.File) {
+    // TODO: Check in upload middleware
+    if (!file) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: VALIDATION_MESSAGES.USER.UPLOAD_AVATAR.INVALID_AVATAR_EXTENSION
+      })
+    }
+
     const { url } = await cloudinaryService.uploadAvatar(file.buffer)
     const { avatar } = await databaseService.users.findOne({ _id: new ObjectId(_id) })
 

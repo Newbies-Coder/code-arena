@@ -145,6 +145,9 @@ export const VALIDATION_MESSAGES = {
     },
     FORGOT_PASSWORD: {
       EMAIL_IS_NOT_EXIT: 'Email is not exit'
+    },
+    UPLOAD_AVATAR: {
+      INVALID_AVATAR_EXTENSION: 'Avatar image extension is invalid'
     }
   },
   TOKEN: {
