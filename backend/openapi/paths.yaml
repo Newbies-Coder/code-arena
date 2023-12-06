@@ -309,11 +309,40 @@ paths:
               schema:
                 type: object
                 properties:
+                  statusCode:
+                    type: integer
+                    example: 200
                   message:
                     type: string
-                    example: Refresh token success
-                  result:
+                    example: Refresh token successfully
+                  data:
                     $ref: '#/components/schemas/RegisterSuccessAuth'
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please check refresh token!
+                  data:
+                    type: object
+                    properties:
+                      refresh-token:
+                        type: string
+                        example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /api/v1/users/forgot-password:
     post:
       tags:
