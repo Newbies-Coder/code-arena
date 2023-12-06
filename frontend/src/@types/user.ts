@@ -1,4 +1,4 @@
-export interface userType {
+  export interface userType {
   email?: string
   passWord?: string
   accessToken?: string

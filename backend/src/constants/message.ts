@@ -14,15 +14,14 @@ export const DATABASE_MESSAGE = {
     DICONNECT: '⛔️ Disconnected from the database main successfully!',
     USER_COLLECTION: 'The table holds user information in the database.',
     REFRESH_TOKEN_COLLECTION: 'The table holds refresh-token information in the database.',
-    OTP_COLLECTION: 'The table holds otp information in the database.'
+    OTP_COLLECTION: 'The table holds otp information in the database.',
+    FOLLOW_COLLECTION: 'The table holds follow information in the database.'
   }
 } as const
 
 export const JWT_MESSAGES = {
-  JWT_SECRECT_KEY:
-    'This “Secret” string is unique to the application and must be prioritized and carefully stored securely on the server side.',
-  JWT_REFRESH_TOKEN_KEY:
-    'This “Secret” string is unique to the application and must be prioritized and carefully stored securely on the server side.',
+  JWT_SECRECT_KEY: 'This “Secret” string is unique to the application and must be prioritized and carefully stored securely on the server side.',
+  JWT_REFRESH_TOKEN_KEY: 'This “Secret” string is unique to the application and must be prioritized and carefully stored securely on the server side.',
   ACCESS_TOKEN_EXPIRES_IN: 'Duration of existence of access_token',
   REFRESH_TOKEN_EXPIRES_IN: 'Duration of existence of access_token',
   JWT_ALGORITHM: 'List of strings with the names of the allowed algorithms'
@@ -31,7 +30,7 @@ export const JWT_MESSAGES = {
 export const OTP_EMAIL_MESSAGES = {
   OTP_EMAIL_NAME: 'Display name of the gmail account that send OTP',
   OTP_EMAIL_ACCOUNT: 'Email of the gmail account that send OTP',
-  OTP_EMAIL_PASSWORD: 'Email password of the gmail account that send OTP',
+  OTP_EMAIL_PASSWORD: 'Email password of the gmail account that send OTP'
 }
 
 export const ENV_MESSAGE = {
@@ -46,7 +45,7 @@ export const CLIENT_MESSAGE = {
   REQ_POINT: 'Maximum number of points can be consumed over duration',
   REQ_DURATION: 'Number of seconds before consumed points are reset.',
   PASSWORD_SECRET: 'String of numeric or character values ​​used in security systems',
-  OTP_SECRET: "String of numeric or character values ​​used in security systems",
+  OTP_SECRET: 'String of numeric or character values ​​used in security systems',
   COOKIES_EXPIRESIN: 'Cookie expires in the system',
   SECRET_COOKIE_NAME: 'Cookies_name when user login and register success and save local'
 } as const
@@ -86,15 +85,26 @@ export const USER_VALIDATOR_MESSAGES = {
 
 export const VALIDATION_MESSAGES = {
   TITLE: 'Validation Error',
+  PAGINATION: {
+    PAGE_CAN_NOT_LESS_THAN_ZERO: 'Page number cannot less than zero',
+    ITEMS_IS_NOT_IN_RANGE: 'Item per page can not less than zero and greater than 100'
+  },
   USER: {
+    COMMONS: {
+      USER_WITH_ID_IS_NOT_EXIST: 'User with id is not exist',
+      USER_ID_MUST_BE_A_STRING: 'User id must be a string',
+      USER_ID_CAN_NOT_BE_EMPTY: 'User id cannot be empty',
+      USER_NOT_LOGIN: 'You must logged in to continue',
+      USER_NOT_ROLE_NOT_SATISFIED: 'You don not have the right role to access this resources',
+      USER_ID_IS_INVALID: 'User id is invalid'
+    },
     LOGIN: {
       EMAIL_IS_REQUIRED: 'Email is required',
       EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
       EMAIL_ACCESSBILITY: "The email address doesn't exist. Please try the valid one or simply register",
       PASSWORD_IS_REQUIRED: 'Password is required',
       PASSWORD_MUST_BE_A_STRING: 'Password must be a string',
-      PASSWORD_MUST_BE_STRONG:
-        'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
+      PASSWORD_MUST_BE_STRONG: 'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
       PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Password must be between 8 and 16 characters long',
       PASSWORD_IS_INCORRECT: 'Password is incorrect',
       ACCOUNT_IS_UNVERIFIED: 'Account is unverified',
@@ -109,14 +119,12 @@ export const VALIDATION_MESSAGES = {
       EMAIL_ACCESSBILITY: 'The email address is already subscribed. Please use a different email.',
       PASSWORD_IS_REQUIRED: 'Password is required',
       PASSWORD_MUST_BE_A_STRING: 'Password must be a string',
-      PASSWORD_MUST_BE_STRONG:
-        'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
+      PASSWORD_MUST_BE_STRONG: 'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
       PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Password must be between 8 and 16 characters long',
       CONFIRM_PASSWORD_IS_REQUIRED: 'Confirm_password is required',
       CONFIRM_PASSWORD_MUST_BE_A_STRING: 'Confirm_password must be a string',
       CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD: 'Confirm password must be the same as password',
-      CONFIRM_PASSWORD_MUST_BE_STRONG:
-        'Confirm_password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
+      CONFIRM_PASSWORD_MUST_BE_STRONG: 'Confirm_password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
       CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Confirm_password must be between 8 and 16 characters long',
       DATE_OF_BIRTH_IS_REQUIRED: 'Date of birth is required',
       DATE_OF_BIRTH_IS_ISO8601: 'Date of birth must be a YYYY-MM-DDTHH:mm:ss.ssssZ'
@@ -142,6 +150,7 @@ export const VALIDATION_MESSAGES = {
   TOKEN: {
     ACCESS_TOKEN_IS_REQUIRED: 'Access_token is required',
     ACCESS_TOKEN_MUST_BE_A_STRING: 'Access_token must be a string',
+    INVALID_BEARER_TOKEN: 'Invalid bearer token',
     REFRESH_TOKEN_IS_REQUIRED: 'Refresh_token is required',
     REFRESH_TOKEN_MUST_BE_A_STRING: 'Refresh_token must be a string',
     REFRESH_TOKEN_USED_OR_NOT_EXIST: 'Used refresh token or not exist',
@@ -150,3 +159,14 @@ export const VALIDATION_MESSAGES = {
     EMAIL_VERIFY_TOKEN_MUST_BE_A_STRING: 'Email verify token must be a string'
   }
 } as const
+
+export const REQUEST_QUERY_MESSAGES = {
+  MAX_ITEM_PER_PAGE: 'How many items per page'
+} as const
+
+export const CLOUDINARY_MESSAGES = {
+  CLOUDINARY_KEY: 'Key to access cloudinary',
+  CLOUDINARY_SECRET: 'Password to access cloudinary',
+  CLOUDINARY_NAME: 'Cloud name of current cloudinary account',
+  CLOUDINARY_AVATAR_FOLDER: 'Folder that contain avatar images on cloudinary'
+}

@@ -10,6 +10,7 @@ import OPTService from '~/services/otp.service'
 import { databaseService } from '~/services/connectDB.service'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import { capitalize } from 'lodash'
+import { ObjectId } from 'mongodb'
 
 // Validation register feature
 export const registerValidator = validate(
@@ -332,5 +333,86 @@ export const refreshTokenValidator = validate(
       }
     },
     ['body']
+  )
+)
+export const getAllUserValidator = validate(
+  checkSchema(
+    {
+      page: {
+        trim: true,
+        isInt: {
+          options: {
+            min: 0
+          },
+          errorMessage: VALIDATION_MESSAGES.PAGINATION.PAGE_CAN_NOT_LESS_THAN_ZERO
+        }
+      },
+      items: {
+        trim: true,
+        isInt: {
+          options: {
+            min: 0,
+            max: 100
+          },
+          errorMessage: VALIDATION_MESSAGES.PAGINATION.ITEMS_IS_NOT_IN_RANGE
+        }
+      }
+    },
+    ['query']
+  )
+)
+
+export const followUserValidator = validate(
+  checkSchema(
+    {
+      userId: {
+        trim: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
+        },
+        custom: {
+          options: async (value) => {
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID,
+                statusCode: StatusCodes.NOT_FOUND
+              })
+            }
+
+            const user = userServices.isUserExist(value)
+
+            if (!user) {
+              throw new ErrorWithStatus({
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST,
+                statusCode: StatusCodes.NOT_FOUND
+              })
+            }
+
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
+export const unfollowUserValidator = validate(
+  checkSchema(
+    {
+      userId: {
+        trim: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
+        }
+      }
+    },
+    ['params']
   )
 )

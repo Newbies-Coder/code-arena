@@ -1,11 +1,17 @@
 import { Router } from 'express'
+import { UserRole } from '~/constants/enums'
 import userController from '~/controllers/users.controllers'
+import { requireLoginMiddleware, requireRoleMiddleware } from '~/middlewares/auth.middlewares'
+import { uploadFile } from '~/middlewares/uploadFile.middleware'
 import {
   accessTokenValidator,
+  followUserValidator,
   forgotPasswordValidator,
+  getAllUserValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator,
+  unfollowUserValidator,
   verifyOTPValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
@@ -137,7 +143,7 @@ userRouter.post('/change-password', userController.register, wrapRequestHandler(
  * Body: { followed_user_id: string }
  */
 
-userRouter.post('/follow/:userId', wrapRequestHandler(userController.follow))
+userRouter.post('/follow/:userId', wrapRequestHandler(requireLoginMiddleware), followUserValidator, wrapRequestHandler(userController.follow))
 
 /**
  * Description: unfollow someone
@@ -146,7 +152,7 @@ userRouter.post('/follow/:userId', wrapRequestHandler(userController.follow))
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.post('/unfollow/:userId', wrapRequestHandler(userController.unfollow))
+userRouter.delete('/unfollow/:userId', wrapRequestHandler(requireLoginMiddleware), unfollowUserValidator, wrapRequestHandler(userController.unfollow))
 
 /**
  * Description: Get all user by admin
@@ -155,7 +161,7 @@ userRouter.post('/unfollow/:userId', wrapRequestHandler(userController.unfollow)
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.get('/', wrapRequestHandler(userController.getAllUser))
+userRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), getAllUserValidator, wrapRequestHandler(userController.getAllUser))
 
 /**
  * Description: Get user profile
@@ -183,6 +189,16 @@ userRouter.get('/@me/profile', wrapRequestHandler(userController.getMe))
  */
 
 userRouter.put('/@me/profile', wrapRequestHandler(userController.updateMe))
+
+/**
+ * Description: Search user with name, return 10 matched users
+ * Path: /
+ * Method: GET
+ * Body:
+ * param: { userName: string }
+ */
+
+userRouter.post('/@me/avatar', wrapRequestHandler(requireLoginMiddleware), uploadFile.single('image'), wrapRequestHandler(userController.updateMeAvatar))
 
 /**
  * Description: Search user with name, return 10 matched users
@@ -222,15 +238,6 @@ userRouter.delete('/delete-users', wrapRequestHandler(userController.deleteManyU
  *  limit,
  *  keyword
  * }
- */
-
-userRouter.get('/pagination', wrapRequestHandler(userController.pagination))
-
-/**
- * Description: Test token
- * Path: /test-token
- * Method: POST
- * Header: { Authorization: Bearer <access_token> }
  */
 
 userRouter.post('/test-token', wrapRequestHandler(userController.testToken))

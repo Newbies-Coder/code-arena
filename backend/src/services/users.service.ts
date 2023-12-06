@@ -2,17 +2,10 @@ import { signToken, verifyToken } from '~/utils/jwt'
 import { databaseService } from './connectDB.service'
 import { TokenType, UserRole, UserVerifyStatus } from '~/constants/enums'
 import { env } from '~/config/environment.config'
-import {
-  ForgotPasswordBody,
-  LoginBody,
-  LogoutBody,
-  RefreshTokenBody,
-  RegisterBody,
-  VerifyOTPBody
-} from '~/models/requests/User.requests'
+import { ForgotPasswordBody, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
-import { ResultRefreshTokenType, ResultRegisterType } from '~/@types/reponse.type'
+import { ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
 import { hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
@@ -21,6 +14,12 @@ import { VALIDATION_MESSAGES } from '~/constants/message'
 
 import emailService from '~/services/email.service'
 import otpService from '~/services/otp.service'
+import { ParsedUrlQuery } from 'querystring'
+import { ParamsDictionary } from 'express-serve-static-core'
+import Follow from '~/models/schemas/Follow.schema'
+import { AuthUser } from '~/@types/auth.type'
+import _ from 'lodash'
+import cloudinaryService from '~/services/cloudinary.service'
 class UserService {
   // Check email exist in dat abase
   async validateEmailAccessibility(email: string) {
@@ -32,6 +31,11 @@ class UserService {
   async validatePassword(email: string, password: string) {
     const user = await databaseService.users.findOne({ email: email, password: hashPassword(password) })
     return Boolean(user)
+  }
+
+  async isUserExist(id: string) {
+    const result = await databaseService.users.findOne({ id: new ObjectId(id) })
+    return Boolean(result)
   }
 
   // Check account was verified
@@ -188,11 +192,7 @@ class UserService {
   async verifyOTP(payload: VerifyOTPBody) {
     let { otp } = payload
     const { email } = await otpService.findOTP(otp)
-    await databaseService.users.updateOne(
-      { email, verify: UserVerifyStatus.Unverified },
-      { $set: { verify: UserVerifyStatus.Verified } },
-      { upsert: false }
-    )
+    await databaseService.users.updateOne({ email, verify: UserVerifyStatus.Unverified }, { $set: { verify: UserVerifyStatus.Verified } }, { upsert: false })
   }
 
   async refreshToken(payload: RefreshTokenBody) {
@@ -219,6 +219,56 @@ class UserService {
     )
 
     const result: ResultRefreshTokenType = { access_token: newAccessToken, refresh_token: newRefreshToken }
+    return result
+  }
+
+  async getAllUser(payload: ParsedUrlQuery) {
+    const page = Number(payload.page)
+    const items = Number(payload.items)
+
+    const result = await databaseService.users
+      .find()
+      .limit(items)
+      .skip(page * items)
+      .toArray()
+
+    return _.omit(result, ['password'])
+  }
+
+  async follow(user: AuthUser, payload: ParamsDictionary) {
+    const { userId } = payload
+
+    await databaseService.follow.insertOne(
+      new Follow({
+        followedId: new ObjectId(userId),
+        followerId: new ObjectId(user._id)
+      })
+    )
+  }
+
+  async unfollow(user: AuthUser, payload: ParamsDictionary) {
+    const { userId } = payload
+
+    await databaseService.follow.deleteMany({
+      followedId: new ObjectId(userId),
+      followerId: new ObjectId(user._id)
+    })
+  }
+
+  async updateMeAvatar({ _id }: AuthUser, file: Express.Multer.File) {
+    const { url } = await cloudinaryService.uploadAvatar(file.buffer)
+    const { avatar } = await databaseService.users.findOne({ _id: new ObjectId(_id) })
+
+    await cloudinaryService.deleteAvatar(avatar)
+    await databaseService.users.updateOne(
+      { _id: new ObjectId(_id) },
+      {
+        $set: {
+          avatar: url
+        }
+      }
+    )
+    const result: UploadAvatarType = { avatarUrl: url }
     return result
   }
 }

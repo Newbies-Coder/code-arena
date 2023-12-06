@@ -5,6 +5,7 @@ import { LoginBody, RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/mode
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
 import { env } from '~/config/environment.config'
+import { ParsedUrlQuery } from 'querystring'
 
 const userController = {
   login: async (req: Request<ParamsDictionary, any, LoginBody>, res: Response, next: NextFunction) => {
@@ -83,15 +84,19 @@ const userController = {
   },
   follow: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!
+    const result = await userServices.follow(req.user, req.params)
+
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.FOLLOW_SUCCESS)
   },
   unfollow: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    const result = await userServices.unfollow(req.user, req.params)
     // Message register successfully!
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.UNFOLLOW_SUCCESS)
   },
-  getAllUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+  getAllUser: async (req: Request<ParamsDictionary, any, any, ParsedUrlQuery>, res: Response, next: NextFunction) => {
+    const result = await userServices.getAllUser(req.query)
     // Message register successfully!
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_ALL_USER_SUCCESS)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_ALL_USER_SUCCESS)
   },
   getUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!
@@ -105,6 +110,11 @@ const userController = {
     // Message register successfully!
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.UPDATE_USER_SUCCESS)
   },
+  updateMeAvatar: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    const result = await userServices.updateMeAvatar(req.user, req.file)
+    // Message register successfully!
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.UPDATE_USER_SUCCESS)
+  },
   search: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.SEARCH_USER_SUCCESS)
@@ -116,10 +126,6 @@ const userController = {
   deleteManyUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.DELETE_MANY_USER_SUCCESS)
-  },
-  pagination: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    // Message register successfully!
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.PAGINATION_USER_SUCCESS)
   },
   testToken: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!
