@@ -833,7 +833,7 @@ export const SelectedHomeIcon: React.FC<IconPropsType> = ({ width = '1.5rem', he
   </svg>
 )
 
-export const FrontendIcon: React.FC<IconPropsType> = ({ width = '2rem', height = '2rem', className }) => (
+export const FrontendIcon: React.FC<IconPropsType> = ({ width = '1rem', height = '1rem', className }) => (
   <svg
     width={width}
     height={height}
@@ -1032,5 +1032,33 @@ export const PlayIcon: React.FC<IconPropsType> = ({ width = '0.875rem', height =
       stroke-linecap="round"
       stroke-linejoin="round"
     />
+  </svg>
+)
+
+export const LeftArrowIcon: React.FC<IconPropsType> = ({ width = '1.875rem', height = '1.875rem', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 30 30"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle opacity="0.3" cx="15" cy="15" r="15" fill="white" />
+    <path d="M18 20L12 15L18 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+)
+
+export const RightArrowIcon: React.FC<IconPropsType> = ({ width = '1.875rem', height = '1.875rem', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 30 30"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle opacity="0.3" cx="15" cy="15" r="15" fill="white" />
+    <path d="M12 10L18 15L12 20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
 )

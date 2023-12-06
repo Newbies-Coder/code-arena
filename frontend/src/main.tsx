@@ -6,8 +6,8 @@ import { unstable_HistoryRouter as HistoryBrowserRouter } from 'react-router-dom
 import { createBrowserHistory } from 'history'
 import { Provider } from 'react-redux'
 import { store } from '@redux/config'
-import MainHome from './container/Home/pages/MainHome'
 import { ConfigProvider } from 'antd'
+import App from './App'
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 export const history: any = createBrowserHistory()
 
@@ -18,15 +18,23 @@ root.render(
         theme={{
           components: {
             Dropdown: {
-              colorBgElevated: 'rgba(255, 255, 255, 0.20)',
+              colorBgElevated: '#f2f2f2',
               algorithm: true,
-              colorText: '#fff',
+              colorText: 'black',
               controlItemBgActiveHover: '#fff',
+            },
+            Progress: {
+              colorText: '#F2F2F2',
+            },
+            Menu: {
+              itemSelectedBg: '#5521b5',
+              itemHoverColor: 'black',
+              itemHoverBg: '#e6f4ff',
             },
           },
         }}
       >
-        <MainHome />
+        <App />
       </ConfigProvider>
     </HistoryBrowserRouter>
   </Provider>,
