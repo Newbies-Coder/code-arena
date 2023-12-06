@@ -1,12 +1,11 @@
-import { BackendIcon, DesignIcon, FrontendIcon, HomeIcon, NewsIcon } from '@/components/Icons'
-import { Button, Card, Col, Layout, Row } from 'antd'
+import { BackendIcon, DesignIcon, FrontendIcon } from '@/components/Icons'
+import { Card, Col, Layout, Row } from 'antd'
 import './style.scss'
 import CarouselItem from '@/components/CarouselItem'
 import SliderItem from '@/components/SliderItem'
 import SidebarLeft from '@/components/SidebarLeft'
 import SidebarRight from '@/components/SidebarRight'
 import HeaderItem from '@/components/HeaderItem'
-import { useState } from 'react'
 const { Content } = Layout
 
 const MainHome = () => {
@@ -33,12 +32,13 @@ const MainHome = () => {
                       hoverable
                       size="small"
                       className="bg-blue-900 border-gray-opacity hover:border-gray-500 rounded-2xl"
+                      style={{ height: '100%' }}
                     >
                       <div className="flex justify-center items-center">
                         <DesignIcon />
                         <div className="text-white ml-2">
                           <span className="xs:hidden xs:text-xs lg:block">6/12 watched</span>
-                          <h2 className="mb-0 text-base">UI/UX DESIGN</h2>
+                          <h2 className="mb-0 xs:text-xs lg:text-base">UI/UX DESIGN</h2>
                         </div>
                       </div>
                     </Card>
@@ -48,12 +48,13 @@ const MainHome = () => {
                       hoverable
                       size="small"
                       className="bg-blue-900 border-gray-opacity hover:border-gray-500 rounded-2xl"
+                      style={{ height: '100%' }}
                     >
                       <div className="flex justify-center items-center">
                         <FrontendIcon className="h-10 w-10" />
                         <div className="text-white ml-2">
                           <span className="xs:hidden xs:text-xs lg:block">6/12 watched</span>
-                          <h2 className="mb-0 text-base">FRONTEND</h2>
+                          <h2 className="mb-0 xs:text-xs lg:text-base">FRONT-END</h2>
                         </div>
                       </div>
                     </Card>
@@ -63,12 +64,13 @@ const MainHome = () => {
                       hoverable
                       size="small"
                       className="bg-blue-900 border-gray-opacity hover:border-gray-500 rounded-2xl"
+                      style={{ height: '100%' }}
                     >
                       <div className="flex justify-center items-center">
                         <BackendIcon className="h-10 w-10" />
                         <div className="text-white ml-2">
                           <span className="xs:hidden xs:text-xs lg:block">6/12 watched</span>
-                          <h2 className="mb-0 text-base">BACKEND</h2>
+                          <h2 className="mb-0 xs:text-xs lg:text-base">BACK-END</h2>
                         </div>
                       </div>
                     </Card>

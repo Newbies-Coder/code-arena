@@ -518,7 +518,7 @@ export const LettersIcon: React.FC<IconPropsType> = ({ width = '1.25rem', height
   </svg>
 )
 
-export const DesignIcon: React.FC<IconPropsType> = ({ width = '2rem', height = '2rem', className }) => (
+export const DesignIcon: React.FC<IconPropsType> = ({ width = '1rem', height = '1rem', className }) => (
   <svg
     width={width}
     height={height}
@@ -852,7 +852,7 @@ export const FrontendIcon: React.FC<IconPropsType> = ({ width = '1rem', height =
   </svg>
 )
 
-export const BackendIcon: React.FC<IconPropsType> = ({ width = '2rem', height = '2rem', className }) => (
+export const BackendIcon: React.FC<IconPropsType> = ({ width = '1rem', height = '1rem', className }) => (
   <svg
     width={width}
     height={height}

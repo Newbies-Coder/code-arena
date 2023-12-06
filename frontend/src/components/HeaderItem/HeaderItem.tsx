@@ -36,8 +36,6 @@ const menuItems: MenuProps['items'] = [
   },
 ]
 
-const text = <span>Title</span>
-
 const content = (
   <div>
     <p>Content</p>
@@ -55,8 +53,8 @@ const HeaderItem = () => {
     setOpen(newOpen)
   }
   return (
-    <Header className="fixed h-16 top-0 w-full bg-blue-900 z-10 px-4" style={{ width: '100%' }}>
-      <div className="flex justify-between items-center pt-2">
+    <Header className="fixed h-16 top-0 w-full bg-blue-900 z-20 px-4" style={{ width: '100%' }}>
+      <div className="flex justify-between items-center">
         <img src={HOME_ICON.LOGO_TEXT} alt="logo" className="xs:hidden xl:block" />
         <img src={LOGO.APP_LOGO} className="xl:hidden xs:block" />
         <div className="flex justify-between items-center relative w-full md:w-auto">
@@ -88,14 +86,13 @@ const HeaderItem = () => {
           </div>
         </div>
         <div className="flex justify-center items-center">
-          <Popover placement="bottomRight" title={text} content={content} trigger="click">
+          <Popover placement="bottomRight" content={content} trigger="click">
             <Button className="h-10 w-10 px-2 mx-1 rounded-full border-yellow-400 flex justify-center items-center">
               <NoNotiIcon />
             </Button>
           </Popover>
           <Popover
             placement="bottomRight"
-            title={text}
             content={content}
             trigger="click"
             open={open}
