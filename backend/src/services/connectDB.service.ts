@@ -1,6 +1,7 @@
 import { Db, MongoClient, ServerApiVersion, Collection } from 'mongodb'
 import { env } from '~/config/environment.config'
 import { DATABASE_MESSAGE } from '~/constants/message'
+import Follow from '~/models/schemas/Follow.schema'
 import OTP from '~/models/schemas/Otps.schema'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import User from '~/models/schemas/Users.schema'
@@ -44,6 +45,10 @@ class DatabaseServices {
 
   get otps(): Collection<OTP> {
     return this.db.collection(env.database.main.collection.otps as string)
+  }
+
+  get follow(): Collection<Follow> {
+    return this.db.collection(env.database.main.collection.follow as string)
   }
 }
 

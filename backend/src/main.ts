@@ -14,11 +14,37 @@ import { databaseService } from './services/connectDB.service'
 import { defaultErrorHandler } from './middlewares/errors.middleware'
 import exitHook from 'async-exit-hook'
 import { DATABASE_MESSAGE } from './constants/message'
-import './config/passport.config'
-import session from 'express-session'
-import passport from 'passport'
+import swaggerJSDoc from 'swagger-jsdoc'
+import swaggerUi from 'swagger-ui-express'
+
+const options: swaggerJSDoc.Options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Code Arena API',
+      version: '1.0.0'
+    },
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    },
+    security: [
+      {
+        BearerAuth: []
+      }
+    ],
+    persistAuthorization: true
+  },
+  apis: ['./openapi/*.yaml']
+}
 
 const app = express()
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(options)))
 const httpServer = createServer(app)
 logServices.connect()
 app.use((req, res, next) => logServices.logRequest(req, res, next))
@@ -28,12 +54,7 @@ app.use(
       directives: {
         defaultSrc: ['*'],
         scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-        styleSrc: [
-          "'self'",
-          "'unsafe-inline'",
-          'https://fonts.googleapis.com/css',
-          'https://use.fontawesome.com/releases/v5.12.0/css/all.css'
-        ],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com/css', 'https://use.fontawesome.com/releases/v5.12.0/css/all.css'],
         objectSrc: ["'none'"],
         upgradeInsecureRequests: []
       }
@@ -51,18 +72,6 @@ app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }))
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(cookieParser())
 app.use(express.static('.'))
-// express session
-app.use(
-  session({
-    secret: env.jwt.secret_key,
-    resave: false,
-    saveUninitialized: false
-  })
-)
-
-app.use(passport.initialize())
-app.use(passport.session())
-
 // Rate limit request from client
 if (env.node_env === 'production') {
   app.use('/api', rateLimiterMiddleware)

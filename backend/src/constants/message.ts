@@ -14,15 +14,14 @@ export const DATABASE_MESSAGE = {
     DICONNECT: '⛔️ Disconnected from the database main successfully!',
     USER_COLLECTION: 'The table holds user information in the database.',
     REFRESH_TOKEN_COLLECTION: 'The table holds refresh-token information in the database.',
-    OTP_COLLECTION: 'The table holds otp information in the database.'
+    OTP_COLLECTION: 'The table holds otp information in the database.',
+    FOLLOW_COLLECTION: 'The table holds follow information in the database.'
   }
 } as const
 
 export const JWT_MESSAGES = {
-  JWT_SECRECT_KEY:
-    'This “Secret” string is unique to the application and must be prioritized and carefully stored securely on the server side.',
-  JWT_REFRESH_TOKEN_KEY:
-    'This “Secret” string is unique to the application and must be prioritized and carefully stored securely on the server side.',
+  JWT_SECRECT_KEY: 'This “Secret” string is unique to the application and must be prioritized and carefully stored securely on the server side.',
+  JWT_REFRESH_TOKEN_KEY: 'This “Secret” string is unique to the application and must be prioritized and carefully stored securely on the server side.',
   ACCESS_TOKEN_EXPIRES_IN: 'Duration of existence of access_token',
   REFRESH_TOKEN_EXPIRES_IN: 'Duration of existence of access_token',
   JWT_ALGORITHM: 'List of strings with the names of the allowed algorithms'
@@ -32,15 +31,6 @@ export const OTP_EMAIL_MESSAGES = {
   OTP_EMAIL_NAME: 'Display name of the gmail account that send OTP',
   OTP_EMAIL_ACCOUNT: 'Email of the gmail account that send OTP',
   OTP_EMAIL_PASSWORD: 'Email password of the gmail account that send OTP'
-}
-
-export const OAUTH_MESSAGE = {
-  GOOGLE_CLIENT_ID: 'Google client id',
-  GOOGLE_SECRET_ID: 'Google secret id',
-  GOOGLE_CALLBACK_URL: 'Google callback url',
-  LINKEDIN_CLIENT_ID: 'Linkedin client id',
-  LINKEDIN_SECRET_ID: 'Linkedin secret id',
-  LINKEDIN_CALLBACK_URL: 'Linkedin callback url'
 }
 
 export const ENV_MESSAGE = {
@@ -96,8 +86,28 @@ export const USER_VALIDATOR_MESSAGES = {
 
 export const VALIDATION_MESSAGES = {
   TITLE: 'Validation Error',
+  PAGINATION: {
+    PAGE_CAN_NOT_LESS_THAN_ZERO: 'Page number cannot less than zero',
+    ITEMS_IS_NOT_IN_RANGE: 'Item per page can not less than zero and greater than 100'
+  },
   USER: {
+    COMMONS: {
+      USER_WITH_ID_IS_NOT_EXIST: 'User with id is not exist',
+      USER_ID_MUST_BE_A_STRING: 'User id must be a string',
+      USER_ID_CAN_NOT_BE_EMPTY: 'User id cannot be empty',
+      USER_NOT_LOGIN: 'You must logged in to continue',
+      USER_NOT_ROLE_NOT_SATISFIED: 'You don not have the right role to access this resources',
+      USER_ID_IS_INVALID: 'User id is invalid'
+    },
     LOGIN: {
+      EMAIL_IS_REQUIRED: 'Email is required',
+      EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
+      EMAIL_ACCESSBILITY: "The email address doesn't exist. Please try the valid one or simply register",
+      PASSWORD_IS_REQUIRED: 'Password is required',
+      PASSWORD_MUST_BE_A_STRING: 'Password must be a string',
+      PASSWORD_MUST_BE_STRONG: 'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
+      PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Password must be between 8 and 16 characters long',
+      PASSWORD_IS_INCORRECT: 'Password is incorrect',
       ACCOUNT_IS_UNVERIFIED: 'Account is unverified',
       ACCOUNT_IS_BANNED: 'Account is banned'
     },
@@ -105,6 +115,18 @@ export const VALIDATION_MESSAGES = {
       NAME_IS_REQUIRED: 'Username is required',
       NAME_MUST_BE_A_STRING: 'Username must be a string',
       NAME_LENGTH_MUST_BE_FROM_4_TO_20: 'Username must be between 4 and 20 characters long',
+      EMAIL_IS_REQUIRED: 'Email is required',
+      EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
+      EMAIL_ACCESSBILITY: 'The email address is already subscribed. Please use a different email.',
+      PASSWORD_IS_REQUIRED: 'Password is required',
+      PASSWORD_MUST_BE_A_STRING: 'Password must be a string',
+      PASSWORD_MUST_BE_STRONG: 'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
+      PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Password must be between 8 and 16 characters long',
+      CONFIRM_PASSWORD_IS_REQUIRED: 'Confirm_password is required',
+      CONFIRM_PASSWORD_MUST_BE_A_STRING: 'Confirm_password must be a string',
+      CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD: 'Confirm password must be the same as password',
+      CONFIRM_PASSWORD_MUST_BE_STRONG: 'Confirm_password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
+      CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Confirm_password must be between 8 and 16 characters long',
       DATE_OF_BIRTH_IS_REQUIRED: 'Date of birth is required',
       DATE_OF_BIRTH_IS_ISO8601: 'Date of birth must be a YYYY-MM-DDTHH:mm:ss.ssssZ'
     },
@@ -124,8 +146,7 @@ export const VALIDATION_MESSAGES = {
     },
     PASSWORD: {
       PASSWORD_IS_REQUIRED: 'Password is required',
-      PASSWORD_MUST_BE_STRONG:
-        'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
+      PASSWORD_MUST_BE_STRONG: 'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
       PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Password must be between 8 and 16 characters long',
       PASSWORD_IS_INCORRECT: 'Password is incorrect',
       PASSWORD_MUST_BE_A_STRING: 'Password must be a string',
@@ -133,8 +154,7 @@ export const VALIDATION_MESSAGES = {
       CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD: 'Confirm password must be the same as password',
       CONFIRM_PASSWORD_MUST_BE_A_STRING: 'Confirm password must be a string',
       CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Confirm password must be between 8 and 16 characters long',
-      CONFIRM_PASSWORD_MUST_BE_STRONG:
-        'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
+      CONFIRM_PASSWORD_MUST_BE_STRONG: 'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
       OLD_PASSWORD_IS_REQUIRED: 'Old password is required',
       OLD_PASSWORD_IS_INCORRECT: 'Old password is incorrect',
       PASSWORD_NOT_SAME_OLD_PASSWORD: 'New password must be not same as old password'
@@ -145,6 +165,9 @@ export const VALIDATION_MESSAGES = {
       EMAIL_ACCESSABILITY: "The email address doesn't exist. Please try the valid one or simply register",
       EMAIL_IS_NOT_EXIT: 'Email is not exit'
     },
+    UPLOAD_AVATAR: {
+      INVALID_AVATAR_EXTENSION: 'Avatar image extension is invalid'
+    },
     USER_PROFILE: {
       USER_ID_IS_REQUIRED: 'User id is required',
       USER_ID_NOT_FOUND: 'User id not found',
@@ -154,6 +177,7 @@ export const VALIDATION_MESSAGES = {
   TOKEN: {
     ACCESS_TOKEN_IS_REQUIRED: 'Access_token is required',
     ACCESS_TOKEN_MUST_BE_A_STRING: 'Access_token must be a string',
+    INVALID_BEARER_TOKEN: 'Invalid bearer token',
     REFRESH_TOKEN_IS_REQUIRED: 'Refresh_token is required',
     REFRESH_TOKEN_MUST_BE_A_STRING: 'Refresh_token must be a string',
     REFRESH_TOKEN_USED_OR_NOT_EXIST: 'Used refresh token or not exist',
@@ -165,3 +189,32 @@ export const VALIDATION_MESSAGES = {
     HEADER_AUTHORIZATION_IS_INVALID: 'Header authorization is invalid'
   }
 } as const
+
+export const REQUEST_QUERY_MESSAGES = {
+  MAX_ITEM_PER_PAGE: 'How many items per page'
+} as const
+
+export const CLOUDINARY_MESSAGES = {
+  CLOUDINARY_KEY: 'Key to access cloudinary',
+  CLOUDINARY_SECRET: 'Password to access cloudinary',
+  CLOUDINARY_NAME: 'Cloud name of current cloudinary account',
+  CLOUDINARY_AVATAR_FOLDER: 'Folder that contain avatar images on cloudinary'
+}
+
+export const AUTH_MESSAGES = {
+  FACEBOOK: {
+    CLIENT_ID: 'ID to login with facebook and oauth2',
+    CLIENT_SECRET: 'Password to login with facebook and oauth2',
+    CALLBACK_URL: 'Url that facebook callback when authenticate'
+  },
+  GITHUB: {
+    CLIENT_ID: 'ID to login with github and oauth2',
+    CLIENT_SECRET: 'Password to login with github and oauth2',
+    CALLBACK_URL: 'Url that github callback when authenticate'
+  }
+}
+
+export const URL_MESSAGES = {
+  AUTH_SUCCESS_URL: 'URL that user get redirected when authenticate success',
+  AUTH_FAIL_URL: 'URL that user get redirected when authenticate fail'
+}

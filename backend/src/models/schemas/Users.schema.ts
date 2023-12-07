@@ -1,17 +1,20 @@
 import { ObjectId } from 'mongodb'
+import { AuthProvider } from '~/@types/auth.type'
 import { UserRole, UserVerifyStatus, UserGenderType } from '~/constants/enums'
 
 // var number = moment().year()
 //  - Number(moment('2000-02-22T00:00:00.000Z').format('YYYY'))
 interface UserType {
   _id?: ObjectId
-  username: string
+  username?: string
   fullName?: string
   email: string
   phone?: string
-  date_of_birth: Date
+  date_of_birth?: Date
   age?: number
-  password: string
+  password?: string
+  providerId?: string
+  provider?: AuthProvider
   role?: UserRole
   gender?: UserGenderType
   verify?: UserVerifyStatus
@@ -25,18 +28,19 @@ interface UserType {
   password_change_at?: Date
   created_at?: Date
   updated_at?: Date
-  google_id?: string
 }
 
 export default class User {
   _id?: ObjectId
   fullName: string
-  username: string
+  username?: string
   email: string
   phone: string
-  date_of_birth: Date
+  date_of_birth?: Date
   age: number
-  password: string
+  password?: string
+  providerId?: string
+  provider?: AuthProvider
   role: UserRole
   gender: UserGenderType
   verify: UserVerifyStatus
@@ -50,7 +54,6 @@ export default class User {
   password_change_at: Date
   created_at: Date
   updated_at: Date
-  google_id: string
 
   constructor(user: UserType) {
     this._id = user._id
@@ -63,6 +66,8 @@ export default class User {
     this.gender = user.gender || null
     this.date_of_birth = user.date_of_birth || new Date()
     this.password = user.password
+    this.provider = user.provider
+    this.providerId = user.providerId
     this.role = user.role || UserRole.User
     this.verify = user.verify || UserVerifyStatus.Unverified
     this.bio = user.bio || ''
@@ -74,6 +79,5 @@ export default class User {
     this.password_change_at = user.password_change_at || null
     this.created_at = user.created_at || new Date()
     this.updated_at = user.updated_at || null
-    this.google_id = user.google_id || ''
   }
 }
