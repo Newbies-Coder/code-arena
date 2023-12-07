@@ -211,6 +211,16 @@ export const AUTH_MESSAGES = {
     CLIENT_ID: 'ID to login with github and oauth2',
     CLIENT_SECRET: 'Password to login with github and oauth2',
     CALLBACK_URL: 'Url that github callback when authenticate'
+  },
+  GOOGLE: {
+    CLIENT_ID: 'ID to login with google and oauth2',
+    CLIENT_SECRET: 'Password to login with google and oauth2',
+    CALLBACK_URL: 'Url that google callback when authenticate'
+  },
+  LINKEDIN: {
+    CLIENT_ID: 'ID to login with linkedin and oauth2',
+    CLIENT_SECRET: 'Password to login with linkedin and oauth2',
+    CALLBACK_URL: 'Url that linkedin callback when authenticate'
   }
 }
 

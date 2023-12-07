@@ -11,6 +11,6 @@ export type AuthUser = {
   email: string
 }
 
-export const authProviders = ['github', 'facebook', 'google', 'linkin'] as const
+export const authProviders = ['github', 'facebook', 'google', 'linkedin'] as const
 
 export type AuthProvider = (typeof authProviders)[number]

@@ -15,8 +15,12 @@ const authRouter = Router()
 
 authRouter.get('/facebook', passport.authenticate('facebook', { session: false }))
 authRouter.get('/github', passport.authenticate('github', { session: false }))
+authRouter.get('/google', passport.authenticate('google', { session: false, scope: ['profile'] }))
+authRouter.get('/linkedin', passport.authenticate('linkedin', { session: false }))
 
 authRouter.get('/callback/github', passport.authenticate('github', { session: false }), wrapRequestHandler(authController.callback('github')))
 authRouter.get('/callback/facebook', passport.authenticate('facebook', { session: false }), wrapRequestHandler(authController.callback('facebook')))
+authRouter.get('/callback/google', passport.authenticate('google', { session: false }), wrapRequestHandler(authController.callback('google')))
+authRouter.get('/callback/linkedin', passport.authenticate('linkedin', { session: false }), wrapRequestHandler(authController.callback('linkedin')))
 
 export default authRouter
