@@ -6,6 +6,7 @@ import { uploadFile } from '~/middlewares/uploadFile.middleware'
 import {
   accessTokenValidator,
   changePasswordValidator,
+  checkTokenValidator,
   followUserValidator,
   forgotPasswordValidator,
   getAllUserValidator,
@@ -154,14 +155,22 @@ userRouter.get('/@me/profile', wrapRequestHandler(userController.getMe))
 userRouter.put('/@me/profile', wrapRequestHandler(userController.updateMe))
 
 /**
- * Description: Search user with name, return 10 matched users
- * Path: /
- * Method: GET
+ * Description: Upload avatar
+ * Path: /@me/avatar
+ * Method: POST
  * Body:
- * param: { userName: string }
  */
 
 userRouter.post('/@me/avatar', wrapRequestHandler(requireLoginMiddleware), uploadFile.single('image'), wrapRequestHandler(userController.updateMeAvatar))
+
+/**
+ * Description: Upload thumbnail
+ * Path: /@me/thumbnail
+ * Method: POST
+ * Body:
+ */
+
+userRouter.post('/@me/thumbnail', wrapRequestHandler(userController.uploadThumbnail))
 
 /**
  * Description: Search user with name, return 10 matched users
@@ -184,12 +193,82 @@ userRouter.delete('/:userId', wrapRequestHandler(userController.delete))
 
 /**
  * Description: Delete a lot of user when user is admin send request list user want to delete
- * Path: /delete-users
+ * Path: /users
  * Method: DELETE
+ * Header: { Authorization: Bearer <access_token> }
+ * Body: [user_id] // Array of user IDs to delete
+ */
+
+userRouter.delete('/users', wrapRequestHandler(userController.deleteManyUser))
+
+/**
+ * Description: Get user by role
+ * Path: /role
+ * Method: GET
+ * Header: { Authorization: Bearer <access_token> }
+ * query: { includes: string }// user | admin | moderator
+ * Note: Feature for ADMIN
+ */
+
+userRouter.get('/roles', wrapRequestHandler(userController.getUsersByRole))
+
+/**
+ * Description: Make a list of your closest pals.
+ * Path: /favorite
+ * Method: GET
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.delete('/delete-users', wrapRequestHandler(userController.deleteManyUser))
+userRouter.get('/favorite', wrapRequestHandler(userController.favorite))
+
+/**
+ * Description: Add persons to your list of close friends.
+ * Path: /favorite
+ * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ * body: {favoriteUserId: string}
+ */
+
+userRouter.post('/favorite', wrapRequestHandler(userController.insertUserFavorite))
+
+/**
+ * Description: Remove the individual from your list of close friends.
+ * Path: /favorite/:userId
+ * Method: DELETE
+ * Header: { Authorization: Bearer <access_token> }
+ * Param: {userId: string}
+ */
+
+userRouter.delete('/favorite/:userId', wrapRequestHandler(userController.removeUserFavorite))
+
+/**
+ * Description: Get list user block
+ * Path: /block
+ * Method: GET
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
+userRouter.get('/block', wrapRequestHandler(userController.blocks))
+
+/**
+ * Description: Block user
+ * Path: /block
+ * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ * Body: {userId: string, blockUserId: string}
+ */
+
+userRouter.post('/block', wrapRequestHandler(userController.insertBlocks))
+
+/**
+ * Description: Unblock user
+ * Path: /unblock
+ * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ * Body: {userId: string, unblockUserId: string}
+ */
+
+userRouter.post('/unblock', wrapRequestHandler(userController.unblock))
 
 /**
  * Description: Test token
@@ -198,6 +277,6 @@ userRouter.delete('/delete-users', wrapRequestHandler(userController.deleteManyU
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.post('/test-token', wrapRequestHandler(userController.testToken))
+userRouter.post('/test-token', checkTokenValidator, wrapRequestHandler(userController.testToken))
 
 export default userRouter
