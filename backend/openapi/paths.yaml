@@ -9,7 +9,6 @@ info:
     - Submit solutions and get real-time feedback
     - Access user profiles and statistics
     - Participate in real-time coding battles
-
     Some useful links:
     - [Code Arena repository](https://github.com)
   contact:
@@ -26,7 +25,32 @@ tags:
     externalDocs:
       description: Feature user
       url: http://localhost:8080/api/v1/users
+  - name: auth
+    description: Operations about authentication
+    externalDocs:
+      description: Feature user authentication
+      url: http://localhost:8080/api/v1/users
 paths:
+  /api/v1/auth/facebook:
+    get:
+      tags:
+        - auth
+      summary: User login with facebook
+      description: User login with facebook
+      operationId: authFacebook
+      responses:
+        '200':
+          description: Login successfully
+  /api/v1/auth/github:
+    get:
+      tags:
+        - auth
+      summary: User login with github
+      description: User login with github
+      operationId: authGithub
+      responses:
+        '200':
+          description: Login successfully
   /api/v1/users/login:
     post:
       tags:
@@ -1256,8 +1280,3 @@ components:
           example: '2023-12-02T00:00:00.000Z'
       xml:
         name: user
-  securitySchemes:
-    api_key:
-      type: apiKey
-      name: api_key
-      in: header

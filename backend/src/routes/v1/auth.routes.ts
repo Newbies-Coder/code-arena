@@ -14,9 +14,11 @@ const authRouter = Router()
  */
 
 authRouter.get('/facebook', passport.authenticate('facebook', { session: false }))
+
 authRouter.get('/github', passport.authenticate('github', { session: false }))
 
 authRouter.get('/callback/github', passport.authenticate('github', { session: false }), wrapRequestHandler(authController.callback('github')))
+
 authRouter.get('/callback/facebook', passport.authenticate('facebook', { session: false }), wrapRequestHandler(authController.callback('facebook')))
 
 export default authRouter
