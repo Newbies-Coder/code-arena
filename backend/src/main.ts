@@ -16,7 +16,6 @@ import exitHook from 'async-exit-hook'
 import { DATABASE_MESSAGE } from './constants/message'
 import swaggerJSDoc from 'swagger-jsdoc'
 import swaggerUi from 'swagger-ui-express'
-import passport from 'passport'
 
 const options: swaggerJSDoc.Options = {
   definition: {
