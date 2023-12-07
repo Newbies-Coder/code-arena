@@ -10,86 +10,88 @@ const { Content } = Layout
 
 const MainHome = () => {
   return (
-    <Layout style={{ height: '100%', backgroundColor: '#0e1820' }}>
-      <div>
-        <HeaderItem />
-      </div>
-      <Layout>
-        <Row>
-          <Col style={{ height: '100%' }} xs={{ span: 0 }} xl={{ span: 3 }}>
-            <SidebarLeft />
-          </Col>
-          <Col style={{ height: '100%', marginTop: '64px' }} xs={{ span: 24 }} xl={{ span: 18 }}>
-            <Content style={{ width: '100%', overflow: 'initial', height: '100%' }}>
-              <div style={{ padding: 24, backgroundColor: '#0e1820', height: '100%' }}>
-                <CarouselItem />
-                <Row
-                  gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-                  style={{ marginTop: '20px', marginLeft: '10px', marginRight: '10px' }}
-                >
-                  <Col span={8}>
-                    <Card
-                      hoverable
-                      size="small"
-                      className="bg-blue-900 border-gray-opacity hover:border-gray-500 rounded-2xl"
-                      style={{ height: '100%' }}
-                    >
-                      <div className="flex justify-center items-center">
-                        <DesignIcon />
-                        <div className="text-white ml-2">
-                          <span className="xs:hidden xs:text-xs lg:block">6/12 watched</span>
-                          <h2 className="mb-0 xs:text-xs lg:text-base">UI/UX DESIGN</h2>
+    <div className="wrapper p-0 m-0 bg-gray-900">
+      <Layout style={{ height: '100%', backgroundColor: '#0e1820' }}>
+        <div>
+          <HeaderItem />
+        </div>
+        <Layout>
+          <Row>
+            <Col style={{ height: '100%' }} xs={{ span: 0 }} xl={{ span: 3 }}>
+              <SidebarLeft />
+            </Col>
+            <Col style={{ height: '100%', marginTop: '64px' }} xs={{ span: 24 }} xl={{ span: 18 }}>
+              <Content style={{ width: '100%', overflow: 'initial', height: '100%' }}>
+                <div style={{ padding: 24, backgroundColor: '#0e1820', height: '100%' }}>
+                  <CarouselItem />
+                  <Row
+                    gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+                    style={{ marginTop: '20px', marginLeft: '10px', marginRight: '10px' }}
+                  >
+                    <Col span={8}>
+                      <Card
+                        hoverable
+                        size="small"
+                        className="bg-blue-900 border-gray-opacity hover:border-gray-500 rounded-2xl"
+                        style={{ height: '100%' }}
+                      >
+                        <div className="flex justify-center items-center">
+                          <DesignIcon className="h-10 w-10 mds:h-8 mds:w-8" />
+                          <div className="text-white ml-2">
+                            <span className="xs:hidden xs:text-xs lg:block">6/12 watched</span>
+                            <h2 className="mb-0 xs:text-xs lg:text-base">UI/UX DESIGN</h2>
+                          </div>
                         </div>
-                      </div>
-                    </Card>
-                  </Col>
-                  <Col span={8}>
-                    <Card
-                      hoverable
-                      size="small"
-                      className="bg-blue-900 border-gray-opacity hover:border-gray-500 rounded-2xl"
-                      style={{ height: '100%' }}
-                    >
-                      <div className="flex justify-center items-center">
-                        <FrontendIcon className="h-10 w-10" />
-                        <div className="text-white ml-2">
-                          <span className="xs:hidden xs:text-xs lg:block">6/12 watched</span>
-                          <h2 className="mb-0 xs:text-xs lg:text-base">FRONT-END</h2>
+                      </Card>
+                    </Col>
+                    <Col span={8}>
+                      <Card
+                        hoverable
+                        size="small"
+                        className="bg-blue-900 border-gray-opacity hover:border-gray-500 rounded-2xl"
+                        style={{ height: '100%' }}
+                      >
+                        <div className="flex justify-center items-center">
+                          <FrontendIcon className="h-10 w-10 mds:h-8 mds:w-8" />
+                          <div className="text-white ml-2">
+                            <span className="xs:hidden xs:text-xs lg:block">6/12 watched</span>
+                            <h2 className="mb-0 xs:text-xs lg:text-base">FRONT-END</h2>
+                          </div>
                         </div>
-                      </div>
-                    </Card>
-                  </Col>
-                  <Col span={8}>
-                    <Card
-                      hoverable
-                      size="small"
-                      className="bg-blue-900 border-gray-opacity hover:border-gray-500 rounded-2xl"
-                      style={{ height: '100%' }}
-                    >
-                      <div className="flex justify-center items-center">
-                        <BackendIcon className="h-10 w-10" />
-                        <div className="text-white ml-2">
-                          <span className="xs:hidden xs:text-xs lg:block">6/12 watched</span>
-                          <h2 className="mb-0 xs:text-xs lg:text-base">BACK-END</h2>
+                      </Card>
+                    </Col>
+                    <Col span={8}>
+                      <Card
+                        hoverable
+                        size="small"
+                        className="bg-blue-900 border-gray-opacity hover:border-gray-500 rounded-2xl"
+                        style={{ height: '100%' }}
+                      >
+                        <div className="flex justify-center items-center">
+                          <BackendIcon className="h-10 w-10 mds:h-8 mds:w-8" />
+                          <div className="text-white ml-2">
+                            <span className="xs:hidden xs:text-xs lg:block">6/12 watched</span>
+                            <h2 className="mb-0 xs:text-xs lg:text-base">BACK-END</h2>
+                          </div>
                         </div>
-                      </div>
-                    </Card>
-                  </Col>
-                </Row>
-                <p className="pt-10 font-popins text-3xl text-white">Continue Watching</p>
-                <div className="mx-10">
-                  <SliderItem />
+                      </Card>
+                    </Col>
+                  </Row>
+                  <p className="pt-10 font-popins text-3xl text-white">Continue Watching</p>
+                  <div className="mx-10">
+                    <SliderItem />
+                  </div>
+                  <p className="pt-10 font-popins text-3xl text-white">Popular Courses</p>
                 </div>
-                <p className="pt-10 font-popins text-3xl text-white">Popular Courses</p>
-              </div>
-            </Content>
-          </Col>
-          <Col style={{ height: '100%' }} xs={{ span: 0 }} xl={{ span: 3 }}>
-            <SidebarRight />
-          </Col>
-        </Row>
+              </Content>
+            </Col>
+            <Col style={{ height: '100%' }} xs={{ span: 0 }} xl={{ span: 3 }}>
+              <SidebarRight />
+            </Col>
+          </Row>
+        </Layout>
       </Layout>
-    </Layout>
+    </div>
   )
 }
 

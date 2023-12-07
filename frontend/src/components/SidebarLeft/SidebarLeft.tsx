@@ -16,7 +16,7 @@ const SidebarLeft = () => {
         }}
       >
         <div>
-          <div className="flex flex-col justify-between w-full">
+          <div className="flex flex-col justify-between w-full pt-2">
             <div>
               <Menu
                 items={[
@@ -28,7 +28,7 @@ const SidebarLeft = () => {
                 style={{ backgroundColor: '#0e1820', color: 'white', fontFamily: 'Poppins, sans-serif' }}
               />
             </div>
-            <div className="flex justify-around items-center">
+            <div className="flex justify-around items-center py-4">
               <p className="text-gray-opacity self-auto m-0">New Members</p>
               <Button type="link" className="text-gray-opacity p-0">
                 See all

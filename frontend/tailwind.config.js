@@ -158,7 +158,7 @@ module.exports = {
         smooch: ['Smooch Sans', 'sans-serif'],
       },
       screens: {
-        xs: '360px',
+        xs: '320px',
         ss: '389px',
         xss: '411px',
         sm: '640px',
