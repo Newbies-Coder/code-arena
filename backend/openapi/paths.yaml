@@ -209,7 +209,7 @@ paths:
               properties:
                 refresh_token:
                   type: string
-                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTcwMDAyMzIyNn0.bFnaBfxWl-Q48HCwAeMpNzZwTO9LEjcBd7Zyipjqr64
+                  example: string
         required: true
       responses:
         '200':
@@ -264,7 +264,7 @@ paths:
               properties:
                 otp:
                   type: string
-                  example: '123456'
+                  example: string
         required: true
       responses:
         '200':
@@ -397,7 +397,7 @@ paths:
               properties:
                 refresh_token:
                   type: string
-                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTcwMDAyMzIyNn0.bFnaBfxWl-Q48HCwAeMpNzZwTO9LEjcBd7Zyipjqr64
+                  example: string
         required: true
       responses:
         '200':
@@ -457,7 +457,7 @@ paths:
               properties:
                 email:
                   type: string
-                  example: user123@gmail.com
+                  example: string
         required: true
       responses:
         '200':
@@ -758,6 +758,262 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+  /api/v1/users/follow/{userId}:
+    post:
+      tags:
+        - user
+      summary: Follow user
+      description: Follow user
+      operationId: followUser
+      parameters:
+        - name: userId
+          in: path
+          description: Please enter the user id you want to follow
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Follow user successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Follow user successfully
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /api/v1/users/unfollow/{userId}:
+    post:
+      tags:
+        - user
+      summary: Unfollow user
+      description: Unfollow user
+      operationId: unfollowUser
+      parameters:
+        - name: userId
+          in: path
+          description: Please enter the user id you want to unfollow
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Unfollow user successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Follow user successfully
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /api/v1/users:
+    get:
+      tags:
+        - user
+      summary: Get all user into the system
+      description: Get all user into the system
+      operationId: getAllUser
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            example: 0
+        - name: items
+          in: query
+          description: Number of users on a page
+          required: false
+          schema:
+            type: integer
+            example: 10
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Get all user successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Get all user successfully
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /api/v1/users/@me/avatar:
+    post:
+      tags:
+        - user
+      summary: Upload avatar user
+      description: Upload avatar
+      operationId: uploadAvatar
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Imformation image upload
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        '200':
+          description: Upload avatar successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Upload avatar successfully
+                  data:
+                    type: object
+                    properties:
+                      avatarUrl:
+                        type: string
+                        example: 'http://res.cloudinary.com/de7hnxr0e/image/upload/v1701942785/avatar/it3nquretum21jkqv2ii.jpg'
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '400':
+          description: Avatar image extension is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    example: Avatar image extension is invalid
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /api/v1/users/test-token:
     post:
       tags:
@@ -811,10 +1067,10 @@ components:
       properties:
         email:
           type: string
-          example: user1234@gmail.com
+          example: string
         password:
           type: string
-          example: User@123
+          example: string
     LoginSuccessAuth:
       type: object
       properties:
@@ -848,54 +1104,49 @@ components:
         refresh_token:
           type: string
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
-    LogoutBody:
-      type: object
-      properties:
-        refresh_token:
-          type: string
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
     ResetPasswordSchema:
       type: object
       properties:
         email:
           type: string
-          example: john@email.com
+          example: string
         password:
           type: string
-          example: 'admin@123'
+          example: string
         confirm_password:
           type: string
-          example: 'admin@123'
+          example: string
     ChangePasswordSchema:
       type: object
       properties:
         old_password:
           type: string
-          example: 'admin@1234'
+          example: string
         password:
           type: string
-          example: 'admin@123'
+          example: string
         confirm_password:
           type: string
-          example: 'admin@123'
+          example: string
     UserSchema:
       type: object
       properties:
         username:
           type: string
-          example: 'user123'
+          example: string
         email:
           type: string
-          example: john@email.com
+          example: string
         password:
           type: string
-          example: 'admin@123'
+          example: string
         confirm_password:
           type: string
-          example: 'admin@123'
+          example: string
         date_of_birth:
           type: string
-          example: '2000-02-22T00:00:00.000Z'
+          format: date
+          example: string
     TokenSchema:
       type: object
       properties:

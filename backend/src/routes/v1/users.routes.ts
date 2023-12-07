@@ -6,6 +6,7 @@ import { uploadFile } from '~/middlewares/uploadFile.middleware'
 import {
   accessTokenValidator,
   changePasswordValidator,
+  checkTokenValidator,
   followUserValidator,
   forgotPasswordValidator,
   getAllUserValidator,
@@ -276,6 +277,6 @@ userRouter.post('/unblock', wrapRequestHandler(userController.unblock))
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.post('/test-token', accessTokenValidator, wrapRequestHandler(userController.testToken))
+userRouter.post('/test-token', checkTokenValidator, wrapRequestHandler(userController.testToken))
 
 export default userRouter

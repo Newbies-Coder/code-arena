@@ -650,7 +650,6 @@ export const userProfileValidator = validate(
   )
 )
 
-
 export const unfollowUserValidator = validate(
   checkSchema(
     {
@@ -665,9 +664,10 @@ export const unfollowUserValidator = validate(
       }
     },
     ['params']
-  ))
+  )
+)
 
-    export const checkTokenValidator = validate(
+export const checkTokenValidator = validate(
   checkSchema(
     {
       Authorization: {
@@ -704,4 +704,4 @@ export const unfollowUserValidator = validate(
     },
     ['headers']
   )
-    )
+)

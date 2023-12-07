@@ -21,13 +21,11 @@ import { AuthUser } from '~/@types/auth.type'
 import _ from 'lodash'
 import cloudinaryService from '~/services/cloudinary.service'
 class UserService {
-  // Check email exist in dat abase
   async validateEmailAccessibility(email: string) {
     const user = await databaseService.users.findOne({ email })
     return Boolean(user)
   }
 
-  // Check password exist in database
   async validatePassword(email: string, password: string) {
     const user = await databaseService.users.findOne({ email: email, password: hashPassword(password) })
     return Boolean(user)
@@ -38,7 +36,6 @@ class UserService {
     return Boolean(result)
   }
 
-  // Check account was verified
   async validateAccountAccessibility(email: string) {
     const user = await databaseService.users.findOne({ email })
     if (user.verify === 'Unverified') {
@@ -56,13 +53,11 @@ class UserService {
     return true
   }
 
-  // Check refresh_token exist in database
   async validateRefreshToken(refresh_token: string) {
     const token = await databaseService.refreshTokens.findOne({ token: refresh_token })
     return Boolean(token)
   }
 
-  // Sign JWT access token
   signAccessToken(_id: string, email: string, role: UserRole) {
     let { access_token_exp, jwt_algorithm, secret_key } = env.jwt
     return signToken({
@@ -80,7 +75,6 @@ class UserService {
     })
   }
 
-  //Sign JWT refresh token
   signRefreshToken(_id: string, email: string, role: UserRole) {
     let { refresh_token_exp, jwt_algorithm, refresh_token_key } = env.jwt
     return signToken({
@@ -130,7 +124,6 @@ class UserService {
     )
   }
 
-  // User register
   async register(payload: RegisterBody) {
     let { email, username } = payload
     let role = UserRole.User
@@ -256,7 +249,6 @@ class UserService {
   }
 
   async updateMeAvatar({ _id }: AuthUser, file: Express.Multer.File) {
-    // TODO: Check in upload middleware
     if (!file) {
       throw new ErrorWithStatus({
         statusCode: StatusCodes.BAD_REQUEST,
@@ -284,7 +276,6 @@ class UserService {
     await databaseService.users.findOneAndUpdate({ email: payload.email }, { $set: { password: hashPassword(payload.password) } })
   }
 
-  // Get user by id
   async getUserByID(id: ObjectId) {
     const user = await databaseService.users.findOne(id)
     if (!user) {
