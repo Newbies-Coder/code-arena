@@ -5,7 +5,7 @@ import { env } from '~/config/environment.config'
 import { ChangePasswordBody, ForgotPasswordBody, InfoTokenType, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
-import { ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
+import { PaginationType, ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
 import { hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
@@ -223,16 +223,26 @@ class UserService {
   }
 
   async getAllUser(payload: ParsedUrlQuery) {
-    const page = Number(payload.page)
-    const items = Number(payload.items)
+    const pageIndex = Number(payload.pageIndex)
+    const pageSize = Number(payload.pageSize)
 
-    const result = await databaseService.users
+    const users = await databaseService.users
       .find()
-      .limit(items)
-      .skip(page * items)
+      .limit(pageSize)
+      .skip((pageIndex - 1) * pageSize)
       .toArray()
 
-    return _.omit(result, ['password'])
+    // TODO: Make something like private attributes const in UserType
+    const filteredUsers = _.map(users, (v) => _.omit(v, ['password', 'created_at', 'updated_at', 'email', 'phone', 'forgot_password_token', 'verify', '_destroy', 'password_change_at']))
+
+    const result: PaginationType<unknown> = {
+      items: filteredUsers,
+      pageIndex: pageIndex,
+      pageSize: pageSize,
+      totalRow: filteredUsers.length
+    }
+
+    return result
   }
 
   async follow(user: AuthUser, payload: ParamsDictionary) {

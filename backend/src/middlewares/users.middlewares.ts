@@ -355,20 +355,20 @@ export const refreshTokenValidator = validate(
 export const getAllUserValidator = validate(
   checkSchema(
     {
-      page: {
+      pageIndex: {
         trim: true,
         isInt: {
           options: {
-            min: 0
+            min: 1
           },
           errorMessage: VALIDATION_MESSAGES.PAGINATION.PAGE_CAN_NOT_LESS_THAN_ZERO
         }
       },
-      items: {
+      pageSize: {
         trim: true,
         isInt: {
           options: {
-            min: 0,
+            min: 1,
             max: 100
           },
           errorMessage: VALIDATION_MESSAGES.PAGINATION.ITEMS_IS_NOT_IN_RANGE
@@ -650,7 +650,6 @@ export const userProfileValidator = validate(
   )
 )
 
-
 export const unfollowUserValidator = validate(
   checkSchema(
     {
@@ -665,9 +664,10 @@ export const unfollowUserValidator = validate(
       }
     },
     ['params']
-  ))
+  )
+)
 
-    export const checkTokenValidator = validate(
+export const checkTokenValidator = validate(
   checkSchema(
     {
       Authorization: {
@@ -704,4 +704,4 @@ export const unfollowUserValidator = validate(
     },
     ['headers']
   )
-    )
+)
