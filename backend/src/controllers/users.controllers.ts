@@ -60,6 +60,9 @@ const userController = {
   uploadAvatar: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.UPLOAD_AVATAR_SUCCESS)
   },
+  uploadThumbnail: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.UPLOAD_THUMBNAIL_SUCCESS)
+  },
   follow: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     // Message register successfully!
     const result = await userServices.follow(req.user, req.params)
@@ -99,6 +102,27 @@ const userController = {
   },
   deleteManyUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.DELETE_MANY_USER_SUCCESS)
+  },
+  getUsersByRole: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_ROLE_USER_SUCCESS)
+  },
+  favorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_ROLE_USER_SUCCESS)
+  },
+  insertUserFavorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_ROLE_USER_SUCCESS)
+  },
+  removeUserFavorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.DELETE_USER_TO_FAVORITES_SUCCESS)
+  },
+  blocks: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_USERS_BLOCK_SUCCESS)
+  },
+  insertBlocks: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.BLOCK_USER_SUCCESS)
+  },
+  unblock: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.REMOVE_USER_BLOCK_SUCCESS)
   },
   testToken: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     const result = await userServices.checkToken(req.body)
