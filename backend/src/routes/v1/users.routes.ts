@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { UserRole } from '~/constants/enums'
 import userController from '~/controllers/users.controllers'
 import { requireLoginMiddleware, requireRoleMiddleware } from '~/middlewares/auth.middlewares'
-import { uploadFile } from '~/middlewares/uploadFile.middleware'
+import { singleImageUpload } from '~/middlewares/uploadFile.middleware'
 import {
   accessTokenValidator,
   changePasswordValidator,
@@ -156,21 +156,23 @@ userRouter.put('/@me/profile', wrapRequestHandler(userController.updateMe))
 
 /**
  * Description: Upload avatar
+ * Path: /
+ * Method: POST
+ * Description: Upload avatar
  * Path: /@me/avatar
  * Method: POST
  * Body:
  */
 
-userRouter.post('/@me/avatar', wrapRequestHandler(requireLoginMiddleware), uploadFile.single('image'), wrapRequestHandler(userController.updateMeAvatar))
+userRouter.post('/@me/avatar', wrapRequestHandler(requireLoginMiddleware), singleImageUpload, wrapRequestHandler(userController.updateMeAvatar))
 
 /**
  * Description: Upload thumbnail
  * Path: /@me/thumbnail
  * Method: POST
- * Body:
  */
 
-userRouter.post('/@me/thumbnail', wrapRequestHandler(userController.uploadThumbnail))
+userRouter.post('/@me/thumbnail', wrapRequestHandler(requireLoginMiddleware), singleImageUpload, wrapRequestHandler(userController.uploadThumbnail))
 
 /**
  * Description: Search user with name, return 10 matched users

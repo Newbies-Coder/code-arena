@@ -259,22 +259,32 @@ class UserService {
   }
 
   async updateMeAvatar({ _id }: AuthUser, file: Express.Multer.File) {
-    if (!file) {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.BAD_REQUEST,
-        message: VALIDATION_MESSAGES.USER.UPLOAD_AVATAR.INVALID_AVATAR_EXTENSION
-      })
-    }
-
-    const { url } = await cloudinaryService.uploadAvatar(file.buffer)
+    const { url } = await cloudinaryService.uploadImage(env.cloudinary.avatar_folder, file.buffer)
     const { avatar } = await databaseService.users.findOne({ _id: new ObjectId(_id) })
 
-    await cloudinaryService.deleteAvatar(avatar)
+    await cloudinaryService.deleteImage(avatar)
     await databaseService.users.updateOne(
       { _id: new ObjectId(_id) },
       {
         $set: {
           avatar: url
+        }
+      }
+    )
+    const result: UploadAvatarType = { avatarUrl: url }
+    return result
+  }
+
+  async updateMeThumbnail({ _id }: AuthUser, file: Express.Multer.File) {
+    const { url } = await cloudinaryService.uploadImage(env.cloudinary.thumbnail_folder, file.buffer)
+    const { avatar } = await databaseService.users.findOne({ _id: new ObjectId(_id) })
+
+    await cloudinaryService.deleteImage(avatar)
+    await databaseService.users.updateOne(
+      { _id: new ObjectId(_id) },
+      {
+        $set: {
+          cover_photo: url
         }
       }
     )

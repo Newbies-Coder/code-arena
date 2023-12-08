@@ -48,7 +48,7 @@ export const sendResponse = {
       messageConstants: note
     })
   },
-  forbindden: (res: Response, data: any, message: string, note?: null) => {
+  forbidden: (res: Response, data: any, message: string, note?: null) => {
     res.status(StatusCodes.FORBIDDEN).json({
       statusCode: StatusCodes.FORBIDDEN,
       message,

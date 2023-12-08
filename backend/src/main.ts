@@ -102,7 +102,7 @@ httpServer.listen(env.server.port, env.server.host, () => {
 // Close db and close db_logs
 exitHook(() => {
   databaseService.disConnect()
-  console.log(DATABASE_MESSAGE.DB_MAIN.DICONNECT)
+  console.log(DATABASE_MESSAGE.DB_MAIN.DISCONNECT)
   logServices.disConnectLogs()
-  console.log(DATABASE_MESSAGE.DB_LOGS.DICONNECT)
+  console.log(DATABASE_MESSAGE.DB_LOGS.DISCONNECT)
 })
