@@ -20,15 +20,15 @@ externalDocs:
 servers:
   - url: http://localhost:8080/api/v1
 tags:
-  - name: user
-    description: Operations about user
-    externalDocs:
-      description: Feature user
-      url: http://localhost:8080/api/v1/users
   - name: auth
     description: Operations about authentication
     externalDocs:
       description: Feature user authentication
+      url: http://localhost:8080/api/v1/auth
+  - name: user
+    description: Operations about user
+    externalDocs:
+      description: Feature user
       url: http://localhost:8080/api/v1/users
 paths:
   /api/v1/auth/facebook:
@@ -48,6 +48,26 @@ paths:
       summary: User login with github
       description: User login with github
       operationId: authGithub
+      responses:
+        '200':
+          description: Login successfully
+  /api/v1/auth/google:
+    get:
+      tags:
+        - auth
+      summary: User login with google
+      description: User login with google
+      operationId: authGoogle
+      responses:
+        '200':
+          description: Login successfully
+  /api/v1/auth/linkedin:
+    get:
+      tags:
+        - auth
+      summary: User login with linkedin
+      description: User login with linkedin
+      operationId: authLinkedin
       responses:
         '200':
           description: Login successfully
@@ -79,7 +99,23 @@ paths:
                   message:
                     example: Login successfully
                   data:
-                    $ref: '#/components/schemas/LoginSuccessAuth'
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 656b0bbd3b0e9defe34fca1a
+                      email:
+                        type: string
+                        example: john@email.com
+                      username:
+                        type: string
+                        example: user123
+                      access_token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
+                      refresh-token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
                   dateTime:
                     type: string
                     format: date-time
@@ -153,7 +189,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserSchema'
+              $ref: '#/components/schemas/RegisterSchema'
         required: true
       responses:
         '201':
@@ -169,7 +205,23 @@ paths:
                   message:
                     example: Create account successfully. Please check email verify OTP!
                   data:
-                    $ref: '#/components/schemas/RegisterSuccessAuth'
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 656b0bbd3b0e9defe34fca1a
+                      email:
+                        type: string
+                        example: john@email.com
+                      username:
+                        type: string
+                        example: user123
+                      access_token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
+                      refresh_token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
                   dateTime:
                     type: string
                     format: date-time
@@ -438,7 +490,23 @@ paths:
                     type: string
                     example: Refresh token successfully
                   data:
-                    $ref: '#/components/schemas/RegisterSuccessAuth'
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 656b0bbd3b0e9defe34fca1a
+                      email:
+                        type: string
+                        example: john@email.com
+                      username:
+                        type: string
+                        example: user123
+                      access_token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
+                      refresh_token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
                   dateTime:
                     type: string
                     format: date-time
@@ -733,7 +801,7 @@ paths:
                   message:
                     example: Get user infomation successfully
                   data:
-                    $ref: '#/components/schemas/ProfileUserSchema'
+                    $ref: '#/components/schemas/ProfileSchema'
                   dateTime:
                     type: string
                     format: date-time
@@ -1095,39 +1163,7 @@ components:
         password:
           type: string
           example: string
-    LoginSuccessAuth:
-      type: object
-      properties:
-        _id:
-          type: string
-          example: 656b0bbd3b0e9defe34fca1a
-        email:
-          type: string
-          example: john@email.com
-        username:
-          type: string
-          example: user123
-        access_token:
-          type: string
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
-    RegisterSuccessAuth:
-      type: object
-      properties:
-        _id:
-          type: string
-          example: 656b0bbd3b0e9defe34fca1a
-        email:
-          type: string
-          example: john@email.com
-        username:
-          type: string
-          example: user123
-        access_token:
-          type: string
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
-        refresh_token:
-          type: string
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
+
     ResetPasswordSchema:
       type: object
       properties:
@@ -1152,7 +1188,7 @@ components:
         confirm_password:
           type: string
           example: string
-    UserSchema:
+    RegisterSchema:
       type: object
       properties:
         username:
@@ -1200,7 +1236,7 @@ components:
         exp:
           type: string
           example: '2000-02-22T00:00:00.000Z'
-    ProfileUserSchema:
+    ProfileSchema:
       type: object
       properties:
         _id:
