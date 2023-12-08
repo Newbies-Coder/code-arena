@@ -1,37 +1,17 @@
 import { Request, Response, NextFunction } from 'express'
 import { sendResponse } from '~/config/response.config'
 import { ParamsDictionary } from 'express-serve-static-core'
-import {
-  ChangePasswordBody,
-  LoginBody,
-  LogoutBody,
-  RefreshTokenBody,
-  RegisterBody,
-  ResendVerifyOTPBody,
-  ResetPasswordBody,
-  VerifyOTPBody
-} from '~/models/requests/User.requests'
+import { ChangePasswordBody, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, ResendVerifyOTPBody, ResetPasswordBody, VerifyOTPBody } from '~/models/requests/User.requests'
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
 import { env } from '~/config/environment.config'
+import { ParsedUrlQuery } from 'querystring'
 import { ObjectId } from 'mongodb'
 
 const userController = {
   login: async (req: Request<ParamsDictionary, any, LoginBody>, res: Response, next: NextFunction) => {
     const result = await userServices.login(req.body)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.LOGIN_SUCCESS)
-  },
-  googleLogin: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.LOGIN_GOOGLE_SUCCESS)
-  },
-  githubLogin: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.LOGIN_GITHUB_SUCCESS)
-  },
-  facebookLogin: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.LOGIN_FACEBOOK_SUCCESS)
-  },
-  linkedinLogin: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.LOGIN_LINKEDIN_SUCCESS)
   },
   register: async (req: Request<ParamsDictionary, any, RegisterBody>, res: Response, next: NextFunction) => {
     const result = await userServices.register(req.body)
@@ -53,11 +33,7 @@ const userController = {
     await userServices.verifyOTP(req.body)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_OTP_SUCCESS)
   },
-  resendVerifyOTP: async (
-    req: Request<ParamsDictionary, any, ResendVerifyOTPBody>,
-    res: Response,
-    next: NextFunction
-  ) => {
+  resendVerifyOTP: async (req: Request<ParamsDictionary, any, ResendVerifyOTPBody>, res: Response, next: NextFunction) => {
     await userServices.sendOTP(req.body.email)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_OTP_SUCCESS)
   },
@@ -84,17 +60,27 @@ const userController = {
   uploadAvatar: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.UPLOAD_AVATAR_SUCCESS)
   },
+  uploadThumbnail: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.UPLOAD_THUMBNAIL_SUCCESS)
+  },
   follow: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    // Message register successfully!
+    const result = await userServices.follow(req.user, req.params)
+
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.FOLLOW_SUCCESS)
   },
   unfollow: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    const result = await userServices.unfollow(req.user, req.params)
+    // Message register successfully!
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.UNFOLLOW_SUCCESS)
   },
-  getAllUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_ALL_USER_SUCCESS)
+  getAllUser: async (req: Request<ParamsDictionary, any, any, ParsedUrlQuery>, res: Response, next: NextFunction) => {
+    const result = await userServices.getAllUser(req.query)
+    // Message register successfully!
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_ALL_USER_SUCCESS)
   },
   getUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    const result = await userServices.getUserByID(new ObjectId(req.params.userId))
+    const result = await userServices.getUserByID(new ObjectId(req.params.id))
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_USER_SUCCESS)
   },
   getMe: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
@@ -102,6 +88,11 @@ const userController = {
   },
   updateMe: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.UPDATE_USER_SUCCESS)
+  },
+  updateMeAvatar: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    const result = await userServices.updateMeAvatar(req.user, req.file)
+    // Message register successfully!
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.UPDATE_USER_SUCCESS)
   },
   search: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.SEARCH_USER_SUCCESS)
@@ -112,11 +103,30 @@ const userController = {
   deleteManyUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.DELETE_MANY_USER_SUCCESS)
   },
-  pagination: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.PAGINATION_USER_SUCCESS)
+  getUsersByRole: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_ROLE_USER_SUCCESS)
+  },
+  favorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_ROLE_USER_SUCCESS)
+  },
+  insertUserFavorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_ROLE_USER_SUCCESS)
+  },
+  removeUserFavorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.DELETE_USER_TO_FAVORITES_SUCCESS)
+  },
+  blocks: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_USERS_BLOCK_SUCCESS)
+  },
+  insertBlocks: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.BLOCK_USER_SUCCESS)
+  },
+  unblock: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.REMOVE_USER_BLOCK_SUCCESS)
   },
   testToken: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.TEST_TOKEN_SUCCESS)
+    const result = await userServices.checkToken(req.body)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.TEST_TOKEN_SUCCESS)
   }
 }
 

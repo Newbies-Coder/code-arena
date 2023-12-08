@@ -2,40 +2,40 @@ import { signToken, verifyToken } from '~/utils/jwt'
 import { databaseService } from './connectDB.service'
 import { TokenType, UserRole, UserVerifyStatus } from '~/constants/enums'
 import { env } from '~/config/environment.config'
-import {
-  ChangePasswordBody,
-  ForgotPasswordBody,
-  LoginBody,
-  LogoutBody,
-  RefreshTokenBody,
-  RegisterBody,
-  VerifyOTPBody
-} from '~/models/requests/User.requests'
+import { ChangePasswordBody, ForgotPasswordBody, InfoTokenType, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
-import { ResultRefreshTokenType, ResultRegisterType } from '~/@types/reponse.type'
+import { ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
 import { hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import { StatusCodes } from 'http-status-codes'
 import { VALIDATION_MESSAGES } from '~/constants/message'
-
+import moment from 'moment'
 import emailService from '~/services/email.service'
 import otpService from '~/services/otp.service'
+import { ParsedUrlQuery } from 'querystring'
+import { ParamsDictionary } from 'express-serve-static-core'
+import Follow from '~/models/schemas/Follow.schema'
+import { AuthUser } from '~/@types/auth.type'
+import _ from 'lodash'
+import cloudinaryService from '~/services/cloudinary.service'
 class UserService {
-  // Check email exist in dat abase
   async validateEmailAccessibility(email: string) {
     const user = await databaseService.users.findOne({ email })
     return Boolean(user)
   }
 
-  // Check password exist in database
   async validatePassword(email: string, password: string) {
     const user = await databaseService.users.findOne({ email: email, password: hashPassword(password) })
     return Boolean(user)
   }
 
-  // Check account was verified
+  async isUserExist(id: string) {
+    const result = await databaseService.users.findOne({ id: new ObjectId(id) })
+    return Boolean(result)
+  }
+
   async validateAccountAccessibility(email: string) {
     const user = await databaseService.users.findOne({ email })
     if (user.verify === 'Unverified') {
@@ -53,14 +53,12 @@ class UserService {
     return true
   }
 
-  // Check refresh_token exist in database
   async validateRefreshToken(refresh_token: string) {
     const token = await databaseService.refreshTokens.findOne({ token: refresh_token })
     return Boolean(token)
   }
 
-  // Sign JWT access token
-  private signAccessToken(_id: string, email: string, role: UserRole) {
+  signAccessToken(_id: string, email: string, role: UserRole) {
     let { access_token_exp, jwt_algorithm, secret_key } = env.jwt
     return signToken({
       payload: {
@@ -77,8 +75,7 @@ class UserService {
     })
   }
 
-  //Sign JWT refresh token
-  private signRefreshToken(_id: string, email: string, role: UserRole) {
+  signRefreshToken(_id: string, email: string, role: UserRole) {
     let { refresh_token_exp, jwt_algorithm, refresh_token_key } = env.jwt
     return signToken({
       payload: {
@@ -95,7 +92,7 @@ class UserService {
     })
   }
   // Create access_token and refresh_token
-  private signAccessAndRefreshToken(user_id: string, email: string, role: UserRole) {
+  signAccessAndRefreshToken(user_id: string, email: string, role: UserRole) {
     return Promise.all([this.signAccessToken(user_id, email, role), this.signRefreshToken(user_id, email, role)])
   }
 
@@ -127,7 +124,6 @@ class UserService {
     )
   }
 
-  // User register
   async register(payload: RegisterBody) {
     let { email, username } = payload
     let role = UserRole.User
@@ -189,11 +185,7 @@ class UserService {
   async verifyOTP(payload: VerifyOTPBody) {
     let { otp } = payload
     const { email } = await otpService.findOTP(otp)
-    await databaseService.users.updateOne(
-      { email, verify: UserVerifyStatus.Unverified },
-      { $set: { verify: UserVerifyStatus.Verified } },
-      { upsert: false }
-    )
+    await databaseService.users.updateOne({ email, verify: UserVerifyStatus.Unverified }, { $set: { verify: UserVerifyStatus.Verified } }, { upsert: false })
   }
 
   async refreshToken(payload: RefreshTokenBody) {
@@ -223,16 +215,69 @@ class UserService {
     return result
   }
 
-  async changePassword(payload: ChangePasswordBody) {
-    await databaseService.users.findOneAndUpdate(
-      { email: payload.email },
-      { $set: { password: hashPassword(payload.password) } }
+  async getAllUser(payload: ParsedUrlQuery) {
+    const page = Number(payload.page)
+    const items = Number(payload.items)
+
+    const result = await databaseService.users
+      .find()
+      .limit(items)
+      .skip(page * items)
+      .toArray()
+
+    return _.omit(result, ['password'])
+  }
+
+  async follow(user: AuthUser, payload: ParamsDictionary) {
+    const { id } = payload
+
+    await databaseService.follow.insertOne(
+      new Follow({
+        followedId: new ObjectId(id),
+        followerId: new ObjectId(user._id)
+      })
     )
   }
 
-  // Get user by id
+  async unfollow(user: AuthUser, payload: ParamsDictionary) {
+    const { id } = payload
+
+    await databaseService.follow.deleteMany({
+      followedId: new ObjectId(id),
+      followerId: new ObjectId(user._id)
+    })
+  }
+
+  async updateMeAvatar({ _id }: AuthUser, file: Express.Multer.File) {
+    if (!file) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: VALIDATION_MESSAGES.USER.UPLOAD_AVATAR.INVALID_AVATAR_EXTENSION
+      })
+    }
+
+    const { url } = await cloudinaryService.uploadAvatar(file.buffer)
+    const { avatar } = await databaseService.users.findOne({ _id: new ObjectId(_id) })
+
+    await cloudinaryService.deleteAvatar(avatar)
+    await databaseService.users.updateOne(
+      { _id: new ObjectId(_id) },
+      {
+        $set: {
+          avatar: url
+        }
+      }
+    )
+    const result: UploadAvatarType = { avatarUrl: url }
+    return result
+  }
+
+  async changePassword(payload: ChangePasswordBody) {
+    await databaseService.users.findOneAndUpdate({ email: payload.email }, { $set: { password: hashPassword(payload.password) } })
+  }
+
   async getUserByID(id: ObjectId) {
-    const user = await databaseService.users.findOne(id)
+    const user = await databaseService.users.findOne({ _id: id })
     if (!user) {
       throw new ErrorWithStatus({
         statusCode: StatusCodes.NOT_FOUND,
@@ -240,6 +285,15 @@ class UserService {
       })
     }
     return user
+  }
+  async checkToken(payload: InfoTokenType) {
+    let { iat, exp, ...item } = payload
+    let userInfo = {
+      ...item,
+      iat: moment(iat * 1000).format(),
+      exp: moment(exp * 1000).format()
+    }
+    return userInfo
   }
 }
 

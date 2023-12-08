@@ -33,6 +33,11 @@ const options: swaggerJSDoc.Options = {
         }
       }
     },
+    servers: [
+      {
+        url: 'http://localhost:8080/api/v1'
+      }
+    ],
     security: [
       {
         BearerAuth: []
@@ -54,12 +59,7 @@ app.use(
       directives: {
         defaultSrc: ['*'],
         scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-        styleSrc: [
-          "'self'",
-          "'unsafe-inline'",
-          'https://fonts.googleapis.com/css',
-          'https://use.fontawesome.com/releases/v5.12.0/css/all.css'
-        ],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com/css', 'https://use.fontawesome.com/releases/v5.12.0/css/all.css'],
         objectSrc: ["'none'"],
         upgradeInsecureRequests: []
       }

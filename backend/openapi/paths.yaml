@@ -9,25 +9,63 @@ info:
     - Submit solutions and get real-time feedback
     - Access user profiles and statistics
     - Participate in real-time coding battles
-
     Some useful links:
-    - [Code Arena repository](https://github.com)
+    - [Code Arena repository](https://github.com/Newbies-Coder/code-arena.git)
   contact:
     email: duongquocnam224400@gmail.com
   version: 1.0.11
-externalDocs:
-  description: Find out more about Swagger
-  url: http://swagger.io
+
 servers:
-  - url: http://localhost:8080/api/v1
+  - url: http://localhost:8080
+
 tags:
+  - name: auth
+    description: Operations about authentication
   - name: user
     description: Operations about user
-    externalDocs:
-      description: Feature user
-      url: http://localhost:8080/api/v1/users
+
 paths:
-  /api/v1/users/login:
+  /auth/facebook:
+    get:
+      tags:
+        - auth
+      summary: User login with facebook
+      description: User login with facebook
+      operationId: authFacebook
+      responses:
+        '200':
+          description: Login successfully
+  /auth/github:
+    get:
+      tags:
+        - auth
+      summary: User login with github
+      description: User login with github
+      operationId: authGithub
+      responses:
+        '200':
+          description: Login successfully
+  /auth/google:
+    get:
+      tags:
+        - auth
+      summary: User login with google
+      description: User login with google
+      operationId: authGoogle
+      responses:
+        '200':
+          description: Login successfully
+  /auth/linkedin:
+    get:
+      tags:
+        - auth
+      summary: User login with linkedin
+      description: User login with linkedin
+      operationId: authLinkedin
+      responses:
+        '200':
+          description: Login successfully
+  /users/login:
     post:
       tags:
         - user
@@ -55,7 +93,23 @@ paths:
                   message:
                     example: Login successfully
                   data:
-                    $ref: '#/components/schemas/LoginSuccessAuth'
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 656b0bbd3b0e9defe34fca1a
+                      email:
+                        type: string
+                        example: john@email.com
+                      username:
+                        type: string
+                        example: user123
+                      access_token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
+                      refresh-token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
                   dateTime:
                     type: string
                     format: date-time
@@ -117,7 +171,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/register:
+  /users/register:
     post:
       tags:
         - user
@@ -129,7 +183,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserSchema'
+              $ref: '#/components/schemas/RegisterSchema'
         required: true
       responses:
         '201':
@@ -145,7 +199,23 @@ paths:
                   message:
                     example: Create account successfully. Please check email verify OTP!
                   data:
-                    $ref: '#/components/schemas/RegisterSuccessAuth'
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 656b0bbd3b0e9defe34fca1a
+                      email:
+                        type: string
+                        example: john@email.com
+                      username:
+                        type: string
+                        example: user123
+                      access_token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
+                      refresh_token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
                   dateTime:
                     type: string
                     format: date-time
@@ -191,14 +261,13 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/logout:
+  /users/logout:
     post:
       tags:
         - user
       summary: Logs out current logged in user session
       description: Logs out current logged in user session
       operationId: logoutUser
-      parameters: []
       security:
         - BearerAuth: []
       requestBody:
@@ -210,7 +279,7 @@ paths:
               properties:
                 refresh_token:
                   type: string
-                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTcwMDAyMzIyNn0.bFnaBfxWl-Q48HCwAeMpNzZwTO9LEjcBd7Zyipjqr64
+                  example: string
         required: true
       responses:
         '200':
@@ -249,7 +318,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/verify-otp:
+  /users/verify-otp:
     post:
       tags:
         - user
@@ -265,7 +334,7 @@ paths:
               properties:
                 otp:
                   type: string
-                  example: '123456'
+                  example: string
         required: true
       responses:
         '200':
@@ -330,7 +399,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/resend-verify-otp:
+  /users/resend-verify-otp:
     post:
       tags:
         - user
@@ -382,7 +451,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/refresh-token:
+  /users/refresh-token:
     post:
       tags:
         - user
@@ -398,7 +467,7 @@ paths:
               properties:
                 refresh_token:
                   type: string
-                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTcwMDAyMzIyNn0.bFnaBfxWl-Q48HCwAeMpNzZwTO9LEjcBd7Zyipjqr64
+                  example: string
         required: true
       responses:
         '200':
@@ -415,7 +484,23 @@ paths:
                     type: string
                     example: Refresh token successfully
                   data:
-                    $ref: '#/components/schemas/RegisterSuccessAuth'
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 656b0bbd3b0e9defe34fca1a
+                      email:
+                        type: string
+                        example: john@email.com
+                      username:
+                        type: string
+                        example: user123
+                      access_token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
+                      refresh_token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
                   dateTime:
                     type: string
                     format: date-time
@@ -442,7 +527,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/forgot-password:
+  /users/forgot-password:
     post:
       tags:
         - user
@@ -458,7 +543,7 @@ paths:
               properties:
                 email:
                   type: string
-                  example: user123@gmail.com
+                  example: string
         required: true
       responses:
         '200':
@@ -524,7 +609,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/reset-password:
+  /users/reset-password:
     post:
       tags:
         - user
@@ -599,7 +684,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/change-password:
+  /users/change-password:
     post:
       tags:
         - user
@@ -680,7 +765,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/{userId}/profile:
+  /users/{id}/profile:
     get:
       tags:
         - user
@@ -688,7 +773,7 @@ paths:
       description: Get user by user_id
       operationId: getUserByID
       parameters:
-        - name: userId
+        - name: id
           in: path
           description: 'The user_id that needs to be fetched'
           required: true
@@ -710,7 +795,7 @@ paths:
                   message:
                     example: Get user infomation successfully
                   data:
-                    $ref: '#/components/schemas/ProfileUserSchema'
+                    $ref: '#/components/schemas/ProfileSchema'
                   dateTime:
                     type: string
                     format: date-time
@@ -759,6 +844,308 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+  /users/follow/{id}:
+    post:
+      tags:
+        - user
+      summary: Follow user
+      description: Follow user
+      operationId: followUser
+      parameters:
+        - name: id
+          in: path
+          description: Please enter the user id you want to follow
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Follow user successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Follow user successfully
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /users/unfollow/{id}:
+    post:
+      tags:
+        - user
+      summary: Unfollow user
+      description: Unfollow user
+      operationId: unfollowUser
+      parameters:
+        - name: id
+          in: path
+          description: Please enter the user id you want to unfollow
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Unfollow user successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Follow user successfully
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /users:
+    get:
+      tags:
+        - user
+      summary: Get all user into the system
+      description: Get all user into the system
+      operationId: getAllUser
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            example: 0
+        - name: items
+          in: query
+          description: Number of users on a page
+          required: false
+          schema:
+            type: integer
+            example: 10
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Get all user successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Get all user successfully
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /users/@me/avatar:
+    post:
+      tags:
+        - user
+      summary: Upload avatar user
+      description: Upload avatar
+      operationId: uploadAvatar
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Imformation image upload
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        '200':
+          description: Upload avatar successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Upload avatar successfully
+                  data:
+                    type: object
+                    properties:
+                      avatarUrl:
+                        type: string
+                        example: 'http://res.cloudinary.com/de7hnxr0e/image/upload/v1701942785/avatar/it3nquretum21jkqv2ii.jpg'
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '400':
+          description: Avatar image extension is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    example: Avatar image extension is invalid
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /users/test-token:
+    post:
+      tags:
+        - user
+      summary: Test token user into the system
+      description: Test token user into the system
+      operationId: testToken
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Get token user successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Test token successfully
+                  data:
+                    $ref: '#/components/schemas/TokenSchema'
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: Header authorization is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You are not currently logged in to the system!
+                  data:
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
 components:
   schemas:
     LoginSchema:
@@ -766,92 +1153,84 @@ components:
       properties:
         email:
           type: string
-          example: user1234@gmail.com
+          example: string
         password:
           type: string
-          example: User@123
-    LoginSuccessAuth:
-      type: object
-      properties:
-        _id:
-          type: string
-          example: 656b0bbd3b0e9defe34fca1a
-        email:
-          type: string
-          example: john@email.com
-        username:
-          type: string
-          example: user123
-        access_token:
-          type: string
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
-    RegisterSuccessAuth:
-      type: object
-      properties:
-        _id:
-          type: string
-          example: 656b0bbd3b0e9defe34fca1a
-        email:
-          type: string
-          example: john@email.com
-        username:
-          type: string
-          example: user123
-        access_token:
-          type: string
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
-        refresh_token:
-          type: string
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
-    LogoutBody:
-      type: object
-      properties:
-        refresh_token:
-          type: string
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjRiZTBhZDJlNDNkMjQ2NDM5NGZlZWRiIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE2OTEzODMyMjYsImV4cCI6MTY5MTQ2OTYyNn0.HTLX20cB7_z0c9c8FDg3MIx6RJEELHHlmJNZa94ku-o
+          example: string
+
     ResetPasswordSchema:
       type: object
       properties:
         email:
           type: string
-          example: john@email.com
+          example: string
         password:
           type: string
-          example: 'admin@123'
+          example: string
         confirm_password:
           type: string
-          example: 'admin@123'
+          example: string
     ChangePasswordSchema:
       type: object
       properties:
         old_password:
           type: string
-          example: 'admin@1234'
+          example: string
         password:
           type: string
-          example: 'admin@123'
+          example: string
         confirm_password:
           type: string
-          example: 'admin@123'
-    UserSchema:
+          example: string
+    RegisterSchema:
       type: object
       properties:
         username:
           type: string
-          example: 'user123'
+          example: string
         email:
           type: string
-          example: john@email.com
+          example: string
         password:
           type: string
-          example: 'admin@123'
+          example: string
         confirm_password:
           type: string
-          example: 'admin@123'
+          example: string
         date_of_birth:
           type: string
+          format: date
+          example: string
+    TokenSchema:
+      type: object
+      properties:
+        _id:
+          type: integer
+          format: int64
+          example: 656b0bbd3b0e9defe34fca1a
+        email:
+          type: string
+          example: user123@gmail.com
+        role:
+          type: string
+          example: 'USER'
+          enum:
+            - USER
+            - MODERATOR
+            - ADMIN
+        token_type:
+          type: string
+          example: 'AccessToken'
+          enum:
+            - AccesToken
+            - RefreshToken
+        iat:
+          type: string
           example: '2000-02-22T00:00:00.000Z'
-    ProfileUserSchema:
+        exp:
+          type: string
+          example: '2000-02-22T00:00:00.000Z'
+    ProfileSchema:
       type: object
       properties:
         _id:
@@ -931,8 +1310,3 @@ components:
           example: '2023-12-02T00:00:00.000Z'
       xml:
         name: user
-  securitySchemes:
-    api_key:
-      type: apiKey
-      name: api_key
-      in: header
