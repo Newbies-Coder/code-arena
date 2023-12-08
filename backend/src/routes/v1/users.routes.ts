@@ -4,7 +4,6 @@ import userController from '~/controllers/users.controllers'
 import { requireLoginMiddleware, requireRoleMiddleware } from '~/middlewares/auth.middlewares'
 import { uploadFile } from '~/middlewares/uploadFile.middleware'
 import {
-  accessTokenValidator,
   changePasswordValidator,
   checkTokenValidator,
   followUserValidator,
@@ -46,7 +45,7 @@ userRouter.post('/register', registerValidator, wrapRequestHandler(userControlle
  * Body: { refresh_token: string }
  */
 
-userRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapRequestHandler(userController.logout))
+userRouter.post('/logout', wrapRequestHandler(requireLoginMiddleware), refreshTokenValidator, wrapRequestHandler(userController.logout))
 
 /**
  * Description. Refresh Token
@@ -71,7 +70,7 @@ userRouter.post('/verify-otp', verifyOTPValidator, wrapRequestHandler(userContro
  * Header: { Authorization: Bearer <access_token> }
  * Body: {}
  */
-userRouter.post('/resend-verify-otp', accessTokenValidator, wrapRequestHandler(userController.resendVerifyOTP))
+userRouter.post('/resend-verify-otp', wrapRequestHandler(requireLoginMiddleware), wrapRequestHandler(userController.resendVerifyOTP))
 
 /**
  * Description. Submit email to reset password, send email to user
@@ -97,7 +96,7 @@ userRouter.post('/reset-password', resetPasswordValidator, wrapRequestHandler(us
  * Body: { old_password: string, password: string, confirm_password: string }
  */
 
-userRouter.post('/change-password', accessTokenValidator, changePasswordValidator, wrapRequestHandler(userController.changePassword))
+userRouter.post('/change-password', wrapRequestHandler(requireLoginMiddleware), changePasswordValidator, wrapRequestHandler(userController.changePassword))
 
 /**
  * Description: Follow someone
@@ -129,12 +128,12 @@ userRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), g
 
 /**
  * Description: Get user profile
- * Path: /:userId/profile
+ * Path: /profile/:userId
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.get('/:userId/profile', accessTokenValidator, userProfileValidator, wrapRequestHandler(userController.getUser))
+userRouter.get('/profile/:userId', wrapRequestHandler(requireLoginMiddleware), userProfileValidator, wrapRequestHandler(userController.getUser))
 
 /**
  * Description: Get my profile
@@ -143,7 +142,7 @@ userRouter.get('/:userId/profile', accessTokenValidator, userProfileValidator, w
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.get('/@me/profile', wrapRequestHandler(userController.getMe))
+userRouter.get('/@me/profile', wrapRequestHandler(requireLoginMiddleware), wrapRequestHandler(userController.getMe))
 
 /**
  * Description: Update self profile

@@ -20,8 +20,6 @@ const userController = {
   },
   logout: async (req: Request<ParamsDictionary, any, LogoutBody>, res: Response, next: NextFunction) => {
     await userServices.logout(req.body)
-    const cookies_names = env.client.cookies_name
-    res.clearCookie(cookies_names)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.LOGOUT_SUCCESS)
   },
   refreshToken: async (req: Request<ParamsDictionary, any, RefreshTokenBody>, res: Response, next: NextFunction) => {
@@ -84,7 +82,8 @@ const userController = {
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_USER_SUCCESS)
   },
   getMe: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_PROFILE_USER_SUCCESS)
+    const result = await userServices.getUserByID(new ObjectId(req.user._id))
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_PROFILE_USER_SUCCESS)
   },
   updateMe: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.UPDATE_USER_SUCCESS)

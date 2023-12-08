@@ -203,46 +203,6 @@ export const loginValidator = validate(
   )
 )
 
-export const accessTokenValidator = validate(
-  checkSchema(
-    {
-      Authorization: {
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.TOKEN.ACCESS_TOKEN_IS_REQUIRED
-        },
-        custom: {
-          options: async (value: string, { req }) => {
-            const bearerPrefix = 'Bearer '
-            if (!value.startsWith(bearerPrefix)) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.UNAUTHORIZED,
-                message: VALIDATION_MESSAGES.AUTHORIZATION.HEADER_AUTHORIZATION_IS_INVALID
-              })
-            }
-            const access_token = value.substring(bearerPrefix.length)
-            const secret_key = env.jwt.secret_key
-            try {
-              const payload = (await verifyToken({
-                token: access_token,
-                secretOrPublicKey: secret_key
-              })) as TokenPayloadType
-              req.body.email = payload.email
-              req.body.role = payload.role
-            } catch (error) {
-              throw new ErrorWithStatus({
-                message: capitalize(error.message),
-                statusCode: StatusCodes.UNAUTHORIZED
-              })
-            }
-            return true
-          }
-        }
-      }
-    },
-    ['headers']
-  )
-)
-
 // Validation forgot password feature
 export const forgotPasswordValidator = validate(
   checkSchema(

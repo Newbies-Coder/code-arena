@@ -301,7 +301,7 @@ class UserService {
         message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
       })
     }
-    return user
+    return _.omit(user, 'password')
   }
   async checkToken(payload: InfoTokenType) {
     let { iat, exp, ...item } = payload
