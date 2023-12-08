@@ -150,6 +150,7 @@ userRouter.get('/@me/profile', wrapRequestHandler(requireLoginMiddleware), wrapR
  * Path: /@me/profile
  * Method: PUT
  * Body:
+ * Header: { Authorization: Bearer <access_token> }
  */
 
 userRouter.put('/@me/profile', wrapRequestHandler(requireLoginMiddleware), updateProfileValidator, wrapRequestHandler(userController.updateMe))

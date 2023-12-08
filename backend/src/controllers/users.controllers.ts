@@ -85,7 +85,7 @@ const userController = {
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_PROFILE_USER_SUCCESS)
   },
   updateMe: async (req: Request<ParamsDictionary, any, UpdateProfileBody>, res: Response, next: NextFunction) => {
-    await userServices.updateProfile(req.body)
+    await userServices.updateProfile(req.user, req.body)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.UPDATE_USER_SUCCESS)
   },
   updateMeAvatar: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {

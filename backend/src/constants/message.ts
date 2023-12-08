@@ -191,7 +191,8 @@ export const VALIDATION_MESSAGES = {
       BIO_MUST_BE_STRING: 'Bio must be a string',
       BIO_MAX_LENGTH_IS_150: 'Bio max length is 50 character',
       ADDRESS_MUST_BE_STRING: 'Address must be a string',
-      ADDRESS_MAX_LENGTH_IS_255: 'Address max length is 255 character'
+      ADDRESS_MAX_LENGTH_IS_255: 'Address max length is 255 character',
+      FIELD_UPDATE_IS_REQUIRED: 'Must be at least 1 field that to updating'
     }
   },
   TOKEN: {

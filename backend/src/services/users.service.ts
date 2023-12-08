@@ -314,7 +314,12 @@ class UserService {
   }
 
   // update profile
-  async updateProfile(payload: UpdateProfileBody) {}
+  async updateProfile(user: AuthUser, payload: UpdateProfileBody) {
+    if (Object.keys(payload).length === 0) {
+      throw new ErrorWithStatus({ statusCode: StatusCodes.BAD_REQUEST, message: VALIDATION_MESSAGES.USER.USER_PROFILE.FIELD_UPDATE_IS_REQUIRED })
+    }
+    await databaseService.users.updateOne({ _id: new ObjectId(user._id) }, { $set: payload }, { upsert: false })
+  }
 }
 
 const userServices = new UserService()
