@@ -2029,6 +2029,13 @@
     "@types/range-parser" "*"
     "@types/send" "*"
 
+"@types/express-session@^1.17.10":
+  version "1.17.10"
+  resolved "https://registry.npmjs.org/@types/express-session/-/express-session-1.17.10.tgz"
+  integrity sha512-U32bC/s0ejXijw5MAzyaV4tuZopCh/K7fPoUDyNbsRXHvPSeymygYD1RFL99YOLhF5PNOkzswvOTRaVHdL1zMw==
+  dependencies:
+    "@types/express" "*"
+
 "@types/express@*", "@types/express@^4.17.20":
   version "4.17.20"
   resolved "https://registry.npmjs.org/@types/express/-/express-4.17.20.tgz"
@@ -2162,9 +2169,9 @@
     "@types/node" "*"
 
 "@types/parse-json@^4.0.0":
-  version "4.0.2"
-  resolved "https://registry.npmjs.org/@types/parse-json/-/parse-json-4.0.2.tgz"
-  integrity sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
+  integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
 
 "@types/passport-facebook@^3.0.3":
   version "3.0.3"
@@ -2184,9 +2191,26 @@
     "@types/passport" "*"
     "@types/passport-oauth2" "*"
 
+"@types/passport-google-oauth20@^2.0.14":
+  version "2.0.14"
+  resolved "https://registry.npmjs.org/@types/passport-google-oauth20/-/passport-google-oauth20-2.0.14.tgz"
+  integrity sha512-ZaZpRUAeMl3vy298ulKO1wGLn9SQtj/CyIfZL/Px5xU9pybMiQU3mhXDCBiWSbg0EK9uXT4ZoWC3ktuWY+5fwQ==
+  dependencies:
+    "@types/express" "*"
+    "@types/passport" "*"
+    "@types/passport-oauth2" "*"
+
+"@types/passport-linkedin-oauth2@^1.5.6":
+  version "1.5.6"
+  resolved "https://registry.yarnpkg.com/@types/passport-linkedin-oauth2/-/passport-linkedin-oauth2-1.5.6.tgz#79549b526f0f5f0dbd8116156e759de1fdb3cda5"
+  integrity sha512-LlIwa+GGK8KoUHDxxwO2+5uqB6YmIHysqdLwpn+YJsjfmqFdAH+4YjhXO7riYwfYcpEr/pI+dSEDlwF0Xt+qhg==
+  dependencies:
+    "@types/express" "*"
+    "@types/passport" "*"
+
 "@types/passport-oauth2@*":
   version "1.4.15"
-  resolved "https://registry.yarnpkg.com/@types/passport-oauth2/-/passport-oauth2-1.4.15.tgz#34f2684f53aad36e664cd01ca9879224229f47e7"
+  resolved "https://registry.npmjs.org/@types/passport-oauth2/-/passport-oauth2-1.4.15.tgz"
   integrity sha512-9cUTP/HStNSZmhxXGuRrBJfEWzIEJRub2eyJu3CvkA+8HAMc9W3aKdFhVq+Qz1hi42qn+GvSAnz3zwacDSYWpw==
   dependencies:
     "@types/express" "*"
@@ -2195,7 +2219,7 @@
 
 "@types/passport@*", "@types/passport@^1.0.16":
   version "1.0.16"
-  resolved "https://registry.yarnpkg.com/@types/passport/-/passport-1.0.16.tgz#5a2918b180a16924c4d75c31254c31cdca5ce6cf"
+  resolved "https://registry.npmjs.org/@types/passport/-/passport-1.0.16.tgz"
   integrity sha512-FD0qD5hbPWQzaM0wHUnJ/T0BBCJBxCeemtnCwc/ThhTg3x9jfrAcRUmj5Dopza+MfFS9acTe3wk7rcVnRIp/0A==
   dependencies:
     "@types/express" "*"
@@ -2686,7 +2710,7 @@ bl@^4.0.3:
 
 body-parser@1.20.1:
   version "1.20.1"
-  resolved "https://registry.npmjs.org/body-parser/-/body-parser-1.20.1.tgz"
+  resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.20.1.tgz#b1812a8912c195cd371a3ee5e66faa2338a5c668"
   integrity sha512-jWi7abTbYwajOytWCQc37VulmWiRae5RyTpaCyDcS5/lMdtwSz5lOpDE67srw/HYe35f1z3fDQw+3txg7gNtWw==
   dependencies:
     bytes "3.1.2"
@@ -2704,7 +2728,7 @@ body-parser@1.20.1:
 
 body-parser@^1.20.2:
   version "1.20.2"
-  resolved "https://registry.npmjs.org/body-parser/-/body-parser-1.20.2.tgz"
+  resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.20.2.tgz#6feb0e21c4724d06de7ff38da36dad4f57a747fd"
   integrity sha512-ml9pReCu3M61kGlqoTm2umSXTlRTuGTx0bfYj+uIUKKYycG5NtSbeetV3faSU6R7ajOPw0g/J1PvK4qNy7s5bA==
   dependencies:
     bytes "3.1.2"
@@ -2971,7 +2995,7 @@ color-convert@^2.0.1:
 
 color-name@1.1.3:
   version "1.1.3"
-  resolved "https://registry.npmjs.org/color-name/-/color-name-1.1.3.tgz"
+  resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.3.tgz#a7d0558bd89c42f795dd42328f740831ca53bc25"
   integrity sha512-72fSenhMw2HZMTVHeCA9KCmpEIbzWiQsjN+BHcBbS9vr1mtt+vJjPdksIBNUmKAW8TFUDPJK5SUU3QhE9NEXDw==
 
 color-name@^1.0.0, color-name@~1.1.4:
@@ -3102,6 +3126,11 @@ cookie@0.4.1:
   version "0.4.1"
   resolved "https://registry.npmjs.org/cookie/-/cookie-0.4.1.tgz"
   integrity sha512-ZwrFkGJxUR3EIoXtO+yVE69Eb7KlixbaeAWfBQB9vVsNn/o+Yw69gBWSSDK825hQNdN+wF8zELf3dFNl/kxkUA==
+
+cookie@0.4.2:
+  version "0.4.2"
+  resolved "https://registry.npmjs.org/cookie/-/cookie-0.4.2.tgz"
+  integrity sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==
 
 cookie@0.5.0:
   version "0.5.0"
@@ -3568,6 +3597,20 @@ expect@^29.0.0, expect@^29.7.0:
     jest-message-util "^29.7.0"
     jest-util "^29.7.0"
 
+express-session@^1.17.3:
+  version "1.17.3"
+  resolved "https://registry.npmjs.org/express-session/-/express-session-1.17.3.tgz"
+  integrity sha512-4+otWXlShYlG1Ma+2Jnn+xgKUZTMJ5QD3YvfilX3AcocOAbIkVylSWEklzALe/+Pu4qV6TYBj5GwOBFfdKqLBw==
+  dependencies:
+    cookie "0.4.2"
+    cookie-signature "1.0.6"
+    debug "2.6.9"
+    depd "~2.0.0"
+    on-headers "~1.0.2"
+    parseurl "~1.3.3"
+    safe-buffer "5.2.1"
+    uid-safe "~2.1.5"
+
 express-validator@^7.0.1:
   version "7.0.1"
   resolved "https://registry.npmjs.org/express-validator/-/express-validator-7.0.1.tgz"
@@ -3620,7 +3663,7 @@ fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
 
 fast-glob@3.2.7:
   version "3.2.7"
-  resolved "https://registry.npmjs.org/fast-glob/-/fast-glob-3.2.7.tgz"
+  resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.2.7.tgz#fd6cb7a2d7e9aa7a7846111e85a196d6b2f766a1"
   integrity sha512-rYGMRwip6lUMvYD3BTScMwT1HtAs2d71SMv66Vrxs0IekGZEjhM0pcMfjQPnknBt2zeCwQMEupiN02ZP4DiT1Q==
   dependencies:
     "@nodelib/fs.stat" "^2.0.2"
@@ -3631,7 +3674,7 @@ fast-glob@3.2.7:
 
 fast-glob@^3.2.9:
   version "3.3.1"
-  resolved "https://registry.npmjs.org/fast-glob/-/fast-glob-3.3.1.tgz"
+  resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.3.1.tgz#784b4e897340f3dbbef17413b3f11acf03c874c4"
   integrity sha512-kNFPyjhh5cKjrUltxs+wFx+ZkbRaxxmZ+X0ZU31SOsxCEtP9VPgtq2teZw1DebupL5GmDaNQ6yKMMVcM41iqDg==
   dependencies:
     "@nodelib/fs.stat" "^2.0.2"
@@ -3887,7 +3930,7 @@ glob@7.1.6:
 
 glob@^7.1.3, glob@^7.1.4:
   version "7.2.3"
-  resolved "https://registry.npmjs.org/glob/-/glob-7.2.3.tgz"
+  resolved "https://registry.yarnpkg.com/glob/-/glob-7.2.3.tgz#b8df0fb802bbfa8e89bd1d938b4e16578ed44f2b"
   integrity sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==
   dependencies:
     fs.realpath "^1.0.0"
@@ -4599,7 +4642,7 @@ js-yaml@4.1.0, js-yaml@^4.1.0:
 
 js-yaml@^3.10.0, js-yaml@^3.13.1:
   version "3.14.1"
-  resolved "https://registry.npmjs.org/js-yaml/-/js-yaml-3.14.1.tgz"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.14.1.tgz#dae812fdb3825fa306609a8717383c50c36a0537"
   integrity sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==
   dependencies:
     argparse "^1.0.7"
@@ -4953,7 +4996,7 @@ mimic-fn@^2.1.0:
 
 minimatch@3.0.5:
   version "3.0.5"
-  resolved "https://registry.npmjs.org/minimatch/-/minimatch-3.0.5.tgz"
+  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.5.tgz#4da8f1290ee0f0f8e83d60ca69f8f134068604a3"
   integrity sha512-tUpxzX0VAzJHjLu0xUfFv1gwVp9ba3IOuRAVH2EGuRW8a5emA2FlACLqiT/lDVtS1W+TGNwqz3sWaNyLgDJWuw==
   dependencies:
     brace-expansion "^1.1.7"
@@ -4979,7 +5022,7 @@ minimist@^1.2.0, minimist@^1.2.6:
 
 mkdirp@^0.5.4:
   version "0.5.6"
-  resolved "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.6.tgz"
+  resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.6.tgz#7def03d2432dcae4ba1d611445c48396062255f6"
   integrity sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==
   dependencies:
     minimist "^1.2.6"
@@ -5042,12 +5085,12 @@ ms@2.1.2:
 
 ms@2.1.3, ms@^2.1.1:
   version "2.1.3"
-  resolved "https://registry.npmjs.org/ms/-/ms-2.1.3.tgz"
+  resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
 multer@^1.4.5-lts.1:
   version "1.4.5-lts.1"
-  resolved "https://registry.npmjs.org/multer/-/multer-1.4.5-lts.1.tgz"
+  resolved "https://registry.yarnpkg.com/multer/-/multer-1.4.5-lts.1.tgz#803e24ad1984f58edffbc79f56e305aec5cfd1ac"
   integrity sha512-ywPWvcDMeH+z9gQq5qYHCCy+ethsk4goepZ45GLD63fOu0YcNecQxi64nDs3qluZB+murG3/D4dJ7+dGctcCQQ==
   dependencies:
     append-field "^1.0.0"
@@ -5362,6 +5405,20 @@ passport-github2@^0.1.12:
   dependencies:
     passport-oauth2 "1.x.x"
 
+passport-google-oauth20@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/passport-google-oauth20/-/passport-google-oauth20-2.0.0.tgz#0d241b2d21ebd3dc7f2b60669ec4d587e3a674ef"
+  integrity sha512-KSk6IJ15RoxuGq7D1UKK/8qKhNfzbLeLrG3gkLZ7p4A6DBCcv7xpyQwuXtWdpyR0+E0mwkpjY1VfPOhxQrKzdQ==
+  dependencies:
+    passport-oauth2 "1.x.x"
+
+passport-linkedin-oauth2@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/passport-linkedin-oauth2/-/passport-linkedin-oauth2-2.0.0.tgz#c320374baa44c1412a9b023590d1d0c1c77cfe73"
+  integrity sha512-PnSeq2HzFQ/y1/p2RTF/kG2zhJ7kwGVg4xO3E+JNxz2aI0pFJGAqC503FVpUksYbhQdNhL6QYlK9qrEXD7ZYCg==
+  dependencies:
+    passport-oauth2 "1.x.x"
+
 passport-oauth2@1.x.x:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/passport-oauth2/-/passport-oauth2-1.7.0.tgz#5c4766c8531ac45ffe9ec2c09de9809e2c841fc4"
@@ -5537,6 +5594,11 @@ quick-lru@^4.0.1:
   version "4.0.1"
   resolved "https://registry.npmjs.org/quick-lru/-/quick-lru-4.0.1.tgz"
   integrity sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==
+
+random-bytes@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/random-bytes/-/random-bytes-1.0.0.tgz"
+  integrity sha512-iv7LhNVO047HzYR3InF6pUcUsPQiHTM1Qal51DcGSuZFBil1aBBWG5eHPNek7bvILMaYJ/8RU1e8w1AMdHmLQQ==
 
 range-parser@~1.2.1:
   version "1.2.1"
@@ -5720,12 +5782,12 @@ rxjs@^7.8.0:
 
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
-  resolved "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz"
+  resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
   integrity sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==
 
 safe-buffer@5.2.1, safe-buffer@^5.0.1, safe-buffer@^5.1.1, safe-buffer@^5.1.2, safe-buffer@~5.2.0:
   version "5.2.1"
-  resolved "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.1.tgz"
+  resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.1.tgz#1eaf9fa9bdb1fdd4ec75f58f9cdb4e6b7827eec6"
   integrity sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==
 
 safe-stable-stringify@^2.3.1:
@@ -5923,12 +5985,12 @@ statuses@2.0.1:
 
 streamifier@^0.1.1:
   version "0.1.1"
-  resolved "https://registry.npmjs.org/streamifier/-/streamifier-0.1.1.tgz"
+  resolved "https://registry.yarnpkg.com/streamifier/-/streamifier-0.1.1.tgz#97e98d8fa4d105d62a2691d1dc07e820db8dfc4f"
   integrity sha512-zDgl+muIlWzXNsXeyUfOk9dChMjlpkq0DRsxujtYPgyJ676yQ8jEm6zzaaWHFDg5BNcLuif0eD2MTyJdZqXpdg==
 
 streamsearch@^1.1.0:
   version "1.1.0"
-  resolved "https://registry.npmjs.org/streamsearch/-/streamsearch-1.1.0.tgz"
+  resolved "https://registry.yarnpkg.com/streamsearch/-/streamsearch-1.1.0.tgz#404dd1e2247ca94af554e841a8ef0eaa238da764"
   integrity sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==
 
 string-length@^4.0.1:
@@ -5950,14 +6012,14 @@ string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
 
 string_decoder@^1.1.1:
   version "1.3.0"
-  resolved "https://registry.npmjs.org/string_decoder/-/string_decoder-1.3.0.tgz"
+  resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-1.3.0.tgz#42f114594a46cf1a8e30b0a84f56c78c3edac21e"
   integrity sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA==
   dependencies:
     safe-buffer "~5.2.0"
 
 string_decoder@~1.1.1:
   version "1.1.1"
-  resolved "https://registry.npmjs.org/string_decoder/-/string_decoder-1.1.1.tgz"
+  resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-1.1.1.tgz#9cf1611ba62685d7030ae9e4ba34149c3af03fc8"
   integrity sha512-n/ShnvDi6FHbbVfviro+WojiFzv+s8MPMHBczVePfUpDJLwoLT0ht1l4YwBCbi8pJAveEEdnkHyPyTP/mzRfwg==
   dependencies:
     safe-buffer "~5.1.0"
@@ -6266,6 +6328,13 @@ typescript@~5.1.3:
   resolved "https://registry.npmjs.org/typescript/-/typescript-5.1.6.tgz"
   integrity sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==
 
+uid-safe@~2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/uid-safe/-/uid-safe-2.1.5.tgz#2b3d5c7240e8fc2e58f8aa269e5ee49c0857bd3a"
+  integrity sha512-KPHm4VL5dDXKz01UuEd88Df+KzynaohSL9fBh096KWAxSKZQDI2uBrVqtvRM4rwrIrRRKsdLNML/lnaaVSRioA==
+  dependencies:
+    random-bytes "~1.0.0"
+
 uid2@0.0.x:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/uid2/-/uid2-0.0.4.tgz#033f3b1d5d32505f5ce5f888b9f3b667123c0a44"
@@ -6503,7 +6572,7 @@ yallist@^4.0.0:
 
 yaml@2.0.0-1:
   version "2.0.0-1"
-  resolved "https://registry.npmjs.org/yaml/-/yaml-2.0.0-1.tgz"
+  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.0.0-1.tgz#8c3029b3ee2028306d5bcf396980623115ff8d18"
   integrity sha512-W7h5dEhywMKenDJh2iX/LABkbFnBxasD27oyXWDS/feDsxiw0dD5ncXdYXgkvAsXIY2MpW/ZKkr9IU30DBdMNQ==
 
 yaml@^1.7.2:
@@ -6513,7 +6582,7 @@ yaml@^1.7.2:
 
 yaml@^2.3.4:
   version "2.3.4"
-  resolved "https://registry.npmjs.org/yaml/-/yaml-2.3.4.tgz"
+  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.3.4.tgz#53fc1d514be80aabf386dc6001eb29bf3b7523b2"
   integrity sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==
 
 yargs-parser@21.1.1, yargs-parser@^21.0.1, yargs-parser@^21.1.1:

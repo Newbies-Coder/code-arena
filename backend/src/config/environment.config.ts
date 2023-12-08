@@ -11,7 +11,7 @@ let { JWT_SECRECT_KEY, JWT_ALGORITHM, JWT_REFRESH_TOKEN_KEY, ACCESS_TOKEN_EXPIRE
 let { OTP_EMAIL_ACCOUNT, OTP_EMAIL_PASSWORD, OTP_EMAIL_NAME } = OTP_EMAIL_MESSAGES
 let { MAX_ITEM_PER_PAGE } = REQUEST_QUERY_MESSAGES
 let { CLOUDINARY_KEY, CLOUDINARY_SECRET, CLOUDINARY_NAME, CLOUDINARY_AVATAR_FOLDER } = CLOUDINARY_MESSAGES
-let { FACEBOOK, GITHUB } = AUTH_MESSAGES
+let { FACEBOOK, GITHUB, GOOGLE, LINKEDIN } = AUTH_MESSAGES
 let { AUTH_SUCCESS_URL, AUTH_FAIL_URL } = URL_MESSAGES
 
 // Validation schema env
@@ -54,6 +54,12 @@ const envSchema = Joi.object({
   GITHUB_AUTH_CLIENT_ID: Joi.string().required().description(GITHUB.CLIENT_ID),
   GITHUB_AUTH_CLIENT_SECRET: Joi.string().required().description(GITHUB.CLIENT_SECRET),
   GITHUB_AUTH_CALLBACK_URL: Joi.string().required().description(GITHUB.CALLBACK_URL),
+  GOOGLE_AUTH_CLIENT_ID: Joi.string().required().description(GOOGLE.CLIENT_ID),
+  GOOGLE_AUTH_CLIENT_SECRET: Joi.string().required().description(GOOGLE.CLIENT_SECRET),
+  GOOGLE_AUTH_CALLBACK_URL: Joi.string().required().description(GOOGLE.CALLBACK_URL),
+  LINKEDIN_AUTH_CLIENT_ID: Joi.string().required().description(LINKEDIN.CLIENT_ID),
+  LINKEDIN_AUTH_CLIENT_SECRET: Joi.string().required().description(LINKEDIN.CLIENT_SECRET),
+  LINKEDIN_AUTH_CALLBACK_URL: Joi.string().required().description(LINKEDIN.CALLBACK_URL),
   AUTH_SUCCESS_URL: Joi.string().required().description(AUTH_SUCCESS_URL),
   AUTH_FAIL_URL: Joi.string().required().description(AUTH_FAIL_URL)
 })
@@ -130,6 +136,16 @@ export const env = {
       client_id: envVars.GITHUB_AUTH_CLIENT_ID,
       client_secret: envVars.GITHUB_AUTH_CLIENT_SECRET,
       callback_url: envVars.GITHUB_AUTH_CALLBACK_URL
+    },
+    google: {
+      client_id: envVars.GOOGLE_AUTH_CLIENT_ID,
+      client_secret: envVars.GOOGLE_AUTH_CLIENT_SECRET,
+      callback_url: envVars.GOOGLE_AUTH_CALLBACK_URL
+    },
+    linkedin: {
+      client_id: envVars.LINKEDIN_AUTH_CLIENT_ID,
+      client_secret: envVars.LINKEDIN_AUTH_CLIENT_SECRET,
+      callback_url: envVars.LINKEDIN_AUTH_CALLBACK_URL
     }
   },
   url: {

@@ -8,6 +8,8 @@ import userServices from '~/services/users.service'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { Request, Response } from 'express'
 import { AuthProvider } from '~/@types/auth.type'
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
+import { Strategy as LinkedinStrategy } from 'passport-linkedin-oauth2'
 
 class AuthService {
   init() {
@@ -58,6 +60,66 @@ class AuthService {
                 username: profile.login,
                 email: profile.email,
                 provider: 'github',
+                providerId: profile.id
+              })
+              await databaseService.users.insertOne(newUser)
+              req.user = newUser
+              return done(null, newUser)
+            }
+            req.user = user
+            return done(null, user)
+          } catch (error) {
+            return done(error, null)
+          }
+        }
+      )
+    )
+    passport.use(
+      new GoogleStrategy(
+        {
+          clientID: env.auth.google.client_id,
+          clientSecret: env.auth.google.client_secret,
+          callbackURL: env.auth.google.callback_url,
+          passReqToCallback: true
+        },
+        async function (req, accessToken, refreshToken, profile, done) {
+          try {
+            let user = await databaseService.users.findOne({ provider: 'google', providerId: profile.id })
+            if (!user) {
+              const newUser = new User({
+                username: profile._json.name,
+                email: profile._json.email,
+                provider: 'google',
+                providerId: profile.id
+              })
+              await databaseService.users.insertOne(newUser)
+              req.user = newUser
+              return done(null, newUser)
+            }
+            req.user = user
+            return done(null, user)
+          } catch (error) {
+            return done(error, null)
+          }
+        }
+      )
+    )
+    passport.use(
+      new LinkedinStrategy(
+        {
+          clientID: env.auth.linkedin.client_id,
+          clientSecret: env.auth.linkedin.client_secret,
+          callbackURL: env.auth.linkedin.callback_url,
+          passReqToCallback: true
+        },
+        async function (req, accessToken, refreshToken, profile, done) {
+          try {
+            let user = await databaseService.users.findOne({ provider: 'linkedin', providerId: profile.id })
+            if (!user) {
+              const newUser = new User({
+                username: profile._json.name,
+                email: profile._json.email,
+                provider: 'linkedin',
                 providerId: profile.id
               })
               await databaseService.users.insertOne(newUser)
