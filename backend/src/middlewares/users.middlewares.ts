@@ -554,7 +554,7 @@ export const resetPasswordValidator = validate(
 export const followUserValidator = validate(
   checkSchema(
     {
-      userId: {
+      id: {
         trim: true,
         notEmpty: {
           errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
@@ -591,7 +591,7 @@ export const followUserValidator = validate(
 export const userProfileValidator = validate(
   checkSchema(
     {
-      userId: {
+      id: {
         trim: true,
         escape: true,
         notEmpty: {
@@ -613,7 +613,7 @@ export const userProfileValidator = validate(
 export const unfollowUserValidator = validate(
   checkSchema(
     {
-      userId: {
+      id: {
         trim: true,
         notEmpty: {
           errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY

@@ -77,7 +77,7 @@ const userController = {
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_ALL_USER_SUCCESS)
   },
   getUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    const result = await userServices.getUserByID(new ObjectId(req.params.userId))
+    const result = await userServices.getUserByID(new ObjectId(req.params.id))
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_USER_SUCCESS)
   },
   getMe: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {

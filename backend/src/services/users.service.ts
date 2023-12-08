@@ -246,21 +246,21 @@ class UserService {
   }
 
   async follow(user: AuthUser, payload: ParamsDictionary) {
-    const { userId } = payload
+    const { id } = payload
 
     await databaseService.follow.insertOne(
       new Follow({
-        followedId: new ObjectId(userId),
+        followedId: new ObjectId(id),
         followerId: new ObjectId(user._id)
       })
     )
   }
 
   async unfollow(user: AuthUser, payload: ParamsDictionary) {
-    const { userId } = payload
+    const { id } = payload
 
     await databaseService.follow.deleteMany({
-      followedId: new ObjectId(userId),
+      followedId: new ObjectId(id),
       followerId: new ObjectId(user._id)
     })
   }
@@ -294,7 +294,7 @@ class UserService {
   }
 
   async getUserByID(id: ObjectId) {
-    const user = await databaseService.users.findOne(id)
+    const user = await databaseService.users.findOne({ _id: id })
     if (!user) {
       throw new ErrorWithStatus({
         statusCode: StatusCodes.NOT_FOUND,

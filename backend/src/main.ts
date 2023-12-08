@@ -33,6 +33,11 @@ const options: swaggerJSDoc.Options = {
         }
       }
     },
+    servers: [
+      {
+        url: 'http://localhost:8080/api/v1'
+      }
+    ],
     security: [
       {
         BearerAuth: []
