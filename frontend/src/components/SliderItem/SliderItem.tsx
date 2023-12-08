@@ -1,7 +1,8 @@
 import { Button, Card, Carousel, Progress } from 'antd'
-import { HeartIcon, LeftArrowIcon, PlayIcon, RedHeartIcon, RightArrowIcon } from '../Icons'
+import { LeftArrowIcon, PlayIcon, RightArrowIcon } from '../Icons'
 import { useState } from 'react'
 import { courseList } from '@/mocks/home.data'
+import { HeartOutlined, HeartFilled } from '@ant-design/icons'
 const settings = {
   dots: false,
   infinite: true,
@@ -56,19 +57,20 @@ const SliderItem = () => {
           <Card
             hoverable
             className="border-2 bg-blue-900 border-gray-opacity w-56 hover:border-gray-500"
-            style={{ width: '100%', marginLeft: '4px', marginRight: '4px' }}
+            style={{ width: '100%', marginLeft: '4px', marginRight: '4px', height: '100%' }}
+            bodyStyle={{ height: '100%', padding: '20px' }}
           >
             <img src={course.bgImage} alt="" className="relative rounded-2xl object-cover h-40 w-full" />
             <Button
-              className="absolute z-10 p-0 border-0 flex justify-center items-center bg-gray-opacity w-8 h-8 rounded-full top-8 right-8 "
+              className="absolute z-10 p-0 border-0 flex justify-center items-center bg-gray-300 w-10 h-10 rounded-full top-8 right-8 "
               onClick={handleLike}
             >
-              {liked ? <RedHeartIcon /> : <HeartIcon />}
+              {liked ? <HeartFilled className="text-lg text-red-600" /> : <HeartOutlined className="text-lg" />}
             </Button>
-            <Button className="absolute z-10 bg-white w-12 h-12 rounded-full lg:bottom-36 lg:right-10 xs:right-8 xs:bottom-40 xss:bottom-[140px] ss:bottom-36 md:bottom-28 mds:bottom-40 xl:bottom-28">
+            <Button className="absolute z-10 bg-white w-12 h-12 rounded-full lg:bottom-32 lg:right-10 xs:right-8 xs:bottom-44 xss:bottom-32 ss:bottom-36 md:bottom-32 mds:bottom-40 xl:bottom-32 smm:bottom-36">
               <PlayIcon className="ml-1" />
             </Button>
-            <div>
+            <div className="pt-4">
               <div className="flex items-center pt-2">
                 <course.Icon />
                 <span className="text-teal-400 pl-2 text-xs">{course.title}</span>

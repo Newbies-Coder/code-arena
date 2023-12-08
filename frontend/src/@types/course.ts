@@ -5,3 +5,9 @@ export type CourseType = {
   description: string
   progressPercent: number
 }
+
+export type FriendType = {
+  key: number
+  name: string
+  status: string
+}

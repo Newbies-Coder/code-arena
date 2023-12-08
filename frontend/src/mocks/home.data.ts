@@ -1,4 +1,4 @@
-import { CourseType } from '@/@types/course'
+import { CourseType, FriendType } from '@/@types/course'
 import { BackendIcon, DesignIcon, FrontendIcon } from '@/components/Icons'
 import { BG } from '@/constants/images'
 
@@ -38,4 +38,11 @@ export const courseList: CourseType[] = [
     title: 'FRONTEND',
     description: "Beginner's Guide to Becoming a Professional Front-End Developer",
   },
+]
+
+export const friendList: FriendType[] = [
+  { key: 1, name: 'Anne Couture', status: 'online' },
+  { key: 2, name: 'Anne Couture', status: 'online' },
+  { key: 3, name: 'Anne Couture', status: 'online' },
+  { key: 4, name: 'Anne Couture', status: 'online' },
 ]

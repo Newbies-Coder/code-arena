@@ -9,6 +9,7 @@
   },
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
     "@reduxjs/toolkit": "^1.9.7",
     "@swc/helpers": "~0.5.2",
     "antd": "^5.11.2",

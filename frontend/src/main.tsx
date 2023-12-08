@@ -27,7 +27,6 @@ root.render(
               colorText: '#F2F2F2',
             },
             Menu: {
-              itemSelectedBg: '#5521b5',
               itemHoverColor: 'black',
               itemHoverBg: '#e6f4ff',
             },

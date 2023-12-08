@@ -1,7 +1,7 @@
 import { Header } from 'antd/es/layout/layout'
 import { HomeIcon, LettersIcon, NoNotiIcon, SearchIcon, UserIcon } from '../Icons'
 import { DownOutlined } from '@ant-design/icons'
-import { Avatar, Button, Card, Dropdown, Input, MenuProps, Popover, Row, Space, message } from 'antd'
+import { Avatar, Button, Dropdown, Input, MenuProps, Popover, Space, message } from 'antd'
 import { HOME_ICON, LOGO } from '@/constants/images'
 import { useState } from 'react'
 
@@ -45,9 +45,6 @@ const content = (
 
 const HeaderItem = () => {
   const [open, setOpen] = useState(false)
-  const hide = () => {
-    setOpen(false)
-  }
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen)
@@ -57,10 +54,10 @@ const HeaderItem = () => {
       <div className="flex justify-between items-center">
         <img src={HOME_ICON.LOGO_TEXT} alt="logo" className="xs:hidden xl:block" />
         <img src={LOGO.APP_LOGO} className="xl:hidden xs:block" />
-        <div className="flex justify-between items-center relative w-full md:w-auto">
+        <div className="flex justify-between items-center relative px-2 w-full md:w-auto">
           <SearchIcon className="absolute z-10 ml-2 " />
           <Input
-            className="px-10 rounded-full text-gray-800 text-base xl:w-128 lg:w-64 w-full"
+            className="px-8 rounded-full text-gray-800 text-base xl:w-128 lg:w-64 w-full"
             placeholder="Search"
           ></Input>
         </div>
@@ -86,7 +83,7 @@ const HeaderItem = () => {
           </div>
         </div>
         <div className="flex justify-center items-center">
-          <Popover placement="bottomRight" content={content} trigger="click">
+          <Popover placement="bottomRight" content={content} trigger="click" className="xs:hidden xss:block">
             <Button className="h-10 w-10 px-2 mx-1 rounded-full border-yellow-400 flex justify-center items-center">
               <NoNotiIcon />
             </Button>
@@ -97,6 +94,7 @@ const HeaderItem = () => {
             trigger="click"
             open={open}
             onOpenChange={handleOpenChange}
+            className="xs:hidden xss:block"
           >
             <Button className="h-10 w-10 px-2 mx-1 rounded-full border-purple-700 flex justify-center items-center">
               <LettersIcon />

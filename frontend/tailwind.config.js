@@ -68,7 +68,7 @@ module.exports = {
       yellow: {
         50: '#fdfdea',
         100: '#fdf6b2',
-        200: '#FFD867',
+        200: '#FFE500',
         300: '#faca15',
         400: '#e3a008',
         500: '#c27803',
@@ -159,8 +159,9 @@ module.exports = {
       },
       screens: {
         xs: '320px',
-        ss: '389px',
+        ss: '375px',
         xss: '411px',
+        smm: '600px',
         sm: '640px',
         md: '768px',
         mds: '820px',
