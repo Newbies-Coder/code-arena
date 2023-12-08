@@ -10,28 +10,22 @@ info:
     - Access user profiles and statistics
     - Participate in real-time coding battles
     Some useful links:
-    - [Code Arena repository](https://github.com)
+    - [Code Arena repository](https://github.com/Newbies-Coder/code-arena.git)
   contact:
     email: duongquocnam224400@gmail.com
   version: 1.0.11
-externalDocs:
-  description: Find out more about Swagger
-  url: http://swagger.io
+
 servers:
-  - url: http://localhost:8080/api/v1
+  - url: http://localhost:8080
+
 tags:
   - name: auth
     description: Operations about authentication
-    externalDocs:
-      description: Feature user authentication
-      url: http://localhost:8080/api/v1/auth
   - name: user
     description: Operations about user
-    externalDocs:
-      description: Feature user
-      url: http://localhost:8080/api/v1/users
+
 paths:
-  /api/v1/auth/facebook:
+  /auth/facebook:
     get:
       tags:
         - auth
@@ -41,7 +35,7 @@ paths:
       responses:
         '200':
           description: Login successfully
-  /api/v1/auth/github:
+  /auth/github:
     get:
       tags:
         - auth
@@ -51,7 +45,7 @@ paths:
       responses:
         '200':
           description: Login successfully
-  /api/v1/auth/google:
+  /auth/google:
     get:
       tags:
         - auth
@@ -61,7 +55,7 @@ paths:
       responses:
         '200':
           description: Login successfully
-  /api/v1/auth/linkedin:
+  /auth/linkedin:
     get:
       tags:
         - auth
@@ -71,7 +65,7 @@ paths:
       responses:
         '200':
           description: Login successfully
-  /api/v1/users/login:
+  /users/login:
     post:
       tags:
         - user
@@ -177,7 +171,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/register:
+  /users/register:
     post:
       tags:
         - user
@@ -267,7 +261,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/logout:
+  /users/logout:
     post:
       tags:
         - user
@@ -324,7 +318,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/verify-otp:
+  /users/verify-otp:
     post:
       tags:
         - user
@@ -405,7 +399,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/resend-verify-otp:
+  /users/resend-verify-otp:
     post:
       tags:
         - user
@@ -457,7 +451,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/refresh-token:
+  /users/refresh-token:
     post:
       tags:
         - user
@@ -533,7 +527,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/forgot-password:
+  /users/forgot-password:
     post:
       tags:
         - user
@@ -615,7 +609,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/reset-password:
+  /users/reset-password:
     post:
       tags:
         - user
@@ -690,7 +684,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/change-password:
+  /users/change-password:
     post:
       tags:
         - user
@@ -771,7 +765,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/{userId}/profile:
+  /users/{id}/profile:
     get:
       tags:
         - user
@@ -779,7 +773,7 @@ paths:
       description: Get user by user_id
       operationId: getUserByID
       parameters:
-        - name: userId
+        - name: id
           in: path
           description: 'The user_id that needs to be fetched'
           required: true
@@ -850,7 +844,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/follow/{userId}:
+  /users/follow/{id}:
     post:
       tags:
         - user
@@ -858,7 +852,7 @@ paths:
       description: Follow user
       operationId: followUser
       parameters:
-        - name: userId
+        - name: id
           in: path
           description: Please enter the user id you want to follow
           required: true
@@ -907,7 +901,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/unfollow/{userId}:
+  /users/unfollow/{id}:
     post:
       tags:
         - user
@@ -915,7 +909,7 @@ paths:
       description: Unfollow user
       operationId: unfollowUser
       parameters:
-        - name: userId
+        - name: id
           in: path
           description: Please enter the user id you want to unfollow
           required: true
@@ -962,7 +956,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users:
+  /users:
     get:
       tags:
         - user
@@ -1025,7 +1019,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/@me/avatar:
+  /users/@me/avatar:
     post:
       tags:
         - user
@@ -1106,7 +1100,7 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /api/v1/users/test-token:
+  /users/test-token:
     post:
       tags:
         - user

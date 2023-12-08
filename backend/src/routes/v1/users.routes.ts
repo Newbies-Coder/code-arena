@@ -107,7 +107,7 @@ userRouter.post('/change-password', accessTokenValidator, changePasswordValidato
  * Body: { followed_user_id: string }
  */
 
-userRouter.post('/follow/:userId', wrapRequestHandler(requireLoginMiddleware), followUserValidator, wrapRequestHandler(userController.follow))
+userRouter.post('/follow/:id', wrapRequestHandler(requireLoginMiddleware), followUserValidator, wrapRequestHandler(userController.follow))
 
 /**
  * Description: unfollow someone
@@ -116,7 +116,7 @@ userRouter.post('/follow/:userId', wrapRequestHandler(requireLoginMiddleware), f
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.delete('/unfollow/:userId', wrapRequestHandler(requireLoginMiddleware), unfollowUserValidator, wrapRequestHandler(userController.unfollow))
+userRouter.delete('/unfollow/:id', wrapRequestHandler(requireLoginMiddleware), unfollowUserValidator, wrapRequestHandler(userController.unfollow))
 
 /**
  * Description: Get all user by admin
@@ -129,12 +129,12 @@ userRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), g
 
 /**
  * Description: Get user profile
- * Path: /:userId/profile
+ * Path: /:id/profile
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.get('/:userId/profile', accessTokenValidator, userProfileValidator, wrapRequestHandler(userController.getUser))
+userRouter.get('/:id/profile', accessTokenValidator, userProfileValidator, wrapRequestHandler(userController.getUser))
 
 /**
  * Description: Get my profile
@@ -184,12 +184,12 @@ userRouter.get('/@me/profile', wrapRequestHandler(userController.search))
 
 /**
  * Description: Delete user when user request user from section client
- * Path: /:userId
+ * Path: /:id
  * Method: DELETE
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.delete('/:userId', wrapRequestHandler(userController.delete))
+userRouter.delete('/:id', wrapRequestHandler(userController.delete))
 
 /**
  * Description: Delete a lot of user when user is admin send request list user want to delete
@@ -226,20 +226,20 @@ userRouter.get('/favorite', wrapRequestHandler(userController.favorite))
  * Path: /favorite
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
- * body: {favoriteUserId: string}
+ * body: {favoriteid: string}
  */
 
 userRouter.post('/favorite', wrapRequestHandler(userController.insertUserFavorite))
 
 /**
  * Description: Remove the individual from your list of close friends.
- * Path: /favorite/:userId
+ * Path: /favorite/:id
  * Method: DELETE
  * Header: { Authorization: Bearer <access_token> }
- * Param: {userId: string}
+ * Param: {id: string}
  */
 
-userRouter.delete('/favorite/:userId', wrapRequestHandler(userController.removeUserFavorite))
+userRouter.delete('/favorite/:id', wrapRequestHandler(userController.removeUserFavorite))
 
 /**
  * Description: Get list user block
@@ -255,7 +255,7 @@ userRouter.get('/block', wrapRequestHandler(userController.blocks))
  * Path: /block
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
- * Body: {userId: string, blockUserId: string}
+ * Body: {id: string, blockid: string}
  */
 
 userRouter.post('/block', wrapRequestHandler(userController.insertBlocks))
@@ -265,7 +265,7 @@ userRouter.post('/block', wrapRequestHandler(userController.insertBlocks))
  * Path: /unblock
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
- * Body: {userId: string, unblockUserId: string}
+ * Body: {id: string, unblockid: string}
  */
 
 userRouter.post('/unblock', wrapRequestHandler(userController.unblock))

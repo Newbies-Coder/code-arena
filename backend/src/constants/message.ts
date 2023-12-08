@@ -51,24 +51,22 @@ export const CLIENT_MESSAGE = {
 } as const
 
 export const RESULT_RESPONSE_MESSAGES = {
+  // auth
   LOGIN_SUCCESS: 'Login successfully!',
   LOGIN_GOOGLE_SUCCESS: 'Login google successfully!',
   LOGIN_FACEBOOK_SUCCESS: 'Login faceboook successfully!',
   LOGIN_LINKEDIN_SUCCESS: 'Login linkedin successfully!',
   LOGIN_GITHUB_SUCCESS: 'Login github successfully!',
+  // user
   REGISTER_SUCCESS: 'Created account successfully!',
   LOGOUT_SUCCESS: 'Logout scussessfully!',
   REFRESH_TOKEN_SUCCESS: 'User refresh_token successfully!',
-  VERIFY_OTP_SUCCESS: 'Verify OTP successfully!',
-  RESEND_OTP_SUCCESS: 'Resend OTP successfully!',
   FORGOT_PASSWORD_SUCCESS: 'Forgot_password successfully!',
   VERIFY_FORGOT_PASSWORD_SUCCESS: 'Verify forgot_password successfully!',
   RESET_PASSWORD_SUCCESS: 'Reset password successfully!',
   CHANGE_PASSWORD_SUCCESS: 'Change password successfully!',
   UPLOAD_AVATAR_SUCCESS: 'Upload avatar successfully!',
   UPLOAD_THUMBNAIL_SUCCESS: 'Upload thumbnail successfully!',
-  FOLLOW_SUCCESS: 'Follow user successfully!',
-  UNFOLLOW_SUCCESS: 'Unfollow user successfully!',
   GET_ALL_USER_SUCCESS: 'Get all users successfully!',
   GET_USER_SUCCESS: 'Get user successfully!',
   GET_PROFILE_USER_SUCCESS: 'Get profile successfully!',
@@ -85,7 +83,22 @@ export const RESULT_RESPONSE_MESSAGES = {
   REMOVE_USER_BLOCK_SUCCESS: 'Remove users from the block list successfully',
   PAGINATION_USER_SUCCESS: 'Pagination user successfully!',
   TEST_TOKEN_SUCCESS: 'Test token successfully!',
-  USER_NOT_FOUND: 'User not found'
+  USER_NOT_FOUND: 'User not found',
+  // otp
+  VERIFY_OTP_SUCCESS: 'Verify OTP successfully!',
+  RESEND_OTP_SUCCESS: 'Resend OTP successfully!',
+  // follow
+  FOLLOW_SUCCESS: 'Follow user successfully!',
+  UNFOLLOW_SUCCESS: 'Unfollow user successfully!',
+
+  AUTH_SUCCESS: {},
+  USER_SUCSESS: {},
+  OTP_SCUCCESS: {},
+  BANNERS_SUCCESS: {
+    GET_ALL: 'Get all banners successfully!',
+    INSERT: 'Insert banners successfully!',
+    DELETE: 'Delete banners successfully!'
+  }
 } as const
 
 export const USER_VALIDATOR_MESSAGES = {
