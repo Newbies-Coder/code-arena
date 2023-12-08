@@ -372,7 +372,7 @@ export const changePasswordValidator = validate(
         },
         custom: {
           options: async (value, { req }) => {
-            const isExistPassword = await userServices.validatePassword(req.body.email, value)
+            const isExistPassword = await userServices.validatePassword(req.user.email, value)
             if (!isExistPassword) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.NOT_FOUND,

@@ -31,9 +31,7 @@ export interface RefreshTokenBody {
 
 export interface ChangePasswordBody {
   email: string
-  old_password: string
   password: string
-  confirm_password: string
 }
 
 export interface ResendVerifyOTPBody {

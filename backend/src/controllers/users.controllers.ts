@@ -30,8 +30,8 @@ const userController = {
     await userServices.verifyOTP(req.body)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_OTP_SUCCESS)
   },
-  resendVerifyOTP: async (req: Request<ParamsDictionary, any, ResendVerifyOTPBody>, res: Response, next: NextFunction) => {
-    await userServices.sendOTP(req.body.email)
+  resendVerifyOTP: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    await userServices.sendOTP(req.user.email)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_OTP_SUCCESS)
   },
   forgotPassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
@@ -43,11 +43,11 @@ const userController = {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_FORGOT_PASSWORD_SUCCESS)
   },
   resetPassword: async (req: Request<ParamsDictionary, any, ResetPasswordBody>, res: Response, next: NextFunction) => {
-    await userServices.changePassword({ email: req.body.email, password: req.body.password } as ChangePasswordBody)
+    await userServices.changePassword({ email: req.body.email, password: req.body.password })
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.RESET_PASSWORD_SUCCESS)
   },
-  changePassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    await userServices.changePassword(req.body)
+  changePassword: async (req: Request<ParamsDictionary, any, ChangePasswordBody>, res: Response, next: NextFunction) => {
+    await userServices.changePassword({ email: req.user.email, password: req.body.password })
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.CHANGE_PASSWORD_SUCCESS)
   },
   // Use AI to generate avatar
