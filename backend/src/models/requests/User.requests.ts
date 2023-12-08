@@ -54,3 +54,13 @@ export interface InfoTokenType {
   iat: number
   exp: number
 }
+
+export interface UpdateProfileBody {
+  fullName?: string
+  username?: string
+  email?: string
+  phone?: string
+  date_of_birth?: Date
+  bio?: string
+  address?: string
+}

@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from 'express'
 import { sendResponse } from '~/config/response.config'
 import { ParamsDictionary } from 'express-serve-static-core'
-import { ChangePasswordBody, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, ResendVerifyOTPBody, ResetPasswordBody, VerifyOTPBody } from '~/models/requests/User.requests'
+import { ChangePasswordBody, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, ResendVerifyOTPBody, ResetPasswordBody, UpdateProfileBody, VerifyOTPBody } from '~/models/requests/User.requests'
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
-import { env } from '~/config/environment.config'
 import { ParsedUrlQuery } from 'querystring'
 import { ObjectId } from 'mongodb'
 
@@ -85,7 +84,8 @@ const userController = {
     const result = await userServices.getUserByID(new ObjectId(req.user._id))
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_PROFILE_USER_SUCCESS)
   },
-  updateMe: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+  updateMe: async (req: Request<ParamsDictionary, any, UpdateProfileBody>, res: Response, next: NextFunction) => {
+    await userServices.updateProfile(req.body)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.UPDATE_USER_SUCCESS)
   },
   updateMeAvatar: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {

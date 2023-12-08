@@ -2,7 +2,7 @@ import { signToken, verifyToken } from '~/utils/jwt'
 import { databaseService } from './connectDB.service'
 import { TokenType, UserRole, UserVerifyStatus } from '~/constants/enums'
 import { env } from '~/config/environment.config'
-import { ChangePasswordBody, ForgotPasswordBody, InfoTokenType, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
+import { ChangePasswordBody, ForgotPasswordBody, InfoTokenType, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, UpdateProfileBody, VerifyOTPBody } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
 import { ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
@@ -312,6 +312,9 @@ class UserService {
     }
     return userInfo
   }
+
+  // update profile
+  async updateProfile(payload: UpdateProfileBody) {}
 }
 
 const userServices = new UserService()

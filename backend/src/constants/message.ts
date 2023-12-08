@@ -179,7 +179,19 @@ export const VALIDATION_MESSAGES = {
     USER_PROFILE: {
       USER_ID_IS_REQUIRED: 'User id is required',
       USER_ID_NOT_FOUND: 'User id not found',
-      USER_ID_IS_INVALID: 'User id is invalid'
+      USER_ID_IS_INVALID: 'User id is invalid',
+      FULL_NAME_MUST_BE_A_STRING: 'Full name must be a string',
+      FULL_NAME_MAX_LENGTH_IS_50: 'Full name length must be from 4 to 50',
+      USER_NAME_MUST_BE_A_STRING: 'User name must be a string',
+      USER_NAME_LENGTH_MUST_BE_FROM_4_TO_20: 'User name length must be from 4 to 20',
+      PHONE_MUST_BE_A_STRING: 'Phone must be a string',
+      PHONE_LENGTH_MUST_BE_10_CHARACTER: 'Phone length must be 10 character',
+      PHONE_LENGTH_MUST_BE_STRING_NUMBER: 'Phone length must be a string number',
+      DATE_OF_BIRTH_IS_ISO8601: 'Date of birth must be a YYYY-MM-DDTHH:mm:ss.ssssZ',
+      BIO_MUST_BE_STRING: 'Bio must be a string',
+      BIO_MAX_LENGTH_IS_150: 'Bio max length is 50 character',
+      ADDRESS_MUST_BE_STRING: 'Address must be a string',
+      ADDRESS_MAX_LENGTH_IS_255: 'Address max length is 255 character'
     }
   },
   TOKEN: {

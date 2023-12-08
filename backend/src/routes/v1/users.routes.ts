@@ -14,6 +14,7 @@ import {
   registerValidator,
   resetPasswordValidator,
   unfollowUserValidator,
+  updateProfileValidator,
   userProfileValidator,
   verifyOTPValidator
 } from '~/middlewares/users.middlewares'
@@ -151,7 +152,7 @@ userRouter.get('/@me/profile', wrapRequestHandler(requireLoginMiddleware), wrapR
  * Body:
  */
 
-userRouter.put('/@me/profile', wrapRequestHandler(userController.updateMe))
+userRouter.put('/@me/profile', wrapRequestHandler(requireLoginMiddleware), updateProfileValidator, wrapRequestHandler(userController.updateMe))
 
 /**
  * Description: Upload avatar
