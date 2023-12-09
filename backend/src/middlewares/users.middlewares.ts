@@ -13,7 +13,6 @@ import { capitalize } from 'lodash'
 import { TokenPayloadType } from '~/@types/tokenPayload.type'
 import { ObjectId } from 'mongodb'
 import { UserRole } from '~/constants/enums'
-import moment from 'moment'
 
 // Validation register feature
 export const registerValidator = validate(
@@ -92,16 +91,6 @@ export const registerValidator = validate(
         },
         escape: true,
         trim: true,
-        isStrongPassword: {
-          options: {
-            minLength: 8,
-            minLowercase: 1,
-            minUppercase: 1,
-            minNumbers: 1,
-            minSymbols: 1
-          },
-          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_MUST_BE_STRONG
-        },
         custom: {
           options: (value, { req }) => {
             if (value !== req.body.password) {
