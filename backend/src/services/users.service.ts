@@ -353,6 +353,15 @@ class UserService {
       })
     )
   }
+
+  // get users in close friend list
+  async getFavorite(user: AuthUser) {
+    const result = await databaseService.closeFriends
+      .find({ userId: new ObjectId(user._id) })
+      .project({ _id: 0, userId: 0, created_at: 0 })
+      .toArray()
+    return result.map((item) => item.friendId)
+  }
 }
 
 const userServices = new UserService()

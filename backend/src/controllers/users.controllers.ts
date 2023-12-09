@@ -119,7 +119,8 @@ const userController = {
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_ROLE_USER_SUCCESS)
   },
   favorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_ROLE_USER_SUCCESS)
+    const result = await userServices.getFavorite(req.user)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_FAVORITE_USER_SUCCESS)
   },
   insertUserFavorite: async (req: Request<ParamsDictionary, any, FavoriteBody>, res: Response, next: NextFunction) => {
     await userServices.insertUserFavorite(req.user, req.body)

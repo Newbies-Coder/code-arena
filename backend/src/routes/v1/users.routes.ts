@@ -222,7 +222,7 @@ userRouter.get('/roles', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.get('/favorite', wrapRequestHandler(userController.favorite))
+userRouter.get('/favorite', wrapRequestHandler(requireLoginMiddleware), wrapRequestHandler(userController.favorite))
 
 /**
  * Description: Add persons to your list of close friends.
