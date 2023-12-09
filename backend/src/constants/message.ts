@@ -15,7 +15,8 @@ export const DATABASE_MESSAGE = {
     USER_COLLECTION: 'The table holds user information in the database.',
     REFRESH_TOKEN_COLLECTION: 'The table holds refresh-token information in the database.',
     OTP_COLLECTION: 'The table holds otp information in the database.',
-    FOLLOW_COLLECTION: 'The table holds follow information in the database.'
+    FOLLOW_COLLECTION: 'The table holds follow information in the database.',
+    CLOSE_FRIENDS_COLLECTION: 'The table holds close friends information in the database.'
   }
 } as const
 
@@ -211,6 +212,9 @@ export const VALIDATION_MESSAGES = {
       ROLE_IS_REQUIRED: 'Role is required',
       ROLE_IS_INVALID: 'Role is invalid',
       ERROR_WHEN_FETCH_DATA: 'Error when fetch data from database'
+    },
+    FAVORITE: {
+      FRIEND_ID_NOT_USER_ID: 'Friend id not user id'
     }
   },
   TOKEN: {

@@ -789,3 +789,34 @@ export const getUsersByRoleValidator = validate(
     ['query']
   )
 )
+
+export const favoriteValidator = validate(
+  checkSchema(
+    {
+      friendId: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
+        },
+        custom: {
+          options: async (value, { req }) => {
+            if (!ObjectId.isValid(value)) {
+              throw Error(VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID)
+            }
+            const user = await userServices.getUserByID(new ObjectId(value))
+            if (!user) {
+              throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST })
+            }
+            if (value === req.user._id) {
+              throw Error(VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ID_NOT_USER_ID)
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)

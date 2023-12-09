@@ -6,6 +6,7 @@ import { uploadFile } from '~/middlewares/uploadFile.middleware'
 import {
   changePasswordValidator,
   checkTokenValidator,
+  favoriteValidator,
   followUserValidator,
   forgotPasswordValidator,
   getAllUserValidator,
@@ -228,10 +229,10 @@ userRouter.get('/favorite', wrapRequestHandler(userController.favorite))
  * Path: /favorite
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
- * body: {favoriteid: string}
+ * body: {friendId: string}
  */
 
-userRouter.post('/favorite', wrapRequestHandler(userController.insertUserFavorite))
+userRouter.post('/favorite', wrapRequestHandler(requireLoginMiddleware), favoriteValidator, wrapRequestHandler(userController.insertUserFavorite))
 
 /**
  * Description: Remove the individual from your list of close friends.

@@ -25,6 +25,7 @@ const envSchema = Joi.object({
   DB_REFRESH_TOKEN_COLLECTION: Joi.string().required().description(DB_MAIN.REFRESH_TOKEN_COLLECTION),
   DB_OTP_COLLECTION: Joi.string().required().description(DB_MAIN.OTP_COLLECTION),
   DB_FOLlOW_COLLECTION: Joi.string().required().description(DB_MAIN.FOLLOW_COLLECTION),
+  DB_CLOSE_FRIENDS_COLLECTION: Joi.string().required().description(DB_MAIN.CLOSE_FRIENDS_COLLECTION),
   DATABASE_USER_LOGS: Joi.string().required().description(DB_LOGS.USERNAME),
   PASSWORD_USER_LOGS: Joi.string().required().description(DB_LOGS.PASSWORD),
   DATABASE_CODE_ARENA: Joi.string().required().description(DB_MAIN.USERNAME),
@@ -94,7 +95,8 @@ export const env = {
         users: envVars.DB_USER_COLLECTION,
         refresh_tokens: envVars.DB_REFRESH_TOKEN_COLLECTION,
         otps: envVars.DB_OTP_COLLECTION,
-        follow: envVars.DB_FOLlOW_COLLECTION
+        follow: envVars.DB_FOLlOW_COLLECTION,
+        close_friends: envVars.DB_CLOSE_FRIENDS_COLLECTION
       }
     },
     logs: {

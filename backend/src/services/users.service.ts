@@ -4,6 +4,7 @@ import { TokenType, UserRole, UserVerifyStatus } from '~/constants/enums'
 import { env } from '~/config/environment.config'
 import {
   ChangePasswordBody,
+  FavoriteBody,
   ForgotPasswordBody,
   GetUsersByRoleQuery,
   InfoTokenType,
@@ -31,6 +32,7 @@ import Follow from '~/models/schemas/Follow.schema'
 import { AuthUser } from '~/@types/auth.type'
 import _ from 'lodash'
 import cloudinaryService from '~/services/cloudinary.service'
+import CloseFriends from '~/models/schemas/CloseFriends'
 class UserService {
   async validateEmailAccessibility(email: string) {
     const user = await databaseService.users.findOne({ email })
@@ -340,6 +342,16 @@ class UserService {
     let startIndex = pageNumber * limit
     const result = await databaseService.users.find({ role: role }).skip(startIndex).limit(limit).toArray()
     return result
+  }
+
+  // add user in close_friends db
+  async insertUserFavorite(user: AuthUser, payload: FavoriteBody) {
+    await databaseService.closeFriends.insertOne(
+      new CloseFriends({
+        friendId: new ObjectId(payload.friendId),
+        userId: new ObjectId(user._id)
+      })
+    )
   }
 }
 

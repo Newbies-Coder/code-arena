@@ -69,3 +69,7 @@ export interface GetUsersByRoleQuery extends ParsedUrlQuery {
   pageNumber: string
   limit: string
 }
+
+export interface FavoriteBody {
+  friendId: string
+}
