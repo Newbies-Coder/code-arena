@@ -11,6 +11,7 @@ const routes: routeTypes = {
   congratulation: '/congratulation',
   passwordResetSuccess: '/password-reset-success',
   notFound: '*',
+  detailCoding: '/detail-coding',
 } as const
 
 export default routes

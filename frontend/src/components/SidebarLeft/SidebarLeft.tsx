@@ -47,6 +47,13 @@ const SidebarLeft = () => {
                       className="flex justify-center items-center bg-gray-300"
                       src="https://studiovietnam.com/wp-content/uploads/2021/07/chup-anh-chan-dung-troi-nang-6.jpg"
                     ></Avatar>
+                    <span
+                      className={
+                        friend.status === 'online'
+                          ? 'absolute rounded-full h-3 w-3 border bg-green-400 bottom-3 left-10'
+                          : 'absolute rounded-full h-3 w-3 border bg-gray-500 bottom-3 left-10'
+                      }
+                    ></span>
                     <div className="ml-4">
                       <p className="m-0 text-white font-popins text-xs">{friend.name}</p>
                       <span className="text-gray-opacity">{friend.status}</span>

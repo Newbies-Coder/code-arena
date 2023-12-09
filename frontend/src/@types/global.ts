@@ -9,4 +9,5 @@ export type routeTypes = {
   congratulation: string
   passwordResetSuccess: string
   notFound: string
+  detailCoding: string
 }
