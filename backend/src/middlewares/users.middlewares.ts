@@ -12,6 +12,7 @@ import { JsonWebTokenError } from 'jsonwebtoken'
 import { capitalize } from 'lodash'
 import { TokenPayloadType } from '~/@types/tokenPayload.type'
 import { ObjectId } from 'mongodb'
+import { UserRole } from '~/constants/enums'
 
 // Validation register feature
 export const registerValidator = validate(
@@ -203,46 +204,6 @@ export const loginValidator = validate(
   )
 )
 
-export const accessTokenValidator = validate(
-  checkSchema(
-    {
-      Authorization: {
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.TOKEN.ACCESS_TOKEN_IS_REQUIRED
-        },
-        custom: {
-          options: async (value: string, { req }) => {
-            const bearerPrefix = 'Bearer '
-            if (!value.startsWith(bearerPrefix)) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.UNAUTHORIZED,
-                message: VALIDATION_MESSAGES.AUTHORIZATION.HEADER_AUTHORIZATION_IS_INVALID
-              })
-            }
-            const access_token = value.substring(bearerPrefix.length)
-            const secret_key = env.jwt.secret_key
-            try {
-              const payload = (await verifyToken({
-                token: access_token,
-                secretOrPublicKey: secret_key
-              })) as TokenPayloadType
-              req.body.email = payload.email
-              req.body.role = payload.role
-            } catch (error) {
-              throw new ErrorWithStatus({
-                message: capitalize(error.message),
-                statusCode: StatusCodes.UNAUTHORIZED
-              })
-            }
-            return true
-          }
-        }
-      }
-    },
-    ['headers']
-  )
-)
-
 // Validation forgot password feature
 export const forgotPasswordValidator = validate(
   checkSchema(
@@ -412,7 +373,7 @@ export const changePasswordValidator = validate(
         },
         custom: {
           options: async (value, { req }) => {
-            const isExistPassword = await userServices.validatePassword(req.body.email, value)
+            const isExistPassword = await userServices.validatePassword(req.user.email, value)
             if (!isExistPassword) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.NOT_FOUND,
@@ -703,5 +664,194 @@ export const checkTokenValidator = validate(
       }
     },
     ['headers']
+  )
+)
+
+export const updateProfileValidator = validate(
+  checkSchema(
+    {
+      fullName: {
+        optional: true,
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.FULL_NAME_MUST_BE_A_STRING
+        },
+        isLength: {
+          options: {
+            min: 4,
+            max: 50
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.FULL_NAME_MAX_LENGTH_IS_50
+        }
+      },
+      username: {
+        optional: true,
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.FULL_NAME_MUST_BE_A_STRING
+        },
+        isLength: {
+          options: {
+            min: 4,
+            max: 20
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_NAME_LENGTH_MUST_BE_FROM_4_TO_20
+        },
+        trim: true
+      },
+      email: {
+        optional: true,
+        isEmail: {
+          errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_MUST_BE_A_STRING
+        },
+        trim: true,
+        custom: {
+          options: async (value) => {
+            const isExistEmail = await userServices.validateEmailAccessibility(value)
+            if (isExistEmail) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
+              })
+            }
+            return true
+          }
+        }
+      },
+      phone: {
+        optional: true,
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.PHONE_MUST_BE_A_STRING
+        },
+        isLength: {
+          options: { min: 10, max: 10 },
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.PHONE_LENGTH_MUST_BE_10_CHARACTER
+        },
+        matches: {
+          options: /^[0-9]+$/,
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.PHONE_LENGTH_MUST_BE_STRING_NUMBER
+        }
+      },
+      date_of_birth: {
+        optional: true,
+        isISO8601: {
+          options: {
+            strict: true,
+            strictSeparator: true
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.DATE_OF_BIRTH_IS_ISO8601
+        }
+      },
+      bio: {
+        optional: true,
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.BIO_MUST_BE_STRING
+        },
+        isLength: {
+          options: {
+            max: 150
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.BIO_MAX_LENGTH_IS_150
+        }
+      },
+      address: {
+        optional: true,
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.FULL_NAME_MUST_BE_A_STRING
+        },
+        isLength: {
+          options: {
+            max: 255
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_NAME_LENGTH_MUST_BE_FROM_4_TO_20
+        }
+      }
+    },
+    ['body']
+  )
+)
+
+export const getUsersByRoleValidator = validate(
+  checkSchema(
+    {
+      includes: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.GET_USERS_BY_ROLE.ROLE_IS_REQUIRED
+        },
+        custom: {
+          options: (value: string) => {
+            if (!Object.values(UserRole).includes((value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()) as UserRole)) {
+              throw new Error(VALIDATION_MESSAGES.USER.GET_USERS_BY_ROLE.ROLE_IS_INVALID)
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['query']
+  )
+)
+
+export const favoriteValidator = validate(
+  checkSchema(
+    {
+      friendId: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
+        },
+        custom: {
+          options: async (value, { req }) => {
+            if (!ObjectId.isValid(value)) {
+              throw Error(VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID)
+            }
+            const user = await userServices.getUserByID(new ObjectId(value))
+            if (!user) {
+              throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST })
+            }
+            if (value === req.user._id) {
+              throw Error(VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ID_NOT_USER_ID)
+            }
+            const isExist = await userServices.isExitInCloseFriends(new ObjectId(req.user._id), new ObjectId(value))
+            if (isExist) {
+              throw Error(VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ID_IS_EXIT)
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
+
+export const removeFavoriteValidator = validate(
+  checkSchema(
+    {
+      id: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
+        },
+        custom: {
+          options: async (value, { req }) => {
+            if (!ObjectId.isValid(value)) {
+              throw Error(VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID)
+            }
+            const user = await userServices.isExitInCloseFriends(new ObjectId(req.user._id), new ObjectId(value))
+            if (!user) {
+              throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.FAVORITE.FAVORITE_NOT_EXIT })
+            }
+            if (value === req.user._id) {
+              throw Error(VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ID_NOT_USER_ID)
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['params']
   )
 )

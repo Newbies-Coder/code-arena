@@ -1,10 +1,21 @@
 import { Request, Response, NextFunction } from 'express'
 import { sendResponse } from '~/config/response.config'
 import { ParamsDictionary } from 'express-serve-static-core'
-import { ChangePasswordBody, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, ResendVerifyOTPBody, ResetPasswordBody, VerifyOTPBody } from '~/models/requests/User.requests'
+import {
+  ChangePasswordBody,
+  FavoriteBody,
+  GetUsersByRoleQuery,
+  LoginBody,
+  LogoutBody,
+  RefreshTokenBody,
+  RegisterBody,
+  ResendVerifyOTPBody,
+  ResetPasswordBody,
+  UpdateProfileBody,
+  VerifyOTPBody
+} from '~/models/requests/User.requests'
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
-import { env } from '~/config/environment.config'
 import { ParsedUrlQuery } from 'querystring'
 import { ObjectId } from 'mongodb'
 
@@ -20,8 +31,6 @@ const userController = {
   },
   logout: async (req: Request<ParamsDictionary, any, LogoutBody>, res: Response, next: NextFunction) => {
     await userServices.logout(req.body)
-    const cookies_names = env.client.cookies_name
-    res.clearCookie(cookies_names)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.LOGOUT_SUCCESS)
   },
   refreshToken: async (req: Request<ParamsDictionary, any, RefreshTokenBody>, res: Response, next: NextFunction) => {
@@ -33,8 +42,8 @@ const userController = {
     await userServices.verifyOTP(req.body)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_OTP_SUCCESS)
   },
-  resendVerifyOTP: async (req: Request<ParamsDictionary, any, ResendVerifyOTPBody>, res: Response, next: NextFunction) => {
-    await userServices.sendOTP(req.body.email)
+  resendVerifyOTP: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    await userServices.sendOTP(req.user.email)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_OTP_SUCCESS)
   },
   forgotPassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
@@ -46,11 +55,11 @@ const userController = {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.VERIFY_FORGOT_PASSWORD_SUCCESS)
   },
   resetPassword: async (req: Request<ParamsDictionary, any, ResetPasswordBody>, res: Response, next: NextFunction) => {
-    await userServices.changePassword({ email: req.body.email, password: req.body.password } as ChangePasswordBody)
+    await userServices.changePassword({ email: req.body.email, password: req.body.password })
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.RESET_PASSWORD_SUCCESS)
   },
-  changePassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    await userServices.changePassword(req.body)
+  changePassword: async (req: Request<ParamsDictionary, any, ChangePasswordBody>, res: Response, next: NextFunction) => {
+    await userServices.changePassword({ email: req.user.email, password: req.body.password })
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.CHANGE_PASSWORD_SUCCESS)
   },
   // Use AI to generate avatar
@@ -84,9 +93,11 @@ const userController = {
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_USER_SUCCESS)
   },
   getMe: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_PROFILE_USER_SUCCESS)
+    const result = await userServices.getUserByID(new ObjectId(req.user._id))
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_PROFILE_USER_SUCCESS)
   },
-  updateMe: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+  updateMe: async (req: Request<ParamsDictionary, any, UpdateProfileBody>, res: Response, next: NextFunction) => {
+    await userServices.updateProfile(req.user, req.body)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.UPDATE_USER_SUCCESS)
   },
   updateMeAvatar: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
@@ -103,16 +114,20 @@ const userController = {
   deleteManyUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.DELETE_MANY_USER_SUCCESS)
   },
-  getUsersByRole: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_ROLE_USER_SUCCESS)
+  getUsersByRole: async (req: Request<ParamsDictionary, any, any, GetUsersByRoleQuery>, res: Response, next: NextFunction) => {
+    const result = await userServices.getUsersByRole(req.query)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_ROLE_USER_SUCCESS)
   },
   favorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_ROLE_USER_SUCCESS)
+    const result = await userServices.getFavorite(req.user)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_FAVORITE_USER_SUCCESS)
   },
-  insertUserFavorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_ROLE_USER_SUCCESS)
+  insertUserFavorite: async (req: Request<ParamsDictionary, any, FavoriteBody>, res: Response, next: NextFunction) => {
+    await userServices.insertUserFavorite(req.user, req.body)
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.INSERT_USER_TO_FAVORITES_SUCCESS)
   },
   removeUserFavorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    await userServices.removeUserFavorite(req.user, req.params)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.DELETE_USER_TO_FAVORITES_SUCCESS)
   },
   blocks: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {

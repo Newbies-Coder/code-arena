@@ -1,6 +1,7 @@
 import { Db, MongoClient, ServerApiVersion, Collection } from 'mongodb'
 import { env } from '~/config/environment.config'
 import { DATABASE_MESSAGE } from '~/constants/message'
+import CloseFriends from '~/models/schemas/CloseFriends'
 import Follow from '~/models/schemas/Follow.schema'
 import OTP from '~/models/schemas/Otps.schema'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
@@ -49,6 +50,11 @@ class DatabaseServices {
 
   get follow(): Collection<Follow> {
     return this.db.collection(env.database.main.collection.follow as string)
+  }
+
+  // Get collection close friends
+  get closeFriends(): Collection<CloseFriends> {
+    return this.db.collection(env.database.main.collection.close_friends as string)
   }
 }
 
