@@ -3,17 +3,12 @@ import { HomeIcon, LibraryIcon, NewsIcon, SettingIcon, StoreIcon, UserIcon } fro
 import Sider from 'antd/es/layout/Sider'
 import { useState } from 'react'
 import { friendList } from '@/mocks/home.data'
+import './style.scss'
 
 const SidebarLeft = () => {
-  const [theme, setTheme] = useState<MenuTheme>('dark')
-
-  const changeTheme = (value: boolean) => {
-    setTheme(value ? 'dark' : 'light')
-  }
-
   return (
     <Sider
-      className="sider-left mt-16 h-screen left-0 border-r lg:block z-10 overflow-y-auto"
+      className="sider-left mt-16 h-screen left-0 border-r lg:block z-10"
       style={{
         position: 'fixed',
         background: '#0e1820',
@@ -33,13 +28,10 @@ const SidebarLeft = () => {
             style={{ backgroundColor: '#0e1820', color: 'white', fontFamily: 'Poppins, sans-serif' }}
           />
         </div>
-        <div className="flex justify-around items-center py-4">
-          <p className="text-gray-opacity self-auto m-0">New Members</p>
-          <Button type="link" className="text-gray-opacity p-0">
-            See all
-          </Button>
-        </div>
         <div>
+          <p className="text-gray-opacity self-auto ml-2">New Members</p>
+        </div>
+        <div className="list-member overflow-y-auto h-[355px]">
           <ul>
             {friendList.map((friend) => (
               <li className="mx-0 mt-2" key={friend.key}>
@@ -47,16 +39,19 @@ const SidebarLeft = () => {
                   size="small"
                   className="bg-blue-opacity mx-4 border-transparent hover:border hover:border-gray-opacity"
                   style={{ width: '95%', marginLeft: '5px' }}
-                  bodyStyle={{ paddingTop: '8px', paddingBottom: '8px' }}
+                  bodyStyle={{ padding: '10px 12px' }}
                 >
-                  <div className="flex justify-center items-center p-0">
-                    <Avatar size={40} className="flex justify-center items-center bg-gray-300">
-                      <UserIcon />
-                    </Avatar>
-                    <div className="pl-8">
-                      <p className="m-0 text-white font-popins">{friend.name}</p>
+                  <div className="flex  items-center p-0">
+                    <Avatar
+                      size={40}
+                      className="flex justify-center items-center bg-gray-300"
+                      src="https://studiovietnam.com/wp-content/uploads/2021/07/chup-anh-chan-dung-troi-nang-6.jpg"
+                    ></Avatar>
+                    <div className="ml-4">
+                      <p className="m-0 text-white font-popins text-xs">{friend.name}</p>
                       <span className="text-gray-opacity">{friend.status}</span>
                     </div>
+                    <div className="relative w-14"></div>
                   </div>
                 </Card>
               </li>
@@ -76,7 +71,7 @@ const SidebarLeft = () => {
               backgroundColor: '#0e1820',
               color: 'white',
               fontFamily: 'Poppins, sans-serif',
-              marginTop: '15px',
+              marginTop: '10px',
             }}
           />
         </div>

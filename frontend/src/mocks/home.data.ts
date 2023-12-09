@@ -43,7 +43,7 @@ export const courseList: CourseType[] = [
 export const friendList: FriendType[] = [
   { key: 1, name: 'Anne Couture', status: 'online' },
   { key: 2, name: 'Anne Couture', status: 'online' },
-  { key: 3, name: 'Anne Couture', status: 'online' },
+  { key: 3, name: 'Anne Couture', status: 'offline' },
   { key: 4, name: 'Anne Couture', status: 'online' },
   { key: 5, name: 'Anne Couture', status: 'online' },
   { key: 6, name: 'Anne Couture', status: 'online' },

@@ -1,4 +1,4 @@
-import { Button, Card, Carousel, Progress } from 'antd'
+import { Button, Card, Carousel, Image, Progress } from 'antd'
 import { LeftArrowIcon, PlayIcon, RightArrowIcon } from '../Icons'
 import { useState } from 'react'
 import { courseList } from '@/mocks/home.data'
@@ -56,11 +56,16 @@ const SliderItem = () => {
         <div className="p-3">
           <Card
             hoverable
-            className="border-2 bg-blue-900 border-gray-opacity w-56 hover:border-gray-500"
+            className="border-2 bg-blue-900 border-gray-opacity w-56 hover:border-gray-500 rounded-xl"
             style={{ width: '100%', height: '100%' }}
-            bodyStyle={{ height: '100%', padding: '20px' }}
+            bodyStyle={{ height: '100%', padding: 0 }}
           >
-            <img src={course.bgImage} alt="" className="relative rounded-2xl object-cover h-40 w-full" />
+            {/* <img src={course.bgImage} alt="" className="relative rounded-t-xl object-cover h-40 w-full" /> */}
+            <Image
+              src={course.bgImage}
+              className="relative rounded-t-xl"
+              style={{ objectFit: 'cover', width: '100%' }}
+            />
             <Button
               className="absolute z-10 p-0 border-0 flex justify-center items-center bg-gray-300 w-10 h-10 rounded-full top-8 right-8 "
               onClick={handleLike}
@@ -70,7 +75,7 @@ const SliderItem = () => {
             <Button className="absolute z-10 bg-white w-12 h-12 rounded-full lg:bottom-32 lg:right-10 xs:right-8 xs:bottom-44 xss:bottom-32 ss:bottom-36 md:bottom-32 mds:bottom-40 xl:bottom-32 smm:bottom-36">
               <PlayIcon className="ml-1" />
             </Button>
-            <div className="pt-4">
+            <div className="p-4">
               <div className="flex items-center pt-2">
                 <course.Icon />
                 <span className="text-teal-400 pl-2 text-xs">{course.title}</span>
