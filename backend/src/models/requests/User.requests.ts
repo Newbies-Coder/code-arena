@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb'
+import { ParsedUrlQuery } from 'querystring'
 
 export interface LoginBody {
   email: string
@@ -31,9 +32,7 @@ export interface RefreshTokenBody {
 
 export interface ChangePasswordBody {
   email: string
-  old_password: string
   password: string
-  confirm_password: string
 }
 
 export interface ResendVerifyOTPBody {
@@ -57,4 +56,23 @@ export interface InfoTokenType {
 
 export interface BlockUserBody {
   blockedId: string
+}
+export interface UpdateProfileBody {
+  fullName?: string
+  username?: string
+  email?: string
+  phone?: string
+  date_of_birth?: Date
+  bio?: string
+  address?: string
+}
+
+export interface GetUsersByRoleQuery extends ParsedUrlQuery {
+  includes: string
+  pageNumber: string
+  limit: string
+}
+
+export interface FavoriteBody {
+  friendId: string
 }

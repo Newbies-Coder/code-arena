@@ -16,7 +16,8 @@ export const DATABASE_MESSAGE = {
     REFRESH_TOKEN_COLLECTION: 'The table holds refresh-token information in the database.',
     OTP_COLLECTION: 'The table holds otp information in the database.',
     FOLLOW_COLLECTION: 'The table holds follow information in the database.',
-    BLOCKED_USER_COLLECTION: 'The table holds user block user information in the database.'
+    BLOCKED_USER_COLLECTION: 'The table holds user block user information in the database.',
+    CLOSE_FRIENDS_COLLECTION: 'The table holds close friends information in the database.'
   }
 } as const
 
@@ -198,10 +199,35 @@ export const VALIDATION_MESSAGES = {
     USER_PROFILE: {
       USER_ID_IS_REQUIRED: 'User id is required',
       USER_ID_NOT_FOUND: 'User id not found',
-      USER_ID_IS_INVALID: 'User id is invalid'
+      USER_ID_IS_INVALID: 'User id is invalid',
+      FULL_NAME_MUST_BE_A_STRING: 'Full name must be a string',
+      FULL_NAME_MAX_LENGTH_IS_50: 'Full name length must be from 4 to 50',
+      USER_NAME_MUST_BE_A_STRING: 'User name must be a string',
+      USER_NAME_LENGTH_MUST_BE_FROM_4_TO_20: 'User name length must be from 4 to 20',
+      PHONE_MUST_BE_A_STRING: 'Phone must be a string',
+      PHONE_LENGTH_MUST_BE_10_CHARACTER: 'Phone length must be 10 character',
+      PHONE_LENGTH_MUST_BE_STRING_NUMBER: 'Phone length must be a string number',
+      DATE_OF_BIRTH_IS_ISO8601: 'Date of birth must be a YYYY-MM-DDTHH:mm:ss.ssssZ',
+      BIO_MUST_BE_STRING: 'Bio must be a string',
+      BIO_MAX_LENGTH_IS_150: 'Bio max length is 50 character',
+      ADDRESS_MUST_BE_STRING: 'Address must be a string',
+      ADDRESS_MAX_LENGTH_IS_255: 'Address max length is 255 character',
+      FIELD_UPDATE_IS_REQUIRED: 'Must be at least 1 field that to updating'
     },
     BLOCK: {
-      USER_ALREADY_BLOCKED: 'User already been blocked'
+      USER_ALREADY_BLOCKED: 'User already been blocked',
+      USER_ID_IS_INVALID: 'User id is invalid'
+    },
+    GET_USERS_BY_ROLE: {
+      ROLE_IS_REQUIRED: 'Role is required',
+      ROLE_IS_INVALID: 'Role is invalid',
+      ERROR_WHEN_FETCH_DATA: 'Error when fetch data from database'
+    },
+    FAVORITE: {
+      FRIEND_ID_NOT_USER_ID: 'Friend id not user id',
+      FRIEND_ID_IS_REQUIRED: 'Friend id is required',
+      FRIEND_ID_IS_EXIT: 'Friend id is exit',
+      FAVORITE_NOT_EXIT: 'Favorite not exit'
     }
   },
   TOKEN: {

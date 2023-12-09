@@ -1,12 +1,25 @@
 import { Request, Response, NextFunction } from 'express'
 import { sendResponse } from '~/config/response.config'
 import { ParamsDictionary } from 'express-serve-static-core'
-import { BlockUserBody, ChangePasswordBody, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, ResendVerifyOTPBody, ResetPasswordBody, VerifyOTPBody } from '~/models/requests/User.requests'
+import {
+  BlockUserBody,
+  ChangePasswordBody,
+  FavoriteBody,
+  GetUsersByRoleQuery,
+  LoginBody,
+  LogoutBody,
+  RefreshTokenBody,
+  RegisterBody,
+  ResendVerifyOTPBody,
+  ResetPasswordBody,
+  UpdateProfileBody,
+  VerifyOTPBody
+} from '~/models/requests/User.requests'
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
-import { env } from '~/config/environment.config'
 import { ParsedUrlQuery } from 'querystring'
 import { ObjectId } from 'mongodb'
+import { env } from '~/config/environment.config'
 
 const userController = {
   login: async (req: Request<ParamsDictionary, any, LoginBody>, res: Response, next: NextFunction) => {
@@ -50,8 +63,8 @@ const userController = {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.RESET_PASSWORD)
   },
   changePassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    await userServices.changePassword(req.body)
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.CHANGE_PASSWORD)
+    await userServices.changePassword({ email: req.body.email, password: req.body.password })
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.RESET_PASSWORD)
   },
   uploadAvatar: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     await userServices.updateMeAvatar(req.user, req.file)
@@ -82,9 +95,11 @@ const userController = {
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_USER)
   },
   getMe: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_PROFILE_USER)
+    const result = await userServices.getUserByID(new ObjectId(req.user._id))
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_PROFILE_USER)
   },
-  updateMe: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+  updateMe: async (req: Request<ParamsDictionary, any, UpdateProfileBody>, res: Response, next: NextFunction) => {
+    await userServices.updateProfile(req.user, req.body)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UPDATE_USER)
   },
   updateMeAvatar: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
@@ -120,16 +135,20 @@ const userController = {
     await userServices.deleteManyUser(req.query)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_MANY_USER)
   },
-  getUsersByRole: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ROLE_USER)
+  getUsersByRole: async (req: Request<ParamsDictionary, any, any, GetUsersByRoleQuery>, res: Response, next: NextFunction) => {
+    const result = await userServices.getUsersByRole(req.query)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ROLE_USER)
   },
   favorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ROLE_USER)
+    const result = await userServices.getFavorite(req.user)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_FAVORITE_USER)
   },
-  insertUserFavorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ROLE_USER)
+  insertUserFavorite: async (req: Request<ParamsDictionary, any, FavoriteBody>, res: Response, next: NextFunction) => {
+    await userServices.insertUserFavorite(req.user, req.body)
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.INSERT_USER_TO_FAVORITES)
   },
   removeUserFavorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    await userServices.removeUserFavorite(req.user, req.params)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_USER_TO_FAVORITES)
   },
   blocks: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
