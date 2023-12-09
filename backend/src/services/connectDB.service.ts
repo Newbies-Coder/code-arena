@@ -1,6 +1,7 @@
 import { Db, MongoClient, ServerApiVersion, Collection } from 'mongodb'
 import { env } from '~/config/environment.config'
 import { DATABASE_MESSAGE } from '~/constants/message'
+import BlockedUser from '~/models/schemas/BlockedUser.schema'
 import CloseFriends from '~/models/schemas/CloseFriends'
 import Follow from '~/models/schemas/Follow.schema'
 import OTP from '~/models/schemas/Otps.schema'
@@ -37,6 +38,10 @@ class DatabaseServices {
   // Get collection user
   get users(): Collection<User> {
     return this.db.collection(env.database.main.collection.users as string)
+  }
+
+  get blocked_users(): Collection<BlockedUser> {
+    return this.db.collection(env.database.main.collection.blocked_user as string)
   }
 
   // Get collection user

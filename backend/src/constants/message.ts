@@ -2,26 +2,27 @@ export const DATABASE_MESSAGE = {
   DB_LOGS: {
     NAME: 'Database access name in the user log',
     USERNAME: 'Username credentials to access the database user logs',
-    PASSWORD: 'Passwrod credentials to access the database user logs ',
+    PASSWORD: 'Password credentials to access the database user logs ',
     CONNECT: '📒 Connected to DB User Logs successfully!',
-    DICONNECT: '⛔️ Disconnected from the database user logs successfully!'
+    DISCONNECT: '⛔️ Disconnected from the database user logs successfully!'
   },
   DB_MAIN: {
     NAME: 'Database access name in the ',
     USERNAME: 'Username credentials to access the database main',
-    PASSWORD: 'Passwrod credentials to access the database main ',
+    PASSWORD: 'Password credentials to access the database main ',
     CONNECT: '🌱 Connected to DB Code Arena successfully!',
-    DICONNECT: '⛔️ Disconnected from the database main successfully!',
+    DISCONNECT: '⛔️ Disconnected from the database main successfully!',
     USER_COLLECTION: 'The table holds user information in the database.',
     REFRESH_TOKEN_COLLECTION: 'The table holds refresh-token information in the database.',
     OTP_COLLECTION: 'The table holds otp information in the database.',
     FOLLOW_COLLECTION: 'The table holds follow information in the database.',
+    BLOCKED_USER_COLLECTION: 'The table holds user block user information in the database.',
     CLOSE_FRIENDS_COLLECTION: 'The table holds close friends information in the database.'
   }
 } as const
 
 export const JWT_MESSAGES = {
-  JWT_SECRECT_KEY: 'This “Secret” string is unique to the application and must be prioritized and carefully stored securely on the server side.',
+  JWT_SECRET_KEY: 'This “Secret” string is unique to the application and must be prioritized and carefully stored securely on the server side.',
   JWT_REFRESH_TOKEN_KEY: 'This “Secret” string is unique to the application and must be prioritized and carefully stored securely on the server side.',
   ACCESS_TOKEN_EXPIRES_IN: 'Duration of existence of access_token',
   REFRESH_TOKEN_EXPIRES_IN: 'Duration of existence of access_token',
@@ -45,56 +46,57 @@ export const ENV_MESSAGE = {
 export const CLIENT_MESSAGE = {
   REQ_POINT: 'Maximum number of points can be consumed over duration',
   REQ_DURATION: 'Number of seconds before consumed points are reset.',
-  PASSWORD_SECRET: 'String of numeric or character values ​​used in security systems',
-  OTP_SECRET: 'String of numeric or character values ​​used in security systems',
-  COOKIES_EXPIRESIN: 'Cookie expires in the system',
+  PASSWORD_SECRET: 'String of numeric or character values used in security systems',
+  OTP_SECRET: 'String of numeric or character values used in security systems',
+  COOKIES_EXPIRES_IN: 'Cookie expires in the system',
   SECRET_COOKIE_NAME: 'Cookies_name when user login and register success and save local'
 } as const
 
 export const RESULT_RESPONSE_MESSAGES = {
-  // auth
-  LOGIN_SUCCESS: 'Login successfully!',
-  LOGIN_GOOGLE_SUCCESS: 'Login google successfully!',
-  LOGIN_FACEBOOK_SUCCESS: 'Login faceboook successfully!',
-  LOGIN_LINKEDIN_SUCCESS: 'Login linkedin successfully!',
-  LOGIN_GITHUB_SUCCESS: 'Login github successfully!',
-  // user
-  REGISTER_SUCCESS: 'Created account successfully!',
-  LOGOUT_SUCCESS: 'Logout scussessfully!',
-  REFRESH_TOKEN_SUCCESS: 'User refresh_token successfully!',
-  FORGOT_PASSWORD_SUCCESS: 'Forgot_password successfully!',
-  VERIFY_FORGOT_PASSWORD_SUCCESS: 'Verify forgot_password successfully!',
-  RESET_PASSWORD_SUCCESS: 'Reset password successfully!',
-  CHANGE_PASSWORD_SUCCESS: 'Change password successfully!',
-  UPLOAD_AVATAR_SUCCESS: 'Upload avatar successfully!',
-  UPLOAD_THUMBNAIL_SUCCESS: 'Upload thumbnail successfully!',
-  GET_ALL_USER_SUCCESS: 'Get all users successfully!',
-  GET_USER_SUCCESS: 'Get user successfully!',
-  GET_PROFILE_USER_SUCCESS: 'Get profile successfully!',
-  UPDATE_USER_SUCCESS: 'Update successfully!',
-  SEARCH_USER_SUCCESS: 'Search user successfully!',
-  DETELE_USER_SUCCESS: 'Delete user successfully!',
-  DELETE_MANY_USER_SUCCESS: 'Delete many user successfully!',
-  GET_ROLE_USER_SUCCESS: 'Get users role successfully!',
-  GET_FAVORITE_USER_SUCCESS: 'Get list of close friends successfully!',
-  INSERT_USER_TO_FAVORITES_SUCCESS: 'Insert user to favorite friends list successfully',
-  DELETE_USER_TO_FAVORITES_SUCCESS: 'Remove user to favorite friends list successfully',
-  GET_USERS_BLOCK_SUCCESS: 'Get list of block friends successfully!',
-  BLOCK_USER_SUCCESS: 'Insert user to the block list successfully',
-  REMOVE_USER_BLOCK_SUCCESS: 'Remove users from the block list successfully',
-  PAGINATION_USER_SUCCESS: 'Pagination user successfully!',
-  TEST_TOKEN_SUCCESS: 'Test token successfully!',
-  USER_NOT_FOUND: 'User not found',
-  // otp
-  VERIFY_OTP_SUCCESS: 'Verify OTP successfully!',
-  RESEND_OTP_SUCCESS: 'Resend OTP successfully!',
-  // follow
-  FOLLOW_SUCCESS: 'Follow user successfully!',
-  UNFOLLOW_SUCCESS: 'Unfollow user successfully!',
-
-  AUTH_SUCCESS: {},
-  USER_SUCSESS: {},
-  OTP_SCUCCESS: {},
+  AUTH_SUCCESS: {
+    LOGIN: 'Login successfully!',
+    LOGIN_GOOGLE: 'Login google successfully!',
+    LOGIN_FACEBOOK: 'Login facebook successfully!',
+    LOGIN_LINKEDIN: 'Login linkedin successfully!',
+    LOGIN_GITHUB: 'Login github successfully!'
+  },
+  USER_SUCCESS: {
+    REGISTER: 'Created account successfully!',
+    LOGOUT: 'Logout successfully!',
+    REFRESH_TOKEN: 'User refresh_token successfully!',
+    FORGOT_PASSWORD: 'Forgot_password successfully!',
+    VERIFY_FORGOT_PASSWORD: 'Verify forgot_password successfully!',
+    RESET_PASSWORD: 'Reset password successfully!',
+    CHANGE_PASSWORD: 'Change password successfully!',
+    UPLOAD_AVATAR: 'Upload avatar successfully!',
+    UPLOAD_THUMBNAIL: 'Upload thumbnail successfully!',
+    GET_ALL_USER: 'Get all users successfully!',
+    GET_USER: 'Get user successfully!',
+    GET_PROFILE_USER: 'Get profile successfully!',
+    UPDATE_USER: 'Update successfully!',
+    SEARCH_USER: 'Search user successfully!',
+    DELETE_USER: 'Delete user successfully!',
+    DELETE_MANY_USER: 'Delete many user successfully!',
+    GET_ROLE_USER: 'Get users role successfully!',
+    GET_FAVORITE_USER: 'Get list of close friends successfully!',
+    INSERT_USER_TO_FAVORITES: 'Insert user to favorite friends list successfully',
+    DELETE_USER_TO_FAVORITES: 'Remove user to favorite friends list successfully',
+    GET_USERS_BLOCK: 'Get list of block friends successfully!',
+    BLOCK_USER: 'Insert user to the block list successfully',
+    REMOVE_USER_BLOCK: 'Remove users from the block list successfully',
+    PAGINATION_USER: 'Pagination user successfully!',
+    TEST_TOKEN: 'Test token successfully!',
+    USER_NOT_FOUND: 'User not found',
+    FOLLOW: 'Follow user successfully!',
+    UNFOLLOW: 'Unfollow user successfully!',
+    GET_BLOCKED_USER: 'Get blocked users successfully',
+    INSERT_BLOCKED_USER: 'Insert blocked users successfully',
+    DELETE_BLOCKED_USER: 'Delete blocked users successfully'
+  },
+  OTP_SUCCESS: {
+    VERIFY_OTP: 'Verify OTP successfully!', //
+    RESEND_OTP: 'Resend OTP successfully!'
+  },
   BANNERS_SUCCESS: {
     GET_ALL: 'Get all banners successfully!',
     INSERT: 'Insert banners successfully!',
@@ -112,6 +114,12 @@ export const VALIDATION_MESSAGES = {
     PAGE_CAN_NOT_LESS_THAN_ZERO: 'Page number cannot less than zero',
     ITEMS_IS_NOT_IN_RANGE: 'Item per page can not less than zero and greater than 100'
   },
+  UPLOAD: {
+    IMAGE: {
+      INVALID_IMAGE_EXTENSION: 'Image extension is invalid',
+      INVALID_IMAGE_SIZE: 'Image is too large'
+    }
+  },
   USER: {
     COMMONS: {
       USER_WITH_ID_IS_NOT_EXIST: 'User with id is not exist',
@@ -119,12 +127,13 @@ export const VALIDATION_MESSAGES = {
       USER_ID_CAN_NOT_BE_EMPTY: 'User id cannot be empty',
       USER_NOT_LOGIN: 'You must logged in to continue',
       USER_NOT_ROLE_NOT_SATISFIED: 'You don not have the right role to access this resources',
-      USER_ID_IS_INVALID: 'User id is invalid'
+      USER_ID_IS_INVALID: 'User id is invalid',
+      USERNAME_MUST_BE_STRING: 'Username must be a string'
     },
     LOGIN: {
       EMAIL_IS_REQUIRED: 'Email is required',
       EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
-      EMAIL_ACCESSBILITY: "The email address doesn't exist. Please try the valid one or simply register",
+      EMAIL_ACCESSIBILITY: "The email address doesn't exist. Please try the valid one or simply register",
       PASSWORD_IS_REQUIRED: 'Password is required',
       PASSWORD_MUST_BE_A_STRING: 'Password must be a string',
       PASSWORD_MUST_BE_STRONG: 'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
@@ -139,7 +148,7 @@ export const VALIDATION_MESSAGES = {
       NAME_LENGTH_MUST_BE_FROM_4_TO_20: 'Username must be between 4 and 20 characters long',
       EMAIL_IS_REQUIRED: 'Email is required',
       EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
-      EMAIL_ACCESSBILITY: 'The email address is already subscribed. Please use a different email.',
+      EMAIL_ACCESSIBILITY: 'The email address is already subscribed. Please use a different email.',
       PASSWORD_IS_REQUIRED: 'Password is required',
       PASSWORD_MUST_BE_A_STRING: 'Password must be a string',
       PASSWORD_MUST_BE_STRONG: 'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
@@ -187,9 +196,6 @@ export const VALIDATION_MESSAGES = {
       EMAIL_ACCESSABILITY: "The email address doesn't exist. Please try the valid one or simply register",
       EMAIL_IS_NOT_EXIT: 'Email is not exit'
     },
-    UPLOAD_AVATAR: {
-      INVALID_AVATAR_EXTENSION: 'Avatar image extension is invalid'
-    },
     USER_PROFILE: {
       USER_ID_IS_REQUIRED: 'User id is required',
       USER_ID_NOT_FOUND: 'User id not found',
@@ -207,6 +213,10 @@ export const VALIDATION_MESSAGES = {
       ADDRESS_MUST_BE_STRING: 'Address must be a string',
       ADDRESS_MAX_LENGTH_IS_255: 'Address max length is 255 character',
       FIELD_UPDATE_IS_REQUIRED: 'Must be at least 1 field that to updating'
+    },
+    BLOCK: {
+      USER_ALREADY_BLOCKED: 'User already been blocked',
+      USER_ID_IS_INVALID: 'User id is invalid'
     },
     GET_USERS_BY_ROLE: {
       ROLE_IS_REQUIRED: 'Role is required',
@@ -244,7 +254,8 @@ export const CLOUDINARY_MESSAGES = {
   CLOUDINARY_KEY: 'Key to access cloudinary',
   CLOUDINARY_SECRET: 'Password to access cloudinary',
   CLOUDINARY_NAME: 'Cloud name of current cloudinary account',
-  CLOUDINARY_AVATAR_FOLDER: 'Folder that contain avatar images on cloudinary'
+  CLOUDINARY_AVATAR_FOLDER: 'Folder that contain avatar images on cloudinary',
+  CLOUDINARY_THUMBNAIL_FOLDER: 'Folder that contain thumbnail images on cloudinary'
 }
 
 export const AUTH_MESSAGES = {

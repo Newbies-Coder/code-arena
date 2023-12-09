@@ -3,6 +3,7 @@ import { databaseService } from './connectDB.service'
 import { TokenType, UserRole, UserVerifyStatus } from '~/constants/enums'
 import { env } from '~/config/environment.config'
 import {
+  BlockUserBody,
   ChangePasswordBody,
   FavoriteBody,
   ForgotPasswordBody,
@@ -17,7 +18,7 @@ import {
 } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
-import { ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
+import { PaginationType, ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
 import { hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
@@ -32,6 +33,8 @@ import Follow from '~/models/schemas/Follow.schema'
 import { AuthUser } from '~/@types/auth.type'
 import _ from 'lodash'
 import cloudinaryService from '~/services/cloudinary.service'
+import { ParsedQs } from 'qs'
+import BlockedUser from '~/models/schemas/BlockedUser.schema'
 import CloseFriends from '~/models/schemas/CloseFriends'
 
 class UserService {
@@ -50,7 +53,7 @@ class UserService {
   }
 
   async isUserExist(id: string) {
-    const result = await databaseService.users.findOne({ id: new ObjectId(id) })
+    const result = await databaseService.users.findOne({ _id: new ObjectId(id) })
     return Boolean(result)
   }
 
@@ -251,16 +254,68 @@ class UserService {
   }
 
   async getAllUser(payload: ParsedUrlQuery) {
-    const page = Number(payload.page)
-    const items = Number(payload.items)
+    const pageIndex = Number(payload.pageIndex)
+    const pageSize = Number(payload.pageSize)
+    const query = String(payload.query ?? ' ')
 
-    const result = await databaseService.users
-      .find()
-      .limit(items)
-      .skip(page * items)
+    // TODO: Use text search index
+    const users = await databaseService.users
+      .find({ username: { $regex: query } })
+      .limit(pageSize)
+      .skip((pageIndex - 1) * pageSize)
       .toArray()
 
-    return _.omit(result, ['password'])
+    // TODO: Make something like private attributes const in UserType
+    const filteredUsers = _.map(users, (v) => _.omit(v, ['password', 'created_at', 'updated_at', 'email', 'phone', 'forgot_password_token', 'verify', '_destroy', 'password_change_at']))
+
+    const result: PaginationType<Partial<User>> = {
+      items: filteredUsers,
+      pageIndex: pageIndex,
+      pageSize: pageSize,
+      totalRow: filteredUsers.length
+    }
+
+    return result
+  }
+
+  async deleteUser(payload: ParamsDictionary) {
+    const { id } = payload
+    await databaseService.users.updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $set: {
+          _destroy: true
+        }
+      },
+      { upsert: false }
+    )
+  }
+
+  async deleteManyUser(payload: ParsedQs) {
+    const { id } = payload
+    let deleteIds: ObjectId[]
+
+    if (id instanceof Array) {
+      deleteIds = id.map((item) => new ObjectId(item))
+    } else if (id instanceof String) {
+      deleteIds = [new ObjectId(id as string)]
+    }
+
+    console.log(id)
+
+    await databaseService.users.updateMany(
+      {
+        _id: {
+          $in: deleteIds
+        }
+      },
+      {
+        $set: {
+          _destroy: true
+        }
+      },
+      { upsert: false }
+    )
   }
 
   async follow(user: AuthUser, payload: ParamsDictionary) {
@@ -284,17 +339,10 @@ class UserService {
   }
 
   async updateMeAvatar({ _id }: AuthUser, file: Express.Multer.File) {
-    if (!file) {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.BAD_REQUEST,
-        message: VALIDATION_MESSAGES.USER.UPLOAD_AVATAR.INVALID_AVATAR_EXTENSION
-      })
-    }
-
-    const { url } = await cloudinaryService.uploadAvatar(file.buffer)
+    const { url } = await cloudinaryService.uploadImage(env.cloudinary.avatar_folder, file.buffer)
     const { avatar } = await databaseService.users.findOne({ _id: new ObjectId(_id) })
 
-    await cloudinaryService.deleteAvatar(avatar)
+    await cloudinaryService.deleteImage(avatar)
     await databaseService.users.updateOne(
       { _id: new ObjectId(_id) },
       {
@@ -305,6 +353,65 @@ class UserService {
     )
     const result: UploadAvatarType = { avatarUrl: url }
     return result
+  }
+
+  async updateMeThumbnail({ _id }: AuthUser, file: Express.Multer.File) {
+    const { url } = await cloudinaryService.uploadImage(env.cloudinary.thumbnail_folder, file.buffer)
+    const { avatar } = await databaseService.users.findOne({ _id: new ObjectId(_id) })
+
+    await cloudinaryService.deleteImage(avatar)
+    await databaseService.users.updateOne(
+      { _id: new ObjectId(_id) },
+      {
+        $set: {
+          cover_photo: url
+        }
+      }
+    )
+    const result: UploadAvatarType = { avatarUrl: url }
+    return result
+  }
+
+  async getMeBlockedUser({ _id }: AuthUser, payload: ParsedQs) {
+    const pageIndex = Number(payload.pageIndex)
+    const pageSize = Number(payload.pageSize)
+
+    // TODO: Use text search index
+    const user = await databaseService.blocked_users
+      .find({ blockerId: new ObjectId(_id) })
+      .limit(pageSize)
+      .skip((pageIndex - 1) * pageSize)
+      .toArray()
+
+    const filteredUsers = _.map(user, (v) => _.omit(v, ['created_at', 'updated_at']))
+
+    const result: PaginationType<Partial<BlockedUser>> = {
+      items: filteredUsers,
+      pageIndex: pageIndex,
+      pageSize: pageSize,
+      totalRow: filteredUsers.length
+    }
+
+    return result
+  }
+
+  async insertMeBlockedUser({ _id }: AuthUser, payload: BlockUserBody) {
+    const { blockedId } = payload
+
+    await databaseService.blocked_users.insertOne(
+      new BlockedUser({
+        blockerId: new ObjectId(_id),
+        blockedId: new ObjectId(blockedId)
+      })
+    )
+  }
+
+  async deleteMeBlockedUser(payload: ParamsDictionary) {
+    const { id } = payload
+
+    await databaseService.blocked_users.deleteOne({
+      _id: new ObjectId(id)
+    })
   }
 
   async changePassword(payload: ChangePasswordBody) {
@@ -321,6 +428,7 @@ class UserService {
     }
     return _.omit(user, 'password')
   }
+
   async checkToken(payload: InfoTokenType) {
     let { iat, exp, ...item } = payload
     let userInfo = {

@@ -54,6 +54,9 @@ export interface InfoTokenType {
   exp: number
 }
 
+export interface BlockUserBody {
+  blockedId: string
+}
 export interface UpdateProfileBody {
   fullName?: string
   username?: string

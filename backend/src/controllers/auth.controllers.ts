@@ -6,6 +6,7 @@ import oauthService from '~/services/oauth.service'
 const authController = {
   callback: (provider: AuthProvider) => async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     await oauthService.callback(provider, req, res)
+    
   }
 }
 
