@@ -820,3 +820,34 @@ export const favoriteValidator = validate(
     ['body']
   )
 )
+
+export const removeFavoriteValidator = validate(
+  checkSchema(
+    {
+      id: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
+        },
+        custom: {
+          options: async (value, { req }) => {
+            if (!ObjectId.isValid(value)) {
+              throw Error(VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID)
+            }
+            const user = await userServices.isExitInCloseFriends(new ObjectId(req.user._id), new ObjectId(value))
+            if (!user) {
+              throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.FAVORITE.FAVORITE_NOT_EXIT })
+            }
+            if (value === req.user._id) {
+              throw Error(VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ID_NOT_USER_ID)
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)

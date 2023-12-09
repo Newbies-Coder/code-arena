@@ -127,6 +127,7 @@ const userController = {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.INSERT_USER_TO_FAVORITES_SUCCESS)
   },
   removeUserFavorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    await userServices.removeUserFavorite(req.user, req.params)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.DELETE_USER_TO_FAVORITES_SUCCESS)
   },
   blocks: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {

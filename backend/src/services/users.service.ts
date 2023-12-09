@@ -33,6 +33,7 @@ import { AuthUser } from '~/@types/auth.type'
 import _ from 'lodash'
 import cloudinaryService from '~/services/cloudinary.service'
 import CloseFriends from '~/models/schemas/CloseFriends'
+import { bool } from 'joi'
 class UserService {
   async validateEmailAccessibility(email: string) {
     const user = await databaseService.users.findOne({ email })
@@ -361,6 +362,17 @@ class UserService {
       .project({ _id: 0, userId: 0, created_at: 0 })
       .toArray()
     return result.map((item) => item.friendId)
+  }
+
+  // check user in close friends list
+  async isExitInCloseFriends(userId: ObjectId, friendId: ObjectId) {
+    const result = await databaseService.closeFriends.findOne({ userId: userId, friendId: friendId })
+    return result
+  }
+
+  // remove doc in close friends
+  async removeUserFavorite(user: AuthUser, payload: ParamsDictionary) {
+    await databaseService.closeFriends.deleteOne({ userId: new ObjectId(user._id), friendId: new ObjectId(payload.id) })
   }
 }
 

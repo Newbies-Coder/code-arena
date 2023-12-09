@@ -214,7 +214,9 @@ export const VALIDATION_MESSAGES = {
       ERROR_WHEN_FETCH_DATA: 'Error when fetch data from database'
     },
     FAVORITE: {
-      FRIEND_ID_NOT_USER_ID: 'Friend id not user id'
+      FRIEND_ID_NOT_USER_ID: 'Friend id not user id',
+      FRIEND_ID_IS_REQUIRED: 'Friend id is required',
+      FAVORITE_NOT_EXIT: 'Favorite not exit'
     }
   },
   TOKEN: {

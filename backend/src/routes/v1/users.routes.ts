@@ -14,6 +14,7 @@ import {
   loginValidator,
   refreshTokenValidator,
   registerValidator,
+  removeFavoriteValidator,
   resetPasswordValidator,
   unfollowUserValidator,
   updateProfileValidator,
@@ -242,7 +243,7 @@ userRouter.post('/favorite', wrapRequestHandler(requireLoginMiddleware), favorit
  * Param: {id: string}
  */
 
-userRouter.delete('/favorite/:id', wrapRequestHandler(userController.removeUserFavorite))
+userRouter.delete('/favorite/:id', wrapRequestHandler(requireLoginMiddleware), removeFavoriteValidator, wrapRequestHandler(userController.removeUserFavorite))
 
 /**
  * Description: Get list user block
