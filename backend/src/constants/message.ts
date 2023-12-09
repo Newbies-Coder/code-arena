@@ -15,7 +15,8 @@ export const DATABASE_MESSAGE = {
     USER_COLLECTION: 'The table holds user information in the database.',
     REFRESH_TOKEN_COLLECTION: 'The table holds refresh-token information in the database.',
     OTP_COLLECTION: 'The table holds otp information in the database.',
-    FOLLOW_COLLECTION: 'The table holds follow information in the database.'
+    FOLLOW_COLLECTION: 'The table holds follow information in the database.',
+    BLOCKED_USER_COLLECTION: 'The table holds user block user information in the database.'
   }
 } as const
 
@@ -86,7 +87,10 @@ export const RESULT_RESPONSE_MESSAGES = {
     TEST_TOKEN: 'Test token successfully!',
     USER_NOT_FOUND: 'User not found',
     FOLLOW: 'Follow user successfully!',
-    UNFOLLOW: 'Unfollow user successfully!'
+    UNFOLLOW: 'Unfollow user successfully!',
+    GET_BLOCKED_USER: 'Get blocked users successfully',
+    INSERT_BLOCKED_USER: 'Insert blocked users successfully',
+    DELETE_BLOCKED_USER: 'Delete blocked users successfully'
   },
   OTP_SUCCESS: {
     VERIFY_OTP: 'Verify OTP successfully!', //
@@ -195,6 +199,9 @@ export const VALIDATION_MESSAGES = {
       USER_ID_IS_REQUIRED: 'User id is required',
       USER_ID_NOT_FOUND: 'User id not found',
       USER_ID_IS_INVALID: 'User id is invalid'
+    },
+    BLOCK: {
+      USER_ALREADY_BLOCKED: 'User already been blocked'
     }
   },
   TOKEN: {

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { sendResponse } from '~/config/response.config'
 import { ParamsDictionary } from 'express-serve-static-core'
-import { ChangePasswordBody, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, ResendVerifyOTPBody, ResetPasswordBody, VerifyOTPBody } from '~/models/requests/User.requests'
+import { BlockUserBody, ChangePasswordBody, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, ResendVerifyOTPBody, ResetPasswordBody, VerifyOTPBody } from '~/models/requests/User.requests'
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
 import { env } from '~/config/environment.config'
@@ -98,6 +98,25 @@ const userController = {
     // Message register successfully!
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UPDATE_USER)
   },
+
+  getMeBlockedUsers: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    const result = await userServices.getMeBlockedUser(req.user, req.query)
+    // Message register successfully!
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_BLOCKED_USER)
+  },
+
+  insertMeBlockedUser: async (req: Request<ParamsDictionary, any, BlockUserBody>, res: Response, next: NextFunction) => {
+    const result = await userServices.insertMeBlockedUser(req.user, req.body)
+    // Message register successfully!
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.INSERT_BLOCKED_USER)
+  },
+
+  deleteMeBlockedUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    const result = await userServices.deleteMeBlockedUser(req.params)
+    // Message register successfully!
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_BLOCKED_USER)
+  },
+
   delete: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     await userServices.deleteUser(req.params)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_USER)

@@ -360,41 +360,50 @@ export const getAllUserValidator = validate(
         isString: {
           errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USERNAME_MUST_BE_STRING
         }
-      },
-      pageIndex: {
-        trim: true,
-        isInt: {
-          options: {
-            min: 1
-          },
-          errorMessage: VALIDATION_MESSAGES.PAGINATION.PAGE_CAN_NOT_LESS_THAN_ZERO
-        }
-      },
-      pageSize: {
-        trim: true,
-        isInt: {
-          options: {
-            min: 1,
-            max: 100
-          },
-          errorMessage: VALIDATION_MESSAGES.PAGINATION.ITEMS_IS_NOT_IN_RANGE
-        }
       }
     },
     ['query']
   )
 )
 
-export const deleteUserValidator = validate(
+export const insertMeBlockedUserValidator = validate(
   checkSchema(
     {
-      id: {
+      blockedId: {
+        trim: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
+        },
         custom: {
-          options: async (value) => {
+          options: async (value, { req }) => {
             if (!ObjectId.isValid(value)) {
               throw new ErrorWithStatus({
                 message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID,
+                statusCode: StatusCodes.BAD_REQUEST
+              })
+            }
+
+            const user = await userServices.isUserExist(value)
+
+            if (!user) {
+              throw new ErrorWithStatus({
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST,
                 statusCode: StatusCodes.NOT_FOUND
+              })
+            }
+
+            const blocked = await databaseService.blocked_users.findOne({
+              blockerId: new ObjectId(req.user._id),
+              blockedId: new ObjectId(value)
+            })
+
+            if (blocked) {
+              throw new ErrorWithStatus({
+                message: VALIDATION_MESSAGES.USER.BLOCK.USER_ALREADY_BLOCKED,
+                statusCode: StatusCodes.CONFLICT
               })
             }
 
@@ -403,7 +412,7 @@ export const deleteUserValidator = validate(
         }
       }
     },
-    ['params']
+    ['body']
   )
 )
 
@@ -635,11 +644,11 @@ export const followUserValidator = validate(
             if (!ObjectId.isValid(value)) {
               throw new ErrorWithStatus({
                 message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID,
-                statusCode: StatusCodes.NOT_FOUND
+                statusCode: StatusCodes.BAD_REQUEST
               })
             }
 
-            const user = userServices.isUserExist(value)
+            const user = await userServices.isUserExist(value)
 
             if (!user) {
               throw new ErrorWithStatus({

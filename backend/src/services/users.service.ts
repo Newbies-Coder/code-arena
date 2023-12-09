@@ -2,7 +2,7 @@ import { signToken, verifyToken } from '~/utils/jwt'
 import { databaseService } from './connectDB.service'
 import { TokenType, UserRole, UserVerifyStatus } from '~/constants/enums'
 import { env } from '~/config/environment.config'
-import { ChangePasswordBody, ForgotPasswordBody, InfoTokenType, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
+import { BlockUserBody, ChangePasswordBody, ForgotPasswordBody, InfoTokenType, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, VerifyOTPBody } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
 import { PaginationType, ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
@@ -20,6 +20,8 @@ import Follow from '~/models/schemas/Follow.schema'
 import { AuthUser } from '~/@types/auth.type'
 import _ from 'lodash'
 import cloudinaryService from '~/services/cloudinary.service'
+import { ParsedQs } from 'qs'
+import BlockedUser from '~/models/schemas/BlockedUser.schema'
 
 class UserService {
   async validateEmailAccessibility(email: string) {
@@ -33,7 +35,7 @@ class UserService {
   }
 
   async isUserExist(id: string) {
-    const result = await databaseService.users.findOne({ id: new ObjectId(id) })
+    const result = await databaseService.users.findOne({ _id: new ObjectId(id) })
     return Boolean(result)
   }
 
@@ -298,6 +300,48 @@ class UserService {
     )
     const result: UploadAvatarType = { avatarUrl: url }
     return result
+  }
+
+  async getMeBlockedUser({ _id }: AuthUser, payload: ParsedQs) {
+    const pageIndex = Number(payload.pageIndex)
+    const pageSize = Number(payload.pageSize)
+
+    // TODO: Use text search index
+    const user = await databaseService.blocked_users
+      .find({ blockerId: new ObjectId(_id) })
+      .limit(pageSize)
+      .skip((pageIndex - 1) * pageSize)
+      .toArray()
+
+    const filteredUsers = _.map(user, (v) => _.omit(v, ['created_at', 'updated_at']))
+
+    const result: PaginationType<Partial<BlockedUser>> = {
+      items: filteredUsers,
+      pageIndex: pageIndex,
+      pageSize: pageSize,
+      totalRow: filteredUsers.length
+    }
+
+    return result
+  }
+
+  async insertMeBlockedUser({ _id }: AuthUser, payload: BlockUserBody) {
+    const { blockedId } = payload
+
+    await databaseService.blocked_users.insertOne(
+      new BlockedUser({
+        blockerId: new ObjectId(_id),
+        blockedId: new ObjectId(blockedId)
+      })
+    )
+  }
+
+  async deleteMeBlockedUser(payload: ParamsDictionary) {
+    const { id } = payload
+
+    await databaseService.blocked_users.deleteOne({
+      _id: new ObjectId(id)
+    })
   }
 
   async changePassword(payload: ChangePasswordBody) {

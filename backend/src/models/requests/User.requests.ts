@@ -54,3 +54,7 @@ export interface InfoTokenType {
   iat: number
   exp: number
 }
+
+export interface BlockUserBody {
+  blockedId: string
+}
