@@ -36,7 +36,6 @@ import cloudinaryService from '~/services/cloudinary.service'
 import { ParsedQs } from 'qs'
 import BlockedUser from '~/models/schemas/BlockedUser.schema'
 import CloseFriends from '~/models/schemas/CloseFriends'
-import { bool } from 'joi'
 
 class UserService {
   async validateEmailAccessibility(email: string) {
@@ -45,8 +44,12 @@ class UserService {
   }
 
   async validatePassword(email: string, password: string) {
-    const user = await databaseService.users.findOne({ email: email, password: hashPassword(password) })
-    return Boolean(user)
+    const user = await databaseService.users.findOne({ email: email })
+    if (user) {
+      throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_NOT_EXIT })
+    }
+
+    return Boolean(user.password !== hashPassword(password))
   }
 
   async isUserExist(id: string) {
