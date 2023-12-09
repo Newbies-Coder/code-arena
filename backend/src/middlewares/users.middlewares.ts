@@ -13,6 +13,7 @@ import { capitalize } from 'lodash'
 import { TokenPayloadType } from '~/@types/tokenPayload.type'
 import { ObjectId } from 'mongodb'
 import { UserRole } from '~/constants/enums'
+import moment from 'moment'
 
 // Validation register feature
 export const registerValidator = validate(
@@ -127,6 +128,25 @@ export const registerValidator = validate(
             strictSeparator: true
           },
           errorMessage: VALIDATION_MESSAGES.USER.REGISTER.DATE_OF_BIRTH_IS_ISO8601
+        },
+        custom: {
+          options: async (value) => {
+            const birthDate = new Date(value)
+            const today = new Date()
+            var age = today.getFullYear() - birthDate.getFullYear()
+            var m = today.getMonth() - birthDate.getMonth()
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+              age--
+            }
+
+            if (age < 12) {
+              throw new ErrorWithStatus({
+                message: VALIDATION_MESSAGES.USER.REGISTER.AGE_IS_NOT_ENOUGH,
+                statusCode: StatusCodes.BAD_REQUEST
+              })
+            }
+            return true
+          }
         }
       }
     },

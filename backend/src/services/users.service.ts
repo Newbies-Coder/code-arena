@@ -275,30 +275,15 @@ class UserService {
     return result
   }
 
-  async deleteUser(payload: ParamsDictionary) {
-    const { id } = payload
-    await databaseService.users.updateOne(
-      { _id: new ObjectId(id) },
-      {
-        $set: {
-          _destroy: true
-        }
-      },
-      { upsert: false }
-    )
-  }
-
   async deleteManyUser(payload: ParsedQs) {
     const { id } = payload
     let deleteIds: ObjectId[]
 
     if (id instanceof Array) {
       deleteIds = id.map((item) => new ObjectId(item))
-    } else if (id instanceof String) {
+    } else {
       deleteIds = [new ObjectId(id as string)]
     }
-
-    console.log(id)
 
     await databaseService.users.updateMany(
       {
