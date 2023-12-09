@@ -358,10 +358,37 @@ class UserService {
   // get users in close friend list
   async getFavorite(user: AuthUser) {
     const result = await databaseService.closeFriends
-      .find({ userId: new ObjectId(user._id) })
-      .project({ _id: 0, userId: 0, created_at: 0 })
+      .aggregate([
+        {
+          $match: { userId: new ObjectId(user._id) }
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'friendId',
+            foreignField: '_id',
+            as: 'friendInfo'
+          }
+        },
+        {
+          $unwind: '$friendInfo'
+        },
+        {
+          $project: {
+            'friendInfo._id': 1,
+            'friendInfo.username': 1,
+            'friendInfo.email': 1,
+            'friendInfo.fullName': 1,
+            'friendInfo.avatar': 1,
+            'friendInfo.cover_photo': 1,
+            'friendInfo.isOnline': 1,
+            'friendInfo.date_of_birth': 1
+          }
+        }
+      ])
       .toArray()
-    return result.map((item) => item.friendId)
+
+    return result.map((item) => item.friendInfo)
   }
 
   // check user in close friends list

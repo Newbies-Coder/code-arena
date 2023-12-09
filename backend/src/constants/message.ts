@@ -216,6 +216,7 @@ export const VALIDATION_MESSAGES = {
     FAVORITE: {
       FRIEND_ID_NOT_USER_ID: 'Friend id not user id',
       FRIEND_ID_IS_REQUIRED: 'Friend id is required',
+      FRIEND_ID_IS_EXIT: 'Friend id is exit',
       FAVORITE_NOT_EXIT: 'Favorite not exit'
     }
   },

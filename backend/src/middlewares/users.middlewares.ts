@@ -812,6 +812,10 @@ export const favoriteValidator = validate(
             if (value === req.user._id) {
               throw Error(VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ID_NOT_USER_ID)
             }
+            const isExist = await userServices.isExitInCloseFriends(new ObjectId(req.user._id), new ObjectId(value))
+            if (isExist) {
+              throw Error(VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ID_IS_EXIT)
+            }
             return true
           }
         }
