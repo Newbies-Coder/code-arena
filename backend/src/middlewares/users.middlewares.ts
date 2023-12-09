@@ -80,6 +80,18 @@ export const registerValidator = validate(
             min: 8,
             max: 16
           }
+        },
+        custom: {
+          options: (value : string) => {
+            if (value.includes(' ')){
+              throw new ErrorWithStatus({
+                message: VALIDATION_MESSAGES.USER.REGISTER.PASSWORD_CAN_NOT_CONTAIN_SPACE,
+                statusCode: StatusCodes.BAD_REQUEST
+              })
+            }
+
+            return true
+          }
         }
       },
       confirm_password: {

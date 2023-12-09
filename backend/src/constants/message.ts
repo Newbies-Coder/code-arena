@@ -153,6 +153,7 @@ export const VALIDATION_MESSAGES = {
       PASSWORD_MUST_BE_A_STRING: 'Password must be a string',
       PASSWORD_MUST_BE_STRONG: 'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
       PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Password must be between 8 and 16 characters long',
+      PASSWORD_CAN_NOT_CONTAIN_SPACE: 'Password can not contain space',
       CONFIRM_PASSWORD_IS_REQUIRED: 'Confirm_password is required',
       CONFIRM_PASSWORD_MUST_BE_A_STRING: 'Confirm_password must be a string',
       CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD: 'Confirm password must be the same as password',
@@ -194,7 +195,7 @@ export const VALIDATION_MESSAGES = {
     EMAIL: {
       EMAIL_IS_REQUIRED: 'Email is required',
       EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
-      EMAIL_ACCESSABILITY: "The email address exist. Please go to login or try the another one",
+      EMAIL_ACCESSABILITY: 'The email address exist. Please go to login or try the another one',
       EMAIL_IS_NOT_EXIT: 'Email is not exits'
     },
     USER_PROFILE: {
