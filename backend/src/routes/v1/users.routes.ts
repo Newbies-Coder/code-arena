@@ -9,6 +9,7 @@ import {
   followUserValidator,
   forgotPasswordValidator,
   getAllUserValidator,
+  getUsersByRoleValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator,
@@ -204,14 +205,14 @@ userRouter.delete('/users', wrapRequestHandler(userController.deleteManyUser))
 
 /**
  * Description: Get user by role
- * Path: /role
+ * Path: /roles
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
  * query: { includes: string }// user | admin | moderator
  * Note: Feature for ADMIN
  */
 
-userRouter.get('/roles', wrapRequestHandler(userController.getUsersByRole))
+userRouter.get('/roles', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), getUsersByRoleValidator, wrapRequestHandler(userController.getUsersByRole))
 
 /**
  * Description: Make a list of your closest pals.

@@ -1,7 +1,18 @@
 import { Request, Response, NextFunction } from 'express'
 import { sendResponse } from '~/config/response.config'
 import { ParamsDictionary } from 'express-serve-static-core'
-import { ChangePasswordBody, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, ResendVerifyOTPBody, ResetPasswordBody, UpdateProfileBody, VerifyOTPBody } from '~/models/requests/User.requests'
+import {
+  ChangePasswordBody,
+  GetUsersByRoleQuery,
+  LoginBody,
+  LogoutBody,
+  RefreshTokenBody,
+  RegisterBody,
+  ResendVerifyOTPBody,
+  ResetPasswordBody,
+  UpdateProfileBody,
+  VerifyOTPBody
+} from '~/models/requests/User.requests'
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
 import { ParsedUrlQuery } from 'querystring'
@@ -102,8 +113,9 @@ const userController = {
   deleteManyUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.DELETE_MANY_USER_SUCCESS)
   },
-  getUsersByRole: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_ROLE_USER_SUCCESS)
+  getUsersByRole: async (req: Request<ParamsDictionary, any, any, GetUsersByRoleQuery>, res: Response, next: NextFunction) => {
+    const result = await userServices.getUsersByRole(req.query)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.GET_ROLE_USER_SUCCESS)
   },
   favorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.GET_ROLE_USER_SUCCESS)

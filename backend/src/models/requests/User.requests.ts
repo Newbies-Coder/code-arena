@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb'
+import { ParsedUrlQuery } from 'querystring'
 
 export interface LoginBody {
   email: string
@@ -61,4 +62,10 @@ export interface UpdateProfileBody {
   date_of_birth?: Date
   bio?: string
   address?: string
+}
+
+export interface GetUsersByRoleQuery extends ParsedUrlQuery {
+  includes: string
+  pageNumber: string
+  limit: string
 }

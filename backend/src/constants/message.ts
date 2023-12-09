@@ -206,6 +206,11 @@ export const VALIDATION_MESSAGES = {
       ADDRESS_MUST_BE_STRING: 'Address must be a string',
       ADDRESS_MAX_LENGTH_IS_255: 'Address max length is 255 character',
       FIELD_UPDATE_IS_REQUIRED: 'Must be at least 1 field that to updating'
+    },
+    GET_USERS_BY_ROLE: {
+      ROLE_IS_REQUIRED: 'Role is required',
+      ROLE_IS_INVALID: 'Role is invalid',
+      ERROR_WHEN_FETCH_DATA: 'Error when fetch data from database'
     }
   },
   TOKEN: {

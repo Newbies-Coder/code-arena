@@ -2,7 +2,18 @@ import { signToken, verifyToken } from '~/utils/jwt'
 import { databaseService } from './connectDB.service'
 import { TokenType, UserRole, UserVerifyStatus } from '~/constants/enums'
 import { env } from '~/config/environment.config'
-import { ChangePasswordBody, ForgotPasswordBody, InfoTokenType, LoginBody, LogoutBody, RefreshTokenBody, RegisterBody, UpdateProfileBody, VerifyOTPBody } from '~/models/requests/User.requests'
+import {
+  ChangePasswordBody,
+  ForgotPasswordBody,
+  GetUsersByRoleQuery,
+  InfoTokenType,
+  LoginBody,
+  LogoutBody,
+  RefreshTokenBody,
+  RegisterBody,
+  UpdateProfileBody,
+  VerifyOTPBody
+} from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
 import { ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
@@ -319,6 +330,16 @@ class UserService {
       throw new ErrorWithStatus({ statusCode: StatusCodes.BAD_REQUEST, message: VALIDATION_MESSAGES.USER.USER_PROFILE.FIELD_UPDATE_IS_REQUIRED })
     }
     await databaseService.users.updateOne({ _id: new ObjectId(user._id) }, { $set: payload }, { upsert: false })
+  }
+
+  // get users by role
+  async getUsersByRole(payload: GetUsersByRoleQuery) {
+    const role = payload.includes === 'user' ? UserRole.User : payload.includes === 'admin' ? UserRole.Admin : UserRole.Moderator
+    const pageNumber = parseInt(payload.pageNumber)
+    const limit = parseInt(payload.limit) === 0 ? parseInt(payload.limit) : 12
+    let startIndex = pageNumber * limit
+    const result = await databaseService.users.find({ role: role }).skip(startIndex).limit(limit).toArray()
+    return result
   }
 }
 

@@ -12,6 +12,7 @@ import { JsonWebTokenError } from 'jsonwebtoken'
 import { capitalize } from 'lodash'
 import { TokenPayloadType } from '~/@types/tokenPayload.type'
 import { ObjectId } from 'mongodb'
+import { UserRole } from '~/constants/enums'
 
 // Validation register feature
 export const registerValidator = validate(
@@ -765,5 +766,26 @@ export const updateProfileValidator = validate(
       }
     },
     ['body']
+  )
+)
+
+export const getUsersByRoleValidator = validate(
+  checkSchema(
+    {
+      includes: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.GET_USERS_BY_ROLE.ROLE_IS_REQUIRED
+        },
+        custom: {
+          options: (value: string) => {
+            if (!Object.values(UserRole).includes((value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()) as UserRole)) {
+              throw new Error(VALIDATION_MESSAGES.USER.GET_USERS_BY_ROLE.ROLE_IS_INVALID)
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['query']
   )
 )
