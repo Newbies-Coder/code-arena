@@ -1,7 +1,7 @@
 import { Header } from 'antd/es/layout/layout'
 import { HomeIcon, LettersIcon, NoNotiIcon, SearchIcon, UserIcon } from '../Icons'
 import { DownOutlined } from '@ant-design/icons'
-import { Avatar, Button, Dropdown, Input, MenuProps, Popover, Space, message } from 'antd'
+import { Avatar, Button, Col, Dropdown, Input, MenuProps, Popover, Row, Space, message } from 'antd'
 import { HOME_ICON, LOGO } from '@/constants/images'
 import { useState } from 'react'
 
@@ -26,6 +26,7 @@ const menuItems: MenuProps['items'] = [
   {
     label: <a href="">Profile</a>,
     key: '0',
+    style: { width: '150px' },
   },
   {
     type: 'divider',
@@ -33,6 +34,7 @@ const menuItems: MenuProps['items'] = [
   {
     label: 'Log out',
     key: '2',
+    style: { width: '150px' },
   },
 ]
 
@@ -70,7 +72,7 @@ const HeaderItem = () => {
               </li>
               <li className="flex justify-center items-center w-24 h-10 mx-2 bg-purple-900 rounded-full border border-gray-500">
                 <img src={HOME_ICON.FLAG} alt="flag" className="md:hidden lg:block" />
-                <Dropdown menu={{ items: items, onClick }} className="text-gray-500 pl-2">
+                <Dropdown menu={{ items: items, onClick }} placement="bottomRight" className="text-gray-500 pl-2">
                   <a onClick={(e) => e.preventDefault()}>
                     <Space>
                       ENG
@@ -100,21 +102,46 @@ const HeaderItem = () => {
               <LettersIcon />
             </Button>
           </Popover>
-          <div className="flex justify-between items-center w-28 h-10 bg-blue-900 rounded-full border border-gray-500">
-            <Avatar size={36} className="flex justify-between items-center bg-gray-300">
-              <UserIcon />
-            </Avatar>
-            <div className="flex justify-between items-center pr-2">
-              <Dropdown menu={{ items: menuItems }} trigger={['click']} className="text-white">
-                <a onClick={(e) => e.preventDefault()}>
-                  <Space>
-                    UYEN
-                    <DownOutlined />
-                  </Space>
-                </a>
-              </Dropdown>
-            </div>
-          </div>
+          <Row>
+            <Col xs={24} sm={24} md={0} lg={0} xl={0}>
+              <div className="flex justify-between items-center w-10 h-10 bg-blue-900 rounded-full border border-gray-500">
+                <Dropdown
+                  menu={{ items: menuItems }}
+                  placement="bottomRight"
+                  trigger={['click']}
+                  className="text-white"
+                >
+                  <Button className="h-10 w-10 p-0 rounded-full">
+                    <Avatar size={37} className="flex justify-between items-center bg-gray-300">
+                      <UserIcon />
+                    </Avatar>
+                  </Button>
+                </Dropdown>
+              </div>
+            </Col>
+            <Col xs={0} md={24} lg={24} xl={24}>
+              <div className="flex justify-between items-center w-40 h-10 bg-blue-900 rounded-full border border-gray-500">
+                <Avatar size={36} className="flex justify-between items-center bg-gray-300">
+                  <UserIcon />
+                </Avatar>
+                <div className="flex justify-between items-center pr-2">
+                  <Dropdown
+                    menu={{ items: menuItems }}
+                    placement="bottomRight"
+                    trigger={['click']}
+                    className="text-white"
+                  >
+                    <a onClick={(e) => e.preventDefault()}>
+                      <Space>
+                        NGOC UYEN
+                        <DownOutlined />
+                      </Space>
+                    </a>
+                  </Dropdown>
+                </div>
+              </div>
+            </Col>
+          </Row>
         </div>
       </div>
     </Header>
