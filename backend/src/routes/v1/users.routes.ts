@@ -7,6 +7,7 @@ import {
   accessTokenValidator,
   changePasswordValidator,
   checkTokenValidator,
+  deleteUserValidator,
   followUserValidator,
   forgotPasswordValidator,
   getAllUserValidator,
@@ -129,6 +130,15 @@ userRouter.delete('/unfollow/:id', wrapRequestHandler(requireLoginMiddleware), u
 userRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), getAllUserValidator, wrapRequestHandler(userController.getAllUser))
 
 /**
+ * Description: Delete user by admin
+ * Path: '/:id'
+ * Method: DELETE
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
+userRouter.delete('/:id', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), deleteUserValidator, wrapRequestHandler(userController.delete))
+
+/**
  * Description: Get user profile
  * Path: /:id/profile
  * Method: GET
@@ -174,16 +184,6 @@ userRouter.post('/@me/avatar', wrapRequestHandler(requireLoginMiddleware), singl
  */
 
 userRouter.post('/@me/thumbnail', wrapRequestHandler(requireLoginMiddleware), singleImageUpload, wrapRequestHandler(userController.uploadThumbnail))
-
-/**
- * Description: Search user with name, return 10 matched users
- * Path: /
- * Method: GET
- * Body:
- * param: { userName: string }
- */
-
-userRouter.get('/@me/profile', wrapRequestHandler(userController.search))
 
 /**
  * Description: Delete user when user request user from section client

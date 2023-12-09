@@ -241,6 +241,11 @@ class UserService {
     return result
   }
 
+  async deleteUser(payload: ParamsDictionary) {
+    const { id } = payload
+    await databaseService.users.deleteOne({ _id: new ObjectId(id) })
+  }
+
   async follow(user: AuthUser, payload: ParamsDictionary) {
     const { id } = payload
 
@@ -319,8 +324,6 @@ class UserService {
     }
     return userInfo
   }
-
-  
 }
 
 const userServices = new UserService()

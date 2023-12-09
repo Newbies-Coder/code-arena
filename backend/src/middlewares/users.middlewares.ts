@@ -385,6 +385,28 @@ export const getAllUserValidator = validate(
   )
 )
 
+export const deleteUserValidator = validate(
+  checkSchema(
+    {
+      id: {
+        custom: {
+          options: async (value) => {
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID,
+                statusCode: StatusCodes.NOT_FOUND
+              })
+            }
+
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
 // Validation change password feature
 export const changePasswordValidator = validate(
   checkSchema(

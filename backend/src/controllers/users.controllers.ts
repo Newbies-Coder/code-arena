@@ -98,10 +98,8 @@ const userController = {
     // Message register successfully!
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UPDATE_USER)
   },
-  search: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.SEARCH_USER)
-  },
   delete: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    await userServices.deleteUser(req.params)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_USER)
   },
   deleteManyUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
