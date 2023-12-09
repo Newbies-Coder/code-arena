@@ -245,7 +245,15 @@ class UserService {
 
   async deleteUser(payload: ParamsDictionary) {
     const { id } = payload
-    await databaseService.users.deleteOne({ _id: new ObjectId(id) })
+    await databaseService.users.updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $set: {
+          _destroy: true
+        }
+      },
+      { upsert: false }
+    )
   }
 
   async follow(user: AuthUser, payload: ParamsDictionary) {
