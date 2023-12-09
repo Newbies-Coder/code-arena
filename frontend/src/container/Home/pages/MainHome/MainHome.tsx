@@ -28,6 +28,18 @@ const MainHome = () => {
                     <SliderItem />
                   </div>
                   <p className="pt-10 font-popins lg:text-3xl text-white xs:text-base">Popular Courses</p>
+                  <div className="xs:mx-2 ">
+                    <SliderItem />
+                  </div>
+                  <div className="xs:mx-2 ">
+                    <SliderItem />
+                  </div>
+                  <div className="xs:mx-2 ">
+                    <SliderItem />
+                  </div>
+                  <div className="xs:mx-2 ">
+                    <SliderItem />
+                  </div>
                 </div>
               </Content>
             </Col>

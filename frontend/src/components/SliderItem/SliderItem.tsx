@@ -57,7 +57,7 @@ const SliderItem = () => {
           <Card
             hoverable
             className="border-2 bg-blue-900 border-gray-opacity w-56 hover:border-gray-500"
-            style={{ width: '100%', marginLeft: '4px', marginRight: '4px', height: '100%' }}
+            style={{ width: '100%', height: '100%' }}
             bodyStyle={{ height: '100%', padding: '20px' }}
           >
             <img src={course.bgImage} alt="" className="relative rounded-2xl object-cover h-40 w-full" />

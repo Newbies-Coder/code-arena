@@ -8,6 +8,7 @@ import { Provider } from 'react-redux'
 import { store } from '@redux/config'
 import { ConfigProvider } from 'antd'
 import App from './App'
+import MainDetail from './container/Detail/pages/MainDetail'
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 export const history: any = createBrowserHistory()
 
@@ -34,6 +35,7 @@ root.render(
         }}
       >
         <App />
+        {/* <MainDetail /> */}
       </ConfigProvider>
     </HistoryBrowserRouter>
   </Provider>,

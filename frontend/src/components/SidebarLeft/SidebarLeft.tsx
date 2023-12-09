@@ -13,7 +13,7 @@ const SidebarLeft = () => {
 
   return (
     <Sider
-      className="sider-left mt-16 h-screen left-0 border-r lg:block z-10"
+      className="sider-left mt-16 h-screen left-0 border-r lg:block z-10 overflow-y-auto"
       style={{
         position: 'fixed',
         background: '#0e1820',
@@ -41,7 +41,7 @@ const SidebarLeft = () => {
         </div>
         <div>
           <ul>
-            {friendList.map((friend, index) => (
+            {friendList.map((friend) => (
               <li className="mx-0 mt-2" key={friend.key}>
                 <Card
                   size="small"
@@ -53,7 +53,7 @@ const SidebarLeft = () => {
                     <Avatar size={40} className="flex justify-center items-center bg-gray-300">
                       <UserIcon />
                     </Avatar>
-                    <div className="pl-4">
+                    <div className="pl-8">
                       <p className="m-0 text-white font-popins">{friend.name}</p>
                       <span className="text-gray-opacity">{friend.status}</span>
                     </div>

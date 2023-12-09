@@ -1,69 +1,32 @@
-// import React, { useState } from 'react';
-// import {
-//   MenuFoldOutlined,
-//   MenuUnfoldOutlined,
-//   UploadOutlined,
-//   UserOutlined,
-//   VideoCameraOutlined,
-// } from '@ant-design/icons';
-// const MainDetail = () => {
-//   const [collapsed, setCollapsed] = useState(false);
-//   const {
-//     token: { colorBgContainer },
-//   } = theme.useToken();
+import { Col, Layout, Row, theme } from 'antd'
+import Sider from 'antd/es/layout/Sider'
+import { Content, Header } from 'antd/es/layout/layout'
+const MainDetail = () => {
+  return (
+    // <Layout className="min-h-screen">
+    //   <Sider style={{ background: '#252E38' }}></Sider>
+    //   <Layout>
+    //     <Header className="fixed top-0 w-full bg-blue-900 "></Header>
+    //     <Layout>
+    //       <Content className="w-full overflow-y-auto bg-gray-600"></Content>
+    //     </Layout>
+    //   </Layout>
+    // </Layout>
+    <Layout className="min-h-screen">
+      <Row className="min-h-screen">
+        <Col xl={{ span: 2 }}>
+          <Sider style={{ background: '#252E38' }}></Sider>
+        </Col>
+        <Col>
+          <Header className="fixed top-0 w-full bg-blue-900"></Header>
+          <Row>
+            <Content className="w-full overflow-y-auto bg-gray-600"></Content>
+          </Row>
+        </Col>
+      </Row>
+      <Sider style={{ background: '#252E38' }}></Sider>
+    </Layout>
+  )
+}
 
-//   return  <Layout>
-//   <Sider trigger={null} collapsible collapsed={collapsed}>
-//     <div className="demo-logo-vertical" />
-//     <Menu
-//       theme="dark"
-//       mode="inline"
-//       defaultSelectedKeys={['1']}
-//       items={[
-//         {
-//           key: '1',
-//           icon: <UserOutlined />,
-//           label: 'nav 1',
-//         },
-//         {
-//           key: '2',
-//           icon: <VideoCameraOutlined />,
-//           label: 'nav 2',
-//         },
-//         {
-//           key: '3',
-//           icon: <UploadOutlined />,
-//           label: 'nav 3',
-//         },
-//       ]}
-//     />
-//   </Sider>
-//   <Layout>
-//     <Header style={{ padding: 0, background: colorBgContainer }}>
-//       <Button
-//         type="text"
-//         icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-//         onClick={() => setCollapsed(!collapsed)}
-//         style={{
-//           fontSize: '16px',
-//           width: 64,
-//           height: 64,
-//         }}
-//       />
-//     </Header>
-//     <Content
-//       style={{
-//         margin: '24px 16px',
-//         padding: 24,
-//         minHeight: 280,
-//         background: colorBgContainer,
-//       }}
-//     >
-//       Content
-//     </Content>
-//   </Layout>
-// </Layout>
-// );
-// }
-
-// export default MainDetail
+export default MainDetail
