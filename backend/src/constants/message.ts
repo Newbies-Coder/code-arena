@@ -122,7 +122,8 @@ export const VALIDATION_MESSAGES = {
       USER_ID_CAN_NOT_BE_EMPTY: 'User id cannot be empty',
       USER_NOT_LOGIN: 'You must logged in to continue',
       USER_NOT_ROLE_NOT_SATISFIED: 'You don not have the right role to access this resources',
-      USER_ID_IS_INVALID: 'User id is invalid'
+      USER_ID_IS_INVALID: 'User id is invalid',
+      USERNAME_MUST_BE_STRING: 'Username must be a string'
     },
     LOGIN: {
       EMAIL_IS_REQUIRED: 'Email is required',

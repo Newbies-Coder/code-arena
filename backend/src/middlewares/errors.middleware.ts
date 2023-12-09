@@ -8,6 +8,8 @@ export const defaultErrorHandler = (err: any, req: Request, res: Response, next:
     if (err instanceof ErrorWithStatus) {
       return res.status(err.statusCode).json(omit(err, ['statusCode']))
     }
+    // Print out stacktrace to find bug easier
+    console.error(err)
     const finalError: any = {}
     Object.getOwnPropertyNames(err).forEach((key) => {
       if (

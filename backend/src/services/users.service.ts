@@ -20,6 +20,7 @@ import Follow from '~/models/schemas/Follow.schema'
 import { AuthUser } from '~/@types/auth.type'
 import _ from 'lodash'
 import cloudinaryService from '~/services/cloudinary.service'
+
 class UserService {
   async validateEmailAccessibility(email: string) {
     const user = await databaseService.users.findOne({ email })
@@ -218,9 +219,11 @@ class UserService {
   async getAllUser(payload: ParsedUrlQuery) {
     const pageIndex = Number(payload.pageIndex)
     const pageSize = Number(payload.pageSize)
+    const query = String(payload.query ?? ' ')
 
+    // TODO: Use text search index
     const users = await databaseService.users
-      .find()
+      .find({ username: { $regex: query } })
       .limit(pageSize)
       .skip((pageIndex - 1) * pageSize)
       .toArray()
@@ -228,7 +231,7 @@ class UserService {
     // TODO: Make something like private attributes const in UserType
     const filteredUsers = _.map(users, (v) => _.omit(v, ['password', 'created_at', 'updated_at', 'email', 'phone', 'forgot_password_token', 'verify', '_destroy', 'password_change_at']))
 
-    const result: PaginationType<unknown> = {
+    const result: PaginationType<Partial<User>> = {
       items: filteredUsers,
       pageIndex: pageIndex,
       pageSize: pageSize,
@@ -306,6 +309,7 @@ class UserService {
     }
     return user
   }
+
   async checkToken(payload: InfoTokenType) {
     let { iat, exp, ...item } = payload
     let userInfo = {
@@ -315,6 +319,8 @@ class UserService {
     }
     return userInfo
   }
+
+  
 }
 
 const userServices = new UserService()

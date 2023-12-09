@@ -123,6 +123,7 @@ userRouter.delete('/unfollow/:id', wrapRequestHandler(requireLoginMiddleware), u
  * Path: '/'
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
+ * Params: { pageIndex: number, pageSize: number, query: string }
  */
 
 userRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), getAllUserValidator, wrapRequestHandler(userController.getAllUser))
