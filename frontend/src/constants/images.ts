@@ -13,6 +13,12 @@ import lockIcon from '@assets/images/svg/lock.svg'
 import userIcon from '@assets/images/svg/user.svg'
 import noAvatarImage from '@assets/images/svg/no-image.svg'
 import Google from '@assets/images/svg/google.svg'
+import Flag from '@assets/images/svg/flag.svg'
+import Gold from '@assets/images/svg/gold.svg'
+import LogoText from '@assets/images/svg/logo.svg'
+import First from '@assets/images/svg/first.svg'
+import Second from '@assets/images/svg/second.svg'
+import Third from '@assets/images/svg/third.svg'
 
 export const LOGO = {
   APP_LOGO: Logo,
@@ -54,4 +60,13 @@ export const REGISTER_ICON = {
 
 export const RESULT_ICON = {
   SUCCESSFULY: ResetSuccesfully,
+}
+
+export const HOME_ICON = {
+  FLAG: Flag,
+  GOLD: Gold,
+  LOGO_TEXT: LogoText,
+  FIRST: First,
+  SECOND: Second,
+  THIRD: Third,
 }

@@ -8,7 +8,7 @@ const ForgotPasswordPage = React.lazy(() => import('@container/Auth/pages/Forgot
 const NewPasswordPage = React.lazy(() => import('@container/Auth/pages/NewPassword'))
 const VerificationPage = React.lazy(() => import('@container/Auth/pages/Verification'))
 const CongratulationPage = React.lazy(() => import('@components/Congratulation'))
-const PasswordResetSuccessPage = React.lazy(() => import('@container/Auth/pages/ForgotPassword'))
+const PasswordResetSuccessPage = React.lazy(() => import('@components/PasswordCongratulation'))
 const NotFoundPage = React.lazy(() => import('@components/NotFound'))
 
 const publicRoute = [
