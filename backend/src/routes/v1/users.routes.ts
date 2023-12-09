@@ -2,10 +2,13 @@ import { Router } from 'express'
 import { UserRole } from '~/constants/enums'
 import userController from '~/controllers/users.controllers'
 import { requireLoginMiddleware, requireRoleMiddleware } from '~/middlewares/auth.middlewares'
-import { uploadFile } from '~/middlewares/uploadFile.middleware'
+import { objectIdValidator, paginationValidator } from '~/middlewares/commons.middleware'
+import { singleImageUpload } from '~/middlewares/uploadFile.middleware'
 import {
   changePasswordValidator,
   checkTokenValidator,
+  deleteManyUserValidator,
+  insertMeBlockedUserValidator,
   favoriteValidator,
   followUserValidator,
   forgotPasswordValidator,
@@ -126,9 +129,19 @@ userRouter.delete('/unfollow/:id', wrapRequestHandler(requireLoginMiddleware), u
  * Path: '/'
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
+ * Params: { pageIndex: number, pageSize: number, query: string }
  */
 
-userRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), getAllUserValidator, wrapRequestHandler(userController.getAllUser))
+userRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), paginationValidator, getAllUserValidator, wrapRequestHandler(userController.getAllUser))
+
+/**
+ * Description: Delete user by admin
+ * Path: '/:id'
+ * Method: DELETE
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
+userRouter.delete('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), deleteManyUserValidator, wrapRequestHandler(userController.deleteManyUser))
 
 /**
  * Description: Get user profile
@@ -160,40 +173,51 @@ userRouter.put('/@me/profile', wrapRequestHandler(requireLoginMiddleware), updat
 
 /**
  * Description: Upload avatar
+ * Path: /
+ * Method: POST
+ * Description: Upload avatar
  * Path: /@me/avatar
  * Method: POST
  * Body:
  */
 
-userRouter.post('/@me/avatar', wrapRequestHandler(requireLoginMiddleware), uploadFile.single('image'), wrapRequestHandler(userController.updateMeAvatar))
+userRouter.post('/@me/avatar', wrapRequestHandler(requireLoginMiddleware), singleImageUpload, wrapRequestHandler(userController.updateMeAvatar))
 
 /**
  * Description: Upload thumbnail
  * Path: /@me/thumbnail
  * Method: POST
- * Body:
  */
 
-userRouter.post('/@me/thumbnail', wrapRequestHandler(userController.uploadThumbnail))
+userRouter.post('/@me/thumbnail', wrapRequestHandler(requireLoginMiddleware), singleImageUpload, wrapRequestHandler(userController.uploadThumbnail))
 
 /**
- * Description: Search user with name, return 10 matched users
- * Path: /
+ * Description: Get blocked user list
+ * Path: /@me/profile
  * Method: GET
- * Body:
- * param: { userName: string }
- */
+ * Header: { Authorization: Bearer <access_token> }
+ * Params: { pageIndex: number, pageSize: number }
+ **/
 
-userRouter.get('/@me/profile', wrapRequestHandler(userController.search))
+userRouter.get('/@me/blocked', paginationValidator, wrapRequestHandler(requireLoginMiddleware), wrapRequestHandler(userController.getMeBlockedUsers))
 
 /**
- * Description: Delete user when user request user from section client
- * Path: /:id
+ * Description: Insert blocked user list
+ * Path: /@me/profile
+ * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ **/
+
+userRouter.post('/@me/blocked', wrapRequestHandler(requireLoginMiddleware), insertMeBlockedUserValidator, wrapRequestHandler(userController.insertMeBlockedUser))
+
+/**
+ * Description: Delete blocked user list aka unblock
+ * Path: /@me/profile
  * Method: DELETE
  * Header: { Authorization: Bearer <access_token> }
- */
+ **/
 
-userRouter.delete('/:id', wrapRequestHandler(userController.delete))
+userRouter.delete('/@me/blocked/:id', wrapRequestHandler(requireLoginMiddleware), objectIdValidator, wrapRequestHandler(userController.deleteMeBlockedUser))
 
 /**
  * Description: Delete a lot of user when user is admin send request list user want to delete
@@ -244,35 +268,6 @@ userRouter.post('/favorite', wrapRequestHandler(requireLoginMiddleware), favorit
  */
 
 userRouter.delete('/favorite/:id', wrapRequestHandler(requireLoginMiddleware), removeFavoriteValidator, wrapRequestHandler(userController.removeUserFavorite))
-
-/**
- * Description: Get list user block
- * Path: /block
- * Method: GET
- * Header: { Authorization: Bearer <access_token> }
- */
-
-userRouter.get('/block', wrapRequestHandler(userController.blocks))
-
-/**
- * Description: Block user
- * Path: /block
- * Method: POST
- * Header: { Authorization: Bearer <access_token> }
- * Body: {id: string, blockid: string}
- */
-
-userRouter.post('/block', wrapRequestHandler(userController.insertBlocks))
-
-/**
- * Description: Unblock user
- * Path: /unblock
- * Method: POST
- * Header: { Authorization: Bearer <access_token> }
- * Body: {id: string, unblockid: string}
- */
-
-userRouter.post('/unblock', wrapRequestHandler(userController.unblock))
 
 /**
  * Description: Test token

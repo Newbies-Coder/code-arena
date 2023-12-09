@@ -47,3 +47,10 @@ export type UserResponseType = {
 export type UploadAvatarType = {
   avatarUrl: string
 }
+
+export type PaginationType<T> = {
+  items: T[]
+  pageIndex: number
+  pageSize: number
+  totalRow: number
+}
