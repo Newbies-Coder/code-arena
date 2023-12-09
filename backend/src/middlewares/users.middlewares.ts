@@ -366,6 +366,37 @@ export const getAllUserValidator = validate(
   )
 )
 
+export const deleteManyUserValidator = validate(
+  checkSchema(
+    {
+      id: {
+        custom: {
+          options: async (value: string | string[]) => {
+            if (value instanceof Array) {
+              if (!value.every((item) => ObjectId.isValid(item))) {
+                throw new ErrorWithStatus({
+                  message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID,
+                  statusCode: StatusCodes.BAD_REQUEST
+                })
+              }
+            } else {
+              if (!ObjectId.isValid(value)) {
+                throw new ErrorWithStatus({
+                  message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID,
+                  statusCode: StatusCodes.BAD_REQUEST
+                })
+              }
+            }
+
+            return true
+          }
+        }
+      }
+    },
+    ['query']
+  )
+)
+
 export const insertMeBlockedUserValidator = validate(
   checkSchema(
     {

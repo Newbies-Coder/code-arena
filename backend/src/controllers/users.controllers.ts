@@ -116,12 +116,8 @@ const userController = {
     // Message register successfully!
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_BLOCKED_USER)
   },
-
-  delete: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    await userServices.deleteUser(req.params)
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_USER)
-  },
   deleteManyUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    await userServices.deleteManyUser(req.query)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_MANY_USER)
   },
   getUsersByRole: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {

@@ -256,6 +256,33 @@ class UserService {
     )
   }
 
+  async deleteManyUser(payload: ParsedQs) {
+    const { id } = payload
+    let deleteIds: ObjectId[]
+
+    if (id instanceof Array) {
+      deleteIds = id.map((item) => new ObjectId(item))
+    } else if (id instanceof String) {
+      deleteIds = [new ObjectId(id as string)]
+    }
+
+    console.log(id)
+
+    await databaseService.users.updateMany(
+      {
+        _id: {
+          $in: deleteIds
+        }
+      },
+      {
+        $set: {
+          _destroy: true
+        }
+      },
+      { upsert: false }
+    )
+  }
+
   async follow(user: AuthUser, payload: ParamsDictionary) {
     const { id } = payload
 

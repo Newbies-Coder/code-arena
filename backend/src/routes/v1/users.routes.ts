@@ -8,6 +8,7 @@ import {
   accessTokenValidator,
   changePasswordValidator,
   checkTokenValidator,
+  deleteManyUserValidator,
   followUserValidator,
   forgotPasswordValidator,
   getAllUserValidator,
@@ -137,7 +138,7 @@ userRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), p
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.delete('/:id', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), objectIdValidator, wrapRequestHandler(userController.delete))
+userRouter.delete('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), deleteManyUserValidator, wrapRequestHandler(userController.deleteManyUser))
 
 /**
  * Description: Get user profile
@@ -215,15 +216,6 @@ userRouter.post('/@me/blocked', wrapRequestHandler(requireLoginMiddleware), inse
 userRouter.delete('/@me/blocked/:id', wrapRequestHandler(requireLoginMiddleware), objectIdValidator, wrapRequestHandler(userController.deleteMeBlockedUser))
 
 /**
- * Description: Delete user when user request user from section client
- * Path: /:id
- * Method: DELETE
- * Header: { Authorization: Bearer <access_token> }
- */
-
-userRouter.delete('/:id', wrapRequestHandler(userController.delete))
-
-/**
  * Description: Delete a lot of user when user is admin send request list user want to delete
  * Path: /users
  * Method: DELETE
@@ -272,35 +264,6 @@ userRouter.post('/favorite', wrapRequestHandler(userController.insertUserFavorit
  */
 
 userRouter.delete('/favorite/:id', wrapRequestHandler(userController.removeUserFavorite))
-
-/**
- * Description: Get list user block
- * Path: /block
- * Method: GET
- * Header: { Authorization: Bearer <access_token> }
- */
-
-userRouter.get('/block', wrapRequestHandler(userController.blocks))
-
-/**
- * Description: Block user
- * Path: /block
- * Method: POST
- * Header: { Authorization: Bearer <access_token> }
- * Body: {id: string, blockid: string}
- */
-
-userRouter.post('/block', wrapRequestHandler(userController.insertBlocks))
-
-/**
- * Description: Unblock user
- * Path: /unblock
- * Method: POST
- * Header: { Authorization: Bearer <access_token> }
- * Body: {id: string, unblockid: string}
- */
-
-userRouter.post('/unblock', wrapRequestHandler(userController.unblock))
 
 /**
  * Description: Test token
