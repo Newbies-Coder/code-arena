@@ -1,5 +1,21 @@
-import { CourseType, FriendType } from '@/@types/course'
-import { BackendIcon, DesignIcon, FrontendIcon } from '@/components/Icons'
+import { CourseType, FriendType, MenuType } from '@/@types/home'
+import {
+  BackendIcon,
+  CyanLineIcon,
+  DesignIcon,
+  FrontendIcon,
+  HomeIcon,
+  LibraryIcon,
+  NewsIcon,
+  PinkLineIcon,
+  PurpleLineIcon,
+  SelectedHomeIcon,
+  SelectedLibraryIcon,
+  SelectedNewsIcon,
+  SelectedStoreIcon,
+  StoreIcon,
+  YellowLineIcon,
+} from '@/components/Icons'
 import { BG } from '@/constants/images'
 
 export const courseList: CourseType[] = [
@@ -49,4 +65,43 @@ export const friendList: FriendType[] = [
   { key: 6, name: 'Anne Couture', status: 'online' },
   { key: 7, name: 'Anne Couture', status: 'online' },
   { key: 8, name: 'Anne Couture', status: 'online' },
+]
+
+export const menuItems: MenuType[] = [
+  {
+    key: 0,
+    label: 'Home',
+    Icon: HomeIcon,
+    IconActive: SelectedHomeIcon,
+    LineIcon: CyanLineIcon,
+    color: 'bg-teal-400',
+    active: true,
+  },
+  {
+    key: 1,
+    label: 'News',
+    Icon: NewsIcon,
+    IconActive: SelectedNewsIcon,
+    LineIcon: PinkLineIcon,
+    color: 'bg-pink-600',
+    active: true,
+  },
+  {
+    key: 2,
+    label: 'Library',
+    Icon: LibraryIcon,
+    IconActive: SelectedLibraryIcon,
+    LineIcon: YellowLineIcon,
+    color: 'bg-yellow-500',
+    active: true,
+  },
+  {
+    key: 3,
+    label: 'Store',
+    Icon: StoreIcon,
+    IconActive: SelectedStoreIcon,
+    LineIcon: PurpleLineIcon,
+    color: 'bg-purple-700',
+    active: true,
+  },
 ]

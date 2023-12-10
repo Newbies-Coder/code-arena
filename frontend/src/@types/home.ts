@@ -11,3 +11,13 @@ export type FriendType = {
   name: string
   status: string
 }
+
+export type MenuType = {
+  key: number
+  label: string
+  Icon: React.ElementType
+  IconActive: React.ElementType
+  LineIcon: React.ElementType
+  color: string
+  active: boolean
+}
