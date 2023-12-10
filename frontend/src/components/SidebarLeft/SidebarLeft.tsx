@@ -1,20 +1,10 @@
-import { Avatar, Button, Card, Col, Menu, MenuTheme, Row } from 'antd'
-import {
-  CyanLineIcon,
-  HomeIcon,
-  LibraryIcon,
-  NewsIcon,
-  SelectedHomeIcon,
-  SettingIcon,
-  StoreIcon,
-  UserIcon,
-} from '../Icons'
+import { Avatar, Card, Menu } from 'antd'
+import { SettingIcon } from '../Icons'
 import Sider from 'antd/es/layout/Sider'
 import { useState } from 'react'
 import { friendList, menuItems } from '@/mocks/home.data'
 import './style.scss'
 import { MenuType } from '@/@types/home'
-import { log } from 'console'
 
 const SidebarLeft = () => {
   const [visible, setVisible] = useState<MenuType[]>(menuItems)
