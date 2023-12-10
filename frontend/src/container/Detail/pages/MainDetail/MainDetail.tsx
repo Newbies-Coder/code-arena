@@ -2,10 +2,19 @@ import { CodeArenaIcon, ForumIcon, HomeIcon, LettersIcon, NoNotiIcon, RankIcon, 
 import { HOME_ICON, LOGO } from '@/constants/images'
 import { Button, Col, Dropdown, Layout, MenuProps, Popover, Row, Space, message } from 'antd'
 import Sider from 'antd/es/layout/Sider'
-import { Content, Header } from 'antd/es/layout/layout'
-import AvatarProfile from '../components/AvatarProfile'
-import { ArrowLeftOutlined, BulbOutlined, DownOutlined } from '@ant-design/icons'
+import { Content, Footer, Header } from 'antd/es/layout/layout'
+import AvatarProfile from '../../components/AvatarProfile'
+import {
+  ArrowLeftOutlined,
+  BorderOutlined,
+  BulbOutlined,
+  DownOutlined,
+  PlayCircleOutlined,
+  SyncOutlined,
+} from '@ant-design/icons'
 import { useState } from 'react'
+import './style.scss'
+import CustomedButton from '../../components/CustomedButton'
 
 const onClick: MenuProps['onClick'] = ({ key }) => {
   message.info(`Click on item ${key}`)
@@ -77,7 +86,7 @@ const MainDetail = () => {
         </ul>
       </Sider>
       <Layout>
-        {/* truyền props */}
+        {/* truyền props? */}
         <Header className="fixed h-16 top-0 w-full bg-blue-900 z-10 px-8">
           <div className="flex justify-between items-center h-full">
             <CodeArenaIcon className="pl-14" />
@@ -129,7 +138,52 @@ const MainDetail = () => {
         <Content>
           <Row className="w-full h-full flex justify-center mt-16">
             <Col xl={10} className="bg-gray-300 w-1/2 min-h-screen"></Col>
-            <Col xl={14} className="bg-cool-gray-800 w-1/2 min-h-screen"></Col>
+            <Col xl={14} className="bg-cool-gray-800 w-1/2 min-h-screen">
+              <Layout className="min-h-screen">
+                <Header className="fixed w-[58.5%] border-b-4 border-blue-900 bg-cool-gray-800 px-4">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <Dropdown
+                        menu={{ items: goItems }}
+                        placement="bottomRight"
+                        className="bg-cool-gray-700 py-2 px-6 rounded-lg text-teal-400 font-popins"
+                      >
+                        <a onClick={(e) => e.preventDefault()}>
+                          <Space>
+                            GO
+                            <DownOutlined />
+                          </Space>
+                        </a>
+                      </Dropdown>
+                      <Dropdown
+                        menu={{ items: goItems }}
+                        placement="bottomRight"
+                        className="bg-cool-gray-700 py-2 px-6 rounded-lg ml-4 text-teal-400 font-popins"
+                      >
+                        <a onClick={(e) => e.preventDefault()}>
+                          <Space>
+                            THEME
+                            <DownOutlined />
+                          </Space>
+                        </a>
+                      </Dropdown>
+                    </div>
+                    <div>
+                      <Button className="coding-header-button p-0 m-0 h-6 w-6 rounded-full border-0 mr-7">
+                        <SyncOutlined className="text-white text-xl" />
+                      </Button>
+                      <Button className="coding-header-button p-0 m-0 h-6 w-6 rounded-full border-0">
+                        <BorderOutlined className="text-white text-xl" />
+                      </Button>
+                    </div>
+                  </div>
+                </Header>
+                <Content className="bg-yellow-50"></Content>
+                <Footer className="fixed bg-cool-gray-800 bottom-0 w-full h-56">
+                  {<CustomedButton label="RUN CODE" Icon={PlayCircleOutlined} className="text-2xl" />}
+                </Footer>
+              </Layout>
+            </Col>
           </Row>
         </Content>
       </Layout>

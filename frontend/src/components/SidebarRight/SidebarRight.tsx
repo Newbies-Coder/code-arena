@@ -85,7 +85,7 @@ const SidebarRight = () => {
                   <div className="relative w-14">
                     <Button
                       className="absolute h-4 p-0 ml-8 w-full top-0 border-gray-opacity text-[10px] text-yellow-200"
-                      icon={<UserAddOutlined />}
+                      icon={<UserAddOutlined style={{ height: 30, width: 30 }} />}
                     >
                       Follow
                     </Button>
