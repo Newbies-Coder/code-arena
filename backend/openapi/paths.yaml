@@ -23,6 +23,8 @@ tags:
     description: Operations about authentication
   - name: user
     description: Operations about user
+  - name: banner
+    description: Operations about banner
 
 paths:
   /auth/facebook:
@@ -1141,6 +1143,50 @@ paths:
                   message:
                     example: You are not currently logged in to the system!
                   data:
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /banners:
+    get:
+      tags:
+        - banner
+      summary: Get all banner into the system
+      description: Obtain all banners in the system.
+      operationId: getAllBanner
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            example: 0
+        - name: items
+          in: query
+          description: Number of users on a page
+          required: false
+          schema:
+            type: integer
+            example: 10
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Get all user successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Get all user successfully
+                  data:
+                    type: string
                     example: ''
                   dateTime:
                     type: string
