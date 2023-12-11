@@ -45,3 +45,27 @@ export const singleImageUpload = (req: Request, res: Response, next: NextFunctio
     next()
   })
 }
+
+export const multiImageUpload = (req: Request, res: Response, next: NextFunction) => {
+  uploadFile.array('image', 4)(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      next(
+        new ErrorWithStatus({
+          statusCode: StatusCodes.BAD_REQUEST,
+          message: VALIDATION_MESSAGES.UPLOAD.IMAGE.MAX_IMAGE_UPLOAD
+        })
+      )
+    }
+
+    if (err instanceof Error) {
+      next(
+        new ErrorWithStatus({
+          statusCode: StatusCodes.BAD_REQUEST,
+          message: VALIDATION_MESSAGES.UPLOAD.IMAGE.INVALID_IMAGE_EXTENSION
+        })
+      )
+    }
+
+    next()
+  })
+}

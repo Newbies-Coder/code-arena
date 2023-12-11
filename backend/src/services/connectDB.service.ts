@@ -1,6 +1,7 @@
 import { Db, MongoClient, ServerApiVersion, Collection } from 'mongodb'
 import { env } from '~/config/environment.config'
 import { DATABASE_MESSAGE } from '~/constants/message'
+import Banner from '~/models/schemas/Banner.schema'
 import BlockedUser from '~/models/schemas/BlockedUser.schema'
 import CloseFriends from '~/models/schemas/CloseFriends'
 import Follow from '~/models/schemas/Follow.schema'
@@ -60,6 +61,11 @@ class DatabaseServices {
   // Get collection close friends
   get closeFriends(): Collection<CloseFriends> {
     return this.db.collection(env.database.main.collection.close_friends as string)
+  }
+
+  // Get collection banners
+  get banners(): Collection<Banner> {
+    return this.db.collection(env.database.main.collection.banners)
   }
 }
 
