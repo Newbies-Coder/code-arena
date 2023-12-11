@@ -6,7 +6,7 @@ import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import userServices from '~/services/users.service'
 import validate from '~/utils/validate'
 
-export const getBannersValidator = validate(
+export const getBannerWithIdValidator = validate(
   checkSchema(
     {
       id: {
@@ -31,6 +31,7 @@ export const getBannersWithUserIdValidator = validate(
     {
       userId: {
         trim: true,
+        optional: true,
         notEmpty: {
           errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
         },
@@ -54,6 +55,25 @@ export const getBannersWithUserIdValidator = validate(
 
             return true
           }
+        }
+      },
+      pageIndex: {
+        trim: true,
+        isInt: {
+          options: {
+            min: 1
+          },
+          errorMessage: VALIDATION_MESSAGES.PAGINATION.PAGE_CAN_NOT_LESS_THAN_ZERO
+        }
+      },
+      pageSize: {
+        trim: true,
+        isInt: {
+          options: {
+            min: 1,
+            max: 100
+          },
+          errorMessage: VALIDATION_MESSAGES.PAGINATION.ITEMS_IS_NOT_IN_RANGE
         }
       }
     },
