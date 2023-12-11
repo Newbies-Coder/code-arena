@@ -2,8 +2,7 @@ import { Router } from 'express'
 import { UserRole } from '~/constants/enums'
 import bannerController from '~/controllers/banner.controllers'
 import { requireRoleMiddleware } from '~/middlewares/auth.middlewares'
-import { getBannersValidator } from '~/middlewares/banners.middlewares'
-import { multiImageUpload } from '~/middlewares/uploadFile.middleware'
+import { getBannersValidator, getBannersWithUserIdValidator } from '~/middlewares/banners.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
 
 const bannerRouter = Router()
@@ -17,6 +16,16 @@ const bannerRouter = Router()
  */
 
 bannerRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), wrapRequestHandler(bannerController.getAll))
+
+/**
+ * Description: Get list banners by user id
+ * Path: /
+ * Method: GET
+ * Header: { Authorization: Bearer <access_token> }
+ * Query: {userId: string}
+ */
+
+bannerRouter.get('/find', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), getBannersWithUserIdValidator, wrapRequestHandler(bannerController.getAll))
 
 /**
  * Description: Get list banners

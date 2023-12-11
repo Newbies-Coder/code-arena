@@ -100,6 +100,7 @@ export const RESULT_RESPONSE_MESSAGES = {
   },
   BANNERS_SUCCESS: {
     GET_ALL: 'Get all banners successfully!',
+    GET_WITH_USER_ID: 'Get banners with user id successfully!',
     INSERT: 'Insert banners successfully!',
     DELETE: 'Delete banners successfully!'
   }

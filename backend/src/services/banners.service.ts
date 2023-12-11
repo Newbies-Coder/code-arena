@@ -37,6 +37,11 @@ class BannersService {
     return await databaseService.banners.find().toArray()
   }
 
+  async getWithUserId(userId: string) {
+    const banners = databaseService.banners.find({ user_id: new ObjectId(userId) })
+    return banners
+  }
+
   async deleteBanner(id: string) {
     const banner = await databaseService.banners.findOne({ _id: new ObjectId(id) })
     if (!banner) {
