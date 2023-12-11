@@ -10,6 +10,9 @@ import { StatusCodes } from 'http-status-codes'
 
 class BannersService {
   async insertBanners({ _id }: AuthUser, slug: string, files: Express.Multer.File[]) {
+    if (files.length === 0) {
+      throw new ErrorWithStatus({ statusCode: StatusCodes.BAD_REQUEST, message: VALIDATION_MESSAGES.BANNER.BANNER_IMAGE_IS_REQUIRED })
+    }
     try {
       const result = await Promise.all(
         files.map(async (file) => {

@@ -251,7 +251,8 @@ export const VALIDATION_MESSAGES = {
   },
   BANNER: {
     BANNER_NOT_FOUND: 'Banner not found',
-    BANNER_ID_INVALID: 'Banner id is invalid'
+    BANNER_ID_INVALID: 'Banner id is invalid',
+    BANNER_IMAGE_IS_REQUIRED: 'Banner image is required'
   }
 } as const
 
