@@ -1,5 +1,8 @@
 import { Router } from 'express'
+import { UserRole } from '~/constants/enums'
 import bannerController from '~/controllers/banner.controllers'
+import { requireRoleMiddleware } from '~/middlewares/auth.middlewares'
+import { multiImageUpload, singleImageUpload } from '~/middlewares/uploadFile.middleware'
 import { wrapRequestHandler } from '~/utils/handler'
 
 const bannerRouter = Router()
@@ -22,7 +25,7 @@ bannerRouter.get('/', wrapRequestHandler(bannerController.getAll))
  * Body: {url: string, user_id: string: slug: string}
  */
 
-bannerRouter.post('/', wrapRequestHandler(bannerController.insert))
+bannerRouter.post('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), multiImageUpload, wrapRequestHandler(bannerController.insert))
 
 /**
  * Description: Remove banner

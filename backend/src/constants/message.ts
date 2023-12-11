@@ -17,7 +17,8 @@ export const DATABASE_MESSAGE = {
     OTP_COLLECTION: 'The table holds otp information in the database.',
     FOLLOW_COLLECTION: 'The table holds follow information in the database.',
     BLOCKED_USER_COLLECTION: 'The table holds user block user information in the database.',
-    CLOSE_FRIENDS_COLLECTION: 'The table holds close friends information in the database.'
+    CLOSE_FRIENDS_COLLECTION: 'The table holds close friends information in the database.',
+    BANNERS_COLLECTION: 'The table holds banners in the database.'
   }
 } as const
 
@@ -117,7 +118,9 @@ export const VALIDATION_MESSAGES = {
   UPLOAD: {
     IMAGE: {
       INVALID_IMAGE_EXTENSION: 'Image extension is invalid',
-      INVALID_IMAGE_SIZE: 'Image is too large'
+      INVALID_IMAGE_SIZE: 'Image is too large',
+      MAX_IMAGE_UPLOAD: 'Upload maximum 4 images',
+      ERROR_INSERT_BANNERS: 'Failed to insert banners'
     }
   },
   USER: {
@@ -255,7 +258,8 @@ export const CLOUDINARY_MESSAGES = {
   CLOUDINARY_SECRET: 'Password to access cloudinary',
   CLOUDINARY_NAME: 'Cloud name of current cloudinary account',
   CLOUDINARY_AVATAR_FOLDER: 'Folder that contain avatar images on cloudinary',
-  CLOUDINARY_THUMBNAIL_FOLDER: 'Folder that contain thumbnail images on cloudinary'
+  CLOUDINARY_THUMBNAIL_FOLDER: 'Folder that contain thumbnail images on cloudinary',
+  CLOUDINARY_BANNER_FOLDER: 'Folder that contain banner images on cloudinary'
 }
 
 export const AUTH_MESSAGES = {
