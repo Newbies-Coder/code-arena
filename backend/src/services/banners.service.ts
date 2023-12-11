@@ -5,6 +5,8 @@ import { VALIDATION_MESSAGES } from '~/constants/message'
 import { databaseService } from './connectDB.service'
 import Banner from '~/models/schemas/Banner.schema'
 import { ObjectId } from 'mongodb'
+import { ErrorWithStatus } from '~/models/errors/Errors.schema'
+import { StatusCodes } from 'http-status-codes'
 
 class BannersService {
   async insertBanners({ _id }: AuthUser, slug: string, files: Express.Multer.File[]) {
@@ -22,6 +24,17 @@ class BannersService {
     } catch (error) {
       throw new Error(VALIDATION_MESSAGES.UPLOAD.IMAGE.ERROR_INSERT_BANNERS)
     }
+  }
+
+  async getAll(id: string) {
+    if (id) {
+      const banner = await databaseService.banners.findOne({ _id: new ObjectId(id) })
+      if (!banner) {
+        throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.BANNER.BANNER_NOT_FOUND })
+      }
+      return banner
+    }
+    return await databaseService.banners.find().toArray()
   }
 }
 

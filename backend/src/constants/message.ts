@@ -120,7 +120,8 @@ export const VALIDATION_MESSAGES = {
       INVALID_IMAGE_EXTENSION: 'Image extension is invalid',
       INVALID_IMAGE_SIZE: 'Image is too large',
       MAX_IMAGE_UPLOAD: 'Upload maximum 4 images',
-      ERROR_INSERT_BANNERS: 'Failed to insert banners'
+      ERROR_INSERT_BANNERS: 'Failed to insert banners',
+      ID_BANNER_IS_INVALID: 'Banner id is invalid'
     }
   },
   USER: {
@@ -246,6 +247,10 @@ export const VALIDATION_MESSAGES = {
   },
   AUTHORIZATION: {
     HEADER_AUTHORIZATION_IS_INVALID: 'Header authorization is invalid'
+  },
+  BANNER: {
+    BANNER_NOT_FOUND: 'Banner not found',
+    BANNER_ID_INVALID: 'Banner id is invalid'
   }
 } as const
 
