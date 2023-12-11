@@ -36,6 +36,15 @@ class BannersService {
     }
     return await databaseService.banners.find().toArray()
   }
+
+  async deleteBanner(id: string) {
+    const banner = await databaseService.banners.findOne({ _id: new ObjectId(id) })
+    if (!banner) {
+      throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.BANNER.BANNER_NOT_FOUND })
+    }
+    await cloudinaryService.deleteImage(banner.url)
+    await databaseService.banners.findOneAndDelete({ _id: new ObjectId(banner._id) })
+  }
 }
 
 const bannersService = new BannersService()
