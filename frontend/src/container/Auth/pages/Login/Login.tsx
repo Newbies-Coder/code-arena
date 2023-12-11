@@ -5,8 +5,35 @@ import { Link } from 'react-router-dom'
 import { inputsLogin, socialMediaLogin } from '@/mocks/auth.data'
 import FormItem from '../../components/FormItem'
 import { SocialMediaType } from '@/@types/form'
+import { useDispatch, useSelector } from 'react-redux'
+import { userState } from '@/@types/user'
+import { useEffect } from 'react'
+import { loginApi } from '@/redux/userReducer/userReducer'
+import { DispathType } from '@/redux/config'
+import { regexEmail } from '@/utils/regex'
+
+const onFinish = (values: any) => {
+  console.log('Success:', values)
+}
+
+const onFinishFailed = (errorInfo: any) => {
+  console.log('Failed:', errorInfo)
+}
+
+const validateEmail = (values: string) => {
+  return regexEmail(values)
+}
 
 const Login = () => {
+  const data = useSelector((state: userState) => state.userLogin)
+  const dispatch: DispathType = useDispatch()
+  useEffect(() => {
+    ;(async () => {
+      const loginData = loginApi({ email: 'ngocuyen@gmail.com', password: 'Leuyen@03' })
+      await dispatch(loginData)
+    })()
+  })
+
   const renderButtonContent = (button: SocialMediaType) => {
     if (button.url) {
       return <img src={button.url} alt={button.alt} className={button.key === 'github' ? 'h-11 w-11' : ''} />
@@ -17,10 +44,11 @@ const Login = () => {
     }
     return null
   }
+
   return (
     <Row className="min-h-screen login ">
-      <Col xs={{ span: 24 }} lg={{ span: 12 }} className="py-8 flex justify-center relative">
-        <div className="mx-4 mt-16 lg:w-[450px]">
+      <Col xs={{ span: 24 }} lg={{ span: 12 }} className="flex justify-center items-center relative">
+        <div className="mx-4 mt-16 pb-16 lg:w-[450px]">
           <Link
             to={'/'}
             className="absolute top-2 left-2 w-14 h-14 rounded-full bg-gray-300 flex justify-center items-center border-none"
@@ -31,7 +59,7 @@ const Login = () => {
           <p className="text-black font-popins text-sm -mt-9 mb-10 text-center font-medium">
             Welcome to the Code Arena free coding learning page!
           </p>
-          <Form name="basic" className="mt-3 w-full">
+          <Form name="basic" className="mt-3 w-full" onFinish={onFinish} onFinishFailed={onFinishFailed}>
             {inputsLogin.map((input, id) => (
               <FormItem
                 key={id}
@@ -65,7 +93,7 @@ const Login = () => {
           <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
             {socialMediaLogin.map((button) => (
               <Col key={button.key} className="gutter-row" span={6}>
-                <Button className="flex justify-center items-center p-0 border-0 h-full w-full social-button">
+                <Button className="flex justify-center items-center p-0 border-0 h-full w-full">
                   {renderButtonContent(button)}
                 </Button>
               </Col>

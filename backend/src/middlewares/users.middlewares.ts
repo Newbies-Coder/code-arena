@@ -176,7 +176,6 @@ export const loginValidator = validate(
                 message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
               })
             }
-            await userServices.validateAccountAccessibility(value)
             return true
           }
         }
@@ -186,7 +185,7 @@ export const loginValidator = validate(
           errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_REQUIRED
         },
         isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT
         },
         isStrongPassword: {
           options: {
@@ -196,12 +195,12 @@ export const loginValidator = validate(
             minNumbers: 1,
             minSymbols: 1
           },
-          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_STRONG
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT
         },
         trim: true,
         escape: true,
         isLength: {
-          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16,
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT,
           options: {
             min: 8,
             max: 16

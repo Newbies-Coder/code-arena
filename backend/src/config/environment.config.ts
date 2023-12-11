@@ -10,7 +10,7 @@ let { REQ_DURATION, REQ_POINT, COOKIES_EXPIRES_IN, SECRET_COOKIE_NAME, PASSWORD_
 let { JWT_SECRET_KEY, JWT_ALGORITHM, JWT_REFRESH_TOKEN_KEY, ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } = JWT_MESSAGES
 let { OTP_EMAIL_ACCOUNT, OTP_EMAIL_PASSWORD, OTP_EMAIL_NAME } = OTP_EMAIL_MESSAGES
 let { MAX_ITEM_PER_PAGE } = REQUEST_QUERY_MESSAGES
-let { CLOUDINARY_KEY, CLOUDINARY_SECRET, CLOUDINARY_NAME, CLOUDINARY_AVATAR_FOLDER, CLOUDINARY_THUMBNAIL_FOLDER } = CLOUDINARY_MESSAGES
+let { CLOUDINARY_KEY, CLOUDINARY_SECRET, CLOUDINARY_NAME, CLOUDINARY_AVATAR_FOLDER, CLOUDINARY_THUMBNAIL_FOLDER, CLOUDINARY_BANNER_FOLDER } = CLOUDINARY_MESSAGES
 let { FACEBOOK, GITHUB, LINKEDIN, GOOGLE } = AUTH_MESSAGES
 let { AUTH_SUCCESS_URL, AUTH_FAIL_URL } = URL_MESSAGES
 
@@ -27,6 +27,7 @@ const envSchema = Joi.object({
   DB_FOLlOW_COLLECTION: Joi.string().required().description(DB_MAIN.FOLLOW_COLLECTION),
   DB_BLOCKED_USER_COLLECTION: Joi.string().required().description(DB_MAIN.BLOCKED_USER_COLLECTION),
   DB_CLOSE_FRIENDS_COLLECTION: Joi.string().required().description(DB_MAIN.CLOSE_FRIENDS_COLLECTION),
+  DB_BANNERS_COLLECTION: Joi.string().required().description(DB_MAIN.BANNERS_COLLECTION),
   DATABASE_USER_LOGS: Joi.string().required().description(DB_LOGS.USERNAME),
   PASSWORD_USER_LOGS: Joi.string().required().description(DB_LOGS.PASSWORD),
   DATABASE_CODE_ARENA: Joi.string().required().description(DB_MAIN.USERNAME),
@@ -51,6 +52,7 @@ const envSchema = Joi.object({
   CLOUDINARY_NAME: Joi.string().required().description(CLOUDINARY_NAME),
   CLOUDINARY_AVATAR_FOLDER: Joi.string().required().description(CLOUDINARY_AVATAR_FOLDER),
   CLOUDINARY_THUMBNAIL_FOLDER: Joi.string().required().description(CLOUDINARY_THUMBNAIL_FOLDER),
+  CLOUDINARY_BANNER_FOLDER: Joi.string().required().description(CLOUDINARY_BANNER_FOLDER),
   FACEBOOK_AUTH_CLIENT_ID: Joi.string().required().description(FACEBOOK.CLIENT_ID),
   FACEBOOK_AUTH_CLIENT_SECRET: Joi.string().required().description(FACEBOOK.CLIENT_SECRET),
   FACEBOOK_AUTH_CALLBACK_URL: Joi.string().required().description(FACEBOOK.CALLBACK_URL),
@@ -99,7 +101,8 @@ export const env = {
         otps: envVars.DB_OTP_COLLECTION,
         follow: envVars.DB_FOLlOW_COLLECTION,
         blocked_user: envVars.DB_BLOCKED_USER_COLLECTION,
-        close_friends: envVars.DB_CLOSE_FRIENDS_COLLECTION
+        close_friends: envVars.DB_CLOSE_FRIENDS_COLLECTION,
+        banners: envVars.DB_BANNERS_COLLECTION
       }
     },
     logs: {
@@ -130,7 +133,8 @@ export const env = {
     key: envVars.CLOUDINARY_KEY,
     cloud_name: envVars.CLOUDINARY_NAME,
     avatar_folder: envVars.CLOUDINARY_AVATAR_FOLDER,
-    thumbnail_folder: envVars.THUMBNAIL_AVATAR_FOLDER
+    thumbnail_folder: envVars.THUMBNAIL_AVATAR_FOLDER,
+    banner_folder: envVars.CLOUDINARY_BANNER_FOLDER
   },
   auth: {
     facebook: {

@@ -11,6 +11,7 @@ export type FormItemPropsType = {
   placeholder: string
   Icon: React.ElementType
   inputType?: string
+  rules?: string
 }
 
 export type SocialMediaType = {

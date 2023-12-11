@@ -1,0 +1,22 @@
+.slick-arrow {
+  &.slick-prev,
+  &.slick-next {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    background-color: #ffffff33;
+    color: black;
+    z-index: 5;
+  }
+  &.slick-prev:hover,
+  &.slick-next:hover {
+    background-color: #ffffff33;
+  }
+}
+
+body {
+  background-color: #0e1820;
+  .ant-layout-sider {
+    width: auto;
+  }
+}

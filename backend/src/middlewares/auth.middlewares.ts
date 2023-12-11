@@ -21,13 +21,17 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
   }
 
   const access_token = tokens[1]
-  const user = await verifyToken({
-    token: access_token,
-    secretOrPublicKey: env.jwt.secret_key
-  })
+  try {
+    const user = await verifyToken({
+      token: access_token,
+      secretOrPublicKey: env.jwt.secret_key
+    })
 
-  req.user = user
-  return next()
+    req.user = user
+    return next()
+  } catch (error) {
+    throw new ErrorWithStatus({ statusCode: StatusCodes.UNAUTHORIZED, message: error.message })
+  }
 }
 
 export const requireLoginMiddleware = async (req: Request, res: Response, next: NextFunction) => {
