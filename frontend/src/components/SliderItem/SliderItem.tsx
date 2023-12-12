@@ -67,7 +67,7 @@ const SliderItem = () => {
               style={{ objectFit: 'cover', height: '200px', width: '100%' }}
             />
             <Button
-              className="absolute z-10 p-0 border-0 flex justify-center items-center bg-gray-300 w-10 h-10 rounded-full top-8 right-8 "
+              className="absolute z-10 p-0 border-0 flex justify-center items-center bg-gray-300 w-10 h-10 rounded-full top-4 right-4 "
               onClick={handleLike}
             >
               {liked ? <HeartFilled className="text-lg text-red-600" /> : <HeartOutlined className="text-lg" />}

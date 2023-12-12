@@ -1,6 +1,6 @@
 import { Header } from 'antd/es/layout/layout'
 import { HomeIcon, LettersIcon, NoNotiIcon, SearchIcon } from '../Icons'
-import { DownOutlined } from '@ant-design/icons'
+import { DownOutlined, MailOutlined } from '@ant-design/icons'
 import { Button, Dropdown, Input, MenuProps, Popover, Space, message } from 'antd'
 import { HOME_ICON, LOGO } from '@/constants/images'
 import { useState } from 'react'
@@ -69,7 +69,7 @@ const HeaderItem: React.FC<HeaderType> = ({ classNameInput }) => {
               </li>
             </ul>
           </div>
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center pl-6">
             <Popover placement="bottomRight" content={content} trigger="click" className="xs:hidden xss:block">
               <Button className="h-10 w-10 px-2 mx-1 rounded-full border-yellow-400 flex justify-center items-center">
                 <NoNotiIcon />
@@ -83,8 +83,8 @@ const HeaderItem: React.FC<HeaderType> = ({ classNameInput }) => {
               onOpenChange={handleOpenChange}
               className="xs:hidden xss:block"
             >
-              <Button className="h-10 w-10 px-2 mx-1 rounded-full border-purple-700 flex justify-center items-center">
-                <LettersIcon />
+              <Button className="h-10 w-10 px-2 mx-1 rounded-full border-purple-700">
+                <MailOutlined className="text-white pb-2" />
               </Button>
             </Popover>
             <AvatarProfile />

@@ -1,10 +1,10 @@
-import { Avatar, Card, Menu } from 'antd'
-import { SettingIcon } from '../Icons'
+import { Avatar, Card } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import { useState } from 'react'
 import { friendList, menuItems } from '@/mocks/home.data'
 import './style.scss'
 import { MenuType } from '@/@types/home'
+import { LiPurpleLineIcon, SettingIcon } from '../Icons'
 
 const SidebarLeft = () => {
   const [visible, setVisible] = useState<MenuType[]>(menuItems)
@@ -32,7 +32,9 @@ const SidebarLeft = () => {
                 <li
                   key={item.key}
                   onClick={() => handleClickMenu(item.key)}
-                  className={visible[item.key].active ? 'flex justify-between hover:bg-gray-opacity py-2' : 'hidden'}
+                  className={
+                    visible[item.key].active ? 'flex justify-between hover:bg-gray-opacity py-2 my-2' : 'hidden'
+                  }
                 >
                   <div className="flex items-center">
                     <item.LineIcon />
@@ -45,7 +47,7 @@ const SidebarLeft = () => {
                   className={
                     visible[item.key].active
                       ? `hidden`
-                      : `relative flex justify-between ${item.color} py-2 rounded-r-3xl`
+                      : `relative flex justify-between ${item.color} py-2 rounded-r-3xl my-2`
                   }
                 >
                   <div className="flex items-center">
@@ -63,7 +65,7 @@ const SidebarLeft = () => {
         <div>
           <p className="text-gray-opacity self-auto ml-2 mb-1">New Members</p>
         </div>
-        <div className="list-member overflow-y-auto h-[355px]">
+        <div className="list-member overflow-y-auto h-[282px]">
           <ul>
             {friendList.map((friend) => (
               <li className="mx-0 mt-2" key={friend.key}>
@@ -98,20 +100,25 @@ const SidebarLeft = () => {
           </ul>
         </div>
         <div>
-          <Menu
-            items={[
-              {
-                label: 'Theme',
-                key: 'home',
-              },
-              { label: 'Setting', key: 'news', icon: <SettingIcon className="h-4 w-4" /> },
-            ]}
-            style={{
-              backgroundColor: '#0e1820',
-              color: 'white',
-              fontFamily: 'Poppins, sans-serif',
-            }}
-          />
+          <ul>
+            <li className="flex justify-between hover:bg-gray-opacity py-2 mt-2 pr-3">
+              <div className="flex items-center">
+                <LiPurpleLineIcon />
+                <p className="font-popins text-white m-0 pl-6">Theme</p>
+              </div>
+              <div>
+                <input type="checkbox" id="switch" className="switch-input" />
+                <label htmlFor="switch" className="switch" />
+              </div>
+            </li>
+            <li className="flex justify-between hover:bg-gray-opacity py-2 mt-2 pr-3">
+              <div className="flex items-center">
+                <LiPurpleLineIcon />
+                <p className="font-popins text-white m-0 pl-6">Setting</p>
+              </div>
+              <SettingIcon />
+            </li>
+          </ul>
         </div>
       </div>
     </Sider>

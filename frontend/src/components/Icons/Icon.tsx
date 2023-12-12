@@ -532,7 +532,7 @@ export const DesignIcon: React.FC<IconPropsType> = ({ width = '1rem', height = '
   </svg>
 )
 
-export const ThemeSunIcon: React.FC<IconPropsType> = ({ width = '2rem', height = '2rem', className }) => (
+export const ThemeSunIcon: React.FC<IconPropsType> = ({ width = '0.938rem', height = '0.938rem', className }) => (
   <svg
     width={width}
     height={height}
@@ -558,7 +558,7 @@ export const ThemeSunIcon: React.FC<IconPropsType> = ({ width = '2rem', height =
   </svg>
 )
 
-export const ThemeMoonIcon: React.FC<IconPropsType> = ({ width = '2rem', height = '2rem', className }) => (
+export const ThemeMoonIcon: React.FC<IconPropsType> = ({ width = '0.688rem', height = '0.688rem', className }) => (
   <svg
     width={width}
     height={height}

@@ -19,7 +19,7 @@ export type MenuType = {
   IconActive: React.ElementType
   LineIcon: React.ElementType
   color: string
-  active: boolean
+  active?: boolean
 }
 
 export type HeaderType = {

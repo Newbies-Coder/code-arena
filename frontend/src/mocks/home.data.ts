@@ -5,6 +5,7 @@ import {
   DesignIcon,
   FrontendIcon,
   HomeIcon,
+  LiPurpleLineIcon,
   LibraryIcon,
   NewsIcon,
   PinkLineIcon,
@@ -13,6 +14,7 @@ import {
   SelectedLibraryIcon,
   SelectedNewsIcon,
   SelectedStoreIcon,
+  SettingIcon,
   StoreIcon,
   YellowLineIcon,
 } from '@/components/Icons'
@@ -105,3 +107,22 @@ export const menuItems: MenuType[] = [
     active: true,
   },
 ]
+
+// export const bottomMenu: MenuType[] = [
+//   {
+//     key: 1,
+//     label: 'Theme',
+//     Icon: StoreIcon,
+//     IconActive: SelectedStoreIcon,
+//     LineIcon: LiPurpleLineIcon,
+//     color: 'bg-purple-500',
+//   },
+//   {
+//     key: 2,
+//     label: 'Setting',
+//     Icon: SettingIcon,
+//     IconActive: SelectedStoreIcon,
+//     LineIcon: LiPurpleLineIcon,
+//     color: 'bg-purple-700',
+//   },
+// ]
