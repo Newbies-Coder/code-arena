@@ -1238,6 +1238,158 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+  /users/@me/blocked:
+    get:
+      tags:
+        - user
+      summary: Get all list user blocked into the system
+      description: Get all list user blocked into the system
+      operationId: getAllUserBlocked
+      parameters:
+        - name: pageIndex
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            example: 0
+        - name: pageSize
+          in: query
+          description: Number of users on a page
+          required: false
+          schema:
+            type: integer
+            example: 10
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Get blocked user successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Get blocked user successfully
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example: [{ id: '656b0bbd3b0e9defe34fcaq2', 'blockerId': '656b0bbd3b0e9defe34fca1a', 'blockedId': '656b0bbd3b0e9defe34fca1a' }]
+                      pageIndex:
+                        type: number
+                        example: 0
+                      pageSize:
+                        type: number
+                        example: 10
+                      totalRow:
+                        type: number
+                        example: 1
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+    post:
+      tags:
+        - user
+      summary: Blocked user
+      description: Blocked user
+      operationId: insertBlocked
+      requestBody:
+        description: User information
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                blockedId:
+                  type: string
+                  example: string
+        required: true
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Blocked user successfully!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Blocked user successfully!
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '409':
+          description: Compare user data to the database.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    example: User already been blocked
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '422':
+          description: Please provide complete input info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  message:
+                    example: Validation error
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Please fill all required details.
+                      path:
+                        type: string
+                        example: /@me/blocked
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /users/test-token:
     post:
       tags:
