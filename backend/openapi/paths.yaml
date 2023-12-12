@@ -25,7 +25,6 @@ tags:
     description: Operations about user
   - name: banner
     description: Operations about banner
-
 paths:
   /auth/facebook:
     get:
@@ -1493,6 +1492,310 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+    put:
+      tags:
+        - user
+      summary: Update profile
+      description: Update profile user successfully!
+      operationId: updateMe
+      requestBody:
+        description: Information profile user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileSchema'
+        required: true
+      responses:
+        '200':
+          description: Update profile user successfully!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileSchema'
+  /users/roles:
+    get:
+      tags:
+        - user
+      summary: Get all list user by role into the system
+      description: Get all list user by role into the system
+      operationId: getAllUserByRole
+      parameters:
+        - name: includes
+          in: query
+          description: Please enter includes contains roles_name
+          required: false
+          schema:
+            type: string
+            example: user
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Get user role successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Get user role successfully
+                  data:
+                    $ref: '#/components/schemas/ProfileSchema'
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '422':
+          description: Please provide complete input info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  message:
+                    example: Validation error
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Please fill all required details.
+                      path:
+                        type: string
+                        example: includes
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /users/favorite:
+    get:
+      tags:
+        - user
+      summary: Get list closed friends into the system
+      description: Get list closed friends into the system
+      operationId: getUserFavorite
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Get list of closed friends successfully!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Get list of closed friends successfully!
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: integer
+                        format: int64
+                        example: 656b0bbd3b0e9defe34fca1a
+                      fullname:
+                        type: string
+                        example: 'User A'
+                      username:
+                        type: string
+                        example: 'user123'
+                      email:
+                        type: string
+                        example: john@email.com
+                      date_of_birth:
+                        type: string
+                        example: '2000-02-22T00:00:00.000Z'
+                      avatar:
+                        type: string
+                        example: ''
+                      cover_photo:
+                        type: string
+                        example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+    post:
+      tags:
+        - user
+      summary: Add user to favorite friends list
+      description: Add user to favorite friends list
+      operationId: insertUserFavorite
+      requestBody:
+        description: User information
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                friendId:
+                  type: string
+                  example: string
+        required: true
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Add user to favorite friends list successfully!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Add user to favorite friends list successfully!
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '409':
+          description: Compare user data to the database.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    example: User already been blocked
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '422':
+          description: Please provide complete input info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  message:
+                    example: Validation error
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Please fill all required details.
+                      path:
+                        type: string
+                        example: favorite
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /users/favorite/{id}:
+    delete:
+      tags:
+        - user
+      summary: Remove user to favorite friend list
+      description: Remove user to favorite friend list
+      operationId: deleteFavoriteFriend
+      parameters:
+        - name: id
+          in: path
+          description: 'The user_id that needs to be delete'
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Delete user to favorite friend list successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Delete user to favorite friend list successfully
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /users/test-token:
     post:
       tags:
@@ -1535,6 +1838,31 @@ paths:
                     example: You are not currently logged in to the system!
                   data:
                     example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '422':
+          description: Please provide complete input info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  message:
+                    example: Validation error
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Please fill all required details.
+                      path:
+                        type: string
+                        example: favorite
                   dateTime:
                     type: string
                     format: date-time
@@ -1682,18 +2010,12 @@ components:
         email:
           type: string
           example: john@email.com
-        password:
-          type: string
-          example: '53d71cd4a299ee96e3b1e899698f8767716bc00a80ec10b1d0d71e17'
         phone:
           type: string
           example: '0779381232'
         date_of_birth:
           type: string
           example: '2000-02-22T00:00:00.000Z'
-        role:
-          type: string
-          example: USER
         gender:
           type: string
           description: Gender Type
@@ -1702,15 +2024,6 @@ components:
             - Male
             - Female
             - Other
-        verify:
-          type: string
-          description: UserStatus
-          example: Unverify
-          enum:
-            - Unverify
-            - Verify
-            - Celebrity
-            - Banned
         bio:
           type: string
           example: ''
@@ -1726,16 +2039,6 @@ components:
         cover_photo:
           type: string
           example: ''
-        isOnline:
-          type: boolean
-          example: true
-        _destroy:
-          type: boolean
-          example: false
-        password_change_at:
-          type: string
-          format: date-time
-          example: '2023-11-01T00:00:00.000Z'
         created_at:
           type: string
           format: date-time
@@ -1744,5 +2047,40 @@ components:
           type: string
           format: date-time
           example: '2023-12-02T00:00:00.000Z'
+      xml:
+        name: user
+    UpdateProfileSchema:
+      type: object
+      properties:
+        fullname:
+          type: string
+          example: 'string'
+        username:
+          type: string
+          example: 'string'
+        phone:
+          type: string
+          example: 'string'
+        date_of_birth:
+          type: string
+          format: date-time
+          example: 'yyyy-mm-ddTHH:mm:ssss'
+        gender:
+          type: string
+          description: Gender Type
+          example: Male
+          enum:
+            - Male
+            - Female
+            - Other
+        bio:
+          type: string
+          example: 'string'
+        address:
+          type: string
+          example: 'string'
+        website:
+          type: string
+          example: 'string'
       xml:
         name: user
