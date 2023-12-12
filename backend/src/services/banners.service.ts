@@ -4,9 +4,11 @@ import { env } from '~/config/environment.config'
 import { VALIDATION_MESSAGES } from '~/constants/message'
 import { databaseService } from './connectDB.service'
 import Banner from '~/models/schemas/Banner.schema'
-import { ObjectId } from 'mongodb'
+import { ObjectId, WithId } from 'mongodb'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import { StatusCodes } from 'http-status-codes'
+import { ParsedUrlQuery } from 'node:querystring'
+import { PaginationType } from '~/@types/reponse.type'
 
 class BannersService {
   async insertBanners({ _id }: AuthUser, slug: string, files: Express.Multer.File[]) {
@@ -29,29 +31,40 @@ class BannersService {
     }
   }
 
-  async getAll(id: string) {
-    if (id) {
-      const banner = await databaseService.banners.findOne({ _id: new ObjectId(id) })
-      if (!banner) {
-        throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.BANNER.BANNER_NOT_FOUND })
-      }
-      return banner
+  async getAll(payload: ParsedUrlQuery) {
+    const pageIndex = Number(payload.pageIndex)
+    const pageSize = Number(payload.pageSize)
+    const userId = String(payload.userId)
+
+    const banners = await databaseService.banners
+      .find({ user_id: new ObjectId(userId) })
+      .limit(pageSize)
+      .skip((pageIndex - 1) * pageSize)
+      .toArray()
+
+    // TODO: Make something like private attributes const in UserType
+
+    const result: PaginationType<WithId<Banner>> = {
+      items: banners,
+      pageIndex: pageIndex,
+      pageSize: pageSize,
+      totalRow: banners.length
     }
-    return await databaseService.banners.find().toArray()
+
+    return result
   }
 
   async getWithUserId(userId: string) {
     const banners = databaseService.banners.find({ user_id: new ObjectId(userId) })
-    return banners
+    return await banners.toArray()
   }
 
   async deleteBanner(id: string) {
-    const banner = await databaseService.banners.findOne({ _id: new ObjectId(id) })
+    const banner = await databaseService.banners.findOneAndDelete({ _id: new ObjectId(id) })
     if (!banner) {
       throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.BANNER.BANNER_NOT_FOUND })
     }
     await cloudinaryService.deleteImage(banner.url)
-    await databaseService.banners.findOneAndDelete({ _id: new ObjectId(banner._id) })
   }
 }
 

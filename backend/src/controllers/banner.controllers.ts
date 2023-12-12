@@ -3,10 +3,11 @@ import { sendResponse } from '~/config/response.config'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import bannersService from '~/services/banners.service'
+import { ParsedUrlQuery } from 'querystring'
 
 const bannerController = {
-  getAll: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    const result = await bannersService.getAll(req.params.id)
+  getAll: async (req: Request<ParamsDictionary, any, any, ParsedUrlQuery>, res: Response, next: NextFunction) => {
+    const result = await bannersService.getAll(req.query)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.BANNERS_SUCCESS.GET_ALL)
   },
   getWithUserId: async (req: Request<ParamsDictionary, any, any, { id: string }>, res: Response, next: NextFunction) => {

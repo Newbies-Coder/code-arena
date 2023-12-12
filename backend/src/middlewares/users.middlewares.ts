@@ -80,6 +80,18 @@ export const registerValidator = validate(
             min: 8,
             max: 16
           }
+        },
+        custom: {
+          options: (value : string) => {
+            if (value.includes(' ')){
+              throw new ErrorWithStatus({
+                message: VALIDATION_MESSAGES.USER.REGISTER.PASSWORD_CAN_NOT_CONTAIN_SPACE,
+                statusCode: StatusCodes.BAD_REQUEST
+              })
+            }
+
+            return true
+          }
         }
       },
       confirm_password: {
@@ -91,16 +103,6 @@ export const registerValidator = validate(
         },
         escape: true,
         trim: true,
-        isStrongPassword: {
-          options: {
-            minLength: 8,
-            minLowercase: 1,
-            minUppercase: 1,
-            minNumbers: 1,
-            minSymbols: 1
-          },
-          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_MUST_BE_STRONG
-        },
         custom: {
           options: (value, { req }) => {
             if (value !== req.body.password) {
@@ -127,6 +129,25 @@ export const registerValidator = validate(
             strictSeparator: true
           },
           errorMessage: VALIDATION_MESSAGES.USER.REGISTER.DATE_OF_BIRTH_IS_ISO8601
+        },
+        custom: {
+          options: async (value) => {
+            const birthDate = new Date(value)
+            const today = new Date()
+            var age = today.getFullYear() - birthDate.getFullYear()
+            var m = today.getMonth() - birthDate.getMonth()
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+              age--
+            }
+
+            if (age < 12) {
+              throw new ErrorWithStatus({
+                message: VALIDATION_MESSAGES.USER.REGISTER.AGE_IS_NOT_ENOUGH,
+                statusCode: StatusCodes.BAD_REQUEST
+              })
+            }
+            return true
+          }
         }
       }
     },
