@@ -767,85 +767,6 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /users/{id}/profile:
-    get:
-      tags:
-        - user
-      summary: Get user by user_id
-      description: Get user by user_id
-      operationId: getUserByID
-      parameters:
-        - name: id
-          in: path
-          description: 'The user_id that needs to be fetched'
-          required: true
-          schema:
-            type: string
-      security:
-        - BearerAuth: []
-      responses:
-        '200':
-          description: User information was successfully retrieved!
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 200
-                  message:
-                    example: Get user infomation successfully
-                  data:
-                    $ref: '#/components/schemas/ProfileSchema'
-                  dateTime:
-                    type: string
-                    format: date-time
-                    example: '2024-02-22T00:00:00.000Z'
-        '401':
-          description: You are not authorized to carry out this task
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 401
-                  message:
-                    example: You do not have permission to perform this task. Please login again!
-                  data:
-                    type: string
-                    example: ''
-                  dateTime:
-                    type: string
-                    format: date-time
-                    example: '2024-02-22T00:00:00.000Z'
-        '422':
-          description: Please provide complete input info.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 422
-                  message:
-                    example: Validation error
-                  data:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                        example: Please fill all required details.
-                      path:
-                        type: string
-                        example: profile
-                  dateTime:
-                    type: string
-                    format: date-time
-                    example: '2024-02-22T00:00:00.000Z'
   /users/follow/{id}:
     post:
       tags:
@@ -856,7 +777,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: Please enter the user id you want to follow
+          description: Please enter the user_id you want to follow
           required: true
           schema:
             type: string
@@ -1021,6 +942,140 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+    delete:
+      tags:
+        - user
+      summary: Delete user
+      description: Delete user by user_id and delete a many user
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: query
+          description: Please enter the user_id you want to delete
+          schema:
+            type: array
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Delete many user successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Delete many user successfully
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /users/profile/{id}:
+    get:
+      tags:
+        - user
+      summary: Get user by user_id
+      description: Get user by user_id
+      operationId: getUserByID
+      parameters:
+        - name: id
+          in: path
+          description: 'The user_id that needs to be fetched'
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User information was successfully retrieved!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Get user infomation successfully
+                  data:
+                    $ref: '#/components/schemas/ProfileSchema'
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '422':
+          description: Please provide complete input info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  message:
+                    example: Validation error
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Please fill all required details.
+                      path:
+                        type: string
+                        example: profile
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /users/@me/avatar:
     post:
       tags:
@@ -1076,6 +1131,87 @@ paths:
                     example: 400
                   message:
                     example: Avatar image extension is invalid
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /users/@me/thumbnail:
+    post:
+      tags:
+        - user
+      summary: Upload thumbnail profile user
+      description: Upload thumbnail profile user
+      operationId: uploadThumbnail
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Imformation thumbnail profile upload
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        '200':
+          description: Upload successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Upload successfully
+                  data:
+                    type: object
+                    properties:
+                      avatarUrl:
+                        type: string
+                        example: 'http://res.cloudinary.com/de7hnxr0e/image/upload/v1701942785/avatar/it3nquretum21jkqv2ii.jpg'
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '400':
+          description: Thumnail image extension is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    example: Thumnail image extension is invalid
                   data:
                     type: string
                     example: ''
