@@ -3,3 +3,39 @@
     color: #9e9e9e;
   }
 }
+
+.list-test-case::-webkit-scrollbar {
+  width: 3px;
+  border-radius: 20px;
+  display: none;
+}
+
+.list-test-case:hover::-webkit-scrollbar {
+  width: 3px;
+  border-radius: 20px;
+  display: block;
+}
+
+.list-test-case::-webkit-scrollbar-track {
+  background-color: #ffffff33;
+}
+
+.list-test-case::-webkit-scrollbar-thumb {
+  background-image: linear-gradient(-45deg, #6a5af9, #d66efd);
+  border-radius: 50px;
+}
+
+.coding-area::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 20px;
+  display: block;
+}
+
+.coding-area::-webkit-scrollbar-track {
+  background-color: #ffffff33;
+}
+
+.coding-area::-webkit-scrollbar-thumb {
+  background-image: linear-gradient(-45deg, #6a5af9, #d66efd);
+  border-radius: 50px;
+}

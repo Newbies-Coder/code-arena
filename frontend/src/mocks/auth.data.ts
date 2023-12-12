@@ -56,9 +56,9 @@ export const socialMediaLogin: SocialMediaType[] = [
 ]
 
 export const inputOTP: OTPType[] = [
-  { type: 'text', maxLength: 1, min: 0, max: 9 },
-  { type: 'text', maxLength: 1, min: 0, max: 9 },
-  { type: 'text', maxLength: 1, min: 0, max: 9 },
-  { type: 'text', maxLength: 1, min: 0, max: 9 },
-  { type: 'text', maxLength: 1, min: 0, max: 9 },
+  { key: 1, type: 'text', maxLength: 1, min: 0, max: 9 },
+  { key: 2, type: 'text', maxLength: 1, min: 0, max: 9 },
+  { key: 3, type: 'text', maxLength: 1, min: 0, max: 9 },
+  { key: 4, type: 'text', maxLength: 1, min: 0, max: 9 },
+  { key: 5, type: 'text', maxLength: 1, min: 0, max: 9 },
 ]

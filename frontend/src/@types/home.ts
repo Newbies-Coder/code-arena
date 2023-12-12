@@ -21,3 +21,7 @@ export type MenuType = {
   color: string
   active: boolean
 }
+
+export type HeaderType = {
+  classNameInput?: string
+}

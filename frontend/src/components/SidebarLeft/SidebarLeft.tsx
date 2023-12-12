@@ -61,7 +61,7 @@ const SidebarLeft = () => {
           </ul>
         </div>
         <div>
-          <p className="text-gray-opacity self-auto ml-2">New Members</p>
+          <p className="text-gray-opacity self-auto ml-2 mb-1">New Members</p>
         </div>
         <div className="list-member overflow-y-auto h-[355px]">
           <ul>
@@ -110,7 +110,6 @@ const SidebarLeft = () => {
               backgroundColor: '#0e1820',
               color: 'white',
               fontFamily: 'Poppins, sans-serif',
-              marginTop: '10px',
             }}
           />
         </div>

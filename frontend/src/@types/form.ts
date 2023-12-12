@@ -22,6 +22,7 @@ export type SocialMediaType = {
 }
 
 export type OTPType = {
+  key: number
   type: string
   maxLength: number
   min: number

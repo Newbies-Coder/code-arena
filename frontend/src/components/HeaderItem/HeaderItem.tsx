@@ -5,6 +5,7 @@ import { Button, Dropdown, Input, MenuProps, Popover, Space, message } from 'ant
 import { HOME_ICON, LOGO } from '@/constants/images'
 import { useState } from 'react'
 import AvatarProfile from '@/container/Detail/components/AvatarProfile'
+import { HeaderType } from '@/@types/home'
 
 const onClick: MenuProps['onClick'] = ({ key }) => {
   message.info(`Click on item ${key}`)
@@ -30,7 +31,7 @@ const content = (
   </div>
 )
 
-const HeaderItem = () => {
+const HeaderItem: React.FC<HeaderType> = ({ classNameInput }) => {
   const [open, setOpen] = useState(false)
 
   const handleOpenChange = (newOpen: boolean) => {
@@ -41,7 +42,7 @@ const HeaderItem = () => {
       <div className="flex justify-between items-center">
         <img src={HOME_ICON.LOGO_TEXT} alt="logo" className="xs:hidden xl:block" />
         <img src={LOGO.APP_LOGO} className="xl:hidden xs:block" />
-        <div className="flex justify-between items-center relative px-2 w-full md:w-auto">
+        <div className={`flex justify-between items-center relative px-2 w-full md:w-auto ${classNameInput || ''}`}>
           <SearchIcon className="absolute z-10 ml-2 " />
           <Input
             className="px-8 rounded-full text-gray-800 text-base xl:w-128 lg:w-64 w-full"
@@ -68,26 +69,26 @@ const HeaderItem = () => {
               </li>
             </ul>
           </div>
-        </div>
-        <div className="flex justify-center items-center">
-          <Popover placement="bottomRight" content={content} trigger="click" className="xs:hidden xss:block">
-            <Button className="h-10 w-10 px-2 mx-1 rounded-full border-yellow-400 flex justify-center items-center">
-              <NoNotiIcon />
-            </Button>
-          </Popover>
-          <Popover
-            placement="bottomRight"
-            content={content}
-            trigger="click"
-            open={open}
-            onOpenChange={handleOpenChange}
-            className="xs:hidden xss:block"
-          >
-            <Button className="h-10 w-10 px-2 mx-1 rounded-full border-purple-700 flex justify-center items-center">
-              <LettersIcon />
-            </Button>
-          </Popover>
-          <AvatarProfile />
+          <div className="flex justify-center items-center">
+            <Popover placement="bottomRight" content={content} trigger="click" className="xs:hidden xss:block">
+              <Button className="h-10 w-10 px-2 mx-1 rounded-full border-yellow-400 flex justify-center items-center">
+                <NoNotiIcon />
+              </Button>
+            </Popover>
+            <Popover
+              placement="bottomRight"
+              content={content}
+              trigger="click"
+              open={open}
+              onOpenChange={handleOpenChange}
+              className="xs:hidden xss:block"
+            >
+              <Button className="h-10 w-10 px-2 mx-1 rounded-full border-purple-700 flex justify-center items-center">
+                <LettersIcon />
+              </Button>
+            </Popover>
+            <AvatarProfile />
+          </div>
         </div>
       </div>
     </Header>

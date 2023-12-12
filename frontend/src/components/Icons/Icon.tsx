@@ -616,66 +616,41 @@ export const StoreIcon: React.FC<IconPropsType> = ({ width = '1.6rem', height = 
   </svg>
 )
 
-export const SelectedStoreIcon: React.FC<IconPropsType> = ({ width = '1.6rem', height = '1.5rem', className }) => (
+export const SelectedStoreIcon: React.FC<IconPropsType> = ({ width = '1.188rem', height = '1.188rem', className }) => (
   <svg
     width={width}
     height={height}
     className={className}
-    viewBox="0 0 27 23"
+    viewBox="0 0 19 15"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g filter="url(#filter0_d_737_69)">
-      <g clip-path="url(#clip0_737_69)">
-        <path
-          d="M11.1237 13.75C11.5609 13.75 11.9154 13.4702 11.9154 13.125C11.9154 12.7798 11.5609 12.5 11.1237 12.5C10.6865 12.5 10.332 12.7798 10.332 13.125C10.332 13.4702 10.6865 13.75 11.1237 13.75Z"
-          stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M19.8346 13.75C20.2719 13.75 20.6263 13.4702 20.6263 13.125C20.6263 12.7798 20.2719 12.5 19.8346 12.5C19.3974 12.5 19.043 12.7798 19.043 13.125C19.043 13.4702 19.3974 13.75 19.8346 13.75Z"
-          stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M4.79297 0.625H7.67176L9.60054 8.99375C9.66636 9.2815 9.84661 9.53997 10.1098 9.72394C10.3729 9.9079 10.7022 10.0056 11.0399 10H18.0354C18.3731 10.0056 18.7024 9.9079 18.9656 9.72394C19.2287 9.53997 19.409 9.2815 19.4748 8.99375L20.6263 3.75H8.39145"
-          stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </g>
+    <g clip-path="url(#clip0_741_1487)">
+      <path
+        d="M7.1237 13.75C7.56092 13.75 7.91536 13.4702 7.91536 13.125C7.91536 12.7798 7.56092 12.5 7.1237 12.5C6.68647 12.5 6.33203 12.7798 6.33203 13.125C6.33203 13.4702 6.68647 13.75 7.1237 13.75Z"
+        stroke="white"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M15.8346 13.75C16.2719 13.75 16.6263 13.4702 16.6263 13.125C16.6263 12.7798 16.2719 12.5 15.8346 12.5C15.3974 12.5 15.043 12.7798 15.043 13.125C15.043 13.4702 15.3974 13.75 15.8346 13.75Z"
+        stroke="white"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M0.792969 0.625H3.67176L5.60054 8.99375C5.66636 9.2815 5.84661 9.53997 6.10976 9.72394C6.37291 9.9079 6.70218 10.0056 7.03994 10H14.0354C14.3731 10.0056 14.7024 9.9079 14.9656 9.72394C15.2287 9.53997 15.409 9.2815 15.4748 8.99375L16.6263 3.75H4.39145"
+        stroke="white"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
     </g>
     <defs>
-      <filter
-        id="filter0_d_737_69"
-        x="0"
-        y="0"
-        width="27"
-        height="23"
-        filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
-      >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
-        <feColorMatrix
-          in="SourceAlpha"
-          type="matrix"
-          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          result="hardAlpha"
-        />
-        <feOffset dy="4" />
-        <feGaussianBlur stdDeviation="2" />
-        <feComposite in2="hardAlpha" operator="out" />
-        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_737_69" />
-        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_737_69" result="shape" />
-      </filter>
-      <clipPath id="clip0_737_69">
-        <rect width="19" height="15" fill="white" transform="translate(4)" />
+      <clipPath id="clip0_741_1487">
+        <rect width="19" height="15" fill="white" />
       </clipPath>
     </defs>
   </svg>
@@ -1138,5 +1113,25 @@ export const ResultIcon: React.FC<IconPropsType> = ({ width = '1.688rem', height
     <circle cx="9" cy="6.5" r="2.5" fill="white" />
     <circle cx="15" cy="13.5" r="2.5" fill="white" />
     <circle cx="24" cy="2.5" r="2.5" fill="white" />
+  </svg>
+)
+
+export const PlaneIcon: React.FC<IconPropsType> = ({ width = '1.875rem', height = '1.875rem', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 30 30"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle cx="15" cy="15" r="14.5" stroke="white" />
+    <path
+      d="M6 15.1053L21 8L13.8947 23L12.3158 16.6842L6 15.1053Z"
+      stroke="white"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
   </svg>
 )

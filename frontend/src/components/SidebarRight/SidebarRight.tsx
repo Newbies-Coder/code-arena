@@ -50,10 +50,7 @@ const SidebarRight = () => {
         <div className="h-32 bg-gray-500"></div>
       </Card>
       <div className="flex justify-around items-center ">
-        <p className="text-gray-opacity self-auto m-0">Your Friends</p>
-        <Button type="link" className="text-gray-opacity p-0">
-          See all
-        </Button>
+        <p className="text-gray-opacity self-auto m-0 my-2 mr-40">Your Friends</p>
       </div>
       <div className="list-friend overflow-y-auto h-[280px]">
         <ul>
@@ -85,7 +82,7 @@ const SidebarRight = () => {
                   <div className="relative w-14">
                     <Button
                       className="absolute h-4 p-0 ml-8 w-full top-0 border-gray-opacity text-[10px] text-yellow-200"
-                      icon={<UserAddOutlined style={{ height: 30, width: 30 }} />}
+                      icon={<UserAddOutlined />}
                     >
                       Follow
                     </Button>
