@@ -220,16 +220,6 @@ userRouter.post('/@me/blocked', wrapRequestHandler(requireLoginMiddleware), inse
 userRouter.delete('/@me/blocked/:id', wrapRequestHandler(requireLoginMiddleware), objectIdValidator, wrapRequestHandler(userController.deleteMeBlockedUser))
 
 /**
- * Description: Delete a lot of user when user is admin send request list user want to delete
- * Path: /users
- * Method: DELETE
- * Header: { Authorization: Bearer <access_token> }
- * Body: [user_id] // Array of user IDs to delete
- */
-
-userRouter.delete('/users', wrapRequestHandler(userController.deleteManyUser))
-
-/**
  * Description: Get user by role
  * Path: /roles
  * Method: GET
