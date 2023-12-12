@@ -1447,6 +1447,52 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+  /users/@me/profile:
+    get:
+      tags:
+        - user
+      summary: Get profile into the system
+      description: Get profile into the system
+      operationId: getMeProfile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Get profile successfully!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Get profile successfully!
+                  data:
+                    $ref: '#/components/schemas/ProfileSchema'
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: Header authorization is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You are not currently logged in to the system!
+                  data:
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /users/test-token:
     post:
       tags:
@@ -1548,7 +1594,6 @@ components:
         password:
           type: string
           example: string
-
     ResetPasswordSchema:
       type: object
       properties:
