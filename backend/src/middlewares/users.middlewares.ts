@@ -82,8 +82,8 @@ export const registerValidator = validate(
           }
         },
         custom: {
-          options: (value : string) => {
-            if (value.includes(' ')){
+          options: (value: string) => {
+            if (value.includes(' ')) {
               throw new ErrorWithStatus({
                 message: VALIDATION_MESSAGES.USER.REGISTER.PASSWORD_CAN_NOT_CONTAIN_SPACE,
                 statusCode: StatusCodes.BAD_REQUEST
@@ -209,7 +209,7 @@ export const loginValidator = validate(
         custom: {
           options: async (value, { req }) => {
             const isExistPassword = await userServices.validatePassword(req.body.email, value)
-            if (!isExistPassword) {
+            if (isExistPassword) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.BAD_REQUEST,
                 message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT
