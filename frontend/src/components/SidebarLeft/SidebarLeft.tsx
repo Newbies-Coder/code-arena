@@ -1,19 +1,11 @@
 import { Avatar, Card } from 'antd'
 import Sider from 'antd/es/layout/Sider'
-import { useState } from 'react'
-import { friendList, menuItems } from '@/mocks/home.data'
+import { friendList } from '@/mocks/home.data'
 import './style.scss'
-import { MenuType } from '@/@types/home'
 import { LiPurpleLineIcon, SettingIcon } from '../Icons'
+import Navbar from '../Navbar'
 
 const SidebarLeft = () => {
-  const [visible, setVisible] = useState<MenuType[]>(menuItems)
-  const handleClickMenu = (index: number) => {
-    const updatedMenuItems = [...menuItems]
-    updatedMenuItems[index] = { ...updatedMenuItems[index], active: !updatedMenuItems[index].active }
-    setVisible(updatedMenuItems)
-  }
-
   return (
     <Sider
       className="sider-left mt-16 h-screen left-0 border-r lg:block z-10"
@@ -25,43 +17,7 @@ const SidebarLeft = () => {
       width={255}
     >
       <div className="flex flex-col justify-between w-full pt-2">
-        <div>
-          <ul>
-            {menuItems.map((item) => (
-              <>
-                <li
-                  key={item.key}
-                  onClick={() => handleClickMenu(item.key)}
-                  className={
-                    visible[item.key].active ? 'flex justify-between hover:bg-gray-opacity py-2 my-2' : 'hidden'
-                  }
-                >
-                  <div className="flex items-center">
-                    <item.LineIcon />
-                    <p className="font-popins text-white m-0 pl-6">{item.label}</p>
-                  </div>
-                  <item.Icon className="mr-4" />
-                </li>
-                <li
-                  onClick={() => handleClickMenu(item.key)}
-                  className={
-                    visible[item.key].active
-                      ? `hidden`
-                      : `relative flex justify-between ${item.color} py-2 rounded-r-3xl my-2`
-                  }
-                >
-                  <div className="flex items-center">
-                    <item.LineIcon />
-                    <p className="font-popins text-white m-0 pl-6">{item.label}</p>
-                  </div>
-                  <div className="absolute bg-black z-10 p-2 rounded-full right-1 bottom-[3px]">
-                    <item.IconActive />
-                  </div>
-                </li>
-              </>
-            ))}
-          </ul>
-        </div>
+        <Navbar />
         <div>
           <p className="text-gray-opacity self-auto ml-2 mb-1">New Members</p>
         </div>
@@ -75,7 +31,7 @@ const SidebarLeft = () => {
                   style={{ width: '95%', marginLeft: '5px' }}
                   bodyStyle={{ padding: '10px 12px' }}
                 >
-                  <div className="flex  items-center p-0">
+                  <div className="flex items-center p-0">
                     <Avatar
                       size={40}
                       className="flex justify-center items-center bg-gray-300"
@@ -92,7 +48,6 @@ const SidebarLeft = () => {
                       <p className="m-0 text-white font-popins text-xs">{friend.name}</p>
                       <span className="text-gray-opacity">{friend.status}</span>
                     </div>
-                    <div className="relative w-14"></div>
                   </div>
                 </Card>
               </li>

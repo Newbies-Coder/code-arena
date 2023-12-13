@@ -1,11 +1,12 @@
 import { Header } from 'antd/es/layout/layout'
-import { HomeIcon, LettersIcon, NoNotiIcon, SearchIcon } from '../Icons'
+import { HomeIcon, NoNotiIcon, SearchIcon } from '../Icons'
 import { DownOutlined, MailOutlined } from '@ant-design/icons'
-import { Button, Dropdown, Input, MenuProps, Popover, Space, message } from 'antd'
+import { Button, Drawer, Dropdown, Input, MenuProps, Popover, Space, message } from 'antd'
 import { HOME_ICON, LOGO } from '@/constants/images'
 import { useState } from 'react'
 import AvatarProfile from '@/container/Detail/components/AvatarProfile'
 import { HeaderType } from '@/@types/home'
+import Navbar from '../Navbar'
 
 const onClick: MenuProps['onClick'] = ({ key }) => {
   message.info(`Click on item ${key}`)
@@ -37,11 +38,33 @@ const HeaderItem: React.FC<HeaderType> = ({ classNameInput }) => {
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen)
   }
+  const [visible, setVisible] = useState(false)
+
+  const showDrawer = () => {
+    setVisible(true)
+  }
+
+  const onClose = () => {
+    setVisible(false)
+  }
+
   return (
     <Header className="fixed h-16 top-0 w-full bg-blue-900 z-20 px-4" style={{ width: '100%' }}>
       <div className="flex justify-between items-center">
-        <img src={HOME_ICON.LOGO_TEXT} alt="logo" className="xs:hidden xl:block" />
-        <img src={LOGO.APP_LOGO} className="xl:hidden xs:block" />
+        <div className="flex justify-between items-center">
+          <img src={HOME_ICON.LOGO_TEXT} alt="logo" className="xs:hidden xl:block" />
+          <img src={LOGO.APP_LOGO} className="xl:hidden xs:block" onClick={showDrawer} />
+          <Drawer
+            style={{ background: '#0e1820' }}
+            width="200px"
+            placement="left"
+            closable={false}
+            onClose={onClose}
+            visible={visible}
+          >
+            <Navbar />
+          </Drawer>
+        </div>
         <div className={`flex justify-between items-center relative px-2 w-full md:w-auto ${classNameInput || ''}`}>
           <SearchIcon className="absolute z-10 ml-2 " />
           <Input
