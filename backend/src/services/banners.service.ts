@@ -50,13 +50,7 @@ class BannersService {
       pageSize: pageSize,
       totalRow: banners.length
     }
-
     return result
-  }
-
-  async getWithUserId(userId: string) {
-    const banners = databaseService.banners.find({ user_id: new ObjectId(userId) })
-    return await banners.toArray()
   }
 
   async deleteBanner(id: string) {

@@ -428,11 +428,9 @@ export const insertMeBlockedUserValidator = validate(
   )
 )
 
-// Validation change password feature
 export const changePasswordValidator = validate(
   checkSchema(
     {
-      // old_password: string, password: string, confirm_password: string
       old_password: {
         notEmpty: {
           errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.OLD_PASSWORD_IS_REQUIRED
@@ -547,7 +545,6 @@ export const changePasswordValidator = validate(
   )
 )
 
-// Validation reset password feature
 export const resetPasswordValidator = validate(
   checkSchema(
     {
