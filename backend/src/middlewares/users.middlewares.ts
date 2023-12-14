@@ -132,6 +132,9 @@ export const registerValidator = validate(
         },
         custom: {
           options: async (value) => {
+            if (!value.match('^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])$')) {
+              throw new Error(VALIDATION_MESSAGES.USER.REGISTER.DATE_OF_BIRTH_ERROR_FORMAT)
+            }
             const birthDate = new Date(value)
             const today = new Date()
             var age = today.getFullYear() - birthDate.getFullYear()
@@ -277,7 +280,10 @@ export const verifyOTPValidator = validate(
           options: async (value) => {
             const otp = await OPTService.findOTP(value)
             if (!otp) {
-              throw new Error(VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_NOT_EXIST)
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.UNAUTHORIZED,
+                message: VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_NOT_EXIST
+              })
             }
 
             if (otp.expiredIn > new Date()) {
@@ -460,7 +466,7 @@ export const changePasswordValidator = validate(
         custom: {
           options: async (value, { req }) => {
             const isExistPassword = await userServices.validatePassword(req.user.email, value)
-            if (!isExistPassword) {
+            if (isExistPassword) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.NOT_FOUND,
                 message: VALIDATION_MESSAGES.USER.PASSWORD.OLD_PASSWORD_IS_INCORRECT
