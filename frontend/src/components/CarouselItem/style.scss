@@ -1,0 +1,15 @@
+.ant-carousel .slick-dots li button {
+  background: white;
+  opacity: 0.4;
+  width: 6px;
+  height: 6px;
+  border-radius: 20px;
+}
+
+.ant-carousel .slick-dots li.slick-active button {
+  opacity: 1;
+  background: white;
+  width: 7px;
+  height: 7px;
+  border-radius: 20px;
+}

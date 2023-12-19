@@ -60,7 +60,7 @@ const HeaderItem: React.FC<HeaderType> = ({ classNameInput }) => {
             placement="left"
             closable={false}
             onClose={onClose}
-            visible={visible}
+            open={visible}
           >
             <Navbar />
           </Drawer>

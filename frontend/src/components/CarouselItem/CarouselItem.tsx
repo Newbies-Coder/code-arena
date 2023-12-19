@@ -1,4 +1,5 @@
-import { Carousel, Image } from 'antd'
+import { Carousel } from 'antd'
+import './style.scss'
 const contentStyle: React.CSSProperties = {
   color: '#fff',
   borderRadius: '20px',

@@ -3,6 +3,9 @@
     color: #9e9e9e;
   }
 }
+.wave-motion-appear-active {
+  color: transparent;
+}
 
 .list-test-case {
   &::-webkit-scrollbar {
@@ -26,9 +29,9 @@
   }
 }
 
-.lesson {
+.lesson-guide {
   &::-webkit-scrollbar {
-    width: 10px;
+    width: 7px;
     border-radius: 20px;
     display: block;
   }

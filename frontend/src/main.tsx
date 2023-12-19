@@ -31,11 +31,13 @@ root.render(
               itemHoverColor: 'black',
               itemHoverBg: '#e6f4ff',
             },
+            Select: {
+              selectorBg: '#464D56',
+            },
           },
         }}
       >
         <App />
-        {/* <MainDetail /> */}
       </ConfigProvider>
     </HistoryBrowserRouter>
   </Provider>,
