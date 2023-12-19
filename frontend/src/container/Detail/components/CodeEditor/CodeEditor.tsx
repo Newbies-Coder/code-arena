@@ -63,7 +63,7 @@ const CodeEditor = () => {
 
   return (
     <>
-      <div className="fixed w-[56%] border-b-4 border-blue-900 bg-cool-gray-800 px-4 z-10 overflow-y-auto">
+      <div className="fixed md:w-[53%] lg:w-[54.5%] xl:w-[55.6%] border-b-4 border-blue-900 bg-cool-gray-800 px-4 z-10 overflow-y-auto">
         <div className="flex justify-between items-center h-16">
           <div>
             <Select
@@ -99,22 +99,23 @@ const CodeEditor = () => {
           </div>
         </div>
       </div>
-      <div className="mt-16">
+      <div className="mt-16 md:w-[53%] lg:w-[54.3%] xl:w-[55.6%]">
         <CodeMirror
           className="text-base"
-          height="378px"
-          width="300px"
+          minHeight="376px"
+          height="100%"
+          width="100%"
           minWidth="100%"
           maxWidth="300px"
           theme={vscodeDark}
           value={code}
         />
       </div>
-      <div className="fixed bg-cool-gray-800 bottom-0 w-[56%] h-56 p-4 border-t-4 border-blue-900">
+      <div className="fixed bg-cool-gray-800 bottom-0 md:w-[53%] lg:w-[54.5%] xl:w-[55.6%] xl:h-56 md:h-64 p-4 border-t-4 border-blue-900">
         <Row>
-          <Col xl={18}>
-            <div className="overflow-y-auto overflow-x-hidden h-48">
-              <div
+          <Col xl={18} md={16} sm={12}>
+            <div className="overflow-y-auto overflow-x-hidden">
+              {/* <div
                 className={`${
                   outputBox
                     ? 'overflow-x-hidden h-36 overflow-y-auto'
@@ -129,16 +130,16 @@ const CodeEditor = () => {
                 </Button>
                 <pre>{output}</pre>
                 <div id="output-container">{selectedLanguage === 'htmlcss' && <p>HTML/CSS OUTPUT</p>}</div>
-              </div>
+              </div> */}
               <p className="font-popins text-base text-white">Test cases</p>
-              <div className="list-test-case overflow-y-auto overflow-x-hidden h-36">
-                <div className="p-4 py-0">
+              <div className="list-test-case overflow-y-auto overflow-x-hidden h-36 mr-2">
+                <div className="py-0 mr-3 md:h-52">
                   {testCases.map((item, index) => (
                     <div key={index}>
-                      <div className="w-full h-12 px-4 bg-cool-gray-700 rounded-full my-2">
+                      <div className="w-full h-14 px-4 bg-cool-gray-700 rounded-full my-3">
                         <div
                           onClick={() => toggleTestCase(index)}
-                          className="flex justify-between items-center w-full h-12 p-4 my-2 bg-cool-gray-700 rounded-full"
+                          className="flex justify-between items-center w-full h-14 p-4 my-2 bg-cool-gray-700 rounded-full"
                         >
                           <p className="font-popins text-lg text-white m-0">
                             {item.key}&nbsp;&nbsp;{item.title}
@@ -158,26 +159,20 @@ const CodeEditor = () => {
               </div>
             </div>
           </Col>
-          <Col xl={6}>
-            <div className="p-4">
-              {
-                <CustomedButton
-                  label="RUN CODE"
-                  Icon={PlayCircleOutlined}
-                  classNameButton="border-0"
-                  classNameIcon="text-2xl font-popins"
-                />
-              }
-              <div className="pt-4">
-                {
-                  <CustomedButton
-                    label="SUBMIT"
-                    Icon={CompassOutlined}
-                    classNameButton="border-0"
-                    classNameIcon="text-2xl font-popins"
-                  />
-                }
-              </div>
+          <Col xl={6} md={8} sm={12}>
+            <div className="xl:mt-6 md:mt-[38px] flex flex-col items-center">
+              <CustomedButton
+                label="RUN CODE"
+                Icon={PlayCircleOutlined}
+                classNameButton="border-0"
+                classNameIcon="text-2xl font-popins"
+              />
+              <CustomedButton
+                label="SUBMIT"
+                Icon={CompassOutlined}
+                classNameButton="border-0 mt-3"
+                classNameIcon="text-2xl font-popins"
+              />
             </div>
           </Col>
         </Row>

@@ -4,8 +4,8 @@ import { Button } from 'antd'
 const CustomedButton: React.FC<ButtonType> = ({ label, Icon, classNameButton, classNameIcon }) => {
   return (
     <Button
-      className={`h-16 w-48 bg-purple-600 rounded-full text-white text-xl ${classNameButton}`}
-      icon={Icon && <Icon className={`text-2xl ${classNameIcon}`} />}
+      className={`xl:h-16 xl:w-48 lg:w-40 md:h-14 md:w-32 bg-purple-600 rounded-full text-white md:text-sm lg:text-xl ${classNameButton}`}
+      icon={Icon && <Icon className={`xl:text-2xl md:text-base ${classNameIcon}`} />}
     >
       {label}
     </Button>
