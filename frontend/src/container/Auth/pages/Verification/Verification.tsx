@@ -5,6 +5,14 @@ import { Button, Col, Form, Row } from 'antd'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
+const onFinish = (values: any) => {
+  console.log('Success:', values)
+}
+
+const onFinishFailed = (errorInfo: any) => {
+  console.log('Failed:', errorInfo)
+}
+
 const Verification = () => {
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(''))
 

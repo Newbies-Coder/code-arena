@@ -1,9 +1,8 @@
-import { Form, Button, Row, Col } from 'antd'
+import { Form, Button, Row, Col, Input, Alert, DatePicker } from 'antd'
 import './style.scss'
 import { LOGO } from '@/constants/images'
 import { Link } from 'react-router-dom'
-import FormItem from '../../components/FormItem'
-import { inputsRegister } from '@/mocks/auth.data'
+import { DateOfBirthIcon, GmailIcon, LockIcon, UserIcon } from '@/components/Icons'
 
 const onFinish = (values: any) => {
   console.log('Success:', values)
@@ -29,15 +28,159 @@ const Register = () => {
             Welcome to the Code Arena free coding learning page!
           </p>
           <Form name="basic" className="mt-3 w-full" onFinish={onFinish} onFinishFailed={onFinishFailed}>
-            {inputsRegister.map((input, id) => (
-              <FormItem
-                key={id}
-                name={input.name}
-                placeholder={input.placeholder}
-                Icon={input.Icon}
-                inputType={input.inputType}
+            <Form.Item
+              name="username"
+              rules={[
+                {
+                  required: true,
+                  message: (
+                    <Alert
+                      className="ml-2 bg-transparent text-base text-red-700"
+                      message="please input your username"
+                      banner
+                      type="error"
+                    />
+                  ),
+                },
+              ]}
+            >
+              <Input
+                className="bg-gray-300 w-full py-2 px-4 text-base font-normal border-0 h-14"
+                classNames={{ input: 'ml-2 bg-gray-300 text-md font-normal font-popins' }}
+                placeholder="username"
+                prefix={<UserIcon />}
               />
-            ))}
+            </Form.Item>
+            <Form.Item
+              name="email"
+              rules={[
+                {
+                  type: 'email',
+                  message: (
+                    <Alert
+                      className="ml-2 bg-transparent text-base text-red-700"
+                      message="invalid email"
+                      banner
+                      type="error"
+                    />
+                  ),
+                },
+                {
+                  required: true,
+                  message: (
+                    <Alert
+                      className="ml-2 bg-transparent text-base text-red-700"
+                      message="please input your email"
+                      banner
+                      type="error"
+                    />
+                  ),
+                },
+              ]}
+            >
+              <Input
+                className="bg-gray-300 w-full py-2 px-4 text-base font-normal border-0 h-14"
+                classNames={{ input: 'ml-2 bg-gray-300 text-md font-normal font-popins' }}
+                placeholder="email"
+                prefix={<GmailIcon />}
+              />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              rules={[
+                {
+                  pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$/,
+                  message: (
+                    <Alert
+                      className="ml-2 bg-transparent text-base text-red-700"
+                      message="password invalid!"
+                      banner
+                      type="error"
+                    />
+                  ),
+                },
+                {
+                  required: true,
+                  message: (
+                    <Alert
+                      className="ml-2 bg-transparent text-base text-red-700"
+                      message="please input your password"
+                      banner
+                      type="error"
+                    />
+                  ),
+                },
+              ]}
+            >
+              <Input
+                className="bg-gray-300 w-full py-2 px-4 text-base font-normal border-0 h-14"
+                classNames={{ input: 'ml-2 bg-gray-300 text-md font-normal font-popins' }}
+                placeholder="password"
+                prefix={<LockIcon />}
+              />
+            </Form.Item>
+            <Form.Item
+              name="confirm-password"
+              rules={[
+                {
+                  required: true,
+                  message: (
+                    <Alert
+                      className="ml-2 bg-transparent text-base text-red-700"
+                      message="please input your confirm password"
+                      banner
+                      type="error"
+                    />
+                  ),
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve()
+                    }
+                    return Promise.reject(
+                      <Alert
+                        className="ml-2 bg-transparent text-base text-red-700"
+                        message="The new password that you entered do not match!"
+                        banner
+                        type="error"
+                      />,
+                    )
+                  },
+                }),
+              ]}
+            >
+              <Input
+                className="bg-gray-300 w-full py-2 px-4 text-base font-normal border-0 h-14"
+                classNames={{ input: 'ml-2 bg-gray-300 text-md font-normal font-popins' }}
+                placeholder="confirm password"
+                prefix={<LockIcon />}
+              />
+            </Form.Item>
+            <Form.Item
+              name="dob"
+              rules={[
+                {
+                  required: true,
+                  message: (
+                    <Alert
+                      className="ml-2 bg-transparent text-base text-red-700"
+                      message="please input your email"
+                      banner
+                      type="error"
+                    />
+                  ),
+                },
+              ]}
+            >
+              <DatePicker
+                disabledDate={(d) => !d || d.isAfter('31-12-2012') || d.isBefore('01-01-1960')}
+                format="DD-MM-YYYY"
+                className="bg-gray-300 w-full py-2 px-4 text-base font-normal border-0 h-14 text-md font-popins"
+                placeholder="DOB"
+                suffixIcon={<DateOfBirthIcon />}
+              />
+            </Form.Item>
             <Form.Item>
               <Button
                 htmlType="submit"
