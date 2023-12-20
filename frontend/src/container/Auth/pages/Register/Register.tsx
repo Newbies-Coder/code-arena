@@ -5,6 +5,14 @@ import { Link } from 'react-router-dom'
 import FormItem from '../../components/FormItem'
 import { inputsRegister } from '@/mocks/auth.data'
 
+const onFinish = (values: any) => {
+  console.log('Success:', values)
+}
+
+const onFinishFailed = (errorInfo: any) => {
+  console.log('Failed:', errorInfo)
+}
+
 const Register = () => {
   return (
     <Row className="min-h-screen register">
@@ -20,7 +28,7 @@ const Register = () => {
           <p className="text-black font-popins text-sm -mt-9 mb-10 text-center font-medium">
             Welcome to the Code Arena free coding learning page!
           </p>
-          <Form name="basic" className="mt-3 w-full">
+          <Form name="basic" className="mt-3 w-full" onFinish={onFinish} onFinishFailed={onFinishFailed}>
             {inputsRegister.map((input, id) => (
               <FormItem
                 key={id}

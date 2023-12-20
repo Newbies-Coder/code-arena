@@ -1,6 +1,5 @@
 import * as ReactDOM from 'react-dom/client'
 import '@/index.scss'
-import 'normalize.css'
 import 'antd/dist/reset.css'
 import { unstable_HistoryRouter as HistoryBrowserRouter } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
@@ -8,7 +7,6 @@ import { Provider } from 'react-redux'
 import { store } from '@redux/config'
 import { ConfigProvider } from 'antd'
 import App from './App'
-import MainDetail from './container/Detail/pages/MainDetail'
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 export const history: any = createBrowserHistory()
 
