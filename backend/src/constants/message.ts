@@ -166,6 +166,7 @@ export const VALIDATION_MESSAGES = {
       CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Confirm_password must be between 8 and 16 characters long',
       DATE_OF_BIRTH_IS_REQUIRED: 'Date of birth is required',
       DATE_OF_BIRTH_IS_ISO8601: 'Date of birth must be a YYYY-MM-DDTHH:mm:ss.ssssZ',
+      DATE_OF_BIRTH_ERROR_FORMAT: 'Date_of_birth must be yyyy-mm-dd',
       AGE_IS_NOT_ENOUGH: 'You must above 12 years old to register'
     },
     VERIFY_OTP: {

@@ -409,6 +409,17 @@ paths:
       operationId: resendVerifyOTP
       security:
         - BearerAuth: []
+      requestBody:
+        description: Information resend verify OTP
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: string
+        required: true
       responses:
         '200':
           description: Successfully resend verify OTP
@@ -824,7 +835,7 @@ paths:
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
   /users/unfollow/{id}:
-    post:
+    delete:
       tags:
         - user
       summary: Unfollow user
@@ -886,14 +897,14 @@ paths:
       description: Get all user into the system
       operationId: getAllUser
       parameters:
-        - name: page
+        - name: pageIndex
           in: query
           description: Page number
           required: false
           schema:
             type: integer
-            example: 0
-        - name: items
+            example: 1
+        - name: pageSize
           in: query
           description: Number of users on a page
           required: false
@@ -1075,6 +1086,72 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+  /users/@me/profile:
+    get:
+      tags:
+        - user
+      summary: Get profile into the system
+      description: Get profile into the system
+      operationId: getMeProfile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Get profile successfully!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Get profile successfully!
+                  data:
+                    $ref: '#/components/schemas/ProfileSchema'
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: Header authorization is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You are not currently logged in to the system!
+                  data:
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+    put:
+      tags:
+        - user
+      summary: Update profile
+      description: Update profile user successfully!
+      operationId: updateMe
+      requestBody:
+        description: Information profile user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileSchema'
+        required: true
+      responses:
+        '200':
+          description: Update profile user successfully!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileSchema'
   /users/@me/avatar:
     post:
       tags:
@@ -1446,152 +1523,6 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /users/@me/profile:
-    get:
-      tags:
-        - user
-      summary: Get profile into the system
-      description: Get profile into the system
-      operationId: getMeProfile
-      security:
-        - BearerAuth: []
-      responses:
-        '200':
-          description: Get profile successfully!
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 200
-                  message:
-                    example: Get profile successfully!
-                  data:
-                    $ref: '#/components/schemas/ProfileSchema'
-                  dateTime:
-                    type: string
-                    format: date-time
-                    example: '2024-02-22T00:00:00.000Z'
-        '401':
-          description: Header authorization is invalid
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 401
-                  message:
-                    example: You are not currently logged in to the system!
-                  data:
-                    example: ''
-                  dateTime:
-                    type: string
-                    format: date-time
-                    example: '2024-02-22T00:00:00.000Z'
-    put:
-      tags:
-        - user
-      summary: Update profile
-      description: Update profile user successfully!
-      operationId: updateMe
-      requestBody:
-        description: Information profile user
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateProfileSchema'
-        required: true
-      responses:
-        '200':
-          description: Update profile user successfully!
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProfileSchema'
-  /users/roles:
-    get:
-      tags:
-        - user
-      summary: Get all list user by role into the system
-      description: Get all list user by role into the system
-      operationId: getAllUserByRole
-      parameters:
-        - name: includes
-          in: query
-          description: Please enter includes contains roles_name
-          required: false
-          schema:
-            type: string
-            example: user
-      security:
-        - BearerAuth: []
-      responses:
-        '200':
-          description: Get user role successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 200
-                  message:
-                    example: Get user role successfully
-                  data:
-                    $ref: '#/components/schemas/ProfileSchema'
-                  dateTime:
-                    type: string
-                    format: date-time
-                    example: '2024-02-22T00:00:00.000Z'
-        '401':
-          description: You are not authorized to carry out this task
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 401
-                  message:
-                    example: You do not have permission to perform this task. Please login again!
-                  data:
-                    type: string
-                    example: ''
-                  dateTime:
-                    type: string
-                    format: date-time
-                    example: '2024-02-22T00:00:00.000Z'
-        '422':
-          description: Please provide complete input info.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 422
-                  message:
-                    example: Validation error
-                  data:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                        example: Please fill all required details.
-                      path:
-                        type: string
-                        example: includes
-                  dateTime:
-                    type: string
-                    format: date-time
-                    example: '2024-02-22T00:00:00.000Z'
   /users/favorite:
     get:
       tags:
@@ -1796,6 +1727,86 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+  /users/roles:
+    get:
+      tags:
+        - user
+      summary: Get all list user by role into the system
+      description: Get all list user by role into the system
+      operationId: getAllUserByRole
+      parameters:
+        - name: includes
+          in: query
+          description: Please enter includes contains roles_name
+          required: false
+          schema:
+            type: string
+            example: user
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Get user role successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Get user role successfully
+                  data:
+                    $ref: '#/components/schemas/ProfileSchema'
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '422':
+          description: Please provide complete input info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  message:
+                    example: Validation error
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Please fill all required details.
+                      path:
+                        type: string
+                        example: includes
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /users/test-token:
     post:
       tags:
@@ -1875,25 +1886,30 @@ paths:
       description: Obtain all banners in the system.
       operationId: getAllBanner
       parameters:
-        - name: page
+        - name: pageIndex
           in: query
-          description: Page number
+          description: Page index
           required: false
           schema:
             type: integer
             example: 0
-        - name: items
+        - name: pageSize
           in: query
-          description: Number of users on a page
+          description: Number of banner on a page
           required: false
           schema:
             type: integer
             example: 10
-      security:
-        - BearerAuth: []
+        - name: userId
+          in: query
+          description: User create banner
+          required: false
+          schema:
+            type: string
+            example: 'string'
       responses:
         '200':
-          description: Get all user successfully
+          description: Get all banner successfully
           content:
             application/json:
               schema:
@@ -1903,10 +1919,224 @@ paths:
                     type: integer
                     example: 200
                   message:
-                    example: Get all user successfully
+                    example: Get all banner successfully
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        example:
+                          [
+                            {
+                              id: '656b0bbd3b0e9defe34fcaq2',
+                              user_id: '656b0bbd3b0e9defe34fca1a',
+                              url: 'http://res.cloudinary.com/de7hnxr0e/image/upload/v1701942785/avatar/it3nquretum21jkqv2ii.jpg',
+                              slug: 'banner-test-1',
+                              created_at: '2000-02-22T00:00:00.000Z',
+                              updated_at: '2023-12-01T00:00:00.000Z',
+                              _destroy: false
+                            }
+                          ]
+                      pageIndex:
+                        type: number
+                        example: 0
+                      pageSize:
+                        type: number
+                        example: 10
+                      totalRow:
+                        type: number
+                        example: 1
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '422':
+          description: Please provide complete input info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  message:
+                    example: Validation error
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Please fill all required details.
+                      path:
+                        type: string
+                        example: /banners
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+    post:
+      tags:
+        - banner
+      summary: Insert multiple banner
+      description: Insert multiple banner
+      operationId: insertMultipleBanner
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Imformation upload banner
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                slug:
+                  type: string
+                  example: 'string'
+        required: true
+      responses:
+        '200':
+          description: Insert banner successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Insetrt banner successfully
+                  data:
+                    type: object
+                    properties:
+                      avatarUrl:
+                        type: array
+                        example:
+                          [
+                            'http://res.cloudinary.com/de7hnxr0e/image/upload/v1701942785/avatar/it3nquretum21jkqv2ii.jpg',
+                            'http://res.cloudinary.com/de7hnxr0e/image/upload/v1701942785/avatar/it3nquretum21jkqv2ii.jpg'
+                          ]
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '400':
+          description: Upload maximum 4 images
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    example: Upload maximum 4 images
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
                   data:
                     type: string
                     example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /banners/{id}:
+    delete:
+      tags:
+        - banner
+      summary: Delete banner
+      description: Delete banner
+      operationId: deleteBanner
+      parameters:
+        - name: id
+          in: path
+          description: 'The banner_id that needs to be delete'
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Delete banners successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Delete banners successfully
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '422':
+          description: Please provide complete input info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  message:
+                    example: Validation error
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Please fill all required details.
+                      path:
+                        type: string
+                        example: /banner
                   dateTime:
                     type: string
                     format: date-time
