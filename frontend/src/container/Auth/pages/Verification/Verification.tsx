@@ -1,10 +1,12 @@
 import { BG, LOGO } from '@/constants/images'
-import { Button, Col, Form, Row } from 'antd'
+import { Button, Col, Form, Row, Statistic } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import './style.scss'
+const { Countdown } = Statistic
 
 let currentIndex: number = 0
+const deadline = Date.now() + 1000 * 60 * 5
 
 const Verification = () => {
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(''))
@@ -68,9 +70,7 @@ const Verification = () => {
             })}
           </Row>
           <div className="flex justify-center items-center mt-6">
-            <h2 className="text-orange-500 text-base font-bold">
-              <span>00</span>:<span>30</span>
-            </h2>
+            <Countdown className="font-bold" value={deadline} format="mm:ss" />
           </div>
           <Form name="basic" className="mt-3 w-full">
             <Form.Item>
