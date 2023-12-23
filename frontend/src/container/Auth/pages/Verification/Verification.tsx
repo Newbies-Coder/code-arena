@@ -1,28 +1,35 @@
-import { OTPType } from '@/@types/form'
 import { BG, LOGO } from '@/constants/images'
-import { inputOTP } from '@/mocks/auth.data'
 import { Button, Col, Form, Row } from 'antd'
-import { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import './style.scss'
 
-const onFinish = (values: any) => {
-  console.log('Success:', values)
-}
-
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo)
-}
+let currentIndex: number = 0
 
 const Verification = () => {
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(''))
+  const [activeIndex, setActiveIndex] = useState<number>(0)
 
-  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = target
     const newOTP: string[] = [...otp]
-    newOTP[index] = value.substring(value.length - 1)
+    newOTP[currentIndex] = value.substring(value.length - 1)
+    if (!value) setActiveIndex(currentIndex - 1)
+    else setActiveIndex(currentIndex + 1)
     setOtp(newOTP)
   }
-  console.log(otp)
+
+  const handleKeyDown = ({ key }: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    currentIndex = index
+    if (key === 'Backspace') setActiveIndex(index - 1)
+  }
+
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [activeIndex])
+
   return (
     <Row className="min-h-screen">
       <Col
@@ -42,20 +49,20 @@ const Verification = () => {
             Verification
           </h2>
           <p className="text-black font-popins text-sm mt-2 mb-10 text-center font-medium">
-            Please enter your 5 digits code that you received in your email!
+            Please enter your 6 digits code that you received in your email!
           </p>
           <Row justify="center">
-            {inputOTP.map((input: OTPType, index) => {
+            {otp.map((_, index) => {
               return (
-                <Col className="gutter-row" span={4.8} key={index}>
+                <Col className="gutter-row" span={4} key={index}>
                   <input
-                    type={input.type}
-                    // maxLength={input.maxLength}
-                    min={input.min}
-                    max={input.max}
-                    className="text-center mx-1 h-14 w-11 md:w-16 md:h-20 md:mx-2 text-2xl font-bold border-2 border-gray-500 rounded-md"
-                    onChange={(e) => handleChange(e, index)}
-                  ></input>
+                    ref={index === activeIndex ? inputRef : null}
+                    type="number"
+                    className="change-value-button text-center mx-1 h-14 w-11 md:w-16 md:h-20 md:mx-2 text-2xl font-bold border-2 border-gray-500 rounded-md"
+                    onChange={handleChange}
+                    onKeyDown={(e) => handleKeyDown(e, index)}
+                    value={otp[index]}
+                  />
                 </Col>
               )
             })}
