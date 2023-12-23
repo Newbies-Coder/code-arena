@@ -25,3 +25,8 @@ export type MenuType = {
 export type HeaderType = {
   classNameInput?: string
 }
+
+export type CodeEditorType = {
+  initialValue: string
+  onChange(value: string): void
+}
