@@ -30,3 +30,10 @@ export type CodeEditorType = {
   initialValue: string
   onChange(value: string): void
 }
+
+export type ToastifyType = {
+  title: string
+  description: string
+  type: 'success' | 'info' | 'warning' | 'error'
+  onButtonClick?: (type: 'success' | 'info' | 'warning' | 'error') => void
+}

@@ -3,4 +3,5 @@ export type ButtonType = {
   Icon?: React.ElementType | undefined
   classNameButton?: string
   classNameIcon?: string
+  onClick?: () => void
 }

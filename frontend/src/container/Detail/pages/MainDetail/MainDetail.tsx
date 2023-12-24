@@ -19,6 +19,7 @@ import HeaderItem from '@/components/HeaderItem'
 import CodeEditor from '../../components/CodeEditor'
 import { useState } from 'react'
 import CustomedButton from '../../components/CustomedButton'
+import ToastifyMessage from '@/components/ToastifyMessage'
 
 const ThemeItems: MenuProps['items'] = [
   {
@@ -48,6 +49,7 @@ const MainDetail = () => {
     newVisibleTestCase[index] = !newVisibleTestCase[index]
     setVisibleTestCase(newVisibleTestCase)
   }
+
   return (
     <Layout className="max-h-screen">
       <HeaderItem classNameInput="hidden" />
@@ -188,12 +190,7 @@ const MainDetail = () => {
                     </Col>
                     <Col xl={6} md={8} sm={12}>
                       <div className="xl:mt-6 md:mt-[38px] flex flex-col items-center">
-                        <CustomedButton
-                          label="RUN CODE"
-                          Icon={PlayCircleOutlined}
-                          classNameButton="border-0"
-                          classNameIcon="text-2xl font-popins"
-                        />
+                        <ToastifyMessage title="thong bao" description="thong bao" type="success" />
                         <CustomedButton
                           label="SUBMIT"
                           Icon={CompassOutlined}
