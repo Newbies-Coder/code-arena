@@ -33,7 +33,6 @@ export const loginApi = (userLogin: any) => {
       const response = await axios.post(`http://localhost:8080/api/v1/users/login`, userLogin)
       const userData = response.data
       dispatch(loginAction(userData))
-      console.log('success:', userData)
     } catch (error) {
       console.log(error)
     }
@@ -46,7 +45,6 @@ export const registerApi = (userRegister: any) => {
       const response = await axios.post(`http://localhost:8080/api/v1/users/register`, userRegister)
       const userData = response.data
       dispatch(registerAction(userData))
-      console.log('success:', userData)
     } catch (error) {
       console.log(error)
     }

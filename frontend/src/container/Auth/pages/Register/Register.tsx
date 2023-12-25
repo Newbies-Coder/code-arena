@@ -1,4 +1,4 @@
-import { Form, Button, Row, Col, Input, Alert, DatePicker } from 'antd'
+import { Form, Button, Row, Col, Input, Alert, DatePicker, DatePickerProps } from 'antd'
 import './style.scss'
 import { LOGO } from '@/constants/images'
 import { Link } from 'react-router-dom'
@@ -7,9 +7,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { userState } from '@/@types/user'
 import { DispatchType } from '@/redux/config'
 import { registerApi } from '@/redux/userReducer/userReducer'
+import moment from 'moment'
 
 const onFinishFailed = (errorInfo: any) => {
   console.log('Failed:', errorInfo)
+}
+
+let birthday = ''
+const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+  birthday = dateString
 }
 
 const Register = () => {
@@ -21,7 +27,7 @@ const Register = () => {
       email: values.email,
       password: values.password,
       confirm_password: values.confirm_password,
-      date_of_birth: values.dob,
+      date_of_birth: birthday,
     })
 
     await dispatch(registerData)
@@ -188,8 +194,9 @@ const Register = () => {
               ]}
             >
               <DatePicker
-                disabledDate={(d) => !d || d.isAfter('31-12-2012') || d.isBefore('01-01-1960')}
-                format="DD-MM-YYYY"
+                onChange={onChange}
+                disabledDate={(d) => !d || d.isAfter('2012-12-31') || d.isBefore('1960-01-01')}
+                format="YYYY-MM-DD"
                 className="bg-gray-300 w-full py-2 px-4 text-base font-normal border-0 h-14 text-md font-popins"
                 placeholder="DOB"
                 suffixIcon={<DateOfBirthIcon />}
