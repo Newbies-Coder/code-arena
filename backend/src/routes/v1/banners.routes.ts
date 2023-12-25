@@ -18,7 +18,7 @@ const bannerRouter = Router()
  * Query: {userId?: string}
  */
 
-bannerRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), paginationValidator, wrapRequestHandler(bannerController.getAll))
+bannerRouter.get('/', paginationValidator, wrapRequestHandler(bannerController.getAll))
 
 /**
  * Description: Insert list banners

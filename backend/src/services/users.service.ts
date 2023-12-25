@@ -45,10 +45,9 @@ class UserService {
 
   async validatePassword(email: string, password: string) {
     const user = await databaseService.users.findOne({ email: email })
-    if (user) {
+    if (!user) {
       throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_NOT_EXIT })
     }
-
     return Boolean(user.password !== hashPassword(password))
   }
 
@@ -119,6 +118,7 @@ class UserService {
 
   async sendOTP(email: string) {
     const otp = await otpService.generateOTP(email)
+
     await emailService.sendMail(
       otp.email,
       'Code Arena',
@@ -224,6 +224,7 @@ class UserService {
     let { otp } = payload
     const { email } = await otpService.findOTP(otp)
     await databaseService.users.updateOne({ email, verify: UserVerifyStatus.Unverified }, { $set: { verify: UserVerifyStatus.Verified } }, { upsert: false })
+    await databaseService.otps.deleteMany({ email: email })
   }
 
   async refreshToken(payload: RefreshTokenBody) {
@@ -315,12 +316,25 @@ class UserService {
   }
 
   async unfollow(user: AuthUser, payload: ParamsDictionary) {
-    const { id } = payload
-
-    await databaseService.follow.deleteMany({
-      followedId: new ObjectId(id),
-      followerId: new ObjectId(user._id)
-    })
+    try {
+      const { id } = payload
+      const isUser = await databaseService.users.findOne({ _id: new ObjectId(id) })
+      if (!isUser) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
+        })
+      }
+      await databaseService.follow.deleteMany({
+        followedId: new ObjectId(id),
+        followerId: new ObjectId(user._id)
+      })
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.NOT_FOUND,
+        message: error.message
+      })
+    }
   }
 
   async updateMeAvatar({ _id }: AuthUser, file: Express.Multer.File) {

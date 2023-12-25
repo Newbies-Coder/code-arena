@@ -178,7 +178,7 @@ export const loginValidator = validate(
         custom: {
           options: async (value, { req }) => {
             const isExistPassword = await userServices.validatePassword(req.body.email, value)
-            if (!isExistPassword) {
+            if (isExistPassword) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.BAD_REQUEST,
                 message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT
@@ -246,7 +246,10 @@ export const verifyOTPValidator = validate(
           options: async (value) => {
             const otp = await OPTService.findOTP(value)
             if (!otp) {
-              throw new Error(VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_NOT_EXIST)
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.UNAUTHORIZED,
+                message: VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_NOT_EXIST
+              })
             }
 
             if (otp.expiredIn > new Date()) {
@@ -397,11 +400,9 @@ export const insertMeBlockedUserValidator = validate(
   )
 )
 
-// Validation change password feature
 export const changePasswordValidator = validate(
   checkSchema(
     {
-      // old_password: string, password: string, confirm_password: string
       old_password: {
         notEmpty: {
           errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.OLD_PASSWORD_IS_REQUIRED
@@ -431,7 +432,7 @@ export const changePasswordValidator = validate(
         custom: {
           options: async (value, { req }) => {
             const isExistPassword = await userServices.validatePassword(req.user.email, value)
-            if (!isExistPassword) {
+            if (isExistPassword) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.NOT_FOUND,
                 message: VALIDATION_MESSAGES.USER.PASSWORD.OLD_PASSWORD_IS_INCORRECT
@@ -516,7 +517,6 @@ export const changePasswordValidator = validate(
   )
 )
 
-// Validation reset password feature
 export const resetPasswordValidator = validate(
   checkSchema(
     {
