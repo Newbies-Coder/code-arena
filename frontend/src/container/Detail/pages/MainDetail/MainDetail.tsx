@@ -11,7 +11,6 @@ import {
   CloseCircleFilled,
   CompassOutlined,
   DownOutlined,
-  PlayCircleOutlined,
   SyncOutlined,
 } from '@ant-design/icons'
 import './style.scss'

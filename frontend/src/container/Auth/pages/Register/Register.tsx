@@ -3,16 +3,30 @@ import './style.scss'
 import { LOGO } from '@/constants/images'
 import { Link } from 'react-router-dom'
 import { DateOfBirthIcon, GmailIcon, LockIcon, UserIcon } from '@/components/Icons'
-
-const onFinish = (values: any) => {
-  console.log('Success:', values)
-}
+import { useDispatch, useSelector } from 'react-redux'
+import { userState } from '@/@types/user'
+import { DispatchType } from '@/redux/config'
+import { registerApi } from '@/redux/userReducer/userReducer'
 
 const onFinishFailed = (errorInfo: any) => {
   console.log('Failed:', errorInfo)
 }
 
 const Register = () => {
+  const data = useSelector((state: userState) => state.userRegister)
+  const dispatch: DispatchType = useDispatch()
+  const onFinish = async (values: any) => {
+    const registerData = registerApi({
+      username: values.username,
+      email: values.email,
+      password: values.password,
+      confirm_password: values.confirm_password,
+      date_of_birth: values.dob,
+    })
+
+    await dispatch(registerData)
+    console.log(values)
+  }
   return (
     <Row className="min-h-screen register">
       <Col xs={{ span: 24 }} lg={{ span: 12 }} className="flex items-center justify-center relative">
@@ -120,7 +134,7 @@ const Register = () => {
               />
             </Form.Item>
             <Form.Item
-              name="confirm-password"
+              name="confirm_password"
               rules={[
                 {
                   required: true,

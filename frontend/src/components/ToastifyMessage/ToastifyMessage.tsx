@@ -1,7 +1,7 @@
 import { ToastifyType } from '@/@types/home'
 import CustomedButton from '@/container/Detail/components/CustomedButton'
 import { PlayCircleOutlined } from '@ant-design/icons'
-import { Button, notification } from 'antd'
+import { notification } from 'antd'
 
 const ToastifyMessage: React.FC<ToastifyType> = ({ title, description, type, onButtonClick }) => {
   const [api, contextHolder] = notification.useNotification()

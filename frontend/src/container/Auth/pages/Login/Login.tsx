@@ -9,11 +9,7 @@ import { userState } from '@/@types/user'
 import { useEffect } from 'react'
 import { loginApi } from '@/redux/userReducer/userReducer'
 import { DispatchType } from '@/redux/config'
-import { UserIcon } from '@/components/Icons'
-
-const onFinish = (values: any) => {
-  console.log('Success:', values)
-}
+import { LockIcon, UserIcon } from '@/components/Icons'
 
 const onFinishFailed = (errorInfo: any) => {
   console.log('Failed:', errorInfo)
@@ -22,12 +18,17 @@ const onFinishFailed = (errorInfo: any) => {
 const Login = () => {
   const data = useSelector((state: userState) => state.userLogin)
   const dispatch: DispatchType = useDispatch()
-  useEffect(() => {
-    ;(async () => {
-      const loginData = loginApi({})
-      await dispatch(loginData)
-    })()
-  })
+  const onFinish = async (values: any) => {
+    const loginData = loginApi({ email: values.email, password: values.password })
+    await dispatch(loginData)
+  }
+
+  // useEffect(() => {
+  //   ;(async () => {
+  //     const loginData = loginApi({})
+  //     await dispatch(loginData)
+  //   })()
+  // }, [])
 
   const renderButtonContent = (button: SocialMediaType) => {
     if (button.url) {
@@ -120,7 +121,7 @@ const Login = () => {
                 className="bg-gray-300 w-full py-2 px-4 text-base font-normal border-0 h-14"
                 classNames={{ input: 'ml-2 bg-gray-300 text-md font-normal font-popins' }}
                 placeholder="password"
-                prefix={<UserIcon />}
+                prefix={<LockIcon />}
               />
             </Form.Item>
             <p className="text-right cursor-pointer">
