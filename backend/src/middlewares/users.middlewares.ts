@@ -118,40 +118,6 @@ export const registerValidator = validate(
           },
           errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16
         }
-      },
-      date_of_birth: {
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.DATE_OF_BIRTH_IS_REQUIRED
-        },
-        isISO8601: {
-          options: {
-            strict: true,
-            strictSeparator: true
-          },
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.DATE_OF_BIRTH_IS_ISO8601
-        },
-        custom: {
-          options: async (value) => {
-            if (!value.match('^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])$')) {
-              throw new Error(VALIDATION_MESSAGES.USER.REGISTER.DATE_OF_BIRTH_ERROR_FORMAT)
-            }
-            const birthDate = new Date(value)
-            const today = new Date()
-            var age = today.getFullYear() - birthDate.getFullYear()
-            var m = today.getMonth() - birthDate.getMonth()
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-              age--
-            }
-
-            if (age < 12) {
-              throw new ErrorWithStatus({
-                message: VALIDATION_MESSAGES.USER.REGISTER.AGE_IS_NOT_ENOUGH,
-                statusCode: StatusCodes.BAD_REQUEST
-              })
-            }
-            return true
-          }
-        }
       }
     },
     ['body']
