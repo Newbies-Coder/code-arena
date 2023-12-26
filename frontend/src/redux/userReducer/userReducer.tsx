@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { DispathType } from '../config'
+import { DispatchType } from '../config'
 import { userState, userType } from 'src/@types/user'
-import { log } from 'console'
+import axios from 'axios'
 
 const initialState: userState = {
   userLogin: {},
+  userRegister: {},
 }
 
 const userReducer = createSlice({
@@ -14,20 +15,38 @@ const userReducer = createSlice({
     loginAction: (state: userState, action: PayloadAction<userType>) => {
       state.userLogin = action.payload
     },
+    registerAction: (state: userState, action: PayloadAction<userType>) => {
+      state.userRegister = action.payload
+    },
   },
 })
 
-export const { loginAction } = userReducer.actions
+export const { loginAction, registerAction } = userReducer.actions
 
 export default userReducer.reducer
 
 /*--------------- Action async --------------- */
 
 export const loginApi = (userLogin: any) => {
-  return async (dispatch: DispathType) => {
+  return async (dispatch: DispatchType) => {
     try {
-      const action = userLogin
-      console.log(action)
-    } catch (error) {}
+      const response = await axios.post(`http://localhost:8080/api/v1/users/login`, userLogin)
+      const userData = response.data
+      dispatch(loginAction(userData))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+export const registerApi = (userRegister: any) => {
+  return async (dispatch: DispatchType) => {
+    try {
+      const response = await axios.post(`http://localhost:8080/api/v1/users/register`, userRegister)
+      const userData = response.data
+      dispatch(registerAction(userData))
+    } catch (error) {
+      console.log(error)
+    }
   }
 }

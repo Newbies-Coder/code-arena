@@ -31,9 +31,9 @@ export const config = {
 
 export const { getStore, setStore, setStoreJson, getStoreJson, clearStore, ACCESS_TOKEN, USER_LOGIN } = config
 
-const DOMAIN = 'https://jiranew.cybersoft.edu.vn/api'
+const DOMAIN = 'http://localhost:8080/api/v1'
 const TOKEN_CODEARENA =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5Mb3AiOiJCb290Y2FtcCAzNUUiLCJIZXRIYW5TdHJpbmciOiIwNy8wNi8yMDIzIiwiSGV0SGFuVGltZSI6IjE2ODYwOTYwMDAwMDAiLCJuYmYiOjE2NTczODYwMDAsImV4cCI6MTY4NjI0MzYwMH0.XsCcIZvawxcwye8KVYB2vJK4d3Gbr1XROtNyAL8nypA'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTZiNGZmNTAxMmQ4ODAwZTFkNjZlMTAiLCJlbWFpbCI6Im5nb2N1eWVubGVwaGFtQGdtYWlsLmNvbSIsInJvbGUiOiJBZG1pbiIsInRva2VuX3R5cGUiOiJBY2Nlc3NUb2tlbiIsImlhdCI6MTcwMzQxNzYzOCwiZXhwIjoxNzAzNDE4NTM4fQ.Tc-vA8NBr2O_QoLrKePdgweqGWQ99tfzSVwOb7E3AyE'
 
 /* Cấu hình request cho tất cả api - response cho tất cả kết quả từ api trả về */
 

@@ -389,8 +389,8 @@ export const FacebookIcon: React.FC<IconPropsType> = ({ width = '3.12rem', heigh
       y2="40.615"
       gradientUnits="userSpaceOnUse"
     >
-      <stop offset="0" stop-color="#2aa4f4" />
-      <stop offset="1" stop-color="#007ad9" />
+      <stop offset="0" stopColor="#2aa4f4" />
+      <stop offset="1" stopColor="#007ad9" />
     </linearGradient>
     <path
       fill="url(#Ld6sqrtcxMyckEl6xeDdMa)"
@@ -509,10 +509,10 @@ export const LettersIcon: React.FC<IconPropsType> = ({ width = '1.25rem', height
     <path
       d="M1.98361 2.40039H9.85247C10.3935 2.40039 10.8361 2.94039 10.8361 3.60039V10.8004C10.8361 11.4604 10.3935 12.0004 9.85247 12.0004H1.98361C1.44262 12.0004 1 11.4604 1 10.8004V3.60039C1 2.94039 1.44262 2.40039 1.98361 2.40039Z"
       stroke="white"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
-    <path d="M10.8361 3.59961L5.91804 7.7996L1 3.59961" stroke="white" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M10.8361 3.59961L5.91804 7.7996L1 3.59961" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
     <ellipse cx="10.9328" cy="2.51999" rx="2.06558" ry="2.51999" fill="white" />
     <ellipse cx="10.9308" cy="2.51993" rx="1.79017" ry="2.18399" fill="#05C922" />
   </svg>
@@ -527,52 +527,8 @@ export const DesignIcon: React.FC<IconPropsType> = ({ width = '1rem', height = '
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <path d="M1 1L26 26" stroke="#5F3EBC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M26 1L1 26" stroke="#5F3EBC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-  </svg>
-)
-
-export const ThemeSunIcon: React.FC<IconPropsType> = ({ width = '2rem', height = '2rem', className }) => (
-  <svg
-    width={width}
-    height={height}
-    className={className}
-    viewBox="0 0 13 13"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M6.5 9C7.88071 9 9 7.88071 9 6.5C9 5.11929 7.88071 4 6.5 4C5.11929 4 4 5.11929 4 6.5C4 7.88071 5.11929 9 6.5 9Z"
-      stroke="#E6D453"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path d="M6.5 1V2" stroke="#E6D453" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M6.5 11V12" stroke="#E6D453" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M2.60938 2.60938L3.31938 3.31938" stroke="#E6D453" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M9.67969 9.67969L10.3897 10.3897" stroke="#E6D453" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M1 6.5H2" stroke="#E6D453" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M11 6.5H12" stroke="#E6D453" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M2.60938 10.3897L3.31938 9.67969" stroke="#E6D453" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M9.67969 3.31938L10.3897 2.60938" stroke="#E6D453" stroke-linecap="round" stroke-linejoin="round" />
-  </svg>
-)
-
-export const ThemeMoonIcon: React.FC<IconPropsType> = ({ width = '2rem', height = '2rem', className }) => (
-  <svg
-    width={width}
-    height={height}
-    className={className}
-    viewBox="0 0 11 11"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M9.98091 5.895C9.90225 6.7461 9.58284 7.5572 9.06003 8.23339C8.53722 8.90958 7.83265 9.4229 7.02876 9.71327C6.22487 10.0036 5.3549 10.0591 4.52066 9.87305C3.68642 9.68703 2.9224 9.26727 2.31802 8.66289C1.71364 8.0585 1.29388 7.29449 1.10786 6.46025C0.921845 5.62601 0.977266 4.75604 1.26764 3.95215C1.55801 3.14825 2.07132 2.44368 2.74751 1.92088C3.42371 1.39807 4.23481 1.07865 5.08591 1C4.58761 1.67413 4.34783 2.50472 4.41017 3.34071C4.47252 4.17669 4.83284 4.96253 5.42561 5.5553C6.01838 6.14807 6.80422 6.50839 7.6402 6.57073C8.47618 6.63308 9.30677 6.39329 9.98091 5.895Z"
-      stroke="#E6D453"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
+    <path d="M1 1L26 26" stroke="#5F3EBC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M26 1L1 26" stroke="#5F3EBC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 
@@ -589,23 +545,23 @@ export const StoreIcon: React.FC<IconPropsType> = ({ width = '1.6rem', height = 
       <path
         d="M7.5013 18.3327C7.96154 18.3327 8.33464 17.9596 8.33464 17.4993C8.33464 17.0391 7.96154 16.666 7.5013 16.666C7.04106 16.666 6.66797 17.0391 6.66797 17.4993C6.66797 17.9596 7.04106 18.3327 7.5013 18.3327Z"
         stroke="#5F3EBC"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M16.6654 18.3327C17.1256 18.3327 17.4987 17.9596 17.4987 17.4993C17.4987 17.0391 17.1256 16.666 16.6654 16.666C16.2051 16.666 15.832 17.0391 15.832 17.4993C15.832 17.9596 16.2051 18.3327 16.6654 18.3327Z"
         stroke="#5F3EBC"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M0.832031 0.833984H3.86233L5.89264 11.9923C5.96191 12.376 6.15166 12.7206 6.42866 12.9659C6.70565 13.2112 7.05226 13.3415 7.40779 13.334H14.7714C15.127 13.3415 15.4736 13.2112 15.7506 12.9659C16.0276 12.7206 16.2173 12.376 16.2866 11.9923L17.4987 5.00065H4.61991"
         stroke="#5F3EBC"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </g>
     <defs>
@@ -616,66 +572,41 @@ export const StoreIcon: React.FC<IconPropsType> = ({ width = '1.6rem', height = 
   </svg>
 )
 
-export const SelectedStoreIcon: React.FC<IconPropsType> = ({ width = '1.6rem', height = '1.5rem', className }) => (
+export const SelectedStoreIcon: React.FC<IconPropsType> = ({ width = '1.188rem', height = '1.188rem', className }) => (
   <svg
     width={width}
     height={height}
     className={className}
-    viewBox="0 0 27 23"
+    viewBox="0 0 19 15"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g filter="url(#filter0_d_737_69)">
-      <g clip-path="url(#clip0_737_69)">
-        <path
-          d="M11.1237 13.75C11.5609 13.75 11.9154 13.4702 11.9154 13.125C11.9154 12.7798 11.5609 12.5 11.1237 12.5C10.6865 12.5 10.332 12.7798 10.332 13.125C10.332 13.4702 10.6865 13.75 11.1237 13.75Z"
-          stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M19.8346 13.75C20.2719 13.75 20.6263 13.4702 20.6263 13.125C20.6263 12.7798 20.2719 12.5 19.8346 12.5C19.3974 12.5 19.043 12.7798 19.043 13.125C19.043 13.4702 19.3974 13.75 19.8346 13.75Z"
-          stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M4.79297 0.625H7.67176L9.60054 8.99375C9.66636 9.2815 9.84661 9.53997 10.1098 9.72394C10.3729 9.9079 10.7022 10.0056 11.0399 10H18.0354C18.3731 10.0056 18.7024 9.9079 18.9656 9.72394C19.2287 9.53997 19.409 9.2815 19.4748 8.99375L20.6263 3.75H8.39145"
-          stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </g>
+    <g clip-path="url(#clip0_741_1487)">
+      <path
+        d="M7.1237 13.75C7.56092 13.75 7.91536 13.4702 7.91536 13.125C7.91536 12.7798 7.56092 12.5 7.1237 12.5C6.68647 12.5 6.33203 12.7798 6.33203 13.125C6.33203 13.4702 6.68647 13.75 7.1237 13.75Z"
+        stroke="white"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M15.8346 13.75C16.2719 13.75 16.6263 13.4702 16.6263 13.125C16.6263 12.7798 16.2719 12.5 15.8346 12.5C15.3974 12.5 15.043 12.7798 15.043 13.125C15.043 13.4702 15.3974 13.75 15.8346 13.75Z"
+        stroke="white"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M0.792969 0.625H3.67176L5.60054 8.99375C5.66636 9.2815 5.84661 9.53997 6.10976 9.72394C6.37291 9.9079 6.70218 10.0056 7.03994 10H14.0354C14.3731 10.0056 14.7024 9.9079 14.9656 9.72394C15.2287 9.53997 15.409 9.2815 15.4748 8.99375L16.6263 3.75H4.39145"
+        stroke="white"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </g>
     <defs>
-      <filter
-        id="filter0_d_737_69"
-        x="0"
-        y="0"
-        width="27"
-        height="23"
-        filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
-      >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
-        <feColorMatrix
-          in="SourceAlpha"
-          type="matrix"
-          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          result="hardAlpha"
-        />
-        <feOffset dy="4" />
-        <feGaussianBlur stdDeviation="2" />
-        <feComposite in2="hardAlpha" operator="out" />
-        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_737_69" />
-        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_737_69" result="shape" />
-      </filter>
-      <clipPath id="clip0_737_69">
-        <rect width="19" height="15" fill="white" transform="translate(4)" />
+      <clipPath id="clip0_741_1487">
+        <rect width="19" height="15" fill="white" />
       </clipPath>
     </defs>
   </svg>
@@ -694,15 +625,15 @@ export const SettingIcon: React.FC<IconPropsType> = ({ width = '1.5rem', height 
       <path
         d="M12.1829 15C13.8652 15 15.229 13.6569 15.229 12C15.229 10.3431 13.8652 9 12.1829 9C10.5005 9 9.13672 10.3431 9.13672 12C9.13672 13.6569 10.5005 15 12.1829 15Z"
         stroke="#C1C6FB"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M19.6987 15C19.5635 15.3016 19.5232 15.6362 19.5829 15.9606C19.6427 16.285 19.7997 16.5843 20.0338 16.82L20.0947 16.88C20.2835 17.0657 20.4333 17.2863 20.5355 17.5291C20.6377 17.7719 20.6903 18.0322 20.6903 18.295C20.6903 18.5578 20.6377 18.8181 20.5355 19.0609C20.4333 19.3037 20.2835 19.5243 20.0947 19.71C19.9061 19.896 19.6821 20.0435 19.4356 20.1441C19.1891 20.2448 18.9248 20.2966 18.6579 20.2966C18.3911 20.2966 18.1268 20.2448 17.8803 20.1441C17.6337 20.0435 17.4098 19.896 17.2212 19.71L17.1602 19.65C16.9209 19.4195 16.617 19.2648 16.2876 19.206C15.9582 19.1472 15.6185 19.1869 15.3122 19.32C15.0119 19.4468 14.7558 19.6572 14.5754 19.9255C14.395 20.1938 14.2982 20.5082 14.2969 20.83V21C14.2969 21.5304 14.0829 22.0391 13.7021 22.4142C13.3212 22.7893 12.8047 23 12.2661 23C11.7275 23 11.211 22.7893 10.8301 22.4142C10.4493 22.0391 10.2353 21.5304 10.2353 21V20.91C10.2275 20.579 10.1187 20.258 9.9231 19.9887C9.72753 19.7194 9.45422 19.5143 9.1387 19.4C8.83245 19.2669 8.49272 19.2272 8.16333 19.286C7.83395 19.3448 7.53001 19.4995 7.2907 19.73L7.22978 19.79C7.04117 19.976 6.8172 20.1235 6.57067 20.2241C6.32414 20.3248 6.05988 20.3766 5.79301 20.3766C5.52613 20.3766 5.26188 20.3248 5.01535 20.2241C4.76881 20.1235 4.54484 19.976 4.35624 19.79C4.16743 19.6043 4.01764 19.3837 3.91544 19.1409C3.81324 18.8981 3.76064 18.6378 3.76064 18.375C3.76064 18.1122 3.81324 17.8519 3.91544 17.6091C4.01764 17.3663 4.16743 17.1457 4.35624 16.96L4.41716 16.9C4.65125 16.6643 4.80827 16.365 4.868 16.0406C4.92772 15.7162 4.8874 15.3816 4.75224 15.08C4.62353 14.7842 4.40981 14.532 4.13739 14.3543C3.86497 14.1766 3.54575 14.0813 3.21901 14.08H3.04639C2.5078 14.08 1.99127 13.8693 1.61042 13.4942C1.22958 13.1191 1.01563 12.6104 1.01562 12.08C1.01562 11.5496 1.22958 11.0409 1.61042 10.6658C1.99127 10.2907 2.5078 10.08 3.04639 10.08H3.13778C3.47387 10.0723 3.79981 9.96512 4.07325 9.77251C4.34669 9.5799 4.55497 9.31074 4.67101 9C4.80617 8.69838 4.84649 8.36381 4.78677 8.03941C4.72704 7.71502 4.57002 7.41568 4.33593 7.18L4.27501 7.12C4.0862 6.93425 3.93641 6.71368 3.83421 6.47088C3.73201 6.22808 3.67941 5.96783 3.67941 5.705C3.67941 5.44217 3.73201 5.18192 3.83421 4.93912C3.93641 4.69632 4.0862 4.47575 4.27501 4.29C4.46361 4.10405 4.68758 3.95653 4.93412 3.85588C5.18065 3.75523 5.4449 3.70343 5.71178 3.70343C5.97865 3.70343 6.24291 3.75523 6.48944 3.85588C6.73597 3.95653 6.95994 4.10405 7.14855 4.29L7.20947 4.35C7.44878 4.58054 7.75272 4.73519 8.0821 4.794C8.41149 4.85282 8.75121 4.81312 9.05747 4.68H9.1387C9.43902 4.55324 9.69515 4.34276 9.87556 4.07447C10.056 3.80618 10.1528 3.49179 10.1541 3.17V3C10.1541 2.46957 10.368 1.96086 10.7489 1.58579C11.1297 1.21071 11.6463 1 12.1849 1C12.7234 1 13.24 1.21071 13.6208 1.58579C14.0017 1.96086 14.2156 2.46957 14.2156 3V3.09C14.2169 3.41179 14.3137 3.72618 14.4942 3.99447C14.6746 4.26276 14.9307 4.47324 15.231 4.6C15.5373 4.73312 15.877 4.77282 16.2064 4.714C16.5358 4.65519 16.8397 4.50054 17.079 4.27L17.1399 4.21C17.3285 4.02405 17.5525 3.87653 17.799 3.77588C18.0456 3.67523 18.3098 3.62343 18.5767 3.62343C18.8436 3.62343 19.1078 3.67523 19.3544 3.77588C19.6009 3.87653 19.8249 4.02405 20.0135 4.21C20.2023 4.39575 20.3521 4.61632 20.4543 4.85912C20.5565 5.10192 20.6091 5.36217 20.6091 5.625C20.6091 5.88783 20.5565 6.14808 20.4543 6.39088C20.3521 6.63368 20.2023 6.85425 20.0135 7.04L19.9525 7.1C19.7185 7.33568 19.5614 7.63502 19.5017 7.95941C19.442 8.28381 19.4823 8.61838 19.6175 8.92V9C19.7462 9.29577 19.9599 9.54802 20.2323 9.72569C20.5047 9.90337 20.824 9.99872 21.1507 10H21.3233C21.8619 10 22.3784 10.2107 22.7593 10.5858C23.1401 10.9609 23.3541 11.4696 23.3541 12C23.3541 12.5304 23.1401 13.0391 22.7593 13.4142C22.3784 13.7893 21.8619 14 21.3233 14H21.2319C20.9052 14.0013 20.586 14.0966 20.3136 14.2743C20.0411 14.452 19.8274 14.7042 19.6987 15Z"
         stroke="#C1C6FB"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </g>
     <defs>
@@ -757,16 +688,16 @@ export const LibraryIcon: React.FC<IconPropsType> = ({ width = '1.5rem', height 
     <path
       d="M2 3H8C9.06087 3 10.0783 3.42143 10.8284 4.17157C11.5786 4.92172 12 5.93913 12 7V21C12 20.2044 11.6839 19.4413 11.1213 18.8787C10.5587 18.3161 9.79565 18 9 18H2V3Z"
       stroke="#FFE600"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
     <path
       d="M22 3H16C14.9391 3 13.9217 3.42143 13.1716 4.17157C12.4214 4.92172 12 5.93913 12 7V21C12 20.2044 12.3161 19.4413 12.8787 18.8787C13.4413 18.3161 14.2044 18 15 18H22V3Z"
       stroke="#FFE600"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 )
@@ -783,14 +714,14 @@ export const SelectedLibraryIcon: React.FC<IconPropsType> = ({ width = '1.5rem',
     <path
       d="M1.25 1.875H5C5.66304 1.875 6.29893 2.13839 6.76777 2.60723C7.23661 3.07607 7.5 3.71196 7.5 4.375V13.125C7.5 12.6277 7.30246 12.1508 6.95083 11.7992C6.59919 11.4475 6.12228 11.25 5.625 11.25H1.25V1.875Z"
       stroke="white"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
     <path
       d="M13.75 1.875H10C9.33696 1.875 8.70107 2.13839 8.23223 2.60723C7.76339 3.07607 7.5 3.71196 7.5 4.375V13.125C7.5 12.6277 7.69754 12.1508 8.04917 11.7992C8.40081 11.4475 8.87772 11.25 9.375 11.25H13.75V1.875Z"
       stroke="white"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 )
@@ -807,9 +738,9 @@ export const HomeIcon: React.FC<IconPropsType> = ({ width = '1.5rem', height = '
     <path
       d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
       stroke="#00D1FF"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 )
@@ -826,9 +757,9 @@ export const SelectedHomeIcon: React.FC<IconPropsType> = ({ width = '1.5rem', he
     <path
       d="M1.5 5.74935L7.33333 1.66602L13.1667 5.74935V12.166C13.1667 12.4754 13.0301 12.7722 12.787 12.991C12.5439 13.2098 12.2142 13.3327 11.8704 13.3327H2.7963C2.4525 13.3327 2.12278 13.2098 1.87968 12.991C1.63657 12.7722 1.5 12.4754 1.5 12.166V5.74935Z"
       stroke="white"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 )
@@ -845,9 +776,9 @@ export const FrontendIcon: React.FC<IconPropsType> = ({ width = '1rem', height =
     <path
       d="M26 23.2222C26 23.9589 25.7366 24.6655 25.2678 25.1864C24.7989 25.7073 24.163 26 23.5 26H3.5C2.83696 26 2.20107 25.7073 1.73223 25.1864C1.26339 24.6655 1 23.9589 1 23.2222V3.77778C1 3.04107 1.26339 2.33453 1.73223 1.81359C2.20107 1.29266 2.83696 1 3.5 1H9.75L12.25 5.16667H23.5C24.163 5.16667 24.7989 5.45932 25.2678 5.98026C25.7366 6.50119 26 7.20773 26 7.94444V23.2222Z"
       stroke="#00D1FF"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 )
@@ -864,16 +795,16 @@ export const BackendIcon: React.FC<IconPropsType> = ({ width = '1rem', height = 
     <path
       d="M5.20703 17.7083H4.16536C3.61283 17.7083 3.08293 17.4888 2.69223 17.0981C2.30152 16.7074 2.08203 16.1775 2.08203 15.625V5.20833C2.08203 4.6558 2.30152 4.12589 2.69223 3.73519C3.08293 3.34449 3.61283 3.125 4.16536 3.125H20.832C21.3846 3.125 21.9145 3.34449 22.3052 3.73519C22.6959 4.12589 22.9154 4.6558 22.9154 5.20833V15.625C22.9154 16.1775 22.6959 16.7074 22.3052 17.0981C21.9145 17.4888 21.3846 17.7083 20.832 17.7083H19.7904"
       stroke="#FE00D1"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
     <path
       d="M12.5013 15.625L17.7096 21.875H7.29297L12.5013 15.625Z"
       stroke="#FE00D1"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 )
@@ -919,7 +850,7 @@ export const VectorIcon: React.FC<IconPropsType> = ({ width = '0.875rem', height
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <path d="M13 1L7 6L1 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M13 1L7 6L1 1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 
@@ -960,7 +891,7 @@ export const YellowLineIcon: React.FC<IconPropsType> = ({ width = '0.125rem', he
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <path d="M1 29C1 11 1 0 1 0" stroke="#FFE500" stroke-width="2" />
+    <path d="M1 29C1 11 1 0 1 0" stroke="#FFE500" strokeWidth="2" />
   </svg>
 )
 
@@ -973,7 +904,7 @@ export const PurpleLineIcon: React.FC<IconPropsType> = ({ width = '0.125rem', he
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <path d="M1 29C1 11 1 0 1 0" stroke="#5F3EBC" stroke-width="2" />
+    <path d="M1 29C1 11 1 0 1 0" stroke="#5F3EBC" strokeWidth="2" />
   </svg>
 )
 
@@ -986,7 +917,7 @@ export const LiPurpleLineIcon: React.FC<IconPropsType> = ({ width = '0.125rem', 
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <path d="M1 29C1 11 1 0 1 0" stroke="#C1C6FB" stroke-width="2" />
+    <path d="M1 29C1 11 1 0 1 0" stroke="#C1C6FB" strokeWidth="2" />
   </svg>
 )
 
@@ -999,7 +930,7 @@ export const PinkLineIcon: React.FC<IconPropsType> = ({ width = '0.125rem', heig
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <path d="M1 29C1 11 1 0 1 0" stroke="#F449F4" stroke-width="2" />
+    <path d="M1 29C1 11 1 0 1 0" stroke="#F449F4" strokeWidth="2" />
   </svg>
 )
 
@@ -1012,7 +943,7 @@ export const CyanLineIcon: React.FC<IconPropsType> = ({ width = '0.125rem', heig
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <path d="M1 29C1 11 1 0 1 0" stroke="#00D1FF" stroke-width="2" />
+    <path d="M1 29C1 11 1 0 1 0" stroke="#00D1FF" strokeWidth="2" />
   </svg>
 )
 
@@ -1029,8 +960,8 @@ export const PlayIcon: React.FC<IconPropsType> = ({ width = '0.875rem', height =
       d="M1 1L13.1875 7.09375L1 13.1875V1Z"
       fill="black"
       stroke="black"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 )
@@ -1045,7 +976,7 @@ export const LeftArrowIcon: React.FC<IconPropsType> = ({ width = '1.875rem', hei
     xmlns="http://www.w3.org/2000/svg"
   >
     <circle opacity="0.3" cx="15" cy="15" r="15" fill="white" />
-    <path d="M18 20L12 15L18 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M18 20L12 15L18 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 
@@ -1059,6 +990,104 @@ export const RightArrowIcon: React.FC<IconPropsType> = ({ width = '1.875rem', he
     xmlns="http://www.w3.org/2000/svg"
   >
     <circle opacity="0.3" cx="15" cy="15" r="15" fill="white" />
-    <path d="M12 10L18 15L12 20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M12 10L18 15L12 20" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
+export const CodeArenaIcon: React.FC<IconPropsType> = ({ width = '13.188rem', height = '1.75rem', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 211 28"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M0.548 14.436C0.548 11.988 1.1 9.792 2.204 7.848C3.308 5.88 4.808 4.344 6.704 3.24C8.624 2.136 10.748 1.584 13.076 1.584C15.812 1.584 18.2 2.244 20.24 3.564C22.28 4.884 23.768 6.756 24.704 9.18H20.78C20.084 7.668 19.076 6.504 17.756 5.688C16.46 4.872 14.9 4.464 13.076 4.464C11.324 4.464 9.752 4.872 8.36 5.688C6.968 6.504 5.876 7.668 5.084 9.18C4.292 10.668 3.896 12.42 3.896 14.436C3.896 16.428 4.292 18.18 5.084 19.692C5.876 21.18 6.968 22.332 8.36 23.148C9.752 23.964 11.324 24.372 13.076 24.372C14.9 24.372 16.46 23.976 17.756 23.184C19.076 22.368 20.084 21.204 20.78 19.692H24.704C23.768 22.092 22.28 23.952 20.24 25.272C18.2 26.568 15.812 27.216 13.076 27.216C10.748 27.216 8.624 26.676 6.704 25.596C4.808 24.492 3.308 22.968 2.204 21.024C1.1 19.08 0.548 16.884 0.548 14.436ZM38.1846 27.324C36.3366 27.324 34.6566 26.904 33.1446 26.064C31.6566 25.224 30.4806 24.036 29.6166 22.5C28.7766 20.94 28.3566 19.14 28.3566 17.1C28.3566 15.084 28.7886 13.308 29.6526 11.772C30.5406 10.212 31.7406 9.024 33.2526 8.208C34.7646 7.368 36.4566 6.948 38.3286 6.948C40.2006 6.948 41.8926 7.368 43.4046 8.208C44.9166 9.024 46.1046 10.2 46.9686 11.736C47.8566 13.272 48.3006 15.06 48.3006 17.1C48.3006 19.14 47.8446 20.94 46.9326 22.5C46.0446 24.036 44.8326 25.224 43.2966 26.064C41.7606 26.904 40.0566 27.324 38.1846 27.324ZM38.1846 24.444C39.3606 24.444 40.4646 24.168 41.4966 23.616C42.5286 23.064 43.3566 22.236 43.9806 21.132C44.6286 20.028 44.9526 18.684 44.9526 17.1C44.9526 15.516 44.6406 14.172 44.0166 13.068C43.3926 11.964 42.5766 11.148 41.5686 10.62C40.5606 10.068 39.4686 9.792 38.2926 9.792C37.0926 9.792 35.9886 10.068 34.9806 10.62C33.9966 11.148 33.2046 11.964 32.6046 13.068C32.0046 14.172 31.7046 15.516 31.7046 17.1C31.7046 18.708 31.9926 20.064 32.5686 21.168C33.1686 22.272 33.9606 23.1 34.9446 23.652C35.9286 24.18 37.0086 24.444 38.1846 24.444ZM51.3839 17.064C51.3839 15.048 51.7919 13.284 52.6079 11.772C53.4239 10.236 54.5399 9.048 55.9559 8.208C57.3959 7.368 59.0039 6.948 60.7799 6.948C62.3159 6.948 63.7439 7.308 65.0639 8.028C66.3839 8.724 67.3919 9.648 68.0879 10.8V0.36H71.3999V27H68.0879V23.292C67.4399 24.468 66.4799 25.44 65.2079 26.208C63.9359 26.952 62.4479 27.324 60.7439 27.324C58.9919 27.324 57.3959 26.892 55.9559 26.028C54.5399 25.164 53.4239 23.952 52.6079 22.392C51.7919 20.832 51.3839 19.056 51.3839 17.064ZM68.0879 17.1C68.0879 15.612 67.7879 14.316 67.1879 13.212C66.5879 12.108 65.7719 11.268 64.7399 10.692C63.7319 10.092 62.6159 9.792 61.3919 9.792C60.1679 9.792 59.0519 10.08 58.0439 10.656C57.0359 11.232 56.2319 12.072 55.6319 13.176C55.0319 14.28 54.7319 15.576 54.7319 17.064C54.7319 18.576 55.0319 19.896 55.6319 21.024C56.2319 22.128 57.0359 22.98 58.0439 23.58C59.0519 24.156 60.1679 24.444 61.3919 24.444C62.6159 24.444 63.7319 24.156 64.7399 23.58C65.7719 22.98 66.5879 22.128 67.1879 21.024C67.7879 19.896 68.0879 18.588 68.0879 17.1ZM94.9361 16.38C94.9361 17.004 94.9001 17.664 94.8281 18.36H79.0601C79.1801 20.304 79.8401 21.828 81.0401 22.932C82.2641 24.012 83.7401 24.552 85.4681 24.552C86.8841 24.552 88.0601 24.228 88.9961 23.58C89.9561 22.908 90.6281 22.02 91.0121 20.916H94.5401C94.0121 22.812 92.9561 24.36 91.3721 25.56C89.7881 26.736 87.8201 27.324 85.4681 27.324C83.5961 27.324 81.9161 26.904 80.4281 26.064C78.9641 25.224 77.8121 24.036 76.9721 22.5C76.1321 20.94 75.7121 19.14 75.7121 17.1C75.7121 15.06 76.1201 13.272 76.9361 11.736C77.7521 10.2 78.8921 9.024 80.3561 8.208C81.8441 7.368 83.5481 6.948 85.4681 6.948C87.3401 6.948 88.9961 7.356 90.4361 8.172C91.8761 8.988 92.9801 10.116 93.7481 11.556C94.5401 12.972 94.9361 14.58 94.9361 16.38ZM91.5521 15.696C91.5521 14.448 91.2761 13.38 90.7241 12.492C90.1721 11.58 89.4161 10.896 88.4561 10.44C87.5201 9.96 86.4761 9.72 85.3241 9.72C83.6681 9.72 82.2521 10.248 81.0761 11.304C79.9241 12.36 79.2641 13.824 79.0961 15.696H91.5521Z"
+      fill="#F78600"
+    />
+    <path
+      d="M123.69 21.42H112.746L110.73 27H107.274L116.346 2.052H120.126L129.162 27H125.706L123.69 21.42ZM122.754 18.756L118.218 6.084L113.682 18.756H122.754ZM136.392 10.476C136.968 9.348 137.784 8.472 138.84 7.848C139.92 7.224 141.228 6.912 142.764 6.912V10.296H141.9C138.228 10.296 136.392 12.288 136.392 16.272V27H133.116V7.272H136.392V10.476ZM164.545 16.38C164.545 17.004 164.509 17.664 164.437 18.36H148.669C148.789 20.304 149.449 21.828 150.649 22.932C151.873 24.012 153.349 24.552 155.077 24.552C156.493 24.552 157.669 24.228 158.605 23.58C159.565 22.908 160.237 22.02 160.621 20.916H164.149C163.621 22.812 162.565 24.36 160.981 25.56C159.397 26.736 157.429 27.324 155.077 27.324C153.205 27.324 151.525 26.904 150.037 26.064C148.573 25.224 147.421 24.036 146.581 22.5C145.741 20.94 145.321 19.14 145.321 17.1C145.321 15.06 145.729 13.272 146.545 11.736C147.361 10.2 148.501 9.024 149.965 8.208C151.453 7.368 153.157 6.948 155.077 6.948C156.949 6.948 158.605 7.356 160.045 8.172C161.485 8.988 162.589 10.116 163.357 11.556C164.149 12.972 164.545 14.58 164.545 16.38ZM161.161 15.696C161.161 14.448 160.885 13.38 160.333 12.492C159.781 11.58 159.025 10.896 158.065 10.44C157.129 9.96 156.085 9.72 154.933 9.72C153.277 9.72 151.861 10.248 150.685 11.304C149.533 12.36 148.873 13.824 148.705 15.696H161.161ZM178.482 6.912C180.882 6.912 182.826 7.644 184.314 9.108C185.802 10.548 186.546 12.636 186.546 15.372V27H183.306V15.84C183.306 13.872 182.814 12.372 181.83 11.34C180.846 10.284 179.502 9.756 177.798 9.756C176.07 9.756 174.69 10.296 173.658 11.376C172.65 12.456 172.146 14.028 172.146 16.092V27H168.87V7.272H172.146V10.08C172.794 9.072 173.67 8.292 174.774 7.74C175.902 7.188 177.138 6.912 178.482 6.912ZM190.673 17.064C190.673 15.048 191.081 13.284 191.897 11.772C192.713 10.236 193.829 9.048 195.245 8.208C196.685 7.368 198.281 6.948 200.033 6.948C201.761 6.948 203.261 7.32 204.533 8.064C205.805 8.808 206.753 9.744 207.377 10.872V7.272H210.689V27H207.377V23.328C206.729 24.48 205.757 25.44 204.461 26.208C203.189 26.952 201.701 27.324 199.997 27.324C198.245 27.324 196.661 26.892 195.245 26.028C193.829 25.164 192.713 23.952 191.897 22.392C191.081 20.832 190.673 19.056 190.673 17.064ZM207.377 17.1C207.377 15.612 207.077 14.316 206.477 13.212C205.877 12.108 205.061 11.268 204.029 10.692C203.021 10.092 201.905 9.792 200.681 9.792C199.457 9.792 198.341 10.08 197.333 10.656C196.325 11.232 195.521 12.072 194.921 13.176C194.321 14.28 194.021 15.576 194.021 17.064C194.021 18.576 194.321 19.896 194.921 21.024C195.521 22.128 196.325 22.98 197.333 23.58C198.341 24.156 199.457 24.444 200.681 24.444C201.905 24.444 203.021 24.156 204.029 23.58C205.061 22.98 205.877 22.128 206.477 21.024C207.077 19.896 207.377 18.588 207.377 17.1Z"
+      fill="#8001FF"
+    />
+  </svg>
+)
+
+export const RankIcon: React.FC<IconPropsType> = ({ width = '1.063rem', height = '1.5rem', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 17 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M8.5 15C12.366 15 15.5 11.866 15.5 8C15.5 4.13401 12.366 1 8.5 1C4.63401 1 1.5 4.13401 1.5 8C1.5 11.866 4.63401 15 8.5 15Z"
+      stroke="white"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M4.71 13.8889L3.5 22.9989L8.5 19.9989L13.5 22.9989L12.29 13.8789"
+      stroke="white"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+)
+
+export const ForumIcon: React.FC<IconPropsType> = ({ width = '1rem', height = '1rem', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 16 15"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M11.5 2.5H15V8.5L11.5 11" stroke="white" />
+    <rect x="0.5" width="11" height="5" fill="white" />
+    <rect x="1" y="5.5" width="10" height="9" stroke="white" />
+  </svg>
+)
+
+export const ResultIcon: React.FC<IconPropsType> = ({ width = '1.688rem', height = '1rem', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 27 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M3 13.5L9 6.5L15 13.5L24 2.5" stroke="white" />
+    <circle cx="3" cy="13.5" r="2.5" fill="white" />
+    <circle cx="9" cy="6.5" r="2.5" fill="white" />
+    <circle cx="15" cy="13.5" r="2.5" fill="white" />
+    <circle cx="24" cy="2.5" r="2.5" fill="white" />
+  </svg>
+)
+
+export const PlaneIcon: React.FC<IconPropsType> = ({ width = '1.875rem', height = '1.875rem', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 30 30"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle cx="15" cy="15" r="14.5" stroke="white" />
+    <path
+      d="M6 15.1053L21 8L13.8947 23L12.3158 16.6842L6 15.1053Z"
+      stroke="white"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 )
