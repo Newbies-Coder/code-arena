@@ -11,6 +11,9 @@ const CongratulationPage = React.lazy(() => import('@components/Congratulation')
 const PasswordResetSuccessPage = React.lazy(() => import('@components/PasswordCongratulation'))
 const NotFoundPage = React.lazy(() => import('@components/NotFound'))
 
+const HomePageAdmin = React.lazy(() => import('@/container/Admin/Home/pages/MainHome'))
+const LoginAdmin = React.lazy(() => import('@container/Admin/Auth/pages/Login'))
+
 const publicRoute = [
   {
     path: config.routes.home,
@@ -51,4 +54,15 @@ const publicRoute = [
   },
 ]
 
-export { publicRoute }
+const privateRoute = [
+  {
+    path: config.routes.admin.home,
+    component: HomePageAdmin,
+  },
+  {
+    path: config.routes.admin.login,
+    component: LoginAdmin,
+  },
+]
+
+export { publicRoute, privateRoute }
