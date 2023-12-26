@@ -1,3 +1,5 @@
+import { Rule } from 'antd/es/form'
+
 export type FieldType = {
   username?: string
   email?: string
@@ -11,7 +13,8 @@ export type FormItemPropsType = {
   placeholder: string
   Icon: React.ElementType
   inputType?: string
-  rules?: string
+  rules?: Rule[]
+  pattern?: string
 }
 
 export type SocialMediaType = {
@@ -19,11 +22,4 @@ export type SocialMediaType = {
   url?: string
   alt?: string
   icon?: React.ElementType
-}
-
-export type OTPType = {
-  type: string
-  maxLength: number
-  min: number
-  max: number
 }

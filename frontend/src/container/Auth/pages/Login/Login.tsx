@@ -1,38 +1,33 @@
-import { Form, Button, Row, Col, Divider } from 'antd'
+import { Form, Button, Row, Col, Divider, Input, Alert } from 'antd'
 import './style.scss'
 import { LOGO, BG } from '@/constants/images'
 import { Link } from 'react-router-dom'
-import { inputsLogin, socialMediaLogin } from '@/mocks/auth.data'
-import FormItem from '../../components/FormItem'
+import { socialMediaLogin } from '@/mocks/auth.data'
 import { SocialMediaType } from '@/@types/form'
 import { useDispatch, useSelector } from 'react-redux'
 import { userState } from '@/@types/user'
-import { useEffect } from 'react'
 import { loginApi } from '@/redux/userReducer/userReducer'
-import { DispathType } from '@/redux/config'
-import { regexEmail } from '@/utils/regex'
-
-const onFinish = (values: any) => {
-  console.log('Success:', values)
-}
+import { DispatchType } from '@/redux/config'
+import { LockIcon, UserIcon } from '@/components/Icons'
 
 const onFinishFailed = (errorInfo: any) => {
   console.log('Failed:', errorInfo)
 }
 
-const validateEmail = (values: string) => {
-  return regexEmail(values)
-}
-
 const Login = () => {
   const data = useSelector((state: userState) => state.userLogin)
-  const dispatch: DispathType = useDispatch()
-  useEffect(() => {
-    ;(async () => {
-      const loginData = loginApi({ email: 'ngocuyen@gmail.com', password: 'Leuyen@03' })
-      await dispatch(loginData)
-    })()
-  })
+  const dispatch: DispatchType = useDispatch()
+  const onFinish = async (values: any) => {
+    const loginData = loginApi({ email: values.email, password: values.password })
+    await dispatch(loginData)
+  }
+
+  // useEffect(() => {
+  //   ;(async () => {
+  //     const loginData = loginApi({})
+  //     await dispatch(loginData)
+  //   })()
+  // }, [])
 
   const renderButtonContent = (button: SocialMediaType) => {
     if (button.url) {
@@ -46,9 +41,9 @@ const Login = () => {
   }
 
   return (
-    <Row className="min-h-screen login ">
+    <Row className="min-h-screen login">
       <Col xs={{ span: 24 }} lg={{ span: 12 }} className="flex justify-center items-center relative">
-        <div className="mx-4 mt-16 pb-16 lg:w-[450px]">
+        <div className="mx-4 mt-8 pb-16 lg:w-[450px]">
           <Link
             to={'/'}
             className="absolute top-2 left-2 w-14 h-14 rounded-full bg-gray-300 flex justify-center items-center border-none"
@@ -60,15 +55,74 @@ const Login = () => {
             Welcome to the Code Arena free coding learning page!
           </p>
           <Form name="basic" className="mt-3 w-full" onFinish={onFinish} onFinishFailed={onFinishFailed}>
-            {inputsLogin.map((input, id) => (
-              <FormItem
-                key={id}
-                name={input.name}
-                placeholder={input.placeholder}
-                Icon={input.Icon}
-                inputType={input.inputType}
+            <Form.Item
+              name="email"
+              rules={[
+                {
+                  type: 'email',
+                  message: (
+                    <Alert
+                      className="ml-2 bg-transparent text-base text-red-700"
+                      message="invalid email"
+                      banner
+                      type="error"
+                    />
+                  ),
+                },
+                {
+                  required: true,
+                  message: (
+                    <Alert
+                      className="ml-2 bg-transparent text-base text-red-700"
+                      message="please input your email"
+                      banner
+                      type="error"
+                    />
+                  ),
+                },
+              ]}
+            >
+              <Input
+                className="bg-gray-300 w-full py-2 px-4 text-base font-normal border-0 h-14"
+                classNames={{ input: 'ml-2 bg-gray-300 text-md font-normal font-popins' }}
+                placeholder="email"
+                prefix={<UserIcon />}
               />
-            ))}
+            </Form.Item>
+            <Form.Item
+              name="password"
+              rules={[
+                {
+                  pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$/,
+                  message: (
+                    <Alert
+                      className="ml-2 bg-transparent text-base text-red-700"
+                      message="password invalid!"
+                      banner
+                      type="error"
+                    />
+                  ),
+                },
+                {
+                  required: true,
+                  message: (
+                    <Alert
+                      className="ml-2 bg-transparent text-base text-red-700"
+                      message="please input your email"
+                      banner
+                      type="error"
+                    />
+                  ),
+                },
+              ]}
+            >
+              <Input
+                className="bg-gray-300 w-full py-2 px-4 text-base font-normal border-0 h-14"
+                classNames={{ input: 'ml-2 bg-gray-300 text-md font-normal font-popins' }}
+                placeholder="password"
+                prefix={<LockIcon />}
+              />
+            </Form.Item>
             <p className="text-right cursor-pointer">
               <Button type="link" className="text-gray-700 p-0">
                 Forgot password?

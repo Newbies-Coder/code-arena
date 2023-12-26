@@ -1,4 +1,4 @@
-import { FormItemPropsType, OTPType, SocialMediaType } from '@/@types/form'
+import { FormItemPropsType, SocialMediaType } from '@/@types/form'
 import { DateOfBirthIcon, FacebookIcon, GmailIcon, LinkedinIcon, LockIcon, UserIcon } from '@/components/Icons'
 import { SOCIAL_ICON } from '@/constants/images'
 
@@ -53,12 +53,4 @@ export const socialMediaLogin: SocialMediaType[] = [
   { key: 'facebook', icon: FacebookIcon },
   { key: 'github', url: SOCIAL_ICON.GITHUB, alt: 'github' },
   { key: 'linkedin', icon: LinkedinIcon },
-]
-
-export const inputOTP: OTPType[] = [
-  { type: 'text', maxLength: 1, min: 0, max: 9 },
-  { type: 'text', maxLength: 1, min: 0, max: 9 },
-  { type: 'text', maxLength: 1, min: 0, max: 9 },
-  { type: 'text', maxLength: 1, min: 0, max: 9 },
-  { type: 'text', maxLength: 1, min: 0, max: 9 },
 ]

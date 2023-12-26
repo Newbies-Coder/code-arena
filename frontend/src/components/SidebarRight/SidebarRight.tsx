@@ -50,10 +50,7 @@ const SidebarRight = () => {
         <div className="h-32 bg-gray-500"></div>
       </Card>
       <div className="flex justify-around items-center ">
-        <p className="text-gray-opacity self-auto m-0">Your Friends</p>
-        <Button type="link" className="text-gray-opacity p-0">
-          See all
-        </Button>
+        <p className="text-gray-opacity self-auto m-0 my-2 mr-40">Your Friends</p>
       </div>
       <div className="list-friend overflow-y-auto h-[280px]">
         <ul>

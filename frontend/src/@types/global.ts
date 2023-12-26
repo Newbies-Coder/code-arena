@@ -15,4 +15,5 @@ export type routeTypes = {
 export type routeAdminTypes = {
   home: string
   login: string
+  detailCoding: string
 }

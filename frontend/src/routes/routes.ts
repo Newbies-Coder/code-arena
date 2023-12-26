@@ -10,6 +10,8 @@ const VerificationPage = React.lazy(() => import('@container/Auth/pages/Verifica
 const CongratulationPage = React.lazy(() => import('@components/Congratulation'))
 const PasswordResetSuccessPage = React.lazy(() => import('@components/PasswordCongratulation'))
 const NotFoundPage = React.lazy(() => import('@components/NotFound'))
+const DetailCodingPage = React.lazy(() => import('@container/Detail/pages/MainDetail'))
+const ProfilePage = React.lazy(() => import('@container/Profile/pages/MainProfile'))
 
 const HomePageAdmin = React.lazy(() => import('@/container/Admin/Home/pages/MainHome'))
 const LoginAdmin = React.lazy(() => import('@container/Admin/Auth/pages/Login'))
@@ -51,6 +53,14 @@ const publicRoute = [
     path: config.routes.notFound,
     component: NotFoundPage,
     layout: null,
+  },
+  {
+    path: config.routes.detailCoding,
+    component: DetailCodingPage,
+  },
+  {
+    path: config.routes.profile,
+    component: ProfilePage,
   },
 ]
 

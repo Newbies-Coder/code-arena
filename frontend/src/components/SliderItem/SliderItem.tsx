@@ -3,6 +3,7 @@ import { LeftArrowIcon, PlayIcon, RightArrowIcon } from '../Icons'
 import { useState } from 'react'
 import { courseList } from '@/mocks/home.data'
 import { HeartOutlined, HeartFilled } from '@ant-design/icons'
+import './style.scss'
 const settings = {
   dots: false,
   infinite: true,
@@ -60,14 +61,13 @@ const SliderItem = () => {
             style={{ width: '100%', height: '100%' }}
             bodyStyle={{ height: '100%', padding: 0 }}
           >
-            {/* <img src={course.bgImage} alt="" className="relative rounded-t-xl object-cover h-40 w-full" /> */}
             <Image
               src={course.bgImage}
               className="relative rounded-t-xl"
-              style={{ objectFit: 'cover', width: '100%' }}
+              style={{ objectFit: 'cover', height: '200px', width: '100%' }}
             />
             <Button
-              className="absolute z-10 p-0 border-0 flex justify-center items-center bg-gray-300 w-10 h-10 rounded-full top-8 right-8 "
+              className="absolute z-10 p-0 border-0 flex justify-center items-center bg-gray-300 w-10 h-10 rounded-full top-4 right-4 "
               onClick={handleLike}
             >
               {liked ? <HeartFilled className="text-lg text-red-600" /> : <HeartOutlined className="text-lg" />}
