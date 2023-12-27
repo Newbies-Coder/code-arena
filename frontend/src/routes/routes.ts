@@ -62,16 +62,16 @@ const publicRoute = [
     path: config.routes.profile,
     component: ProfilePage,
   },
+  {
+    path: config.routes.admin.login,
+    component: LoginAdmin,
+  },
 ]
 
 const privateRoute = [
   {
     path: config.routes.admin.home,
     component: HomePageAdmin,
-  },
-  {
-    path: config.routes.admin.login,
-    component: LoginAdmin,
   },
 ]
 

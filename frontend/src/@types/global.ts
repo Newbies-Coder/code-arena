@@ -10,10 +10,10 @@ export type routeTypes = {
   passwordResetSuccess: string
   notFound: string
   admin: routeAdminTypes
+  detailCoding: string
 }
 
 export type routeAdminTypes = {
   home: string
   login: string
-  detailCoding: string
 }
