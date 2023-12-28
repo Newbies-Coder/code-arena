@@ -1,5 +1,5 @@
 import { LOGO, SYS } from '@/constants/images'
-import { Alert, Button, Divider, Form, Input } from 'antd'
+import { Alert, Button, Form, Input } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 
 export default function ResetPassword() {
