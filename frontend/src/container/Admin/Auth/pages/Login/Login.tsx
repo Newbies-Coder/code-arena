@@ -1,10 +1,8 @@
-import { userState } from '@/@types/user'
 import { DispatchType } from '@/redux/config'
 import { loginApi } from '@/redux/userReducer/userReducer'
 import { LOGO, SYS } from '@constants/images'
 import { Alert, Button, Checkbox, Form, Input } from 'antd'
-import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
 type FieldType = {
@@ -14,8 +12,6 @@ type FieldType = {
 }
 
 const Login = () => {
-  const [loginCompleted, setLoginCompleted] = useState(false)
-  const data = useSelector((state: userState) => state.userLogin)
   const dispatch: DispatchType = useDispatch()
   const navigate = useNavigate()
 
