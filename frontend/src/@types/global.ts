@@ -16,4 +16,6 @@ export type routeTypes = {
 export type routeAdminTypes = {
   home: string
   login: string
+  resetPassword: string
+  createNewPassword: string
 }

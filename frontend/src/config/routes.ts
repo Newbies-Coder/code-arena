@@ -15,6 +15,8 @@ const routes: routeTypes = {
   admin: {
     home: '/admin',
     login: '/admin/login',
+    resetPassword: '/admin/reset-password',
+    createNewPassword: '/admin/create-new-password',
   },
 } as const
 
