@@ -34,7 +34,7 @@ export default function CreateNewPassword() {
             <img src={SYS.IMAGE.YOUNG_MAN} alt="" className="h-full" />
           </div>
           <div className="w-full md:w-1/2 mt-1 mr-20 flex flex-col items-center py-10">
-            <h2 className="text-8xl text-white font-smooch text-center mt-4 mb-4">Reset Password</h2>
+            <h2 className="text-8xl text-white font-smooch text-center mt-4 mb-4">Create New Password</h2>
             <Form
               name="basic"
               initialValues={{ remember: true }}
