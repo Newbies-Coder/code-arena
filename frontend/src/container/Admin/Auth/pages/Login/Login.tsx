@@ -1,6 +1,11 @@
+import { userState } from '@/@types/user'
+import { DispatchType } from '@/redux/config'
+import { loginApi } from '@/redux/userReducer/userReducer'
 import { LOGO, SYS } from '@constants/images'
-import { Button, Checkbox, Form, Input } from 'antd'
-import { Link } from 'react-router-dom'
+import { Alert, Button, Checkbox, Form, Input } from 'antd'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 
 type FieldType = {
   email?: string
@@ -9,6 +14,22 @@ type FieldType = {
 }
 
 const Login = () => {
+  const [loginCompleted, setLoginCompleted] = useState(false)
+  const data = useSelector((state: userState) => state.userLogin)
+  const dispatch: DispatchType = useDispatch()
+  const navigate = useNavigate()
+
+  const onFinish = async (values: FieldType) => {
+    await dispatch(loginApi({ email: values.email, password: values.password }))
+    if (localStorage.getItem('accessToken')) {
+      navigate('/admin')
+    }
+  }
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo)
+  }
+
   return (
     <>
       <div className="h-screen w-full bg-[#0e1820] flex flex-col justify-between">
@@ -25,42 +46,92 @@ const Login = () => {
           <div className="w-56 h-1/6 bg-[#6e7479] p-3"></div>
         </div>
       </div>
-      <div className="fixed bg-black border-[10px] border-[#00D1FF] rounded-2xl outline-none top-24 left-7 right-7 md:left-14 md:right-14 bottom-24">
+      <div className="fixed bg-black border-[10px] border-[#00D1FF] rounded-2xl outline-none top-24 left-7 right-7 bottom-14 md:left-14 md:right-14 md:bottom-20">
         <h2 className="text-8xl text-white font-smooch text-center mt-4 mb-4">Sign-in</h2>
         <div className="flex justify-center h-full px-4">
           <div className="w-0 md:w-1/2 md:pl-32">
             <img src={SYS.IMAGE.YOUNG_MAN} alt="" className="h-96" />
           </div>
-          <div className="w-full md:w-1/2">
+          <div className="w-full md:w-1/2 mt-1">
             <Form
               name="basic"
               initialValues={{ remember: true }}
-              autoComplete="off"
-              className="w-full md:w-2/3 flex flex-col items-center"
+              className="w-full md:w-2/3 flex flex-col items-center relative"
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
             >
+              <h3 className="absolute -top-2 left-3 px-2 mb-0 text-white bg-black z-10 rounded-md">Email</h3>
               <Form.Item<FieldType>
                 name="email"
-                rules={[{ required: true, message: 'Please input your email!' }]}
-                className="border-2 rounded-lg border-white w-full mb-10"
+                rules={[
+                  {
+                    type: 'email',
+                    message: (
+                      <Alert
+                        className="bg-transparent text-base text-red-700"
+                        message="Invalid email"
+                        banner
+                        type="error"
+                      />
+                    ),
+                  },
+                  {
+                    required: true,
+                    message: (
+                      <Alert
+                        className="bg-transparent text-base text-red-700"
+                        message="Please input your email"
+                        banner
+                        type="error"
+                      />
+                    ),
+                  },
+                ]}
+                className="border-2 rounded-lg border-white w-full mb-10 flex flex-col"
               >
-                <h3 className="-mt-3 ml-2 pl-2 mb-0 text-white bg-black w-14">Email</h3>
-                <Input className="bg-transparent border-none text-white focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none" />
+                <Input className="h-12 bg-transparent border-none text-white focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none" />
               </Form.Item>
 
+              <h3 className="absolute top-20 left-3 px-2 mb-0 text-white bg-black z-10 rounded-md">Password</h3>
               <Form.Item<FieldType>
                 name="password"
-                rules={[{ required: true, message: 'Please input your password!' }]}
-                className="border-2 rounded-lg border-white w-full"
+                rules={[
+                  {
+                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$/,
+                    message: (
+                      <Alert
+                        className="bg-transparent text-base text-red-700"
+                        message="Invalid password"
+                        banner
+                        type="error"
+                      />
+                    ),
+                  },
+                  {
+                    required: true,
+                    message: (
+                      <Alert
+                        className="bg-transparent text-base text-red-700"
+                        message="Please input your password"
+                        banner
+                        type="error"
+                      />
+                    ),
+                  },
+                ]}
+                className="border-2 rounded-lg border-white w-full mb-10 flex flex-col"
               >
-                <h3 className="-mt-3 ml-2 pl-2 mb-0 text-white bg-black w-20">Password</h3>
-                <Input className="bg-transparent border-none text-white focus:shadow-none focus:border-none focus:outline-none" />
+                <Input
+                  type="password"
+                  className="h-12 bg-transparent border-none text-white focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none"
+                />
               </Form.Item>
 
-              <Form.Item<FieldType> name="remember" valuePropName="checked" className="w-full">
+              <Form.Item<FieldType> name="remember" valuePropName="checked" className="w-full mb-1 -mt-1">
                 <Checkbox className="text-5xl font-semibold text-[#cccc]">Remember me</Checkbox>
               </Form.Item>
 
-              <Form.Item className="w-2/3">
+              <Form.Item className="w-2/3 mt-2">
                 <Button
                   type="primary"
                   htmlType="submit"
