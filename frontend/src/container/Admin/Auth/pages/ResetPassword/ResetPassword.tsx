@@ -79,7 +79,7 @@ export default function ResetPassword() {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  className="text-[#7302E8] text-3xl font-bold h-16 w-full border-white rounded-tl-[30px] rounded-bl-[50px] rounded-tr-[50px] rounded-br-[30px]"
+                  className="flex items-center justify-center bg-gradient-to-tr --tw-gradient-stops from-[#6A5AF9] to-[#D66EFD] py-4 px-8 text-3xl font-bold h-16 w-full border-none rounded-tl-[30px] rounded-bl-[50px] rounded-tr-[50px] rounded-br-[30px] hover:bg-gradient-to-l hover:bg-white"
                 >
                   Continue
                 </Button>
@@ -93,7 +93,7 @@ export default function ResetPassword() {
             <Button
               type="primary"
               htmlType="submit"
-              className="text-[#7302E8] text-3xl font-bold h-16 border-white rounded-tl-[30px] rounded-bl-[50px] rounded-tr-[50px] rounded-br-[30px] w-2/3"
+              className="flex items-center justify-center bg-gradient-to-tr --tw-gradient-stops from-[#6A5AF9] to-[#D66EFD] py-4 px-8 text-3xl font-bold h-16 border-none rounded-tl-[30px] rounded-bl-[50px] rounded-tr-[50px] rounded-br-[30px] hover:bg-gradient-to-l hover:bg-white w-2/3"
               onClick={() => navigate('/admin/login')}
             >
               Sign-in

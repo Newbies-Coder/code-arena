@@ -28,13 +28,13 @@ export default function CreateNewPassword() {
           <div className="w-56 h-1/6 bg-[#6e7479] p-3"></div>
         </div>
       </div>
-      <div className="fixed bg-black border-[10px] border-[#00D1FF] rounded-2xl outline-none top-24 left-7 right-7 bottom-14 md:left-14 md:right-14 md:bottom-20">
+      <div className="fixed bg-black border-[10px] border-[#00D1FF] rounded-2xl outline-none top-24 left-7 right-7 bottom-14 lg:left-14 lg:right-14 lg:bottom-20 flex justify-center">
         <div className="flex justify-center h-full px-4">
-          <div className="w-0 md:w-1/2 md:pl-32 mt-10">
+          <div className="w-0 lg:w-1/2 lg:pl-32 mt-10">
             <img src={SYS.IMAGE.YOUNG_MAN} alt="" className="h-full" />
           </div>
-          <div className="w-full md:w-1/2 mt-1 mr-20 flex flex-col items-center py-10">
-            <h2 className="text-8xl text-white font-smooch text-center mt-4 mb-4">Create New Password</h2>
+          <div className="w-full lg:w-1/2 mt-1 flex flex-col items-center py-10">
+            <h2 className="text-6xl text-white font-smooch text-center mb-4">Create New Password</h2>
             <Form
               name="basic"
               initialValues={{ remember: true }}
@@ -116,21 +116,21 @@ export default function CreateNewPassword() {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  className="text-[#7302E8] text-3xl font-bold h-16 w-full border-white rounded-tl-[30px] rounded-bl-[50px] rounded-tr-[50px] rounded-br-[30px]"
+                  className="flex items-center justify-center bg-gradient-to-tr --tw-gradient-stops from-[#6A5AF9] to-[#D66EFD] py-4 px-8 text-xl md:text-3xl font-bold h-10 md:h-16 w-full border-none rounded-tl-[30px] rounded-bl-[50px] rounded-tr-[50px] rounded-br-[30px] hover:bg-gradient-to-l hover:bg-white"
                 >
                   Continue
                 </Button>
               </Form.Item>
             </Form>
             <div className="w-2/3 flex mb-0">
-              <div className="border-t-2 border-white w-full mt-2"></div>
-              <p className="text-xl font-semibold text-white px-4">Or</p>
-              <div className="border-t-2 border-white w-full mt-2"></div>
+              <div className="border-t-2 border-white w-full mt-1"></div>
+              <p className="text-xl font-semibold text-white px-4 -mt-2">Or</p>
+              <div className="border-t-2 border-white w-full mt-1"></div>
             </div>
             <Button
               type="primary"
               htmlType="submit"
-              className="text-[#7302E8] text-3xl font-bold h-16 border-white rounded-tl-[30px] rounded-bl-[50px] rounded-tr-[50px] rounded-br-[30px] w-2/3"
+              className="flex items-center justify-center bg-gradient-to-tr --tw-gradient-stops from-[#6A5AF9] to-[#D66EFD] py-4 px-8 text-xl md:text-3xl font-bold h-10 md:h-16 w-2/3 border-none rounded-tl-[30px] rounded-bl-[50px] rounded-tr-[50px] rounded-br-[30px] hover:bg-gradient-to-l hover:bg-white"
               onClick={() => navigate('/admin/login')}
             >
               Sign-in
