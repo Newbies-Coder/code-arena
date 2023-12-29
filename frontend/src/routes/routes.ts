@@ -17,6 +17,8 @@ const HomePageAdmin = React.lazy(() => import('@/container/Admin/Home/pages/Main
 const LoginAdmin = React.lazy(() => import('@container/Admin/Auth/pages/Login'))
 const ResetPasswordAdmin = React.lazy(() => import('@container/Admin/Auth/pages/ResetPassword'))
 const CreateNewPasswordAdmin = React.lazy(() => import('@/container/Admin/Auth/pages/CreateNewPassword'))
+const ProfileAdmin = React.lazy(() => import('@/container/Admin/Profile/pages/MainProfile'))
+const LayoutAdmin = React.lazy(() => import('@/layout/Admin'))
 
 const publicRoute = [
   {
@@ -82,6 +84,11 @@ const privateRoute = [
   {
     path: config.routes.admin.createNewPassword,
     component: CreateNewPasswordAdmin,
+  },
+  {
+    path: config.routes.admin.profile,
+    component: ProfileAdmin,
+    layout: LayoutAdmin,
   },
 ]
 

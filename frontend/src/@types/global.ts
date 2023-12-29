@@ -18,4 +18,5 @@ export type routeAdminTypes = {
   login: string
   resetPassword: string
   createNewPassword: string
+  profile: string
 }
