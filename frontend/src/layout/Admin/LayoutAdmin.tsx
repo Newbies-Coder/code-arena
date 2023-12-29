@@ -86,7 +86,7 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
             <AvatarProfile />
           </div>
         </Header>
-        <Content className="h-full overflow-scroll">{children}</Content>
+        <Content className="h-full">{children}</Content>
       </Layout>
     </Layout>
   )

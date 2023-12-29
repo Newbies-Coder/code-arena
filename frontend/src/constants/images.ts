@@ -20,6 +20,7 @@ import First from '@assets/images/svg/first.svg'
 import Second from '@assets/images/svg/second.svg'
 import Third from '@assets/images/svg/third.svg'
 import YoungMan from '@assets/images/young_man.png'
+import BackgroundProfile from '@assets/images/background/background_profile.png'
 
 export const LOGO = {
   APP_LOGO: Logo,
@@ -35,6 +36,7 @@ export const SYS = {
   IMAGE: {
     NO_AVATAR: noAvatarImage,
     YOUNG_MAN: YoungMan,
+    BG_PROFILE: BackgroundProfile,
   },
 }
 
