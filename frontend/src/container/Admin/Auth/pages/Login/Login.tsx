@@ -42,13 +42,13 @@ const Login = () => {
           <div className="w-56 h-1/6 bg-[#6e7479] p-3"></div>
         </div>
       </div>
-      <div className="fixed bg-black border-[10px] border-[#00D1FF] rounded-2xl outline-none top-24 left-7 right-7 bottom-14 md:left-14 md:right-14 md:bottom-20">
+      <div className="fixed bg-black border-[10px] border-[#00D1FF] rounded-2xl outline-none top-24 left-7 right-7 bottom-14 md:left-14 md:right-14 md:bottom-20 flex flex-col">
         <h2 className="text-8xl text-white font-smooch text-center mt-4 mb-4">Sign-in</h2>
-        <div className="flex justify-center h-full px-4">
-          <div className="w-0 md:w-1/2 md:pl-32">
-            <img src={SYS.IMAGE.YOUNG_MAN} alt="" className="h-96" />
+        <div className="flex justify-center px-4 h-full">
+          <div className="w-0 md:w-1/2 md:pl-32 h-full">
+            <img src={SYS.IMAGE.YOUNG_MAN} alt="" className="h-full" />
           </div>
-          <div className="w-full md:w-1/2 mt-1">
+          <div className="w-full md:w-1/2 mt-1 h-full">
             <Form
               name="basic"
               initialValues={{ remember: true }}
