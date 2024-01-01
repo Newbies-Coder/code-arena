@@ -42,7 +42,7 @@ export default function CreateNewPassword() {
               onFinish={onFinish}
               onFinishFailed={onFinishFailed}
             >
-              <h3 className="absolute -top-2 left-3 px-2 mb-0 text-white bg-black z-10 rounded-md">Password</h3>
+              <h3 className="absolute -top-2 left-3 px-2 mb-0 text-[#6a5af9] bg-black z-10 rounded-md">Password</h3>
               <Form.Item
                 name="password"
                 rules={[
@@ -69,15 +69,17 @@ export default function CreateNewPassword() {
                     ),
                   },
                 ]}
-                className="border-2 rounded-lg border-white w-full mb-10 flex flex-col"
+                className="border-2 rounded-lg border-[#6a5af9] w-full mb-10 flex flex-col"
               >
                 <Input
                   type="password"
-                  className="h-12 bg-transparent border-none text-white focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none"
+                  className="h-12 bg-transparent border-none text-[#6a5af9] focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none"
                 />
               </Form.Item>
 
-              <h3 className="absolute top-20 left-3 px-2 mb-0 text-white bg-black z-10 rounded-md">Confirm password</h3>
+              <h3 className="absolute top-20 left-3 px-2 mb-0 text-[#6a5af9] bg-black z-10 rounded-md">
+                Confirm password
+              </h3>
               <Form.Item
                 name="confirmPassword"
                 rules={[
@@ -104,11 +106,11 @@ export default function CreateNewPassword() {
                     ),
                   },
                 ]}
-                className="border-2 rounded-lg border-white w-full mb-10 flex flex-col"
+                className="border-2 rounded-lg border-[#6a5af9] w-full mb-10 flex flex-col"
               >
                 <Input
                   type="password"
-                  className="h-12 bg-transparent border-none text-white focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none"
+                  className="h-12 bg-transparent border-none text-[#6a5af9] focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none"
                 />
               </Form.Item>
 
