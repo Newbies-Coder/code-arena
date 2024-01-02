@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb'
 import { ParsedUrlQuery } from 'querystring'
 
-export interface LoginBody {
+export interface LoginPayload {
   email: string
   password: string
 }

@@ -53,6 +53,39 @@ export const CLIENT_MESSAGE = {
   SECRET_COOKIE_NAME: 'Cookies_name when user login and register success and save local'
 } as const
 
+export const DEV_ERRORS_MESSAGES = {
+  LOGIN: 'Error during login process',
+  REGISTER: 'Error during register process',
+  FIND_OTP: 'Error finding OTP',
+  GENERATED_OTP: 'Error generated OTP',
+  VERIFY_OTP: 'Error verifying OTP',
+  GET_ALL_USER: 'Error retrieving users',
+  DELETED_BANNER: 'Error delete banner',
+  GET_ALL_BANNER: 'Error get all banners',
+  INSERT_BRANDS: 'Error inert brands',
+  GET_ALL_BRANDS: 'Error get all brands',
+  UPDATE_BRANDS: 'Error update brands',
+  DELETED_BRANDS: 'Error deleted brands',
+  LOGOUT: 'Error occurred during logout.',
+  CHANGE_PASSWORD: 'Error changing password',
+  FORGOT_PASSWORD: 'Error in forgot-password',
+  SEND_FAILURE: 'Error in send OTP',
+  GET_ROLE_USER: 'Error fetching users by role',
+  INSERT_STORE: 'Error inserting store',
+  GET_ALL_STORES: 'Error get all stores',
+  UPDATE_STORES: 'Error update stores',
+  DELETED_STORE: 'Error deleted store',
+  INSERT_TAGS: 'Error inserting tags',
+  GET_ALL_TAGS: 'Error get all tags',
+  GET_TAGS_BY_ID: 'Error get tags by id',
+  UPDATE_TAGS: 'Error update tags',
+  DELETED_TAGS: 'Error deleted tags',
+  INSERT_PROVINCE: 'Error inserting province',
+  GET_ALL_PROVINCE: 'Error get all province',
+  UPDATE_PROVINCE: 'Error update province',
+  DELETED_PROVINCE: 'Error deleted province'
+}
+
 export const RESULT_RESPONSE_MESSAGES = {
   AUTH_SUCCESS: {
     LOGIN: 'Login successfully!',
@@ -145,7 +178,8 @@ export const VALIDATION_MESSAGES = {
       PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Password must be between 8 and 16 characters long',
       PASSWORD_IS_INCORRECT: 'Password is incorrect',
       ACCOUNT_IS_UNVERIFIED: 'Account is unverified',
-      ACCOUNT_IS_BANNED: 'Account is banned'
+      ACCOUNT_IS_BANNED: 'Account is banned',
+      USER_NOT_FOUND: 'User not found'
     },
     REGISTER: {
       NAME_IS_REQUIRED: 'Username is required',
@@ -202,7 +236,8 @@ export const VALIDATION_MESSAGES = {
       EMAIL_IS_REQUIRED: 'Email is required',
       EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
       EMAIL_ACCESSABILITY: 'The email address exist. Please go to login or try the another one',
-      EMAIL_IS_NOT_EXIT: 'Email is not exits'
+      EMAIL_IS_NOT_EXIT: 'Email is not exits',
+      VALID_USERNAME_PART_OF_EMAIL: 'Username part of the email must not contain special characters'
     },
     USER_PROFILE: {
       USER_ID_IS_REQUIRED: 'User id is required',

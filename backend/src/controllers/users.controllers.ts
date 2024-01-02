@@ -6,7 +6,7 @@ import {
   ChangePasswordBody,
   FavoriteBody,
   GetUsersByRoleQuery,
-  LoginBody,
+  LoginPayload,
   LogoutBody,
   RefreshTokenBody,
   RegisterBody,
@@ -22,7 +22,7 @@ import { ObjectId } from 'mongodb'
 import { env } from '~/config/environment.config'
 
 const userController = {
-  login: async (req: Request<ParamsDictionary, any, LoginBody>, res: Response, next: NextFunction) => {
+  login: async (req: Request<ParamsDictionary, any, LoginPayload>, res: Response, next: NextFunction) => {
     const result = await userServices.login(req.body)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.AUTH_SUCCESS.LOGIN)
   },

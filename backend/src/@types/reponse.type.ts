@@ -13,11 +13,10 @@ export type ResultRefreshTokenType = {
   access_token: string
   refresh_token: string
 }
-
-export type ResultLoginType = {
+export type LoginResultType = {
   _id: string
-  fullName: string
   email: string
+  username: string
   access_token: string
   refresh_token: string
 }

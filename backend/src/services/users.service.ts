@@ -9,7 +9,7 @@ import {
   ForgotPasswordBody,
   GetUsersByRoleQuery,
   InfoTokenType,
-  LoginBody,
+  LoginPayload,
   LogoutBody,
   RefreshTokenBody,
   RegisterBody,
@@ -18,12 +18,12 @@ import {
 } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
-import { PaginationType, ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
+import { LoginResultType, PaginationType, ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
 import { hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import { StatusCodes } from 'http-status-codes'
-import { VALIDATION_MESSAGES } from '~/constants/message'
+import { DEV_ERRORS_MESSAGES, VALIDATION_MESSAGES } from '~/constants/message'
 import moment from 'moment'
 import emailService from '~/services/email.service'
 import otpService from '~/services/otp.service'
@@ -43,12 +43,12 @@ class UserService {
     return Boolean(user)
   }
 
-  async validatePassword(email: string, password: string) {
-    const user = await databaseService.users.findOne({ email: email })
-    if (!user) {
-      throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_NOT_EXIT })
+  async validatePassword(providedPassword: string, storedPassword: string): Promise<boolean> {
+    try {
+      return hashPassword(providedPassword) === storedPassword ? true : false
+    } catch (error) {
+      throw error
     }
-    return Boolean(user.password !== hashPassword(password))
   }
 
   async isUserExist(id: string) {
@@ -111,7 +111,7 @@ class UserService {
       }
     })
   }
-  // Create access_token and refresh_token
+
   signAccessAndRefreshToken(user_id: string, email: string, role: UserRole) {
     return Promise.all([this.signAccessToken(user_id, email, role), this.signRefreshToken(user_id, email, role)])
   }
@@ -187,26 +187,52 @@ class UserService {
     return content
   }
 
-  async login(payload: LoginBody) {
-    let email = payload.email
-    const { username, _id, role } = await databaseService.users.findOne({ email: email })
-    const [access_token, refresh_token] = await this.signAccessAndRefreshToken(_id.toString(), email, role)
-    // if user is logged in but still login again
-    await databaseService.refreshTokens.deleteOne({ user_id: _id })
-    await databaseService.refreshTokens.insertOne(
-      new RefreshToken({
-        token: refresh_token,
-        user_id: _id
+  async login(payload: LoginPayload): Promise<LoginResultType> {
+    try {
+      const user = await databaseService.users.findOne({ email: payload.email })
+
+      if (!user) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: VALIDATION_MESSAGES.USER.LOGIN.USER_NOT_FOUND
+        })
+      }
+      const isPasswordCorrect = await userServices.validatePassword(payload.password, user.password)
+      if (!isPasswordCorrect) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.UNAUTHORIZED,
+          message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT
+        })
+      }
+
+      const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user._id.toString(), user.email, user.role)
+
+      await databaseService.refreshTokens.updateOne(
+        { user_id: user._id },
+        {
+          $set: {
+            user_id: user._id,
+            token: refresh_token,
+            created_at: new Date(),
+            updated_at: new Date()
+          }
+        },
+        { upsert: true }
+      )
+      const content: LoginResultType = {
+        _id: user._id.toString(),
+        email: user.email,
+        username: user.username,
+        access_token,
+        refresh_token
+      }
+      return content
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.LOGIN
       })
-    )
-    const content: ResultRegisterType = {
-      _id: _id.toString(),
-      username: username,
-      email,
-      access_token,
-      refresh_token
     }
-    return content
   }
 
   async logout(payload: LogoutBody) {
@@ -438,7 +464,6 @@ class UserService {
     return userInfo
   }
 
-  // update profile
   async updateProfile(user: AuthUser, payload: UpdateProfileBody) {
     if (Object.keys(payload).length === 0) {
       throw new ErrorWithStatus({ statusCode: StatusCodes.BAD_REQUEST, message: VALIDATION_MESSAGES.USER.USER_PROFILE.FIELD_UPDATE_IS_REQUIRED })
@@ -446,7 +471,6 @@ class UserService {
     await databaseService.users.updateOne({ _id: new ObjectId(user._id) }, { $set: payload }, { upsert: false })
   }
 
-  // get users by role
   async getUsersByRole(payload: GetUsersByRoleQuery) {
     const role = payload.includes === 'user' ? UserRole.User : payload.includes === 'admin' ? UserRole.Admin : UserRole.Moderator
     const pageNumber = parseInt(payload.pageNumber)
@@ -456,7 +480,6 @@ class UserService {
     return result
   }
 
-  // add user in close_friends db
   async insertUserFavorite(user: AuthUser, payload: FavoriteBody) {
     await databaseService.closeFriends.insertOne(
       new CloseFriends({
@@ -466,7 +489,6 @@ class UserService {
     )
   }
 
-  // get users in close friend list
   async getFavorite(user: AuthUser) {
     const result = await databaseService.closeFriends
       .aggregate([
@@ -502,13 +524,11 @@ class UserService {
     return result.map((item) => item.friendInfo)
   }
 
-  // check user in close friends list
   async isExitInCloseFriends(userId: ObjectId, friendId: ObjectId) {
     const result = await databaseService.closeFriends.findOne({ userId: userId, friendId: friendId })
     return result
   }
 
-  // remove doc in close friends
   async removeUserFavorite(user: AuthUser, payload: ParamsDictionary) {
     await databaseService.closeFriends.deleteOne({ userId: new ObjectId(user._id), friendId: new ObjectId(payload.id) })
   }

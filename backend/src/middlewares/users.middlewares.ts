@@ -124,7 +124,6 @@ export const registerValidator = validate(
   )
 )
 
-// Validation login feature
 export const loginValidator = validate(
   checkSchema(
     {
@@ -137,12 +136,13 @@ export const loginValidator = validate(
         },
         trim: true,
         custom: {
-          options: async (value) => {
-            const isExistEmail = await userServices.validateEmailAccessibility(value)
-            if (!isExistEmail) {
+          options: async (value, { req }) => {
+            const specialCharacters = /[^a-zA-Z0-9.-]/
+            const username = value.split('@')[0]
+            if (specialCharacters.test(username)) {
               throw new ErrorWithStatus({
-                statusCode: StatusCodes.NOT_FOUND,
-                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.EMAIL.VALID_USERNAME_PART_OF_EMAIL
               })
             }
             return true
@@ -164,27 +164,14 @@ export const loginValidator = validate(
             minNumbers: 1,
             minSymbols: 1
           },
-          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_STRONG
         },
         trim: true,
-        escape: true,
         isLength: {
-          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT,
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16,
           options: {
             min: 8,
             max: 16
-          }
-        },
-        custom: {
-          options: async (value, { req }) => {
-            const isExistPassword = await userServices.validatePassword(req.body.email, value)
-            if (isExistPassword) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT
-              })
-            }
-            return true
           }
         }
       }
