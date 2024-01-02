@@ -3,6 +3,7 @@ import { databaseService } from './connectDB.service'
 import { TokenType, UserRole, UserVerifyStatus } from '~/constants/enums'
 import { env } from '~/config/environment.config'
 import {
+  AccessTokenPayload,
   BlockUserBody,
   ChangePasswordBody,
   FavoriteBody,
@@ -12,6 +13,7 @@ import {
   LoginPayload,
   LogoutBody,
   RefreshTokenBody,
+  RefreshTokenPayload,
   RegisterBody,
   UpdateProfileBody,
   VerifyOTPBody
@@ -36,8 +38,47 @@ import cloudinaryService from '~/services/cloudinary.service'
 import { ParsedQs } from 'qs'
 import BlockedUser from '~/models/schemas/BlockedUser.schema'
 import CloseFriends from '~/models/schemas/CloseFriends'
+import { SignOptions } from 'jsonwebtoken'
 
 class UserService {
+  signAccessToken(_id: string, email: string, role: UserRole): Promise<string> {
+    const { access_token_exp, jwt_algorithm, secret_key } = env.jwt
+    const payload: AccessTokenPayload = {
+      _id,
+      email,
+      role,
+      token_type: TokenType.AccessToken
+    }
+    const options: SignOptions = {
+      expiresIn: access_token_exp,
+      algorithm: jwt_algorithm
+    }
+    return signToken({ payload, privateKey: secret_key as string, options })
+  }
+
+  signRefreshToken(_id: string, email: string, role: UserRole): Promise<string> {
+    const { refresh_token_exp, jwt_algorithm, refresh_token_key } = env.jwt
+    const payload: RefreshTokenPayload = {
+      _id,
+      email,
+      role,
+      token_type: TokenType.RefreshToken
+    }
+    const options: SignOptions = {
+      expiresIn: refresh_token_exp,
+      algorithm: jwt_algorithm
+    }
+    return signToken({
+      payload,
+      privateKey: refresh_token_key as string,
+      options
+    })
+  }
+
+  public signAccessAndRefreshToken(user_id: string, email: string, role: UserRole): Promise<[string, string]> {
+    return Promise.all([this.signAccessToken(user_id, email, role), this.signRefreshToken(user_id, email, role)])
+  }
+
   async validateEmailAccessibility(email: string) {
     const user = await databaseService.users.findOne({ email })
     return Boolean(user)
@@ -47,7 +88,7 @@ class UserService {
     try {
       return hashPassword(providedPassword) === storedPassword ? true : false
     } catch (error) {
-      throw error
+      throw error.message
     }
   }
 
@@ -56,18 +97,16 @@ class UserService {
     return Boolean(result)
   }
 
-  async validateAccountAccessibility(email: string) {
+  async validateAccountAccessibility(email: string): Promise<boolean> {
     const user = await databaseService.users.findOne({ email })
-    if (user.verify === 'Unverified') {
+    if (!user || ['Unverified', 'Banned'].includes(user.verify)) {
       throw new ErrorWithStatus({
         statusCode: StatusCodes.FORBIDDEN,
-        message: VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_UNVERIFIED
-      })
-    }
-    if (user.verify === 'Banned') {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.FORBIDDEN,
-        message: VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_BANNED
+        message: user
+          ? user.verify === 'Unverified'
+            ? VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_UNVERIFIED
+            : VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_BANNED
+          : VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_NOT_FOUND
       })
     }
     return true
@@ -78,42 +117,52 @@ class UserService {
     return Boolean(token)
   }
 
-  signAccessToken(_id: string, email: string, role: UserRole) {
-    let { access_token_exp, jwt_algorithm, secret_key } = env.jwt
-    return signToken({
-      payload: {
-        _id,
-        email,
-        role,
-        token_type: TokenType.AccessToken
-      },
-      privateKey: secret_key as string,
-      options: {
-        expiresIn: access_token_exp,
-        algorithm: jwt_algorithm
-      }
-    })
-  }
+  async login(payload: LoginPayload): Promise<LoginResultType> {
+    try {
+      const user = await databaseService.users.findOne({ email: payload.email })
 
-  signRefreshToken(_id: string, email: string, role: UserRole) {
-    let { refresh_token_exp, jwt_algorithm, refresh_token_key } = env.jwt
-    return signToken({
-      payload: {
-        _id,
-        email,
-        role,
-        token_type: TokenType.RefreshToken
-      },
-      privateKey: refresh_token_key as string,
-      options: {
-        expiresIn: refresh_token_exp,
-        algorithm: jwt_algorithm
+      if (!user) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: VALIDATION_MESSAGES.USER.LOGIN.USER_NOT_FOUND
+        })
       }
-    })
-  }
+      const isPasswordCorrect = await userServices.validatePassword(payload.password, user.password)
+      if (!isPasswordCorrect) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.UNAUTHORIZED,
+          message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT
+        })
+      }
 
-  signAccessAndRefreshToken(user_id: string, email: string, role: UserRole) {
-    return Promise.all([this.signAccessToken(user_id, email, role), this.signRefreshToken(user_id, email, role)])
+      const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user._id.toString(), user.email, user.role)
+
+      await databaseService.refreshTokens.updateOne(
+        { user_id: user._id },
+        {
+          $set: {
+            user_id: user._id,
+            token: refresh_token,
+            created_at: new Date(),
+            updated_at: new Date()
+          }
+        },
+        { upsert: true }
+      )
+      const content: LoginResultType = {
+        _id: user._id.toString(),
+        email: user.email,
+        username: user.username,
+        access_token,
+        refresh_token
+      }
+      return content
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.LOGIN
+      })
+    }
   }
 
   async sendOTP(email: string) {
@@ -185,54 +234,6 @@ class UserService {
 
     let content: ResultRegisterType = { _id: user_id, username, email, access_token, refresh_token }
     return content
-  }
-
-  async login(payload: LoginPayload): Promise<LoginResultType> {
-    try {
-      const user = await databaseService.users.findOne({ email: payload.email })
-
-      if (!user) {
-        throw new ErrorWithStatus({
-          statusCode: StatusCodes.NOT_FOUND,
-          message: VALIDATION_MESSAGES.USER.LOGIN.USER_NOT_FOUND
-        })
-      }
-      const isPasswordCorrect = await userServices.validatePassword(payload.password, user.password)
-      if (!isPasswordCorrect) {
-        throw new ErrorWithStatus({
-          statusCode: StatusCodes.UNAUTHORIZED,
-          message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT
-        })
-      }
-
-      const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user._id.toString(), user.email, user.role)
-
-      await databaseService.refreshTokens.updateOne(
-        { user_id: user._id },
-        {
-          $set: {
-            user_id: user._id,
-            token: refresh_token,
-            created_at: new Date(),
-            updated_at: new Date()
-          }
-        },
-        { upsert: true }
-      )
-      const content: LoginResultType = {
-        _id: user._id.toString(),
-        email: user.email,
-        username: user.username,
-        access_token,
-        refresh_token
-      }
-      return content
-    } catch (error) {
-      throw new ErrorWithStatus({
-        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
-        message: error.message || DEV_ERRORS_MESSAGES.LOGIN
-      })
-    }
   }
 
   async logout(payload: LogoutBody) {

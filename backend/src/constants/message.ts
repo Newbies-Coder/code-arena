@@ -179,6 +179,7 @@ export const VALIDATION_MESSAGES = {
       PASSWORD_IS_INCORRECT: 'Password is incorrect',
       ACCOUNT_IS_UNVERIFIED: 'Account is unverified',
       ACCOUNT_IS_BANNED: 'Account is banned',
+      ACCOUNT_NOT_FOUND: 'Account not found',
       USER_NOT_FOUND: 'User not found'
     },
     REGISTER: {

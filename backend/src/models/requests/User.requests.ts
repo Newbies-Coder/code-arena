@@ -1,9 +1,24 @@
 import { ObjectId } from 'mongodb'
 import { ParsedUrlQuery } from 'querystring'
+import { TokenType, UserRole } from '~/constants/enums'
 
 export interface LoginPayload {
   email: string
   password: string
+}
+
+export interface AccessTokenPayload {
+  _id: string
+  email: string
+  role: UserRole
+  token_type: TokenType.AccessToken
+}
+
+export interface RefreshTokenPayload {
+  _id: string
+  email: string
+  role: UserRole
+  token_type: TokenType.RefreshToken
 }
 
 export interface RegisterBody {
