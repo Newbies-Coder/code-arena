@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DispatchType } from '../config'
 import { userState, userType } from 'src/@types/user'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 
 const initialState: userState = {
   userLogin: {},
@@ -31,10 +31,16 @@ export const loginApi = (userLogin: any) => {
   return async (dispatch: DispatchType) => {
     try {
       const response = await axios.post(`http://localhost:8080/api/v1/users/login`, userLogin)
-      const userData = response.data
-      dispatch(loginAction(userData))
+      // const userData = response.data
+      // dispatch(loginAction(userData))
+      dispatch(loginAction(response.data.data))
+      localStorage.setItem('accessToken', response.data.data.access_token)
+      localStorage.setItem('refreshToken', response.data.data.refresh_token)
     } catch (error) {
       console.log(error)
+      if (error instanceof AxiosError) {
+        alert(error.response?.data.message)
+      }
     }
   }
 }

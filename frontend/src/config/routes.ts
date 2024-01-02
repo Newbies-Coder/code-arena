@@ -12,6 +12,12 @@ const routes: routeTypes = {
   passwordResetSuccess: '/password-reset-success',
   notFound: '*',
   detailCoding: '/detail-coding',
+  admin: {
+    home: '/admin',
+    login: '/admin/login',
+    resetPassword: '/admin/reset-password',
+    createNewPassword: '/admin/create-new-password',
+  },
 } as const
 
 export default routes

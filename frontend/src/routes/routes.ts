@@ -13,6 +13,11 @@ const NotFoundPage = React.lazy(() => import('@components/NotFound'))
 const DetailCodingPage = React.lazy(() => import('@container/Detail/pages/MainDetail'))
 const ProfilePage = React.lazy(() => import('@container/Profile/pages/MainProfile'))
 
+const HomePageAdmin = React.lazy(() => import('@/container/Admin/Home/pages/MainHome'))
+const LoginAdmin = React.lazy(() => import('@container/Admin/Auth/pages/Login'))
+const ResetPasswordAdmin = React.lazy(() => import('@container/Admin/Auth/pages/ResetPassword'))
+const CreateNewPasswordAdmin = React.lazy(() => import('@/container/Admin/Auth/pages/CreateNewPassword'))
+
 const publicRoute = [
   {
     path: config.routes.home,
@@ -59,6 +64,25 @@ const publicRoute = [
     path: config.routes.profile,
     component: ProfilePage,
   },
+  {
+    path: config.routes.admin.login,
+    component: LoginAdmin,
+  },
 ]
 
-export { publicRoute }
+const privateRoute = [
+  {
+    path: config.routes.admin.home,
+    component: HomePageAdmin,
+  },
+  {
+    path: config.routes.admin.resetPassword,
+    component: ResetPasswordAdmin,
+  },
+  {
+    path: config.routes.admin.createNewPassword,
+    component: CreateNewPasswordAdmin,
+  },
+]
+
+export { publicRoute, privateRoute }
