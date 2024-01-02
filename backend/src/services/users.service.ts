@@ -75,7 +75,7 @@ class UserService {
     })
   }
 
-  public signAccessAndRefreshToken(user_id: string, email: string, role: UserRole): Promise<[string, string]> {
+  signAccessAndRefreshToken(user_id: string, email: string, role: UserRole): Promise<[string, string]> {
     return Promise.all([this.signAccessToken(user_id, email, role), this.signRefreshToken(user_id, email, role)])
   }
 
@@ -89,6 +89,15 @@ class UserService {
       return hashPassword(providedPassword) === storedPassword ? true : false
     } catch (error) {
       throw error.message
+    }
+  }
+
+  async findUserByEmail(email: string): Promise<User | null> {
+    try {
+      const user = await databaseService.users.findOne({ email })
+      return user
+    } catch (error) {
+      throw error
     }
   }
 
@@ -166,12 +175,9 @@ class UserService {
   }
 
   async sendOTP(email: string) {
-    const otp = await otpService.generateOTP(email)
-
-    await emailService.sendMail(
-      otp.email,
-      'Code Arena',
-      `<div
+    try {
+      const otp = await otpService.generateOTP(email)
+      const emailContent = `<div
       style="font-family:Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2;background-image: url('https://i.pinimg.com/originals/ac/71/99/ac71991f2c80919102eb0a2f7936a9cf.png'); background-size: contain; object-fit: cover; ">
       <div
         style="margin: 50px auto; width: 50%; padding: 20px 0; background-color: #f1f0f0dd; border-radius: 10px; box-shadow: 0 0 10px #d1cececc;">
@@ -208,32 +214,42 @@ class UserService {
         </div>
       </div>
     </div>`
-    )
+      await emailService.sendMail(otp.email, 'Code Arena', emailContent)
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: DEV_ERRORS_MESSAGES.SEND_FAILURE
+      })
+    }
   }
 
-  async register(payload: RegisterBody) {
-    let { email, username } = payload
-    let role = UserRole.User
-    const result = await databaseService.users.insertOne(
-      new User({
+  async register(payload: RegisterBody): Promise<ResultRegisterType> {
+    try {
+      let { email, username, password, date_of_birth } = payload
+      const hashedPassword = hashPassword(password)
+      const newUser = new User({
         ...payload,
-        date_of_birth: new Date(payload.date_of_birth),
-        password: hashPassword(payload.password)
+        password: hashedPassword,
+        date_of_birth: new Date(date_of_birth),
+        role: UserRole.User
       })
-    )
-    let user_id = result.insertedId.toString()
-    const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id, email, role)
-    await databaseService.refreshTokens.insertOne(
-      new RefreshToken({
+      const userResult = await databaseService.users.insertOne(newUser)
+      const user_id = userResult.insertedId.toString()
+      const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id, email, UserRole.User)
+      const refreshTokenObj = new RefreshToken({
         token: refresh_token,
         user_id: new ObjectId(user_id)
       })
-    )
-
-    await this.sendOTP(email)
-
-    let content: ResultRegisterType = { _id: user_id, username, email, access_token, refresh_token }
-    return content
+      await databaseService.refreshTokens.insertOne(refreshTokenObj)
+      await this.sendOTP(email)
+      const content: ResultRegisterType = { _id: user_id, username, email, access_token, refresh_token }
+      return content
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.REGISTER
+      })
+    }
   }
 
   async logout(payload: LogoutBody) {

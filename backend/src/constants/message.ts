@@ -200,7 +200,7 @@ export const VALIDATION_MESSAGES = {
       CONFIRM_PASSWORD_MUST_BE_STRONG: 'Confirm_password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
       CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Confirm_password must be between 8 and 16 characters long',
       DATE_OF_BIRTH_IS_REQUIRED: 'Date of birth is required',
-      DATE_OF_BIRTH_IS_ISO8601: 'Date of birth must be a YYYY-MM-DDTHH:mm:ss.ssssZ',
+      DATE_OF_BIRTH_MUST_BE_A_STRING: 'Date of birth must be a string',
       DATE_OF_BIRTH_ERROR_FORMAT: 'Date_of_birth must be yyyy-mm-dd',
       AGE_IS_NOT_ENOUGH: 'You must above 12 years old to register'
     },
@@ -238,7 +238,8 @@ export const VALIDATION_MESSAGES = {
       EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
       EMAIL_ACCESSABILITY: 'The email address exist. Please go to login or try the another one',
       EMAIL_IS_NOT_EXIT: 'Email is not exits',
-      VALID_USERNAME_PART_OF_EMAIL: 'Username part of the email must not contain special characters'
+      VALID_USERNAME_PART_OF_EMAIL: 'Username part of the email must not contain special characters',
+      EMAIL_ALREADY_EXISTS: 'Email already exists'
     },
     USER_PROFILE: {
       USER_ID_IS_REQUIRED: 'User id is required',

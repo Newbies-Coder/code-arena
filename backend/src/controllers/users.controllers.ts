@@ -28,7 +28,6 @@ const userController = {
   },
   register: async (req: Request<ParamsDictionary, any, RegisterBody>, res: Response, next: NextFunction) => {
     const result = await userServices.register(req.body)
-
     return sendResponse.created(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.REGISTER)
   },
   logout: async (req: Request<ParamsDictionary, any, LogoutBody>, res: Response, next: NextFunction) => {

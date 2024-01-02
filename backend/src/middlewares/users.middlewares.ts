@@ -13,8 +13,8 @@ import { capitalize } from 'lodash'
 import { TokenPayloadType } from '~/@types/tokenPayload.type'
 import { ObjectId } from 'mongodb'
 import { UserRole } from '~/constants/enums'
+import { isIsoDate } from '~/utils/helper'
 
-// Validation register feature
 export const registerValidator = validate(
   checkSchema(
     {
@@ -44,11 +44,20 @@ export const registerValidator = validate(
         trim: true,
         custom: {
           options: async (value) => {
-            const isExistEmail = await userServices.validateEmailAccessibility(value)
-            if (isExistEmail) {
+            const specialCharacters = /[^a-zA-Z0-9.-]/
+            const username = value.split('@')[0]
+            if (specialCharacters.test(username)) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
+                message: VALIDATION_MESSAGES.USER.EMAIL.VALID_USERNAME_PART_OF_EMAIL
+              })
+            }
+
+            const user = await userServices.findUserByEmail(value)
+            if (user) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.CONFLICT,
+                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ALREADY_EXISTS
               })
             }
             return true
@@ -118,6 +127,24 @@ export const registerValidator = validate(
           },
           errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16
         }
+      },
+      date_of_birth: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.DATE_OF_BIRTH_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.DATE_OF_BIRTH_MUST_BE_A_STRING
+        },
+        trim: true,
+        custom: {
+          options: (value) => {
+            const val = isIsoDate(value)
+            if (!val) {
+              throw new Error(VALIDATION_MESSAGES.USER.REGISTER.DATE_OF_BIRTH_ERROR_FORMAT)
+            }
+            return true
+          }
+        }
       }
     },
     ['body']
@@ -136,7 +163,7 @@ export const loginValidator = validate(
         },
         trim: true,
         custom: {
-          options: async (value, { req }) => {
+          options: async (value) => {
             const specialCharacters = /[^a-zA-Z0-9.-]/
             const username = value.split('@')[0]
             if (specialCharacters.test(username)) {
@@ -145,6 +172,7 @@ export const loginValidator = validate(
                 message: VALIDATION_MESSAGES.USER.EMAIL.VALID_USERNAME_PART_OF_EMAIL
               })
             }
+            await userServices.validateAccountAccessibility(value)
             return true
           }
         }
