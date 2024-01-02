@@ -37,21 +37,20 @@ const userRouter = Router()
 userRouter.post('/login', loginValidator, wrapRequestHandler(userController.login))
 
 /**
- * Description. Register a new user
+ * Description: Register a new user
  * Path: /register
  * Method: POST
- * Body: { name: string, email: string, password: string, confirm_password: string, date_of_birth: ISO8601 }
+ * Body: { name: string, email: string, password: string, confirm_password: string, date_of_birth: string }
  */
 userRouter.post('/register', registerValidator, wrapRequestHandler(userController.register))
 
 /**
- * Description. Logout a user
+ * Description: Logout a user
  * Path: /logout
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
  * Body: { refresh_token: string }
  */
-
 userRouter.post('/logout', wrapRequestHandler(requireLoginMiddleware), refreshTokenValidator, wrapRequestHandler(userController.logout))
 
 /**

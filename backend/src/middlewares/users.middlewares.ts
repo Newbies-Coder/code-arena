@@ -208,7 +208,6 @@ export const loginValidator = validate(
   )
 )
 
-// Validation forgot password feature
 export const forgotPasswordValidator = validate(
   checkSchema(
     {
@@ -661,6 +660,7 @@ export const followUserValidator = validate(
     ['params']
   )
 )
+
 export const userProfileValidator = validate(
   checkSchema(
     {

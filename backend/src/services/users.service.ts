@@ -253,9 +253,22 @@ class UserService {
   }
 
   async logout(payload: LogoutBody) {
-    let refresh_token = payload.refresh_token
-    await databaseService.refreshTokens.deleteOne({ token: refresh_token })
-    return true
+    try {
+      const { refresh_token } = payload
+      const result = await databaseService.refreshTokens.deleteOne({ token: refresh_token })
+      if (result.deletedCount === 0) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.CONFLICT,
+          message: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.TOKEN_NOT_FOUND
+        })
+      }
+      return true
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.LOGOUT
+      })
+    }
   }
 
   async forgotPassword(payload: ForgotPasswordBody) {

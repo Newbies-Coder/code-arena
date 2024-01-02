@@ -213,7 +213,8 @@ export const VALIDATION_MESSAGES = {
     },
     REFRESH_TOKEN: {
       REFRESH_TOKEN_IS_REQUIRED: 'Refresh token is required',
-      REFRESH_TOKEN_IS_NOT_EXIST: 'Refresh token is not exist'
+      REFRESH_TOKEN_IS_NOT_EXIST: 'Refresh token is not exist',
+      TOKEN_NOT_FOUND: 'Attempted to delete non-existent refresh token.'
     },
     LOGOUT: {
       HEADER_AUTHORIZATION_IS_INVALID: 'Header authorization is invalid'
