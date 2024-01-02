@@ -43,7 +43,7 @@ export default function ResetPassword() {
               onFinish={onFinish}
               onFinishFailed={onFinishFailed}
             >
-              <h3 className="absolute -top-2 left-3 px-2 mb-0 text-white bg-black z-10 rounded-md">Email</h3>
+              <h3 className="absolute -top-2 left-3 px-2 mb-0 text-[#6a5af9] bg-black z-10 rounded-md">Email</h3>
               <Form.Item
                 name="email"
                 rules={[
@@ -70,7 +70,7 @@ export default function ResetPassword() {
                     ),
                   },
                 ]}
-                className="border-2 rounded-lg border-white w-full mb-10 flex flex-col"
+                className="border-2 rounded-lg border-[#6a5af9] w-full mb-10 flex flex-col"
               >
                 <Input className="h-12 bg-transparent border-none text-white focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none" />
               </Form.Item>

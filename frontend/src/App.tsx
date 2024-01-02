@@ -16,7 +16,10 @@ const App = () => {
         {accessToken &&
           privateRoute.map((route, idx) => {
             const Page = route.component
-            return <Route key={idx} path={route.path} element={<Page />}></Route>
+            const Layout = route.layout
+            return (
+              <Route key={idx} path={route.path} element={Layout ? <Layout children={<Page />} /> : <Page />}></Route>
+            )
           })}
       </Routes>
     </Suspense>

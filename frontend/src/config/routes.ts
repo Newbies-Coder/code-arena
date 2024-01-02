@@ -17,6 +17,10 @@ const routes: routeTypes = {
     login: '/admin/login',
     resetPassword: '/admin/reset-password',
     createNewPassword: '/admin/create-new-password',
+    profile: '/admin/profile',
+    user: '/admin/user',
+    course: '/admin/course',
+    message: '/admin/message',
   },
 } as const
 
