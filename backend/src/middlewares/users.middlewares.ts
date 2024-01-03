@@ -454,8 +454,8 @@ export const changePasswordValidator = validate(
         },
         custom: {
           options: async (value, { req }) => {
-            const isExistPassword = await userServices.validatePassword(req.user.email, value)
-            if (isExistPassword) {
+            const hasUserExist = await userServices.validateEmailAndPasswordExist(req.user.email, value)
+            if (!hasUserExist) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.NOT_FOUND,
                 message: VALIDATION_MESSAGES.USER.PASSWORD.OLD_PASSWORD_IS_INCORRECT
@@ -553,11 +553,19 @@ export const resetPasswordValidator = validate(
         trim: true,
         custom: {
           options: async (value) => {
-            const isExistEmail = await userServices.validateEmailAccessibility(value)
-            if (!isExistEmail) {
+            const specialCharacters = /[^a-zA-Z0-9.-]/
+            const username = value.split('@')[0]
+            if (specialCharacters.test(username)) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.EMAIL.VALID_USERNAME_PART_OF_EMAIL
+              })
+            }
+            const user = await userServices.findUserByEmail(value)
+            if (user === null) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.NOT_FOUND,
-                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
+                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_NOT_REGISTER
               })
             }
             await userServices.validateAccountAccessibility(value)

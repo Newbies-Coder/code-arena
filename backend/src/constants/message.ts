@@ -84,7 +84,8 @@ export const DEV_ERRORS_MESSAGES = {
   INSERT_PROVINCE: 'Error inserting province',
   GET_ALL_PROVINCE: 'Error get all province',
   UPDATE_PROVINCE: 'Error update province',
-  DELETED_PROVINCE: 'Error deleted province'
+  DELETED_PROVINCE: 'Error deleted province',
+  VALIDATION_EMAIL_AND_PASSWORD: 'Error validating email and password'
 }
 
 export const RESULT_RESPONSE_MESSAGES = {
@@ -161,6 +162,8 @@ export const VALIDATION_MESSAGES = {
   },
   USER: {
     COMMONS: {
+      USER_RESET_PASSWORD_FAILED: 'Reset password failed!',
+      USER_CHANGE_PASSWORD_FAILED: 'Change password failed!',
       USER_WITH_ID_IS_NOT_EXIST: 'User with id is not exist',
       USER_ID_MUST_BE_A_STRING: 'User id must be a string',
       USER_ID_CAN_NOT_BE_EMPTY: 'User id cannot be empty',

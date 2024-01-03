@@ -18,9 +18,9 @@ import {
 } from '~/models/requests/User.requests'
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
-import { ParsedUrlQuery } from 'querystring'
 import { ObjectId } from 'mongodb'
 import { env } from '~/config/environment.config'
+import { ParsedGetAllUserUrlQuery } from '~/@types/reponse.type'
 
 const userController = {
   login: async (req: Request<ParamsDictionary, any, LoginPayload>, res: Response, next: NextFunction) => {
@@ -60,14 +60,21 @@ const userController = {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.OTP_SUCCESS.VERIFY_OTP)
   },
 
+  getAllUser: async (req: Request<ParamsDictionary, any, any, ParsedGetAllUserUrlQuery>, res: Response, next: NextFunction) => {
+    const result = await userServices.getAllUser(req.query)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ALL_USER)
+  },
+
   resetPassword: async (req: Request<ParamsDictionary, any, ResetPasswordBody>, res: Response, next: NextFunction) => {
-    await userServices.changePassword({ email: req.body.email, password: req.body.password } as ChangePasswordBody)
+    await userServices.resetPassword({ email: req.body.email, password: req.body.password } as ResetPasswordBody)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.RESET_PASSWORD)
   },
-  changePassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    await userServices.changePassword({ email: req.body.email, password: req.body.password })
+
+  changePassword: async (req: Request<ParamsDictionary, any, ChangePasswordBody>, res: Response, next: NextFunction) => {
+    await userServices.changePassword(req.user, req.body)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.RESET_PASSWORD)
   },
+
   uploadAvatar: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     await userServices.updateMeAvatar(req.user, req.file)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UPLOAD_AVATAR)
@@ -87,11 +94,7 @@ const userController = {
     // Message register successfully!
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UNFOLLOW)
   },
-  getAllUser: async (req: Request<ParamsDictionary, any, any, ParsedUrlQuery>, res: Response, next: NextFunction) => {
-    const result = await userServices.getAllUser(req.query)
-    // Message register successfully!
-    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ALL_USER)
-  },
+
   getUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     const result = await userServices.getUserByID(new ObjectId(req.params.id))
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_USER)

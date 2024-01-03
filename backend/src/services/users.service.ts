@@ -15,6 +15,7 @@ import {
   RefreshTokenBody,
   RefreshTokenPayload,
   RegisterBody,
+  ResetPasswordBody,
   UpdateProfileBody,
   VerifyOTPBody
 } from '~/models/requests/User.requests'
@@ -77,6 +78,22 @@ class UserService {
 
   signAccessAndRefreshToken(user_id: string, email: string, role: UserRole): Promise<[string, string]> {
     return Promise.all([this.signAccessToken(user_id, email, role), this.signRefreshToken(user_id, email, role)])
+  }
+
+  async validateEmailAndPasswordExist(email: string, password: string): Promise<boolean> {
+    try {
+      if (!email || !password) {
+        throw new Error('Email and password must be provided.')
+      }
+      const hashedPassword = hashPassword(password)
+      const user = await databaseService.users.findOne({ email, password: hashedPassword })
+      return Boolean(user)
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.VALIDATION_EMAIL_AND_PASSWORD
+      })
+    }
   }
 
   async validateEmailAccessibility(email: string): Promise<boolean> {
@@ -386,6 +403,43 @@ class UserService {
     }
   }
 
+  async resetPassword(payload: ResetPasswordBody): Promise<void> {
+    try {
+      const { email, password } = payload
+      const hashedPassword = hashPassword(password)
+      const updateResult = await databaseService.users.findOneAndUpdate({ email }, { $set: { password: hashedPassword, password_change_at: new Date() } })
+      if (updateResult === null) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: VALIDATION_MESSAGES.USER.COMMONS.USER_RESET_PASSWORD_FAILED
+        })
+      }
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.CHANGE_PASSWORD
+      })
+    }
+  }
+
+  async changePassword({ email }: AuthUser, payload: ChangePasswordBody): Promise<void> {
+    try {
+      const hashedPassword = hashPassword(payload.password)
+      const updateResult = await databaseService.users.findOneAndUpdate({ email: email }, { $set: { password: hashedPassword, password_change_at: new Date() } })
+      if (updateResult === null) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: VALIDATION_MESSAGES.USER.COMMONS.USER_CHANGE_PASSWORD_FAILED
+        })
+      }
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.CHANGE_PASSWORD
+      })
+    }
+  }
+
   async deleteManyUser(payload: ParsedQs) {
     const { id } = payload
     let deleteIds: ObjectId[]
@@ -518,10 +572,6 @@ class UserService {
     await databaseService.blocked_users.deleteOne({
       _id: new ObjectId(id)
     })
-  }
-
-  async changePassword(payload: ChangePasswordBody) {
-    await databaseService.users.findOneAndUpdate({ email: payload.email }, { $set: { password: hashPassword(payload.password) } })
   }
 
   async getUserByID(id: ObjectId) {
