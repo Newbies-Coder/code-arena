@@ -30,7 +30,6 @@ import { DEV_ERRORS_MESSAGES, VALIDATION_MESSAGES } from '~/constants/message'
 import moment from 'moment'
 import emailService from '~/services/email.service'
 import otpService from '~/services/otp.service'
-import { ParsedUrlQuery } from 'querystring'
 import { ParamsDictionary } from 'express-serve-static-core'
 import Follow from '~/models/schemas/Follow.schema'
 import { AuthUser } from '~/@types/auth.type'
@@ -78,6 +77,28 @@ class UserService {
 
   signAccessAndRefreshToken(user_id: string, email: string, role: UserRole): Promise<[string, string]> {
     return Promise.all([this.signAccessToken(user_id, email, role), this.signRefreshToken(user_id, email, role)])
+  }
+
+  private validateIds(followerId: string, followedId: string): void {
+    if (!ObjectId.isValid(followerId) || !ObjectId.isValid(followedId)) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.UNAUTHORIZED,
+        message: VALIDATION_MESSAGES.USER.FOLLOW.INVALID_ID
+      })
+    }
+  }
+
+  private async checkIfAlreadyFollowed(followerId: string, followedId: string): Promise<boolean> {
+    const follow = await databaseService.follow.findOne({
+      followerId: new ObjectId(followerId),
+      followedId: new ObjectId(followedId)
+    })
+    return follow !== null
+  }
+
+  private async checkUserExistence(userId: string): Promise<boolean> {
+    const user = await databaseService.users.findOne({ _id: new ObjectId(userId) })
+    return Boolean(user)
   }
 
   async validateEmailAndPasswordExist(email: string, password: string): Promise<boolean> {
@@ -511,6 +532,59 @@ class UserService {
       })
     }
   }
+
+  async follow(user: AuthUser, payload: ParamsDictionary): Promise<void> {
+    try {
+      const { id } = payload
+      this.validateIds(user._id, id)
+      const isAlreadyFollowed = await this.checkIfAlreadyFollowed(user._id, id)
+      if (isAlreadyFollowed) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: VALIDATION_MESSAGES.USER.FOLLOW.ALREADY_FOLLOW_USER
+        })
+      }
+      const followEntry = new Follow({
+        followedId: new ObjectId(id),
+        followerId: new ObjectId(user._id)
+      })
+      await databaseService.follow.insertOne(followEntry)
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.FOLLOW_USER
+      })
+    }
+  }
+
+  async unfollow(user: AuthUser, payload: ParamsDictionary): Promise<void> {
+    try {
+      const { id } = payload
+      const userToUnfollowExists = await this.checkUserExistence(id)
+      if (!userToUnfollowExists) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
+        })
+      }
+      const followingExists = await this.checkIfAlreadyFollowed(user._id, id)
+      if (!followingExists) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: VALIDATION_MESSAGES.USER.FOLLOW.NOT_ALREADY_FOLLOW_USER
+        })
+      }
+      await databaseService.follow.deleteMany({
+        followedId: new ObjectId(id),
+        followerId: new ObjectId(user._id)
+      })
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.status || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.UNFOLLOW_USER
+      })
+    }
+  }
   //TODO:
   async deleteManyUser(payload: ParsedQs) {
     const { id } = payload
@@ -535,39 +609,6 @@ class UserService {
       },
       { upsert: false }
     )
-  }
-
-  async follow(user: AuthUser, payload: ParamsDictionary) {
-    const { id } = payload
-
-    await databaseService.follow.insertOne(
-      new Follow({
-        followedId: new ObjectId(id),
-        followerId: new ObjectId(user._id)
-      })
-    )
-  }
-
-  async unfollow(user: AuthUser, payload: ParamsDictionary) {
-    try {
-      const { id } = payload
-      const isUser = await databaseService.users.findOne({ _id: new ObjectId(id) })
-      if (!isUser) {
-        throw new ErrorWithStatus({
-          statusCode: StatusCodes.NOT_FOUND,
-          message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
-        })
-      }
-      await databaseService.follow.deleteMany({
-        followedId: new ObjectId(id),
-        followerId: new ObjectId(user._id)
-      })
-    } catch (error) {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.NOT_FOUND,
-        message: error.message
-      })
-    }
   }
 
   async updateMeAvatar({ _id }: AuthUser, file: Express.Multer.File) {

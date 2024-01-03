@@ -105,17 +105,16 @@ userRouter.post('/change-password', wrapRequestHandler(requireLoginMiddleware), 
 
 /**
  * Description: Follow someone
- * Path: /follow
+ * Path: /follow/:id
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
- * Body: { followed_user_id: string }
  */
 
 userRouter.post('/follow/:id', wrapRequestHandler(requireLoginMiddleware), followUserValidator, wrapRequestHandler(userController.follow))
 
 /**
- * Description: unfollow someone
- * Path: /follow/user_id
+ * Description: Unfollow someone
+ * Path: /follow/:id
  * Method: DELETE
  * Header: { Authorization: Bearer <access_token> }
  */
@@ -127,7 +126,7 @@ userRouter.delete('/unfollow/:id', wrapRequestHandler(requireLoginMiddleware), u
  * Path: '/'
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
- * Params: { pageIndex: number, pageSize: number, query: string }
+ * Params: { page: number, limit: number, userId: string, sort_by: string, created_at: asc | desc }
  */
 
 userRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), paginationUserValidators, wrapRequestHandler(userController.getAllUser))

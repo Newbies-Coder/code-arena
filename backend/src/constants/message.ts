@@ -87,7 +87,9 @@ export const DEV_ERRORS_MESSAGES = {
   DELETED_PROVINCE: 'Error deleted province',
   VALIDATION_EMAIL_AND_PASSWORD: 'Error validating email and password',
   CHECK_TOKEN: 'Error checking token',
-  GET_USER_BY_ID: 'Error fetching user'
+  GET_USER_BY_ID: 'Error fetching user',
+  FOLLOW_USER: 'Error in follow operation',
+  UNFOLLOW_USER: 'Error in unfollow operation'
 }
 
 export const RESULT_RESPONSE_MESSAGES = {
@@ -286,6 +288,11 @@ export const VALIDATION_MESSAGES = {
       FRIEND_ID_IS_REQUIRED: 'Friend id is required',
       FRIEND_ID_IS_EXIT: 'Friend id is exit',
       FAVORITE_NOT_EXIT: 'Favorite not exit'
+    },
+    FOLLOW: {
+      INVALID_ID: 'Invalid user or follow target ID.',
+      NOT_ALREADY_FOLLOW_USER: 'User not already follows user',
+      ALREADY_FOLLOW_USER: 'User already follows user'
     }
   },
   TOKEN: {
