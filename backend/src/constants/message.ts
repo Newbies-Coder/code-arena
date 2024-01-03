@@ -86,7 +86,8 @@ export const DEV_ERRORS_MESSAGES = {
   UPDATE_PROVINCE: 'Error update province',
   DELETED_PROVINCE: 'Error deleted province',
   VALIDATION_EMAIL_AND_PASSWORD: 'Error validating email and password',
-  CHECK_TOKEN: 'Error checking token'
+  CHECK_TOKEN: 'Error checking token',
+  GET_USER_BY_ID: 'Error fetching user'
 }
 
 export const RESULT_RESPONSE_MESSAGES = {

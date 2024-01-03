@@ -328,20 +328,6 @@ export const verifyOTPValidator = validate(
   )
 )
 
-export const getAllUserValidator = validate(
-  checkSchema(
-    {
-      query: {
-        trim: true,
-        isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USERNAME_MUST_BE_STRING
-        }
-      }
-    },
-    ['query']
-  )
-)
-
 export const deleteManyUserValidator = validate(
   checkSchema(
     {

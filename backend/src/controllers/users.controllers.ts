@@ -84,14 +84,11 @@ const userController = {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UPLOAD_THUMBNAIL)
   },
   follow: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    // Message register successfully!
-    userServices.follow(req.user, req.params)
-
+    await userServices.follow(req.user, req.params)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.FOLLOW)
   },
   unfollow: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     await userServices.unfollow(req.user, req.params)
-    // Message register successfully!
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UNFOLLOW)
   },
 
@@ -100,7 +97,7 @@ const userController = {
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_USER)
   },
   getMe: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    const result = await userServices.getUserByID(new ObjectId(req.user._id))
+    const result = await userServices.getMe(new ObjectId(req.user._id))
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_PROFILE_USER)
   },
   updateMe: async (req: Request<ParamsDictionary, any, UpdateProfileBody>, res: Response, next: NextFunction) => {
@@ -109,31 +106,26 @@ const userController = {
   },
   updateMeAvatar: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     const result = await userServices.updateMeAvatar(req.user, req.file)
-    // Message register successfully!
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UPDATE_USER)
   },
 
   updateMeThumbnail: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     const result = await userServices.updateMeThumbnail(req.user, req.file)
-    // Message register successfully!
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UPDATE_USER)
   },
 
   getMeBlockedUsers: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     const result = await userServices.getMeBlockedUser(req.user, req.query)
-    // Message register successfully!
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_BLOCKED_USER)
   },
 
   insertMeBlockedUser: async (req: Request<ParamsDictionary, any, BlockUserBody>, res: Response, next: NextFunction) => {
     const result = await userServices.insertMeBlockedUser(req.user, req.body)
-    // Message register successfully!
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.INSERT_BLOCKED_USER)
   },
 
   deleteMeBlockedUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     const result = await userServices.deleteMeBlockedUser(req.params)
-    // Message register successfully!
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_BLOCKED_USER)
   },
   deleteManyUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {

@@ -12,7 +12,6 @@ import {
   favoriteValidator,
   followUserValidator,
   forgotPasswordValidator,
-  getAllUserValidator,
   getUsersByRoleValidator,
   loginValidator,
   refreshTokenValidator,

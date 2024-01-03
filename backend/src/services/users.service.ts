@@ -469,6 +469,48 @@ class UserService {
       })
     }
   }
+
+  async getUserByID(id: ObjectId) {
+    try {
+      const user = await databaseService.users.findOne({ _id: id })
+      if (!user) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
+        })
+      }
+      return _.omit(user, 'password', 'created_at', 'updated_at', 'forgot_password_token', 'verify', '_destroy', 'password_change_at', 'role')
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.GET_USER_BY_ID
+      })
+    }
+  }
+
+  async getMe(id: ObjectId) {
+    try {
+      if (!ObjectId.isValid(id)) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.UNAUTHORIZED,
+          message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_INVALID
+        })
+      }
+      const user = await databaseService.users.findOne({ _id: id })
+      if (!user) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
+        })
+      }
+      return _.omit(user, 'password')
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.GET_USER_BY_ID
+      })
+    }
+  }
   //TODO:
   async deleteManyUser(payload: ParsedQs) {
     const { id } = payload
@@ -561,6 +603,7 @@ class UserService {
     const result: UploadAvatarType = { avatarUrl: url }
     return result
   }
+
   //! ERROR PAGINATION
   async getMeBlockedUser({ _id }: AuthUser, payload: ParsedQs) {
     const pageIndex = Number(payload.pageIndex)
@@ -602,17 +645,6 @@ class UserService {
     await databaseService.blocked_users.deleteOne({
       _id: new ObjectId(id)
     })
-  }
-
-  async getUserByID(id: ObjectId) {
-    const user = await databaseService.users.findOne({ _id: id })
-    if (!user) {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.NOT_FOUND,
-        message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
-      })
-    }
-    return _.omit(user, 'password')
   }
 
   async updateProfile(user: AuthUser, payload: UpdateProfileBody) {
