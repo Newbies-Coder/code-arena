@@ -167,7 +167,9 @@ export const VALIDATION_MESSAGES = {
       USER_NOT_LOGIN: 'You must logged in to continue',
       USER_NOT_ROLE_NOT_SATISFIED: 'You don not have the right role to access this resources',
       USER_ID_IS_INVALID: 'User id is invalid',
-      USERNAME_MUST_BE_STRING: 'Username must be a string'
+      USERNAME_MUST_BE_STRING: 'Username must be a string',
+      INVALID_INCLUDES: 'Invalid includes pagination',
+      INVALID_SORT_ORDER_CREATED_AT: 'Invalid sort order created_at pagination'
     },
     LOGIN: {
       EMAIL_IS_REQUIRED: 'Email is required',
@@ -243,6 +245,7 @@ export const VALIDATION_MESSAGES = {
       EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
       EMAIL_ACCESSABILITY: 'The email address exist. Please go to login or try the another one',
       EMAIL_IS_NOT_EXIT: 'Email is not exits',
+      EMAIL_IS_NOT_REGISTER: 'Email is not register',
       VALID_USERNAME_PART_OF_EMAIL: 'Username part of the email must not contain special characters',
       EMAIL_ALREADY_EXISTS: 'Email already exists'
     },

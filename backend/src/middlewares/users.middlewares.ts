@@ -261,11 +261,19 @@ export const forgotPasswordValidator = validate(
         trim: true,
         custom: {
           options: async (value) => {
-            const isExistEmail = await userServices.validateEmailAccessibility(value)
-            if (!isExistEmail) {
+            const specialCharacters = /[^a-zA-Z0-9.-]/
+            const username = value.split('@')[0]
+            if (specialCharacters.test(username)) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_NOT_EXIT
+                message: VALIDATION_MESSAGES.USER.EMAIL.VALID_USERNAME_PART_OF_EMAIL
+              })
+            }
+            const user = await userServices.findUserByEmail(value)
+            if (user === null) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_NOT_REGISTER
               })
             }
             await userServices.validateAccountAccessibility(value)
@@ -319,6 +327,7 @@ export const verifyOTPValidator = validate(
     ['body']
   )
 )
+
 export const getAllUserValidator = validate(
   checkSchema(
     {

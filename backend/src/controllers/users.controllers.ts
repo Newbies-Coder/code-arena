@@ -5,6 +5,7 @@ import {
   BlockUserBody,
   ChangePasswordBody,
   FavoriteBody,
+  ForgotPasswordBody,
   GetUsersByRoleQuery,
   LoginPayload,
   LogoutBody,
@@ -26,35 +27,39 @@ const userController = {
     const result = await userServices.login(req.body)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.AUTH_SUCCESS.LOGIN)
   },
+
   register: async (req: Request<ParamsDictionary, any, RegisterBody>, res: Response, next: NextFunction) => {
     const result = await userServices.register(req.body)
     return sendResponse.created(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.REGISTER)
   },
+
   logout: async (req: Request<ParamsDictionary, any, LogoutBody>, res: Response, next: NextFunction) => {
     await userServices.logout(req.body)
     const cookies_names = env.client.cookies_name
     res.clearCookie(cookies_names)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.LOGOUT)
   },
+
   refreshToken: async (req: Request<ParamsDictionary, any, RefreshTokenBody>, res: Response, next: NextFunction) => {
     const result = await userServices.refreshToken(req.body)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.REFRESH_TOKEN)
   },
+
   verifyOTP: async (req: Request<ParamsDictionary, any, VerifyOTPBody>, res: Response, next: NextFunction) => {
     await userServices.verifyOTP(req.body)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.OTP_SUCCESS.VERIFY_OTP)
   },
+
+  forgotPassword: async (req: Request<ParamsDictionary, any, ForgotPasswordBody>, res: Response, next: NextFunction) => {
+    await userServices.forgotPassword(req.body)
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.FORGOT_PASSWORD)
+  },
+
   resendVerifyOTP: async (req: Request<ParamsDictionary, any, ResendVerifyOTPBody>, res: Response, next: NextFunction) => {
     await userServices.sendOTP(req.body.email)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.OTP_SUCCESS.VERIFY_OTP)
   },
-  forgotPassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    await userServices.forgotPassword(req.body)
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.FORGOT_PASSWORD)
-  },
-  verifyForgotPassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.VERIFY_FORGOT_PASSWORD)
-  },
+
   resetPassword: async (req: Request<ParamsDictionary, any, ResetPasswordBody>, res: Response, next: NextFunction) => {
     await userServices.changePassword({ email: req.body.email, password: req.body.password } as ChangePasswordBody)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.RESET_PASSWORD)

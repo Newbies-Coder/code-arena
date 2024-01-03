@@ -30,7 +30,7 @@ class BannersService {
       throw new Error(VALIDATION_MESSAGES.UPLOAD.IMAGE.ERROR_INSERT_BANNERS)
     }
   }
-
+  //!ERROR PAGINATION
   async getAll(payload: ParsedUrlQuery) {
     const pageIndex = Number(payload.pageIndex)
     const pageSize = Number(payload.pageSize)
@@ -44,7 +44,7 @@ class BannersService {
 
     // TODO: Make something like private attributes const in UserType
 
-    const result: PaginationType<WithId<Banner>> = {
+    const result: any = {
       items: banners,
       pageIndex: pageIndex,
       pageSize: pageSize,

@@ -49,7 +49,16 @@ export type UploadAvatarType = {
 
 export type PaginationType<T> = {
   items: T[]
-  pageIndex: number
-  pageSize: number
-  totalRow: number
+  page: number
+  limit: number
+  total_pages: number
+  total_items: number
+}
+
+export type ParsedGetAllUserUrlQuery = {
+  page?: string
+  limit?: string
+  userId?: string
+  sort_by?: string
+  created_at?: string
 }

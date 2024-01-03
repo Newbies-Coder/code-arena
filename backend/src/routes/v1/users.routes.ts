@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { UserRole } from '~/constants/enums'
 import userController from '~/controllers/users.controllers'
 import { requireLoginMiddleware, requireRoleMiddleware } from '~/middlewares/auth.middlewares'
-import { objectIdValidator, paginationValidator } from '~/middlewares/commons.middleware'
+import { objectIdValidator, paginationUserValidators, paginationValidator } from '~/middlewares/commons.middleware'
 import { singleImageUpload } from '~/middlewares/uploadFile.middleware'
 import {
   changePasswordValidator,
@@ -131,7 +131,7 @@ userRouter.delete('/unfollow/:id', wrapRequestHandler(requireLoginMiddleware), u
  * Params: { pageIndex: number, pageSize: number, query: string }
  */
 
-userRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), paginationValidator, getAllUserValidator, wrapRequestHandler(userController.getAllUser))
+userRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), paginationUserValidators, wrapRequestHandler(userController.getAllUser))
 
 /**
  * Description: Delete user by admin

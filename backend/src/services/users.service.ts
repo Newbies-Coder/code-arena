@@ -20,7 +20,7 @@ import {
 } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
-import { LoginResultType, PaginationType, ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
+import { LoginResultType, PaginationType, ParsedGetAllUserUrlQuery, ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
 import { hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
@@ -338,33 +338,52 @@ class UserService {
   }
 
   async forgotPassword(payload: ForgotPasswordBody): Promise<void> {
-    const email = payload.email
-    await userServices.sendOTP(email)
+    const { email } = payload
+    try {
+      await this.sendOTP(email)
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.FORGOT_PASSWORD
+      })
+    }
   }
 
-  async getAllUser(payload: ParsedUrlQuery) {
-    const pageIndex = Number(payload.pageIndex)
-    const pageSize = Number(payload.pageSize)
-    const query = String(payload.query ?? ' ')
+  async getAllUser(payload: ParsedGetAllUserUrlQuery): Promise<PaginationType<Partial<User>>> {
+    try {
+      const page = Number(payload.page) || 1
+      const limit = Number(payload.limit) || 10
+      const userId = payload.userId ? new ObjectId(payload.userId) : null
+      const sort_by = payload.sort_by || '_id'
+      const sortByCreatedAt = payload.created_at === 'desc' ? -1 : 1
 
-    // TODO: Use text search index
-    const users = await databaseService.users
-      .find({ username: { $regex: query } })
-      .limit(pageSize)
-      .skip((pageIndex - 1) * pageSize)
-      .toArray()
+      let query = userId ? { _id: userId } : {}
 
-    // TODO: Make something like private attributes const in UserType
-    const filteredUsers = _.map(users, (v) => _.omit(v, ['password', 'created_at', 'updated_at', 'email', 'phone', 'forgot_password_token', 'verify', '_destroy', 'password_change_at']))
+      const items = await databaseService.users
+        .find(query)
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .sort({ [sort_by]: sortByCreatedAt })
+        .toArray()
 
-    const result: PaginationType<Partial<User>> = {
-      items: filteredUsers,
-      pageIndex: pageIndex,
-      pageSize: pageSize,
-      totalRow: filteredUsers.length
+      const total_items = await databaseService.users.countDocuments(query)
+      const total_pages = Math.floor((total_items + limit - 1) / limit)
+      const filteredUsers = _.map(items, (v) => _.omit(v, ['password', 'created_at', 'updated_at', 'email', 'phone', 'forgot_password_token', 'verify', '_destroy', 'password_change_at']))
+
+      const content: PaginationType<Partial<User>> = {
+        items: filteredUsers,
+        page,
+        limit,
+        total_pages,
+        total_items
+      }
+      return content
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.GET_ALL_USER
+      })
     }
-
-    return result
   }
 
   async deleteManyUser(payload: ParsedQs) {
@@ -458,7 +477,7 @@ class UserService {
     const result: UploadAvatarType = { avatarUrl: url }
     return result
   }
-
+  //! ERROR PAGINATION
   async getMeBlockedUser({ _id }: AuthUser, payload: ParsedQs) {
     const pageIndex = Number(payload.pageIndex)
     const pageSize = Number(payload.pageSize)
@@ -472,7 +491,7 @@ class UserService {
 
     const filteredUsers = _.map(user, (v) => _.omit(v, ['created_at', 'updated_at']))
 
-    const result: PaginationType<Partial<BlockedUser>> = {
+    const result: any = {
       items: filteredUsers,
       pageIndex: pageIndex,
       pageSize: pageSize,
