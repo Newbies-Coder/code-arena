@@ -57,6 +57,7 @@ export const DEV_ERRORS_MESSAGES = {
   LOGIN: 'Error during login process',
   REGISTER: 'Error during register process',
   FIND_OTP: 'Error finding OTP',
+  REFESH_TOKEN: 'Error refresh token',
   GENERATED_OTP: 'Error generated OTP',
   VERIFY_OTP: 'Error verifying OTP',
   GET_ALL_USER: 'Error retrieving users',
@@ -208,8 +209,11 @@ export const VALIDATION_MESSAGES = {
       OTP_IS_REQUIRED: 'OTP is required',
       OTP_MUST_BE_A_STRING: 'OTP must be a string',
       OPT_LENGTH_MUST_BE_6: 'OTP length must be 6 characters long',
-      OTP_IS_NOT_EXIST: 'OTP is not exist',
-      OTP_IS_EXPIRED: 'OTP is not exist'
+      OTP_IS_NOT_EXIST: 'OTP is not found',
+      OTP_IS_EXPIRED: 'OTP expired!',
+      NOT_FOUND_OR_ALREADY_VERIFIED: 'User not found or OTP already verified',
+      INVALID_OTP: 'Invalid OTP',
+      OTP_IS_NUMBERIC: 'Please enter OTP must be numberic'
     },
     REFRESH_TOKEN: {
       REFRESH_TOKEN_IS_REQUIRED: 'Refresh token is required',

@@ -208,6 +208,46 @@ export const loginValidator = validate(
   )
 )
 
+export const refreshTokenValidator = validate(
+  checkSchema(
+    {
+      refresh_token: {
+        trim: true,
+        custom: {
+          options: async (value) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.UNAUTHORIZED,
+                message: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.REFRESH_TOKEN_IS_REQUIRED
+              })
+            }
+
+            try {
+              const result = await databaseService.refreshTokens.findOne({ token: value })
+              if (!result) {
+                throw new ErrorWithStatus({
+                  message: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.REFRESH_TOKEN_IS_NOT_EXIST,
+                  statusCode: StatusCodes.UNAUTHORIZED
+                })
+              }
+            } catch (error) {
+              if (error instanceof JsonWebTokenError) {
+                throw new ErrorWithStatus({
+                  message: capitalize(error.message),
+                  statusCode: StatusCodes.UNAUTHORIZED
+                })
+              }
+              throw error
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
+
 export const forgotPasswordValidator = validate(
   checkSchema(
     {
@@ -258,18 +298,19 @@ export const verifyOTPValidator = validate(
         },
         custom: {
           options: async (value) => {
-            const otp = await OPTService.findOTP(value)
-            if (!otp) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.UNAUTHORIZED,
-                message: VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_NOT_EXIST
-              })
+            const checkOTP = isNaN(value)
+            if (checkOTP) {
+              throw new Error(VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_NUMBERIC)
             }
-
-            if (otp.expiredIn > new Date()) {
+            const otpRecord = await OPTService.findOTP(value)
+            if (!otpRecord) {
+              throw new Error(VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_NOT_EXIST)
+            }
+            const { expiredIn } = otpRecord
+            const currentTime = new Date()
+            if (currentTime > expiredIn) {
               throw new Error(VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_EXPIRED)
             }
-
             return true
           }
         }
@@ -278,47 +319,6 @@ export const verifyOTPValidator = validate(
     ['body']
   )
 )
-
-export const refreshTokenValidator = validate(
-  checkSchema(
-    {
-      refresh_token: {
-        trim: true,
-        custom: {
-          options: async (value) => {
-            if (!value) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.UNAUTHORIZED,
-                message: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.REFRESH_TOKEN_IS_REQUIRED
-              })
-            }
-
-            try {
-              const result = await databaseService.refreshTokens.findOne({ token: value })
-              if (!result) {
-                throw new ErrorWithStatus({
-                  message: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.REFRESH_TOKEN_IS_NOT_EXIST,
-                  statusCode: StatusCodes.UNAUTHORIZED
-                })
-              }
-            } catch (error) {
-              if (error instanceof JsonWebTokenError) {
-                throw new ErrorWithStatus({
-                  message: capitalize(error.message),
-                  statusCode: StatusCodes.UNAUTHORIZED
-                })
-              }
-              throw error
-            }
-            return true
-          }
-        }
-      }
-    },
-    ['body']
-  )
-)
-
 export const getAllUserValidator = validate(
   checkSchema(
     {

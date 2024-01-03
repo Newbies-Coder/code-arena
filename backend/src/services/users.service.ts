@@ -79,7 +79,7 @@ class UserService {
     return Promise.all([this.signAccessToken(user_id, email, role), this.signRefreshToken(user_id, email, role)])
   }
 
-  async validateEmailAccessibility(email: string) {
+  async validateEmailAccessibility(email: string): Promise<boolean> {
     const user = await databaseService.users.findOne({ email })
     return Boolean(user)
   }
@@ -101,7 +101,7 @@ class UserService {
     }
   }
 
-  async isUserExist(id: string) {
+  async isUserExist(id: string): Promise<boolean> {
     const result = await databaseService.users.findOne({ _id: new ObjectId(id) })
     return Boolean(result)
   }
@@ -121,7 +121,7 @@ class UserService {
     return true
   }
 
-  async validateRefreshToken(refresh_token: string) {
+  async validateRefreshToken(refresh_token: string): Promise<boolean> {
     const token = await databaseService.refreshTokens.findOne({ token: refresh_token })
     return Boolean(token)
   }
@@ -252,7 +252,7 @@ class UserService {
     }
   }
 
-  async logout(payload: LogoutBody) {
+  async logout(payload: LogoutBody): Promise<boolean> {
     try {
       const { refresh_token } = payload
       const result = await databaseService.refreshTokens.deleteOne({ token: refresh_token })
@@ -271,43 +271,75 @@ class UserService {
     }
   }
 
-  async forgotPassword(payload: ForgotPasswordBody) {
+  async refreshToken(payload: RefreshTokenBody): Promise<ResultRefreshTokenType> {
+    try {
+      const { refresh_token } = payload
+      const { refresh_token_key } = env.jwt
+
+      const { _id, role, email } = await verifyToken({
+        token: refresh_token,
+        secretOrPublicKey: refresh_token_key
+      })
+
+      const deleteRefreshToken = databaseService.refreshTokens.deleteOne({ user_id: _id })
+      const signToken = await this.signAccessAndRefreshToken(_id, email, role)
+      const [tokens] = await Promise.all([signToken, deleteRefreshToken])
+      const [newAccessToken, newRefreshToken] = tokens
+
+      await databaseService.refreshTokens.insertOne(
+        new RefreshToken({
+          token: refresh_token,
+          user_id: new ObjectId(_id)
+        })
+      )
+      const result: ResultRefreshTokenType = { access_token: newAccessToken, refresh_token: newRefreshToken }
+      return result
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.REFESH_TOKEN
+      })
+    }
+  }
+
+  async verifyOTP(payload: VerifyOTPBody): Promise<void> {
+    try {
+      const { otp } = payload
+      const otpData = await otpService.findOTP(otp)
+      if (!otpData) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.BAD_REQUEST,
+          message: VALIDATION_MESSAGES.USER.VERIFY_OTP.INVALID_OTP
+        })
+      }
+
+      const { email } = otpData
+
+      const updateResult = await databaseService.users.updateOne(
+        { email, verify: UserVerifyStatus.Unverified },
+        { $set: { verify: UserVerifyStatus.Verified, updated_at: new Date() } },
+        { upsert: false }
+      )
+
+      if (updateResult.matchedCount === 0) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: VALIDATION_MESSAGES.USER.VERIFY_OTP.NOT_FOUND_OR_ALREADY_VERIFIED
+        })
+      }
+
+      await databaseService.otps.deleteMany({ email })
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.VERIFY_OTP
+      })
+    }
+  }
+
+  async forgotPassword(payload: ForgotPasswordBody): Promise<void> {
     const email = payload.email
     await userServices.sendOTP(email)
-  }
-
-  async verifyOTP(payload: VerifyOTPBody) {
-    let { otp } = payload
-    const { email } = await otpService.findOTP(otp)
-    await databaseService.users.updateOne({ email, verify: UserVerifyStatus.Unverified }, { $set: { verify: UserVerifyStatus.Verified } }, { upsert: false })
-    await databaseService.otps.deleteMany({ email: email })
-  }
-
-  async refreshToken(payload: RefreshTokenBody) {
-    const { refresh_token } = payload
-    const { refresh_token_key } = env.jwt
-
-    const { _id, role, email } = await verifyToken({
-      token: refresh_token,
-      secretOrPublicKey: refresh_token_key
-    })
-
-    const deleteRefreshToken = databaseService.refreshTokens.deleteOne({ user_id: _id })
-    const signToken = this.signAccessAndRefreshToken(_id, email, role)
-
-    const [tokens] = await Promise.all([signToken, deleteRefreshToken])
-
-    const [newAccessToken, newRefreshToken] = tokens
-
-    await databaseService.refreshTokens.insertOne(
-      new RefreshToken({
-        token: refresh_token,
-        user_id: new ObjectId(_id)
-      })
-    )
-
-    const result: ResultRefreshTokenType = { access_token: newAccessToken, refresh_token: newRefreshToken }
-    return result
   }
 
   async getAllUser(payload: ParsedUrlQuery) {

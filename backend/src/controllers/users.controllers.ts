@@ -38,7 +38,6 @@ const userController = {
   },
   refreshToken: async (req: Request<ParamsDictionary, any, RefreshTokenBody>, res: Response, next: NextFunction) => {
     const result = await userServices.refreshToken(req.body)
-
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.REFRESH_TOKEN)
   },
   verifyOTP: async (req: Request<ParamsDictionary, any, VerifyOTPBody>, res: Response, next: NextFunction) => {
@@ -51,7 +50,6 @@ const userController = {
   },
   forgotPassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     await userServices.forgotPassword(req.body)
-
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.FORGOT_PASSWORD)
   },
   verifyForgotPassword: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {

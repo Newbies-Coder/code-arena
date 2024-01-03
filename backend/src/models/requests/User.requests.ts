@@ -21,6 +21,10 @@ export interface RefreshTokenPayload {
   token_type: TokenType.RefreshToken
 }
 
+export interface RefreshTokenBody {
+  refresh_token: string
+}
+
 export interface RegisterBody {
   username: string
   email: string
@@ -39,10 +43,6 @@ export interface ForgotPasswordBody {
 
 export interface VerifyOTPBody {
   otp: string
-}
-
-export interface RefreshTokenBody {
-  refresh_token: string
 }
 
 export interface ChangePasswordBody {
