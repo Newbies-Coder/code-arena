@@ -85,7 +85,8 @@ export const DEV_ERRORS_MESSAGES = {
   GET_ALL_PROVINCE: 'Error get all province',
   UPDATE_PROVINCE: 'Error update province',
   DELETED_PROVINCE: 'Error deleted province',
-  VALIDATION_EMAIL_AND_PASSWORD: 'Error validating email and password'
+  VALIDATION_EMAIL_AND_PASSWORD: 'Error validating email and password',
+  CHECK_TOKEN: 'Error checking token'
 }
 
 export const RESULT_RESPONSE_MESSAGES = {
@@ -295,7 +296,9 @@ export const VALIDATION_MESSAGES = {
     REFRESH_TOKEN_USED_OR_NOT_EXIST: 'Used refresh token or not exist',
     REFRESH_TOKEN_IS_NOT_EXIST_IN_COOKIES: 'No refresh token in cookies!',
     EMAIL_VERIFY_TOKEN_IS_REQUIRED: 'Email verify token is required',
-    EMAIL_VERIFY_TOKEN_MUST_BE_A_STRING: 'Email verify token must be a string'
+    EMAIL_VERIFY_TOKEN_MUST_BE_A_STRING: 'Email verify token must be a string',
+    EXPIRED_TIME: 'Token has expired.',
+    INVALID_TOKEN: 'Invalid token missing iat or exp'
   },
   AUTHORIZATION: {
     HEADER_AUTHORIZATION_IS_INVALID: 'Header authorization is invalid'

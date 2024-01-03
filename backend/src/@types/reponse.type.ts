@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import { UserGenderType, UserRole, UserVerifyStatus } from '~/constants/enums'
+import { TokenType, UserGenderType, UserRole, UserVerifyStatus } from '~/constants/enums'
 
 export type ResultRegisterType = {
   _id: string
@@ -19,6 +19,15 @@ export type LoginResultType = {
   username: string
   access_token: string
   refresh_token: string
+}
+
+export type ResultCheckTokenType = {
+  _id: ObjectId
+  email: string
+  role: string
+  token_type: TokenType.AccessToken | TokenType.RefreshToken
+  iat: string
+  exp: string
 }
 
 export type UserResponseType = {

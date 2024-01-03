@@ -21,7 +21,7 @@ import {
 } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
-import { LoginResultType, PaginationType, ParsedGetAllUserUrlQuery, ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
+import { LoginResultType, PaginationType, ParsedGetAllUserUrlQuery, ResultCheckTokenType, ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
 import { hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
@@ -440,6 +440,36 @@ class UserService {
     }
   }
 
+  async checkToken(payload: InfoTokenType): Promise<ResultCheckTokenType> {
+    try {
+      const { iat, exp, ...otherProperties } = payload
+      if (!iat || !exp) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.UNAUTHORIZED,
+          message: VALIDATION_MESSAGES.TOKEN.INVALID_TOKEN
+        })
+      }
+      const currentTime = moment().unix()
+      if (exp < currentTime) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.UNAUTHORIZED,
+          message: VALIDATION_MESSAGES.TOKEN.EXPIRED_TIME
+        })
+      }
+      const userInfo = {
+        ...otherProperties,
+        iat: moment(iat * 1000).format(),
+        exp: moment(exp * 1000).format()
+      }
+      return userInfo
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.CHECK_TOKEN
+      })
+    }
+  }
+  //TODO:
   async deleteManyUser(payload: ParsedQs) {
     const { id } = payload
     let deleteIds: ObjectId[]
@@ -583,16 +613,6 @@ class UserService {
       })
     }
     return _.omit(user, 'password')
-  }
-
-  async checkToken(payload: InfoTokenType) {
-    let { iat, exp, ...item } = payload
-    let userInfo = {
-      ...item,
-      iat: moment(iat * 1000).format(),
-      exp: moment(exp * 1000).format()
-    }
-    return userInfo
   }
 
   async updateProfile(user: AuthUser, payload: UpdateProfileBody) {

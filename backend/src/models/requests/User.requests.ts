@@ -63,7 +63,7 @@ export interface InfoTokenType {
   _id: ObjectId
   email: string
   role: string
-  token_type: string
+  token_type: TokenType.AccessToken | TokenType.RefreshToken
   iat: number
   exp: number
 }
