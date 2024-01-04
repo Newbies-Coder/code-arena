@@ -23,6 +23,7 @@ import { ObjectId } from 'mongodb'
 import {
   LoginResultType,
   PaginationType,
+  ParsedGetAllUserBlockedUrlQuery,
   ParsedGetAllUserUrlQuery,
   ParsedGetUserByRoleUrlQuery,
   ResultCheckTokenType,
@@ -48,6 +49,7 @@ import { ParsedQs } from 'qs'
 import BlockedUser from '~/models/schemas/BlockedUser.schema'
 import CloseFriends from '~/models/schemas/CloseFriends'
 import { SignOptions } from 'jsonwebtoken'
+import { STATUS_CODES } from 'http'
 
 class UserService {
   signAccessToken(_id: string, email: string, role: UserRole): Promise<string> {
@@ -97,6 +99,28 @@ class UserService {
     }
   }
 
+  private validateBlockedIds(blockerId: string, blockedId: string): void {
+    if (!ObjectId.isValid(blockerId) || !ObjectId.isValid(blockedId)) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.UNAUTHORIZED,
+        message: VALIDATION_MESSAGES.USER.BLOCKED.USER_ID_IS_INVALID
+      })
+    }
+  }
+
+  private extractIds(id: unknown): ObjectId[] {
+    if (Array.isArray(id)) {
+      return id.map((item) => new ObjectId(item))
+    } else if (typeof id === 'string') {
+      return [new ObjectId(id)]
+    } else {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.NOT_FOUND,
+        message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
+      })
+    }
+  }
+
   private async checkIfAlreadyFollowed(followerId: string, followedId: string): Promise<boolean> {
     const follow = await databaseService.follow.findOne({
       followerId: new ObjectId(followerId),
@@ -105,9 +129,43 @@ class UserService {
     return follow !== null
   }
 
+  private async checkIfAlreadyBlocked(blockerId: string, blockedId: string): Promise<boolean> {
+    const blocked = await databaseService.blocked_users.findOne({
+      blockerId: new ObjectId(blockerId),
+      blockedId: new ObjectId(blockedId)
+    })
+    return blocked !== null
+  }
+
   private async checkUserExistence(userId: string): Promise<boolean> {
     const user = await databaseService.users.findOne({ _id: new ObjectId(userId) })
     return Boolean(user)
+  }
+
+  private async upload(file: Express.Multer.File, folderName: string): Promise<string> {
+    const { url } = await cloudinaryService.uploadImage(folderName, file.buffer)
+    return url
+  }
+
+  private async updateUserAvatarInDatabase(userId: string, avatarUrl: string): Promise<void> {
+    await databaseService.users.updateOne({ _id: new ObjectId(userId) }, { $set: { avatar: avatarUrl } })
+  }
+
+  private async updateUserThumbnailInDatabase(userId: string, thumbnailUrl: string): Promise<void> {
+    await databaseService.users.updateOne({ _id: new ObjectId(userId) }, { $set: { cover_photo: thumbnailUrl } })
+  }
+
+  private getRoleFromPayload(roleString: string): UserRole {
+    switch (roleString) {
+      case 'user':
+        return UserRole.User
+      case 'admin':
+        return UserRole.Admin
+      case 'moderator':
+        return UserRole.Moderator
+      default:
+        return UserRole.User
+    }
   }
 
   async validateEmailAndPasswordExist(email: string, password: string): Promise<boolean> {
@@ -171,32 +229,6 @@ class UserService {
   async validateRefreshToken(refresh_token: string): Promise<boolean> {
     const token = await databaseService.refreshTokens.findOne({ token: refresh_token })
     return Boolean(token)
-  }
-
-  private async upload(file: Express.Multer.File, folderName: string): Promise<string> {
-    const { url } = await cloudinaryService.uploadImage(folderName, file.buffer)
-    return url
-  }
-
-  private async updateUserAvatarInDatabase(userId: string, avatarUrl: string): Promise<void> {
-    await databaseService.users.updateOne({ _id: new ObjectId(userId) }, { $set: { avatar: avatarUrl } })
-  }
-
-  private async updateUserThumbnailInDatabase(userId: string, thumbnailUrl: string): Promise<void> {
-    await databaseService.users.updateOne({ _id: new ObjectId(userId) }, { $set: { cover_photo: thumbnailUrl } })
-  }
-
-  private getRoleFromPayload(roleString: string): UserRole {
-    switch (roleString) {
-      case 'user':
-        return UserRole.User
-      case 'admin':
-        return UserRole.Admin
-      case 'moderator':
-        return UserRole.Moderator
-      default:
-        return UserRole.User
-    }
   }
 
   async login(payload: LoginPayload): Promise<LoginResultType> {
@@ -682,82 +714,117 @@ class UserService {
       })
     }
   }
-  //TODO:
-  async deleteManyUser(payload: ParsedQs) {
-    const { id } = payload
-    let deleteIds: ObjectId[]
 
-    if (id instanceof Array) {
-      deleteIds = id.map((item) => new ObjectId(item))
-    } else {
-      deleteIds = [new ObjectId(id as string)]
+  async updateProfile(user: AuthUser, payload: UpdateProfileBody): Promise<void> {
+    try {
+      if (Object.keys(payload).length === 0) {
+        throw new ErrorWithStatus({ statusCode: StatusCodes.BAD_REQUEST, message: VALIDATION_MESSAGES.USER.USER_PROFILE.FIELD_UPDATE_IS_REQUIRED })
+      }
+      await databaseService.users.updateOne({ _id: new ObjectId(user._id) }, { $set: { ...payload, updated_at: new Date() } }, { upsert: false })
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.UPDATE_PROFILE
+      })
     }
-
-    await databaseService.users.updateMany(
-      {
-        _id: {
-          $in: deleteIds
-        }
-      },
-      {
-        $set: {
-          _destroy: true
-        }
-      },
-      { upsert: false }
-    )
   }
 
-  //! ERROR PAGINATION
-  async getMeBlockedUser({ _id }: AuthUser, payload: ParsedQs) {
-    const pageIndex = Number(payload.pageIndex)
-    const pageSize = Number(payload.pageSize)
-
-    // TODO: Use text search index
-    const user = await databaseService.blocked_users
-      .find({ blockerId: new ObjectId(_id) })
-      .limit(pageSize)
-      .skip((pageIndex - 1) * pageSize)
-      .toArray()
-
-    const filteredUsers = _.map(user, (v) => _.omit(v, ['created_at', 'updated_at']))
-
-    const result: any = {
-      items: filteredUsers,
-      pageIndex: pageIndex,
-      pageSize: pageSize,
-      totalRow: filteredUsers.length
+  async deleteManyUsers(payload: ParsedQs): Promise<void> {
+    try {
+      const deleteIds = this.extractIds(payload.id)
+      await databaseService.users.updateMany({ _id: { $in: deleteIds } }, { $set: { _destroy: true } }, { upsert: false })
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.DELETED_MANY_USER
+      })
     }
-
-    return result
   }
 
-  async insertMeBlockedUser({ _id }: AuthUser, payload: BlockUserBody) {
-    const { blockedId } = payload
+  async getMeBlockedUser({ _id }: AuthUser, payload: ParsedGetAllUserBlockedUrlQuery): Promise<PaginationType<Partial<User>>> {
+    try {
+      const page = Number(payload.page) || 1
+      const limit = Number(payload.limit) || 10
+      const sortByCreatedAt = payload.created_at === 'desc' ? -1 : 1
+      const items = await databaseService.blocked_users
+        .find({ blockerId: new ObjectId(_id) })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .sort({ _id: sortByCreatedAt })
+        .toArray()
+      const filteredUsers = _.map(items, (v) => _.omit(v, ['password', 'created_at', 'updated_at']))
+      const total_items = filteredUsers.length
+      const total_pages = Math.floor((total_items + limit - 1) / limit)
+      const content: PaginationType<Partial<User>> = {
+        items: filteredUsers,
+        page,
+        limit,
+        total_pages,
+        total_items
+      }
+      return content
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.BLOCKED_USER
+      })
+    }
+  }
 
-    await databaseService.blocked_users.insertOne(
-      new BlockedUser({
+  async blockedUser({ _id }: AuthUser, payload: BlockUserBody): Promise<void> {
+    try {
+      const { blockedId } = payload
+      this.validateBlockedIds(_id, blockedId)
+      const isAlreadyBlocked = await this.checkIfAlreadyBlocked(_id, blockedId)
+      if (_id.includes(blockedId)) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.FORBIDDEN,
+          message: VALIDATION_MESSAGES.USER.BLOCKED.USER_BLOCK_THEMSELVES
+        })
+      }
+
+      if (isAlreadyBlocked) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: VALIDATION_MESSAGES.USER.BLOCKED.USER_ALREADY_BLOCKED
+        })
+      }
+      const blockEntry = new BlockedUser({
         blockerId: new ObjectId(_id),
         blockedId: new ObjectId(blockedId)
       })
-    )
+      await databaseService.blocked_users.insertOne(blockEntry)
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.BLOCKED_USER
+      })
+    }
   }
 
-  async deleteMeBlockedUser(payload: ParamsDictionary) {
+  async unBlockedUser({ _id }: AuthUser, payload: ParamsDictionary): Promise<void> {
     const { id } = payload
-
-    await databaseService.blocked_users.deleteOne({
-      _id: new ObjectId(id)
+    const userToUnBlockExists = await this.checkUserExistence(id)
+    if (!userToUnBlockExists) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.NOT_FOUND,
+        message: VALIDATION_MESSAGES.USER.BLOCKED.USER_ID_IS_INVALID
+      })
+    }
+    const blockExists = await this.checkIfAlreadyBlocked(_id, id)
+    if (!blockExists) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.NOT_FOUND,
+        message: VALIDATION_MESSAGES.USER.BLOCKED.USER_NOT_ALREADY_BLOCKED_USER
+      })
+    }
+    await databaseService.blocked_users.deleteMany({
+      blockerId: new ObjectId(_id),
+      blockedId: new ObjectId(id)
     })
   }
 
-  async updateProfile(user: AuthUser, payload: UpdateProfileBody) {
-    if (Object.keys(payload).length === 0) {
-      throw new ErrorWithStatus({ statusCode: StatusCodes.BAD_REQUEST, message: VALIDATION_MESSAGES.USER.USER_PROFILE.FIELD_UPDATE_IS_REQUIRED })
-    }
-    await databaseService.users.updateOne({ _id: new ObjectId(user._id) }, { $set: payload }, { upsert: false })
-  }
-
+  //TODO:
   async insertUserFavorite(user: AuthUser, payload: FavoriteBody) {
     await databaseService.closeFriends.insertOne(
       new CloseFriends({

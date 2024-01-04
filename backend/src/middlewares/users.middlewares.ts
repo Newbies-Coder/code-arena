@@ -359,7 +359,7 @@ export const deleteManyUserValidator = validate(
   )
 )
 
-export const insertMeBlockedUserValidator = validate(
+export const blockedUserValidator = validate(
   checkSchema(
     {
       blockedId: {
@@ -371,35 +371,20 @@ export const insertMeBlockedUserValidator = validate(
           errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
         },
         custom: {
-          options: async (value, { req }) => {
+          options: async (value) => {
             if (!ObjectId.isValid(value)) {
               throw new ErrorWithStatus({
-                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID,
-                statusCode: StatusCodes.BAD_REQUEST
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID
               })
             }
-
             const user = await userServices.isUserExist(value)
-
             if (!user) {
               throw new ErrorWithStatus({
-                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST,
-                statusCode: StatusCodes.NOT_FOUND
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
               })
             }
-
-            const blocked = await databaseService.blocked_users.findOne({
-              blockerId: new ObjectId(req.user._id),
-              blockedId: new ObjectId(value)
-            })
-
-            if (blocked) {
-              throw new ErrorWithStatus({
-                message: VALIDATION_MESSAGES.USER.BLOCK.USER_ALREADY_BLOCKED,
-                statusCode: StatusCodes.CONFLICT
-              })
-            }
-
             return true
           }
         }
@@ -783,18 +768,20 @@ export const updateProfileValidator = validate(
       email: {
         optional: true,
         isEmail: {
-          errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.EMAIL_MUST_BE_A_STRING
         },
         trim: true,
         custom: {
           options: async (value) => {
-            const isExistEmail = await userServices.validateEmailAccessibility(value)
-            if (isExistEmail) {
+            const specialCharacters = /[^a-zA-Z0-9.-]/
+            const username = value.split('@')[0]
+            if (specialCharacters.test(username)) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
+                message: VALIDATION_MESSAGES.USER.USER_PROFILE.VALID_USERNAME_PART_OF_EMAIL
               })
             }
+            await userServices.validateAccountAccessibility(value)
             return true
           }
         }
@@ -810,17 +797,25 @@ export const updateProfileValidator = validate(
         },
         matches: {
           options: /^[0-9]+$/,
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.PHONE_LENGTH_MUST_BE_STRING_NUMBER
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.PHONE_INVALID
         }
       },
       date_of_birth: {
-        optional: true,
-        isISO8601: {
-          options: {
-            strict: true,
-            strictSeparator: true
-          },
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.DATE_OF_BIRTH_IS_ISO8601
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.DATE_OF_BIRTH_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.DATE_OF_BIRTH_MUST_BE_A_STRING
+        },
+        trim: true,
+        custom: {
+          options: (value) => {
+            const val = isIsoDate(value)
+            if (!val) {
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.DATE_OF_BIRTH_ERROR_FORMAT)
+            }
+            return true
+          }
         }
       },
       bio: {
@@ -830,21 +825,21 @@ export const updateProfileValidator = validate(
         },
         isLength: {
           options: {
-            max: 150
+            max: 500
           },
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.BIO_MAX_LENGTH_IS_150
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.BIO_MAX_LENGTH_IS_500
         }
       },
       address: {
         optional: true,
         isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.FULL_NAME_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.ADDRESS_MUST_BE_STRING
         },
         isLength: {
           options: {
             max: 255
           },
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_NAME_LENGTH_MUST_BE_FROM_4_TO_20
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.ADDRESS_MAX_LENGTH_IS_255
         }
       }
     },

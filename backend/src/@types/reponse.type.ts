@@ -81,3 +81,9 @@ export type ParsedGetUserByRoleUrlQuery = {
   limit?: string
   includes?: UserRole.User | UserRole.Admin | UserRole.Moderator
 }
+
+export type ParsedGetAllUserBlockedUrlQuery = {
+  page?: string
+  limit?: string
+  created_at?: 'asc' | 'desc'
+}

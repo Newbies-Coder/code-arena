@@ -63,28 +63,11 @@ export const DEV_ERRORS_MESSAGES = {
   GET_ALL_USER: 'Error retrieving users',
   DELETED_BANNER: 'Error delete banner',
   GET_ALL_BANNER: 'Error get all banners',
-  INSERT_BRANDS: 'Error inert brands',
-  GET_ALL_BRANDS: 'Error get all brands',
-  UPDATE_BRANDS: 'Error update brands',
-  DELETED_BRANDS: 'Error deleted brands',
   LOGOUT: 'Error occurred during logout.',
   CHANGE_PASSWORD: 'Error changing password',
   FORGOT_PASSWORD: 'Error in forgot-password',
   SEND_FAILURE: 'Error in send OTP',
   GET_ROLE_USER: 'Error fetching users by role',
-  INSERT_STORE: 'Error inserting store',
-  GET_ALL_STORES: 'Error get all stores',
-  UPDATE_STORES: 'Error update stores',
-  DELETED_STORE: 'Error deleted store',
-  INSERT_TAGS: 'Error inserting tags',
-  GET_ALL_TAGS: 'Error get all tags',
-  GET_TAGS_BY_ID: 'Error get tags by id',
-  UPDATE_TAGS: 'Error update tags',
-  DELETED_TAGS: 'Error deleted tags',
-  INSERT_PROVINCE: 'Error inserting province',
-  GET_ALL_PROVINCE: 'Error get all province',
-  UPDATE_PROVINCE: 'Error update province',
-  DELETED_PROVINCE: 'Error deleted province',
   VALIDATION_EMAIL_AND_PASSWORD: 'Error validating email and password',
   CHECK_TOKEN: 'Error checking token',
   GET_USER_BY_ID: 'Error fetching user',
@@ -92,7 +75,11 @@ export const DEV_ERRORS_MESSAGES = {
   UNFOLLOW_USER: 'Error in unfollow operation',
   UPLOAD_AVATAR: 'Error updating avatar',
   UPLOAD_THUMBNAIL: 'Error updating thumbnail',
-  GET_USER_BY_ROLE: 'Error get user by role'
+  GET_USER_BY_ROLE: 'Error get user by role',
+  UPDATE_PROFILE: 'Error update profile user',
+  DELETED_MANY_USER: 'Error deleting users',
+  BLOCKED_USER: 'Error fetching blocked users',
+  UNBLOCKED_USER: 'Error fetching unblocked users'
 }
 
 export const RESULT_RESPONSE_MESSAGES = {
@@ -133,8 +120,8 @@ export const RESULT_RESPONSE_MESSAGES = {
     FOLLOW: 'Follow user successfully!',
     UNFOLLOW: 'Unfollow user successfully!',
     GET_BLOCKED_USER: 'Get blocked users successfully',
-    INSERT_BLOCKED_USER: 'Insert blocked users successfully',
-    DELETE_BLOCKED_USER: 'Delete blocked users successfully'
+    INSERT_BLOCKED_USER: 'Blocked users successfully',
+    DELETE_BLOCKED_USER: 'Unblocked users successfully'
   },
   OTP_SUCCESS: {
     VERIFY_OTP: 'Verify OTP successfully!', //
@@ -269,17 +256,24 @@ export const VALIDATION_MESSAGES = {
       USER_NAME_LENGTH_MUST_BE_FROM_4_TO_20: 'User name length must be from 4 to 20',
       PHONE_MUST_BE_A_STRING: 'Phone must be a string',
       PHONE_LENGTH_MUST_BE_10_CHARACTER: 'Phone length must be 10 character',
-      PHONE_LENGTH_MUST_BE_STRING_NUMBER: 'Phone length must be a string number',
+      PHONE_INVALID: 'Phone number invalid',
       DATE_OF_BIRTH_IS_ISO8601: 'Date of birth must be a YYYY-MM-DDTHH:mm:ss.ssssZ',
       BIO_MUST_BE_STRING: 'Bio must be a string',
-      BIO_MAX_LENGTH_IS_150: 'Bio max length is 50 character',
+      BIO_MAX_LENGTH_IS_500: 'Bio max length is 500 character',
       ADDRESS_MUST_BE_STRING: 'Address must be a string',
       ADDRESS_MAX_LENGTH_IS_255: 'Address max length is 255 character',
-      FIELD_UPDATE_IS_REQUIRED: 'Must be at least 1 field that to updating'
+      FIELD_UPDATE_IS_REQUIRED: 'Must be at least 1 field that to updating',
+      EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
+      VALID_USERNAME_PART_OF_EMAIL: 'Username part of the email must not contain special characters',
+      DATE_OF_BIRTH_IS_REQUIRED: 'Date of birth is required',
+      DATE_OF_BIRTH_ERROR_FORMAT: 'Date_of_birth must be yyyy-mm-dd',
+      DATE_OF_BIRTH_MUST_BE_A_STRING: 'Date_of_birth must be string'
     },
-    BLOCK: {
+    BLOCKED: {
       USER_ALREADY_BLOCKED: 'User already been blocked',
-      USER_ID_IS_INVALID: 'User id is invalid'
+      USER_ID_IS_INVALID: 'User id is invalid',
+      USER_NOT_ALREADY_BLOCKED_USER: 'User has not already been blocked',
+      USER_BLOCK_THEMSELVES: 'Users cannot block themselves'
     },
     GET_USERS_BY_ROLE: {
       ROLE_IS_REQUIRED: 'Role is required',

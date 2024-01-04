@@ -2,13 +2,13 @@ import { Router } from 'express'
 import { UserRole } from '~/constants/enums'
 import userController from '~/controllers/users.controllers'
 import { requireLoginMiddleware, requireRoleMiddleware } from '~/middlewares/auth.middlewares'
-import { objectIdValidator, paginationUserValidators, paginationValidator } from '~/middlewares/commons.middleware'
+import { objectIdValidator, paginationBlockedUserValidators, paginationUserValidators, paginationValidator } from '~/middlewares/commons.middleware'
 import { singleImageUpload } from '~/middlewares/uploadFile.middleware'
 import {
+  blockedUserValidator,
   changePasswordValidator,
   checkTokenValidator,
   deleteManyUserValidator,
-  insertMeBlockedUserValidator,
   favoriteValidator,
   followUserValidator,
   forgotPasswordValidator,
@@ -190,31 +190,32 @@ userRouter.post('/@me/thumbnail', wrapRequestHandler(requireLoginMiddleware), si
 
 /**
  * Description: Get blocked user list
- * Path: /@me/profile
+ * Path: /@me/blocked
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
- * Params: { pageIndex: number, pageSize: number }
+ * Params: { page: number, limit: number , created_at: asc | desc}
  **/
 
-userRouter.get('/@me/blocked', paginationValidator, wrapRequestHandler(requireLoginMiddleware), wrapRequestHandler(userController.getMeBlockedUsers))
+userRouter.get('/@me/blocked', wrapRequestHandler(requireLoginMiddleware), paginationBlockedUserValidators, wrapRequestHandler(userController.getMeBlockedUsers))
 
 /**
  * Description: Insert blocked user list
- * Path: /@me/profile
+ * Path: /@me/blocked
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
+ * Body: {}
  **/
 
-userRouter.post('/@me/blocked', wrapRequestHandler(requireLoginMiddleware), insertMeBlockedUserValidator, wrapRequestHandler(userController.insertMeBlockedUser))
+userRouter.post('/@me/blocked', wrapRequestHandler(requireLoginMiddleware), blockedUserValidator, wrapRequestHandler(userController.blockedUser))
 
 /**
  * Description: Delete blocked user list aka unblock
- * Path: /@me/profile
+ * Path: /@me/blocked/:id
  * Method: DELETE
  * Header: { Authorization: Bearer <access_token> }
  **/
 
-userRouter.delete('/@me/blocked/:id', wrapRequestHandler(requireLoginMiddleware), objectIdValidator, wrapRequestHandler(userController.deleteMeBlockedUser))
+userRouter.delete('/@me/blocked/:id', wrapRequestHandler(requireLoginMiddleware), objectIdValidator, wrapRequestHandler(userController.unBlockedUser))
 
 /**
  * Description: Get user by role

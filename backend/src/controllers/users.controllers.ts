@@ -87,30 +87,39 @@ const userController = {
     const result = await userServices.getUserByID(new ObjectId(req.params.id))
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_USER)
   },
+
   getMe: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     const result = await userServices.getMe(new ObjectId(req.user._id))
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_PROFILE_USER)
   },
+
   uploadAvatar: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     const result = await userServices.updateMeAvatar(req.user, req.file)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UPLOAD_AVATAR)
   },
+
   uploadThumbnail: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     const result = await userServices.updateMeThumbnail(req.user, req.file)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UPLOAD_THUMBNAIL)
   },
+
   testToken: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     const result = await userServices.checkToken(req.body)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.TEST_TOKEN)
   },
+
   getUsersByRole: async (req: Request<ParamsDictionary, any, any, ParsedGetUserByRoleUrlQuery>, res: Response, next: NextFunction) => {
     const result = await userServices.getUsersByRole(req.query)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ROLE_USER)
   },
-  //TODO
+
   updateMe: async (req: Request<ParamsDictionary, any, UpdateProfileBody>, res: Response, next: NextFunction) => {
     await userServices.updateProfile(req.user, req.body)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UPDATE_USER)
+  },
+  deleteManyUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    await userServices.deleteManyUsers(req.query)
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_MANY_USER)
   },
 
   getMeBlockedUsers: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
@@ -118,19 +127,14 @@ const userController = {
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_BLOCKED_USER)
   },
 
-  insertMeBlockedUser: async (req: Request<ParamsDictionary, any, BlockUserBody>, res: Response, next: NextFunction) => {
-    const result = await userServices.insertMeBlockedUser(req.user, req.body)
+  blockedUser: async (req: Request<ParamsDictionary, any, BlockUserBody>, res: Response, next: NextFunction) => {
+    const result = await userServices.blockedUser(req.user, req.body)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.INSERT_BLOCKED_USER)
   },
 
-  deleteMeBlockedUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    const result = await userServices.deleteMeBlockedUser(req.params)
+  unBlockedUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    const result = await userServices.unBlockedUser(req.user, req.params)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_BLOCKED_USER)
-  },
-
-  deleteManyUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    await userServices.deleteManyUser(req.query)
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_MANY_USER)
   },
 
   //TODO: Favorite fix error
