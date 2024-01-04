@@ -1,6 +1,14 @@
 import { MenuItemType } from '@/@types/admin'
 import DarkMode from '@/components/DarkMode'
-import { CourserIcon, DashboardIcon, LogoutIcon, MessageIcon, NoNotiIcon, UsersIcon } from '@/components/Icons'
+import {
+  CourserIcon,
+  DashboardIcon,
+  LogoutIcon,
+  MessageIcon,
+  NoNotiIcon,
+  SettingIcon,
+  UsersIcon,
+} from '@/components/Icons'
 import Menu from '@/components/Menu'
 import { HOME_ICON, LOGO } from '@/constants/images'
 import AvatarProfile from '@/container/Detail/components/AvatarProfile'
@@ -61,6 +69,10 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
             {!collapsed && <span className="text-sm font-semibold text-white">Theme</span>}
             <DarkMode />
           </div>
+          <Button type="text" className="w-full h-8 flex items-center justify-between px-2">
+            {!collapsed && <span className="text-sm font-semibold text-white">Settings</span>}
+            <SettingIcon className={collapsed ? 'w-full' : ''} />
+          </Button>
           <Button
             icon={!collapsed && <LogoutIcon />}
             className={clsx(['h-10 text-white flex items-center w-full'])}
