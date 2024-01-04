@@ -742,18 +742,44 @@ class UserService {
   }
 
   async getMeBlockedUser({ _id }: AuthUser, payload: ParsedGetAllUserBlockedUrlQuery): Promise<PaginationType<Partial<User>>> {
+    const page = Number(payload.page) || 1
+    const limit = Number(payload.limit) || 10
+    const sortByCreatedAt = payload.created_at === 'desc' ? -1 : 1
+    const skipCount = (page - 1) * limit
+    const pipeline = [
+      {
+        $match: { blockerId: new ObjectId(_id) }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'blockedId',
+          foreignField: '_id',
+          as: 'blockInfo'
+        }
+      },
+      { $unwind: '$blockInfo' },
+      {
+        $project: {
+          'blockInfo._id': 1,
+          'blockInfo.username': 1,
+          'blockInfo.email': 1,
+          'blockInfo.fullName': 1,
+          'blockInfo.avatar': 1,
+          'blockInfo.cover_photo': 1,
+          'blockInfo.isOnline': 1,
+          'blockInfo.date_of_birth': 1,
+          'blockInfo.created_at': 1
+        }
+      },
+      { $sort: { 'blockInfo.created_at': sortByCreatedAt } },
+      { $skip: skipCount },
+      { $limit: limit }
+    ]
     try {
-      const page = Number(payload.page) || 1
-      const limit = Number(payload.limit) || 10
-      const sortByCreatedAt = payload.created_at === 'desc' ? -1 : 1
-      const items = await databaseService.blocked_users
-        .find({ blockerId: new ObjectId(_id) })
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .sort({ _id: sortByCreatedAt })
-        .toArray()
-      const filteredUsers = _.map(items, (v) => _.omit(v, ['password', 'created_at', 'updated_at']))
-      const total_items = filteredUsers.length
+      const result = await databaseService.blocked_users.aggregate(pipeline).toArray()
+      const filteredUsers = result.map((item) => item.blockInfo)
+      const total_items = filteredUsers.length ? filteredUsers.length : 0
       const total_pages = Math.floor((total_items + limit - 1) / limit)
       const content: PaginationType<Partial<User>> = {
         items: filteredUsers,
@@ -765,8 +791,8 @@ class UserService {
       return content
     } catch (error) {
       throw new ErrorWithStatus({
-        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: error.message || DEV_ERRORS_MESSAGES.BLOCKED_USER
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.GET_ALL_USER_FAVORITE
       })
     }
   }
