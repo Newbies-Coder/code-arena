@@ -79,7 +79,10 @@ export const DEV_ERRORS_MESSAGES = {
   UPDATE_PROFILE: 'Error update profile user',
   DELETED_MANY_USER: 'Error deleting users',
   BLOCKED_USER: 'Error fetching blocked users',
-  UNBLOCKED_USER: 'Error fetching unblocked users'
+  UNBLOCKED_USER: 'Error fetching unblocked users',
+  INSERT_USER_FAVORITES: 'Error fetching insert users into favorite list',
+  REMOVED_USER_FAVORITES: 'Error fetching remove users into favorite list',
+  GET_ALL_USER_FAVORITE: 'Error fetching favorites'
 }
 
 export const RESULT_RESPONSE_MESSAGES = {
@@ -284,7 +287,10 @@ export const VALIDATION_MESSAGES = {
       FRIEND_ID_NOT_USER_ID: 'Friend id not user id',
       FRIEND_ID_IS_REQUIRED: 'Friend id is required',
       FRIEND_ID_IS_EXIT: 'Friend id is exit',
-      FAVORITE_NOT_EXIT: 'Favorite not exit'
+      FAVORITE_NOT_EXIT: 'Favorite not exit',
+      USER_FAVOTITE_THEMSELVES: 'Users cannot favorite themselves',
+      FRIEND_ALREADY_FAVORITE: 'Friend already been favorite list',
+      FRIEND_NOT_ALREADY_FAVORITE_USER: 'Friend has not already been favorite list'
     },
     FOLLOW: {
       INVALID_ID: 'Invalid user or follow target ID.',

@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { UserRole } from '~/constants/enums'
 import userController from '~/controllers/users.controllers'
 import { requireLoginMiddleware, requireRoleMiddleware } from '~/middlewares/auth.middlewares'
-import { objectIdValidator, paginationBlockedUserValidators, paginationUserValidators, paginationValidator } from '~/middlewares/commons.middleware'
+import { objectIdValidator, paginationBlockedUserValidators, paginationUserFavoriteValidators, paginationUserValidators, paginationValidator } from '~/middlewares/commons.middleware'
 import { singleImageUpload } from '~/middlewares/uploadFile.middleware'
 import {
   blockedUserValidator,
@@ -235,7 +235,7 @@ userRouter.get('/roles', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.get('/favorite', wrapRequestHandler(requireLoginMiddleware), wrapRequestHandler(userController.favorite))
+userRouter.get('/favorite', wrapRequestHandler(requireLoginMiddleware), paginationUserFavoriteValidators, wrapRequestHandler(userController.favorite))
 
 /**
  * Description: Add persons to your list of close friends.

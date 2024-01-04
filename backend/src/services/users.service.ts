@@ -24,6 +24,7 @@ import {
   LoginResultType,
   PaginationType,
   ParsedGetAllUserBlockedUrlQuery,
+  ParsedGetAllUserFavoriteUrlQuery,
   ParsedGetAllUserUrlQuery,
   ParsedGetUserByRoleUrlQuery,
   ResultCheckTokenType,
@@ -49,7 +50,6 @@ import { ParsedQs } from 'qs'
 import BlockedUser from '~/models/schemas/BlockedUser.schema'
 import CloseFriends from '~/models/schemas/CloseFriends'
 import { SignOptions } from 'jsonwebtoken'
-import { STATUS_CODES } from 'http'
 
 class UserService {
   signAccessToken(_id: string, email: string, role: UserRole): Promise<string> {
@@ -824,58 +824,87 @@ class UserService {
     })
   }
 
-  //TODO:
-  async insertUserFavorite(user: AuthUser, payload: FavoriteBody) {
-    await databaseService.closeFriends.insertOne(
-      new CloseFriends({
+  async insertUserFavorite({ _id }: AuthUser, payload: FavoriteBody): Promise<void> {
+    try {
+      const blockEntry = new CloseFriends({
         friendId: new ObjectId(payload.friendId),
-        userId: new ObjectId(user._id)
+        userId: new ObjectId(_id)
       })
-    )
+      await databaseService.closeFriends.insertOne(blockEntry)
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.INSERT_USER_FAVORITES
+      })
+    }
   }
 
-  async getFavorite(user: AuthUser) {
-    const result = await databaseService.closeFriends
-      .aggregate([
-        {
-          $match: { userId: new ObjectId(user._id) }
-        },
-        {
-          $lookup: {
-            from: 'users',
-            localField: 'friendId',
-            foreignField: '_id',
-            as: 'friendInfo'
-          }
-        },
-        {
-          $unwind: '$friendInfo'
-        },
-        {
-          $project: {
-            'friendInfo._id': 1,
-            'friendInfo.username': 1,
-            'friendInfo.email': 1,
-            'friendInfo.fullName': 1,
-            'friendInfo.avatar': 1,
-            'friendInfo.cover_photo': 1,
-            'friendInfo.isOnline': 1,
-            'friendInfo.date_of_birth': 1
-          }
+  async removeUserFavorite({ _id }: AuthUser, payload: ParamsDictionary): Promise<void> {
+    try {
+      const { id } = payload
+      await databaseService.closeFriends.deleteOne({ userId: new ObjectId(_id), friendId: new ObjectId(id) })
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.REMOVED_USER_FAVORITES
+      })
+    }
+  }
+
+  async getFavorite({ _id }: AuthUser, payload: ParsedGetAllUserFavoriteUrlQuery): Promise<PaginationType<Partial<User>>> {
+    const page = Number(payload.page) || 1
+    const limit = Number(payload.limit) || 10
+    const sortByCreatedAt = payload.created_at === 'desc' ? -1 : 1
+    const skipCount = (page - 1) * limit
+    const pipeline = [
+      {
+        $match: { userId: new ObjectId(_id) }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'friendId',
+          foreignField: '_id',
+          as: 'friendInfo'
         }
-      ])
-      .toArray()
-
-    return result.map((item) => item.friendInfo)
-  }
-
-  async isExitInCloseFriends(userId: ObjectId, friendId: ObjectId) {
-    const result = await databaseService.closeFriends.findOne({ userId: userId, friendId: friendId })
-    return result
-  }
-
-  async removeUserFavorite(user: AuthUser, payload: ParamsDictionary) {
-    await databaseService.closeFriends.deleteOne({ userId: new ObjectId(user._id), friendId: new ObjectId(payload.id) })
+      },
+      { $unwind: '$friendInfo' },
+      {
+        $project: {
+          'friendInfo._id': 1,
+          'friendInfo.username': 1,
+          'friendInfo.email': 1,
+          'friendInfo.fullName': 1,
+          'friendInfo.avatar': 1,
+          'friendInfo.cover_photo': 1,
+          'friendInfo.isOnline': 1,
+          'friendInfo.date_of_birth': 1,
+          'friendInfo.created_at': 1
+        }
+      },
+      { $sort: { 'friendInfo.created_at': sortByCreatedAt } },
+      { $skip: skipCount },
+      { $limit: limit }
+    ]
+    try {
+      const result = await databaseService.closeFriends.aggregate(pipeline).toArray()
+      const filteredUsers = result.map((item) => item.friendInfo)
+      const total_items = filteredUsers.length ? filteredUsers.length : 0
+      const total_pages = Math.floor((total_items + limit - 1) / limit)
+      const content: PaginationType<Partial<User>> = {
+        items: filteredUsers,
+        page,
+        limit,
+        total_pages,
+        total_items
+      }
+      return content
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.GET_ALL_USER_FAVORITE
+      })
+    }
   }
 }
 

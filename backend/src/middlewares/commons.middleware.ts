@@ -124,6 +124,41 @@ export const paginationBlockedUserValidators = validate(
   )
 )
 
+export const paginationUserFavoriteValidators = validate(
+  checkSchema(
+    {
+      page: {
+        trim: true,
+        optional: { options: { nullable: true } },
+        isInt: {
+          options: { min: 1 },
+          errorMessage: VALIDATION_MESSAGES.PAGINATION.PAGE_CAN_NOT_LESS_THAN_ZERO
+        },
+        toInt: true
+      },
+      limit: {
+        trim: true,
+        optional: { options: { nullable: true } },
+        isInt: {
+          options: { min: 1, max: 100 },
+          errorMessage: VALIDATION_MESSAGES.PAGINATION.ITEMS_IS_NOT_IN_RANGE
+        },
+        toInt: true
+      },
+      created_at: {
+        trim: true,
+        optional: { options: { nullable: true } },
+        isString: true,
+        custom: {
+          options: (value) => ['asc', 'desc'].includes(value.toLowerCase()),
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.INVALID_SORT_ORDER_CREATED_AT
+        }
+      }
+    },
+    ['query']
+  )
+)
+
 export const objectIdValidator = validate(
   checkSchema(
     {

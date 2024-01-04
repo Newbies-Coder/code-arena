@@ -136,10 +136,8 @@ const userController = {
     const result = await userServices.unBlockedUser(req.user, req.params)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_BLOCKED_USER)
   },
-
-  //TODO: Favorite fix error
   favorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    const result = await userServices.getFavorite(req.user)
+    const result = await userServices.getFavorite(req.user, req.query)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_FAVORITE_USER)
   },
   insertUserFavorite: async (req: Request<ParamsDictionary, any, FavoriteBody>, res: Response, next: NextFunction) => {
@@ -149,16 +147,6 @@ const userController = {
   removeUserFavorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     await userServices.removeUserFavorite(req.user, req.params)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_USER_TO_FAVORITES)
-  },
-  //TODO: Block fix error
-  blocks: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_USERS_BLOCK)
-  },
-  insertBlocks: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.BLOCK_USER)
-  },
-  unblock: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.REMOVE_USER_BLOCK)
   }
 }
 

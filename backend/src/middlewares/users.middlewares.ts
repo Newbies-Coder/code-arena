@@ -899,18 +899,19 @@ export const favoriteValidator = validate(
         custom: {
           options: async (value, { req }) => {
             if (!ObjectId.isValid(value)) {
-              throw Error(VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID)
+              throw new ErrorWithStatus({ statusCode: StatusCodes.BAD_REQUEST, message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID })
             }
-            const user = await userServices.getUserByID(new ObjectId(value))
-            if (!user) {
-              throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST })
+            const user = await databaseService.users.findOne({ _id: new ObjectId(value) })
+            if (user === null) {
+              throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ID_IS_EXIT })
             }
-            if (value === req.user._id) {
-              throw Error(VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ID_NOT_USER_ID)
+            if (value === req.user?._id) {
+              throw new ErrorWithStatus({ statusCode: StatusCodes.FORBIDDEN, message: VALIDATION_MESSAGES.USER.FAVORITE.USER_FAVOTITE_THEMSELVES })
             }
-            const isExist = await userServices.isExitInCloseFriends(new ObjectId(req.user._id), new ObjectId(value))
-            if (isExist) {
-              throw Error(VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ID_IS_EXIT)
+            const isFriendAlreadyFavorites = await databaseService.closeFriends.findOne({ userId: new ObjectId(req.user?._id), friendId: new ObjectId(value) })
+
+            if (isFriendAlreadyFavorites) {
+              throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ALREADY_FAVORITE })
             }
             return true
           }
@@ -934,14 +935,21 @@ export const removeFavoriteValidator = validate(
         custom: {
           options: async (value, { req }) => {
             if (!ObjectId.isValid(value)) {
-              throw Error(VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID)
+              throw new ErrorWithStatus({ statusCode: StatusCodes.BAD_REQUEST, message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID })
             }
-            const user = await userServices.isExitInCloseFriends(new ObjectId(req.user._id), new ObjectId(value))
+            const user = await databaseService.users.findOne({ _id: new ObjectId(value) })
             if (!user) {
-              throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.FAVORITE.FAVORITE_NOT_EXIT })
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
+              })
+            }
+            const isFriendAlreadyFavorites = await databaseService.closeFriends.findOne({ userId: new ObjectId(req.user?._id), friendId: new ObjectId(value) })
+            if (!isFriendAlreadyFavorites) {
+              throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_NOT_ALREADY_FAVORITE_USER })
             }
             if (value === req.user._id) {
-              throw Error(VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ID_NOT_USER_ID)
+              throw new ErrorWithStatus({ statusCode: StatusCodes.FORBIDDEN, message: VALIDATION_MESSAGES.USER.FAVORITE.USER_FAVOTITE_THEMSELVES })
             }
             return true
           }
