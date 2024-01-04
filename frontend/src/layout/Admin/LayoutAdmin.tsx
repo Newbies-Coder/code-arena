@@ -1,19 +1,9 @@
 import { MenuItemType } from '@/@types/admin'
 import DarkMode from '@/components/DarkMode'
-import {
-  CourserIcon,
-  DashboardIcon,
-  LogoutIcon,
-  MessageIcon,
-  MoonIcon,
-  NoNotiIcon,
-  SunIcon,
-  UsersIcon,
-} from '@/components/Icons'
+import { CourserIcon, DashboardIcon, LogoutIcon, MessageIcon, NoNotiIcon, UsersIcon } from '@/components/Icons'
 import Menu from '@/components/Menu'
 import { HOME_ICON, LOGO } from '@/constants/images'
 import AvatarProfile from '@/container/Detail/components/AvatarProfile'
-import { CloseOutlined } from '@ant-design/icons'
 import { Button, Layout } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import { Content, Header } from 'antd/es/layout/layout'
