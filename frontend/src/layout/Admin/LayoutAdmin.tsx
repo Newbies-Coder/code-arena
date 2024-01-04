@@ -1,11 +1,23 @@
 import { MenuItemType } from '@/@types/admin'
-import { CourserIcon, DashboardIcon, LogoutIcon, MessageIcon, NoNotiIcon, UsersIcon } from '@/components/Icons'
+import DarkMode from '@/components/DarkMode'
+import {
+  CourserIcon,
+  DashboardIcon,
+  LogoutIcon,
+  MessageIcon,
+  MoonIcon,
+  NoNotiIcon,
+  SunIcon,
+  UsersIcon,
+} from '@/components/Icons'
 import Menu from '@/components/Menu'
 import { HOME_ICON, LOGO } from '@/constants/images'
 import AvatarProfile from '@/container/Detail/components/AvatarProfile'
+import { CloseOutlined } from '@ant-design/icons'
 import { Button, Layout } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import { Content, Header } from 'antd/es/layout/layout'
+import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -44,7 +56,7 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
-        className="border-r border-[#cccc]"
+        className="relative border-r border-[#cccc]"
       >
         <Link to={'/admin'} className="flex justify-center mb-2">
           {!collapsed ? (
@@ -54,19 +66,19 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
           )}
         </Link>
         <Menu items={items} collapsed={collapsed} />
-        {!collapsed ? (
+        <div className="flex flex-col items-center absolute bottom-14 left-2 right-2 gap-2">
+          <div className="w-full h-8 flex items-center justify-between px-2">
+            {!collapsed && <span className="text-sm font-semibold text-white">Theme</span>}
+            <DarkMode />
+          </div>
           <Button
-            icon={<LogoutIcon />}
-            className="m-1 pl-4 h-10 w-48 text-white flex items-center fixed bottom-12"
+            icon={!collapsed && <LogoutIcon />}
+            className={clsx(['h-10 text-white flex items-center w-full'])}
             classNames={{ icon: 'ml-2' }}
           >
-            Log out
+            {!collapsed ? 'Log out' : <LogoutIcon />}
           </Button>
-        ) : (
-          <Button className="m-1 px-6 fixed bottom-12">
-            <LogoutIcon />
-          </Button>
-        )}
+        </div>
       </Sider>
       <Layout className="w-full md:w-9/12">
         <Header className="flex justify-between">
