@@ -541,7 +541,7 @@ export const StoreIcon: React.FC<IconPropsType> = ({ width = '1.6rem', height = 
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0_770_81)">
+    <g clipPath="url(#clip0_770_81)">
       <path
         d="M7.5013 18.3327C7.96154 18.3327 8.33464 17.9596 8.33464 17.4993C8.33464 17.0391 7.96154 16.666 7.5013 16.666C7.04106 16.666 6.66797 17.0391 6.66797 17.4993C6.66797 17.9596 7.04106 18.3327 7.5013 18.3327Z"
         stroke="#5F3EBC"
@@ -581,7 +581,7 @@ export const SelectedStoreIcon: React.FC<IconPropsType> = ({ width = '1.188rem',
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0_741_1487)">
+    <g clipPath="url(#clip0_741_1487)">
       <path
         d="M7.1237 13.75C7.56092 13.75 7.91536 13.4702 7.91536 13.125C7.91536 12.7798 7.56092 12.5 7.1237 12.5C6.68647 12.5 6.33203 12.7798 6.33203 13.125C6.33203 13.4702 6.68647 13.75 7.1237 13.75Z"
         stroke="white"
@@ -621,7 +621,7 @@ export const SettingIcon: React.FC<IconPropsType> = ({ width = '1.5rem', height 
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0_737_177)">
+    <g clipPath="url(#clip0_737_177)">
       <path
         d="M12.1829 15C13.8652 15 15.229 13.6569 15.229 12C15.229 10.3431 13.8652 9 12.1829 9C10.5005 9 9.13672 10.3431 9.13672 12C9.13672 13.6569 10.5005 15 12.1829 15Z"
         stroke="#C1C6FB"
@@ -1092,7 +1092,12 @@ export const PlaneIcon: React.FC<IconPropsType> = ({ width = '1.875rem', height 
   </svg>
 )
 
-export const DashboardIcon: React.FC<IconPropsType> = ({ width = '20px', height = '20px', className }) => (
+export const DashboardIcon: React.FC<IconPropsType> = ({
+  width = '20px',
+  height = '20px',
+  color = 'white',
+  className,
+}) => (
   <svg
     width={width}
     height={height}
@@ -1106,41 +1111,46 @@ export const DashboardIcon: React.FC<IconPropsType> = ({ width = '20px', height 
         <path
           id="Vector"
           d="M18.3333 9.08268V3.41602C18.3333 2.16602 17.8 1.66602 16.475 1.66602H13.1083C11.7833 1.66602 11.25 2.16602 11.25 3.41602V9.08268C11.25 10.3327 11.7833 10.8327 13.1083 10.8327H16.475C17.8 10.8327 18.3333 10.3327 18.3333 9.08268Z"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          stroke={color}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <path
           id="Vector_2"
           d="M18.3333 16.584V15.084C18.3333 13.834 17.8 13.334 16.475 13.334H13.1083C11.7833 13.334 11.25 13.834 11.25 15.084V16.584C11.25 17.834 11.7833 18.334 13.1083 18.334H16.475C17.8 18.334 18.3333 17.834 18.3333 16.584Z"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          stroke={color}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <path
           id="Vector_3"
           d="M8.74935 10.916V16.5827C8.74935 17.8327 8.21602 18.3327 6.89102 18.3327H3.52435C2.19935 18.3327 1.66602 17.8327 1.66602 16.5827V10.916C1.66602 9.66602 2.19935 9.16602 3.52435 9.16602H6.89102C8.21602 9.16602 8.74935 9.66602 8.74935 10.916Z"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          stroke={color}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <path
           id="Vector_4"
           d="M8.74935 3.41602V4.91602C8.74935 6.16602 8.21602 6.66602 6.89102 6.66602H3.52435C2.19935 6.66602 1.66602 6.16602 1.66602 4.91602V3.41602C1.66602 2.16602 2.19935 1.66602 3.52435 1.66602H6.89102C8.21602 1.66602 8.74935 2.16602 8.74935 3.41602Z"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          stroke={color}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </g>
     </g>
   </svg>
 )
 
-export const CourserIcon: React.FC<IconPropsType> = ({ width = '20px', height = '20px', className }) => (
+export const CourserIcon: React.FC<IconPropsType> = ({
+  width = '20px',
+  height = '20px',
+  color = 'white',
+  className,
+}) => (
   <svg
     width={width}
     height={height}
@@ -1153,24 +1163,24 @@ export const CourserIcon: React.FC<IconPropsType> = ({ width = '20px', height = 
       <path
         id="Vector"
         d="M3.33398 16.2493C3.33398 15.6968 3.55348 15.1669 3.94418 14.7762C4.33488 14.3855 4.86478 14.166 5.41732 14.166H16.6673"
-        stroke="white"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         id="Vector_2"
         d="M5.41732 1.66602H16.6673V18.3327H5.41732C4.86478 18.3327 4.33488 18.1132 3.94418 17.7225C3.55348 17.3318 3.33398 16.8019 3.33398 16.2493V3.74935C3.33398 3.19681 3.55348 2.66691 3.94418 2.27621C4.33488 1.88551 4.86478 1.66602 5.41732 1.66602Z"
-        stroke="white"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </g>
   </svg>
 )
 
-export const UsersIcon: React.FC<IconPropsType> = ({ width = '20px', height = '20px', className }) => (
+export const UsersIcon: React.FC<IconPropsType> = ({ width = '20px', height = '20px', color = 'white', className }) => (
   <svg
     width={width}
     height={height}
@@ -1179,49 +1189,54 @@ export const UsersIcon: React.FC<IconPropsType> = ({ width = '20px', height = '2
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g id="users" clip-path="url(#clip0_1125_3779)">
+    <g id="users" clipPath="url(#clip0_1125_3779)">
       <path
         id="Vector"
         d="M14.1673 17.5V15.8333C14.1673 14.9493 13.8161 14.1014 13.191 13.4763C12.5659 12.8512 11.718 12.5 10.834 12.5H4.16732C3.28326 12.5 2.43542 12.8512 1.8103 13.4763C1.18517 14.1014 0.833984 14.9493 0.833984 15.8333V17.5"
-        stroke="white"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         id="Vector_2"
         d="M7.49935 9.16667C9.3403 9.16667 10.8327 7.67428 10.8327 5.83333C10.8327 3.99238 9.3403 2.5 7.49935 2.5C5.6584 2.5 4.16602 3.99238 4.16602 5.83333C4.16602 7.67428 5.6584 9.16667 7.49935 9.16667Z"
-        stroke="white"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         id="Vector_3"
         d="M19.166 17.4991V15.8324C19.1655 15.0939 18.9196 14.3764 18.4672 13.7927C18.0147 13.209 17.3811 12.7921 16.666 12.6074"
-        stroke="white"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         id="Vector_4"
         d="M13.334 2.60742C14.051 2.79101 14.6865 3.20801 15.1403 3.79268C15.5942 4.37736 15.8405 5.09645 15.8405 5.83659C15.8405 6.57673 15.5942 7.29582 15.1403 7.8805C14.6865 8.46517 14.051 8.88217 13.334 9.06576"
-        stroke="white"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </g>
     <defs>
       <clipPath id="clip0_1125_3779">
-        <rect width="20" height="20" fill="white" />
+        <rect width="20" height="20" fill={color} />
       </clipPath>
     </defs>
   </svg>
 )
 
-export const MessageIcon: React.FC<IconPropsType> = ({ width = '20px', height = '20px', className }) => (
+export const MessageIcon: React.FC<IconPropsType> = ({
+  width = '20px',
+  height = '20px',
+  color = 'white',
+  className,
+}) => (
   <svg
     width={width}
     height={height}
@@ -1234,10 +1249,10 @@ export const MessageIcon: React.FC<IconPropsType> = ({ width = '20px', height = 
       <path
         id="Vector"
         d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z"
-        stroke="white"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </g>
   </svg>
@@ -1255,17 +1270,17 @@ export const LogoutIcon: React.FC<IconPropsType> = ({ width = '20px', height = '
     <path
       d="M13.334 14.1673L17.5007 10.0007L13.334 5.83398"
       stroke="#DADBDF"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
-    <path d="M17.5 10H7.5" stroke="#DADBDF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M17.5 10H7.5" stroke="#DADBDF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     <path
       d="M7.5 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V4.16667C2.5 3.72464 2.67559 3.30072 2.98816 2.98816C3.30072 2.67559 3.72464 2.5 4.16667 2.5H7.5"
       stroke="#DADBDF"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 )

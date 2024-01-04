@@ -1,29 +1,19 @@
-import { CourserIcon, DashboardIcon, LogoutIcon, MessageIcon, UsersIcon } from '@/components/Icons'
+import { MenuItemType } from '@/@types/admin'
+import { CourserIcon, DashboardIcon, LogoutIcon, MessageIcon, NoNotiIcon, UsersIcon } from '@/components/Icons'
+import Menu from '@/components/Menu'
 import { HOME_ICON, LOGO } from '@/constants/images'
 import AvatarProfile from '@/container/Detail/components/AvatarProfile'
-import { BellOutlined } from '@ant-design/icons'
-import { Button, Layout, Menu, MenuProps } from 'antd'
+import { Button, Layout } from 'antd'
 import Sider from 'antd/es/layout/Sider'
-import { Content, Header, Footer } from 'antd/es/layout/layout'
+import { Content, Header } from 'antd/es/layout/layout'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-type MenuItem = Required<MenuProps>['items'][number]
-
-function getItem(label: React.ReactNode, key: React.Key, icon?: React.ReactNode, children?: MenuItem[]): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem
-}
-
-const items: MenuItem[] = [
-  getItem(<Link to={'/admin'}>Dashboard</Link>, '1', <DashboardIcon />),
-  getItem(<Link to={'/admin/user'}>User</Link>, '2', <UsersIcon />),
-  getItem(<Link to={'/admin/course'}>Course</Link>, '3', <CourserIcon />),
-  getItem(<Link to={'/admin/message'}>Message</Link>, '4', <MessageIcon />),
+const items: MenuItemType[] = [
+  { label: 'Dashboard', icon: <DashboardIcon color="#00D1FF" />, link: '/admin', active: false, color: '#00D1FF' },
+  { label: 'User', icon: <UsersIcon color="#F449F4" />, link: '/admin/user', active: false, color: '#F449F4' },
+  { label: 'Course', icon: <CourserIcon color="#FFE500" />, link: '/admin/course', active: false, color: '#FFE500' },
+  { label: 'Message', icon: <MessageIcon color="#5F3EBC" />, link: '/admin/message', active: false, color: '#5F3EBC' },
 ]
 
 export default function LayoutAdmin({ children }: { children: JSX.Element }) {
@@ -63,7 +53,7 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
             <img src={LOGO.APP_LOGO} alt="logo" className="mt-1 p-1 bg-gray-300 rounded-full" />
           )}
         </Link>
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
+        <Menu items={items} collapsed={collapsed} />
         {!collapsed ? (
           <Button
             icon={<LogoutIcon />}
@@ -82,7 +72,9 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
         <Header className="flex justify-between">
           <h3 className="text-white text-xl">{window.location.href.includes('/profile') && 'Personal information'}</h3>
           <div className="flex items-center">
-            <BellOutlined className="text-white text-xl mr-2" />
+            <Button className="h-10 w-10 px-2 mx-1 rounded-full border-yellow-400 flex justify-center items-center">
+              <NoNotiIcon />
+            </Button>
             <AvatarProfile />
           </div>
         </Header>
