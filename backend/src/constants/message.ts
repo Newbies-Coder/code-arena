@@ -89,7 +89,9 @@ export const DEV_ERRORS_MESSAGES = {
   CHECK_TOKEN: 'Error checking token',
   GET_USER_BY_ID: 'Error fetching user',
   FOLLOW_USER: 'Error in follow operation',
-  UNFOLLOW_USER: 'Error in unfollow operation'
+  UNFOLLOW_USER: 'Error in unfollow operation',
+  UPLOAD_AVATAR: 'Error updating avatar',
+  UPLOAD_THUMBNAIL: 'Error updating thumbnail'
 }
 
 export const RESULT_RESPONSE_MESSAGES = {

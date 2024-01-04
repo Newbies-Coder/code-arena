@@ -21,7 +21,16 @@ import {
 } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
-import { LoginResultType, PaginationType, ParsedGetAllUserUrlQuery, ResultCheckTokenType, ResultRefreshTokenType, ResultRegisterType, UploadAvatarType } from '~/@types/reponse.type'
+import {
+  LoginResultType,
+  PaginationType,
+  ParsedGetAllUserUrlQuery,
+  ResultCheckTokenType,
+  ResultRefreshTokenType,
+  ResultRegisterType,
+  UploadAvatarType,
+  UploadThumbnailType
+} from '~/@types/reponse.type'
 import { hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
@@ -162,6 +171,19 @@ class UserService {
   async validateRefreshToken(refresh_token: string): Promise<boolean> {
     const token = await databaseService.refreshTokens.findOne({ token: refresh_token })
     return Boolean(token)
+  }
+
+  private async upload(file: Express.Multer.File, folderName: string): Promise<string> {
+    const { url } = await cloudinaryService.uploadImage(folderName, file.buffer)
+    return url
+  }
+
+  private async updateUserAvatarInDatabase(userId: string, avatarUrl: string): Promise<void> {
+    await databaseService.users.updateOne({ _id: new ObjectId(userId) }, { $set: { avatar: avatarUrl } })
+  }
+
+  private async updateUserThumbnailInDatabase(userId: string, thumbnailUrl: string): Promise<void> {
+    await databaseService.users.updateOne({ _id: new ObjectId(userId) }, { $set: { cover_photo: thumbnailUrl } })
   }
 
   async login(payload: LoginPayload): Promise<LoginResultType> {
@@ -585,6 +607,36 @@ class UserService {
       })
     }
   }
+
+  async updateMeAvatar({ _id }: AuthUser, file: Express.Multer.File): Promise<UploadAvatarType> {
+    try {
+      const newAvatarUrl = await this.upload(file, env.cloudinary.avatar_folder)
+      const currentUser = await databaseService.users.findOne({ _id: new ObjectId(_id) })
+      await Promise.all([currentUser?.avatar ? cloudinaryService.deleteImage(currentUser.avatar) : Promise.resolve(), this.updateUserAvatarInDatabase(_id, newAvatarUrl)])
+
+      return { avatarUrl: newAvatarUrl }
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.status || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.UPLOAD_AVATAR
+      })
+    }
+  }
+
+  async updateMeThumbnail({ _id }: AuthUser, file: Express.Multer.File): Promise<UploadThumbnailType> {
+    try {
+      const newThumbnailUrl = await this.upload(file, env.cloudinary.thumbnail_folder)
+      const currentUser = await databaseService.users.findOne({ _id: new ObjectId(_id) })
+      await Promise.all([currentUser?.cover_photo ? cloudinaryService.deleteImage(currentUser.cover_photo) : Promise.resolve(), this.updateUserThumbnailInDatabase(_id, newThumbnailUrl)])
+
+      return { thumbnailUrl: newThumbnailUrl }
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.status || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.UPLOAD_AVATAR
+      })
+    }
+  }
   //TODO:
   async deleteManyUser(payload: ParsedQs) {
     const { id } = payload
@@ -609,40 +661,6 @@ class UserService {
       },
       { upsert: false }
     )
-  }
-
-  async updateMeAvatar({ _id }: AuthUser, file: Express.Multer.File) {
-    const { url } = await cloudinaryService.uploadImage(env.cloudinary.avatar_folder, file.buffer)
-    const { avatar } = await databaseService.users.findOne({ _id: new ObjectId(_id) })
-
-    await cloudinaryService.deleteImage(avatar)
-    await databaseService.users.updateOne(
-      { _id: new ObjectId(_id) },
-      {
-        $set: {
-          avatar: url
-        }
-      }
-    )
-    const result: UploadAvatarType = { avatarUrl: url }
-    return result
-  }
-
-  async updateMeThumbnail({ _id }: AuthUser, file: Express.Multer.File) {
-    const { url } = await cloudinaryService.uploadImage(env.cloudinary.thumbnail_folder, file.buffer)
-    const { avatar } = await databaseService.users.findOne({ _id: new ObjectId(_id) })
-
-    await cloudinaryService.deleteImage(avatar)
-    await databaseService.users.updateOne(
-      { _id: new ObjectId(_id) },
-      {
-        $set: {
-          cover_photo: url
-        }
-      }
-    )
-    const result: UploadAvatarType = { avatarUrl: url }
-    return result
   }
 
   //! ERROR PAGINATION

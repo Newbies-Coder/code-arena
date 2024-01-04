@@ -56,6 +56,10 @@ export type UploadAvatarType = {
   avatarUrl: string
 }
 
+export type UploadThumbnailType = {
+  thumbnailUrl: string
+}
+
 export type PaginationType<T> = {
   items: T[]
   page: number

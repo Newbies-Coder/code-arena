@@ -170,20 +170,20 @@ userRouter.put('/@me/profile', wrapRequestHandler(requireLoginMiddleware), updat
 
 /**
  * Description: Upload avatar
- * Path: /
- * Method: POST
- * Description: Upload avatar
  * Path: /@me/avatar
  * Method: POST
- * Body:
+ * Header: { Authorization: Bearer <access_token> }
+ * Body: {image: file}
  */
 
-userRouter.post('/@me/avatar', wrapRequestHandler(requireLoginMiddleware), singleImageUpload, wrapRequestHandler(userController.updateMeAvatar))
+userRouter.post('/@me/avatar', wrapRequestHandler(requireLoginMiddleware), singleImageUpload, wrapRequestHandler(userController.uploadAvatar))
 
 /**
  * Description: Upload thumbnail
  * Path: /@me/thumbnail
  * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ * Body: {image: file}
  */
 
 userRouter.post('/@me/thumbnail', wrapRequestHandler(requireLoginMiddleware), singleImageUpload, wrapRequestHandler(userController.uploadThumbnail))
