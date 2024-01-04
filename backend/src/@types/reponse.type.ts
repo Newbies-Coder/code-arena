@@ -75,3 +75,9 @@ export type ParsedGetAllUserUrlQuery = {
   sort_by?: string
   created_at?: string
 }
+
+export type ParsedGetUserByRoleUrlQuery = {
+  page?: string
+  limit?: string
+  includes?: UserRole.User | UserRole.Admin | UserRole.Moderator
+}

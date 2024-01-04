@@ -8,7 +8,6 @@ import {
   ChangePasswordBody,
   FavoriteBody,
   ForgotPasswordBody,
-  GetUsersByRoleQuery,
   InfoTokenType,
   LoginPayload,
   LogoutBody,
@@ -25,6 +24,7 @@ import {
   LoginResultType,
   PaginationType,
   ParsedGetAllUserUrlQuery,
+  ParsedGetUserByRoleUrlQuery,
   ResultCheckTokenType,
   ResultRefreshTokenType,
   ResultRegisterType,
@@ -184,6 +184,19 @@ class UserService {
 
   private async updateUserThumbnailInDatabase(userId: string, thumbnailUrl: string): Promise<void> {
     await databaseService.users.updateOne({ _id: new ObjectId(userId) }, { $set: { cover_photo: thumbnailUrl } })
+  }
+
+  private getRoleFromPayload(roleString: string): UserRole {
+    switch (roleString) {
+      case 'user':
+        return UserRole.User
+      case 'admin':
+        return UserRole.Admin
+      case 'moderator':
+        return UserRole.Moderator
+      default:
+        return UserRole.User
+    }
   }
 
   async login(payload: LoginPayload): Promise<LoginResultType> {
@@ -637,6 +650,38 @@ class UserService {
       })
     }
   }
+
+  async getUsersByRole(payload: ParsedGetUserByRoleUrlQuery): Promise<PaginationType<Partial<User>>> {
+    try {
+      const page = Number(payload.page) || 1
+      const limit = Number(payload.limit) || 10
+      const role = this.getRoleFromPayload(payload.includes)
+
+      const items = await databaseService.users
+        .find({ role })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .toArray()
+
+      const total_items = await databaseService.users.countDocuments()
+      const total_pages = Math.floor((total_items + limit - 1) / limit)
+      const filteredUsers = _.map(items, (v) => _.omit(v, ['password']))
+
+      const content: PaginationType<Partial<User>> = {
+        items: filteredUsers,
+        page,
+        limit,
+        total_pages,
+        total_items
+      }
+      return content
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.GET_USER_BY_ROLE
+      })
+    }
+  }
   //TODO:
   async deleteManyUser(payload: ParsedQs) {
     const { id } = payload
@@ -711,15 +756,6 @@ class UserService {
       throw new ErrorWithStatus({ statusCode: StatusCodes.BAD_REQUEST, message: VALIDATION_MESSAGES.USER.USER_PROFILE.FIELD_UPDATE_IS_REQUIRED })
     }
     await databaseService.users.updateOne({ _id: new ObjectId(user._id) }, { $set: payload }, { upsert: false })
-  }
-
-  async getUsersByRole(payload: GetUsersByRoleQuery) {
-    const role = payload.includes === 'user' ? UserRole.User : payload.includes === 'admin' ? UserRole.Admin : UserRole.Moderator
-    const pageNumber = parseInt(payload.pageNumber)
-    const limit = parseInt(payload.limit) === 0 ? parseInt(payload.limit) : 12
-    let startIndex = pageNumber * limit
-    const result = await databaseService.users.find({ role: role }).skip(startIndex).limit(limit).toArray()
-    return result
   }
 
   async insertUserFavorite(user: AuthUser, payload: FavoriteBody) {

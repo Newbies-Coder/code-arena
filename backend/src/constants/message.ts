@@ -91,7 +91,8 @@ export const DEV_ERRORS_MESSAGES = {
   FOLLOW_USER: 'Error in follow operation',
   UNFOLLOW_USER: 'Error in unfollow operation',
   UPLOAD_AVATAR: 'Error updating avatar',
-  UPLOAD_THUMBNAIL: 'Error updating thumbnail'
+  UPLOAD_THUMBNAIL: 'Error updating thumbnail',
+  GET_USER_BY_ROLE: 'Error get user by role'
 }
 
 export const RESULT_RESPONSE_MESSAGES = {

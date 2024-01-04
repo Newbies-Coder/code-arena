@@ -6,7 +6,6 @@ import {
   ChangePasswordBody,
   FavoriteBody,
   ForgotPasswordBody,
-  GetUsersByRoleQuery,
   LoginPayload,
   LogoutBody,
   RefreshTokenBody,
@@ -20,7 +19,7 @@ import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
 import { ObjectId } from 'mongodb'
 import { env } from '~/config/environment.config'
-import { ParsedGetAllUserUrlQuery } from '~/@types/reponse.type'
+import { ParsedGetAllUserUrlQuery, ParsedGetUserByRoleUrlQuery } from '~/@types/reponse.type'
 
 const userController = {
   login: async (req: Request<ParamsDictionary, any, LoginPayload>, res: Response, next: NextFunction) => {
@@ -100,6 +99,14 @@ const userController = {
     const result = await userServices.updateMeThumbnail(req.user, req.file)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UPLOAD_THUMBNAIL)
   },
+  testToken: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    const result = await userServices.checkToken(req.body)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.TEST_TOKEN)
+  },
+  getUsersByRole: async (req: Request<ParamsDictionary, any, any, ParsedGetUserByRoleUrlQuery>, res: Response, next: NextFunction) => {
+    const result = await userServices.getUsersByRole(req.query)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ROLE_USER)
+  },
   //TODO
   updateMe: async (req: Request<ParamsDictionary, any, UpdateProfileBody>, res: Response, next: NextFunction) => {
     await userServices.updateProfile(req.user, req.body)
@@ -120,14 +127,13 @@ const userController = {
     const result = await userServices.deleteMeBlockedUser(req.params)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_BLOCKED_USER)
   },
+
   deleteManyUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     await userServices.deleteManyUser(req.query)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_MANY_USER)
   },
-  getUsersByRole: async (req: Request<ParamsDictionary, any, any, GetUsersByRoleQuery>, res: Response, next: NextFunction) => {
-    const result = await userServices.getUsersByRole(req.query)
-    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ROLE_USER)
-  },
+
+  //TODO: Favorite fix error
   favorite: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     const result = await userServices.getFavorite(req.user)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_FAVORITE_USER)
@@ -140,6 +146,7 @@ const userController = {
     await userServices.removeUserFavorite(req.user, req.params)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_USER_TO_FAVORITES)
   },
+  //TODO: Block fix error
   blocks: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_USERS_BLOCK)
   },
@@ -148,10 +155,6 @@ const userController = {
   },
   unblock: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.REMOVE_USER_BLOCK)
-  },
-  testToken: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    const result = await userServices.checkToken(req.body)
-    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.TEST_TOKEN)
   }
 }
 

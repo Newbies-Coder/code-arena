@@ -1,5 +1,4 @@
 import { ObjectId } from 'mongodb'
-import { ParsedUrlQuery } from 'querystring'
 import { TokenType, UserRole } from '~/constants/enums'
 
 export interface LoginPayload {
@@ -79,12 +78,6 @@ export interface UpdateProfileBody {
   date_of_birth?: Date
   bio?: string
   address?: string
-}
-
-export interface GetUsersByRoleQuery extends ParsedUrlQuery {
-  includes: string
-  pageNumber: string
-  limit: string
 }
 
 export interface FavoriteBody {

@@ -855,6 +855,24 @@ export const updateProfileValidator = validate(
 export const getUsersByRoleValidator = validate(
   checkSchema(
     {
+      page: {
+        trim: true,
+        optional: { options: { nullable: true } },
+        isInt: {
+          options: { min: 1 },
+          errorMessage: VALIDATION_MESSAGES.PAGINATION.PAGE_CAN_NOT_LESS_THAN_ZERO
+        },
+        toInt: true
+      },
+      limit: {
+        trim: true,
+        optional: { options: { nullable: true } },
+        isInt: {
+          options: { min: 1, max: 100 },
+          errorMessage: VALIDATION_MESSAGES.PAGINATION.ITEMS_IS_NOT_IN_RANGE
+        },
+        toInt: true
+      },
       includes: {
         notEmpty: {
           errorMessage: VALIDATION_MESSAGES.USER.GET_USERS_BY_ROLE.ROLE_IS_REQUIRED
