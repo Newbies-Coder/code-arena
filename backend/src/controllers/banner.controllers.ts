@@ -10,6 +10,10 @@ const bannerController = {
     const result = await bannersService.getAll(req.query)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.BANNERS_SUCCESS.GET_ALL)
   },
+  getBannerByUserId: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    const result = await bannersService.getBannerByUserId(req.params.id)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.BANNERS_SUCCESS.GET_WITH_USER_ID)
+  },
   insert: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     const result = await bannersService.insertBanners(req.user, req.body.slug, req.files as Express.Multer.File[])
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.BANNERS_SUCCESS.INSERT)

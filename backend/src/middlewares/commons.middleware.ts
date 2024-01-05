@@ -159,6 +159,65 @@ export const paginationUserFavoriteValidators = validate(
   )
 )
 
+export const paginationBannerValidators = validate(
+  checkSchema(
+    {
+      page: {
+        trim: true,
+        optional: { options: { nullable: true } },
+        isInt: {
+          options: { min: 1 },
+          errorMessage: VALIDATION_MESSAGES.PAGINATION.PAGE_CAN_NOT_LESS_THAN_ZERO
+        },
+        toInt: true
+      },
+      limit: {
+        trim: true,
+        optional: { options: { nullable: true } },
+        isInt: {
+          options: { min: 1, max: 100 },
+          errorMessage: VALIDATION_MESSAGES.PAGINATION.ITEMS_IS_NOT_IN_RANGE
+        },
+        toInt: true
+      },
+      bannerId: {
+        trim: true,
+        optional: { options: { nullable: true } },
+        isMongoId: {
+          errorMessage: VALIDATION_MESSAGES.BANNER.INVALID_ID
+        },
+        custom: {
+          options: async (value) => {
+            const banner = await databaseService.banners.findOne({ _id: new ObjectId(value) })
+            if (banner === null) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.CONFLICT,
+                message: VALIDATION_MESSAGES.BANNER.NOT_FOUND
+              })
+            }
+            return true
+          }
+        }
+      },
+      sort_by: {
+        trim: true,
+        optional: { options: { nullable: true } },
+        isString: true
+      },
+      sort_order: {
+        trim: true,
+        optional: { options: { nullable: true } },
+        isString: true,
+        custom: {
+          options: (value) => ['asc', 'desc'].includes(value.toLowerCase()),
+          errorMessage: VALIDATION_MESSAGES.BANNER.INVALID_SORT_ORDER
+        }
+      }
+    },
+    ['query']
+  )
+)
+
 export const objectIdValidator = validate(
   checkSchema(
     {

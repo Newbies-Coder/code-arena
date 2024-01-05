@@ -88,6 +88,14 @@ export type ParsedGetAllUserFavoriteUrlQuery = {
   created_at?: string
 }
 
+export type ParsedBannerUrlQuery = {
+  page?: string
+  limit?: string
+  bannerId?: string
+  sort_by?: string
+  sort_order?: string
+}
+
 export type ParsedGetAllUserBlockedUrlQuery = {
   page?: string
   limit?: string

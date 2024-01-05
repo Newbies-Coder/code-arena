@@ -63,6 +63,8 @@ export const DEV_ERRORS_MESSAGES = {
   GET_ALL_USER: 'Error retrieving users',
   DELETED_BANNER: 'Error delete banner',
   GET_ALL_BANNER: 'Error get all banners',
+  GET_BANNER_WITH_ID: 'Error get banners by banner_id',
+  INSERT_BANNER: 'Error inert banner',
   LOGOUT: 'Error occurred during logout.',
   CHANGE_PASSWORD: 'Error changing password',
   FORGOT_PASSWORD: 'Error in forgot-password',
@@ -315,9 +317,11 @@ export const VALIDATION_MESSAGES = {
     HEADER_AUTHORIZATION_IS_INVALID: 'Header authorization is invalid'
   },
   BANNER: {
-    BANNER_NOT_FOUND: 'Banner not found',
-    BANNER_ID_INVALID: 'Banner id is invalid',
-    BANNER_IMAGE_IS_REQUIRED: 'Banner image is required'
+    ID_IS_REQUIRED: 'Banner id is required',
+    IMAGE_IS_REQUIRED: 'Banner image is required',
+    NOT_FOUND: 'Banner does not exists',
+    INVALID_ID: 'Invalid banner id',
+    INVALID_SORT_ORDER: 'Invalid sorting order'
   }
 } as const
 
