@@ -2726,33 +2726,3 @@ components:
           type: string
       xml:
         name: banner
-    StoreSchema:
-      type: object
-      properties:
-        _id:
-          type: string
-          description: Unique identifier for the store
-        name:
-          type: string
-        alias:
-          type: string
-        image:
-          type: string
-        longtitude:
-          type: string
-        latitude:
-          type: string
-        email:
-          type: string
-        hotline:
-          type: string
-        short_address:
-          type: string
-        province_code:
-          type: number
-        district_code:
-          type: number
-        ward_code:
-          type: number
-      xml:
-        name: store
