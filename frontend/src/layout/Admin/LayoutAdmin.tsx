@@ -60,7 +60,7 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
           {!collapsed ? (
             <img src={HOME_ICON.LOGO_TEXT} alt="logo" />
           ) : (
-            <img src={LOGO.APP_LOGO} alt="logo" className="mt-1 p-1 bg-gray-300 rounded-full" />
+            <img src={LOGO.APP_LOGO} alt="logo" className="mt-1 p-2 bg-gray-300 rounded-full" />
           )}
         </Link>
         <Menu items={items} collapsed={collapsed} />
