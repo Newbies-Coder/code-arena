@@ -19,7 +19,7 @@ class BannersService {
         files.map(async (file) => {
           const result = await cloudinaryService.uploadImage(env.cloudinary.banner_folder, file.buffer)
           const imageUrl = result.secure_url
-          await databaseService.banners.insertOne(new Banner({ user_id: new ObjectId(_id), slug: slug, url: imageUrl }))
+          await databaseService.banners.insertOne(new Banner({ user_id: new ObjectId(_id), slug, url: imageUrl }))
           return imageUrl
         })
       )
