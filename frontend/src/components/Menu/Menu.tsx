@@ -11,7 +11,7 @@ export default function Menu(props: MenuType) {
     setMenu(menuUpdate)
   }
   return (
-    <div className="mt-2">
+    <div className="mt-2 fixed top-16 w-48">
       {menu.map((item: MenuItemType, index: number) => (
         <div key={index} className="flex my-2 mr-4 text-white" onClick={() => handleItemActive(index)}>
           <div style={{ border: `1px solid ${item.color}` }}></div>

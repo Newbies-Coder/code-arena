@@ -56,7 +56,7 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
         onCollapse={(value) => setCollapsed(value)}
         className="relative border-r border-[#cccc]"
       >
-        <Link to={'/admin'} className="flex justify-center mb-2">
+        <Link to={'/admin'} className={`fixed top-0 flex justify-center mb-2 ${collapsed && 'w-20'}`}>
           {!collapsed ? (
             <img src={HOME_ICON.LOGO_TEXT} alt="logo" />
           ) : (
@@ -64,7 +64,12 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
           )}
         </Link>
         <Menu items={items} collapsed={collapsed} />
-        <div className="flex flex-col items-center absolute bottom-14 left-2 right-2 gap-2">
+        <div
+          className={clsx([
+            'flex flex-col items-center fixed bottom-14 left-2 gap-2',
+            !collapsed ? 'w-[180px]' : 'w-[60px]',
+          ])}
+        >
           <div className="w-full h-8 flex items-center justify-between px-2">
             {!collapsed && <span className="text-sm font-semibold text-white">Theme</span>}
             <DarkMode />
