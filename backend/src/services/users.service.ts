@@ -108,19 +108,6 @@ class UserService {
     }
   }
 
-  private extractIds(id: unknown): ObjectId[] {
-    if (Array.isArray(id)) {
-      return id.map((item) => new ObjectId(item))
-    } else if (typeof id === 'string') {
-      return [new ObjectId(id)]
-    } else {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.NOT_FOUND,
-        message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
-      })
-    }
-  }
-
   private async checkIfAlreadyFollowed(followerId: string, followedId: string): Promise<boolean> {
     const follow = await databaseService.follow.findOne({
       followerId: new ObjectId(followerId),
@@ -155,17 +142,11 @@ class UserService {
     await databaseService.users.updateOne({ _id: new ObjectId(userId) }, { $set: { cover_photo: thumbnailUrl } })
   }
 
-  private getRoleFromPayload(roleString: string): UserRole {
-    switch (roleString) {
-      case 'user':
-        return UserRole.User
-      case 'admin':
-        return UserRole.Admin
-      case 'moderator':
-        return UserRole.Moderator
-      default:
-        return UserRole.User
-    }
+  private calculateAge(dob: string): number {
+    const birthDate = new Date(dob)
+    const difference = Date.now() - birthDate.getTime()
+    const ageDate = new Date(difference)
+    return Math.abs(ageDate.getUTCFullYear() - 1970)
   }
 
   async validateEmailAndPasswordExist(email: string, password: string): Promise<boolean> {
@@ -332,11 +313,13 @@ class UserService {
     try {
       let { email, username, password, date_of_birth } = payload
       const hashedPassword = hashPassword(password)
+      const age = this.calculateAge(date_of_birth)
       const newUser = new User({
         ...payload,
         password: hashedPassword,
         date_of_birth: new Date(date_of_birth),
-        role: UserRole.User
+        role: UserRole.User,
+        age
       })
       const userResult = await databaseService.users.insertOne(newUser)
       const user_id = userResult.insertedId.toString()
@@ -450,43 +433,6 @@ class UserService {
       throw new ErrorWithStatus({
         statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
         message: error.message || DEV_ERRORS_MESSAGES.FORGOT_PASSWORD
-      })
-    }
-  }
-
-  async getAllUser(payload: ParsedGetAllUserUrlQuery): Promise<PaginationType<Partial<User>>> {
-    try {
-      const page = Number(payload.page) || 1
-      const limit = Number(payload.limit) || 10
-      const userId = payload.userId ? new ObjectId(payload.userId) : null
-      const sort_by = payload.sort_by || '_id'
-      const sortByCreatedAt = payload.created_at === 'desc' ? -1 : 1
-
-      let query = userId ? { _id: userId } : {}
-
-      const items = await databaseService.users
-        .find(query)
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .sort({ [sort_by]: sortByCreatedAt })
-        .toArray()
-
-      const total_items = await databaseService.users.countDocuments(query)
-      const total_pages = Math.floor((total_items + limit - 1) / limit)
-      const filteredUsers = _.map(items, (v) => _.omit(v, ['password', 'created_at', 'updated_at', 'email', 'phone', 'forgot_password_token', 'verify', '_destroy', 'password_change_at']))
-
-      const content: PaginationType<Partial<User>> = {
-        items: filteredUsers,
-        page,
-        limit,
-        total_pages,
-        total_items
-      }
-      return content
-    } catch (error) {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: error.message || DEV_ERRORS_MESSAGES.GET_ALL_USER
       })
     }
   }
@@ -683,38 +629,6 @@ class UserService {
     }
   }
 
-  async getUsersByRole(payload: ParsedGetUserByRoleUrlQuery): Promise<PaginationType<Partial<User>>> {
-    try {
-      const page = Number(payload.page) || 1
-      const limit = Number(payload.limit) || 10
-      const role = this.getRoleFromPayload(payload.includes)
-
-      const items = await databaseService.users
-        .find({ role })
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .toArray()
-
-      const total_items = await databaseService.users.countDocuments()
-      const total_pages = Math.floor((total_items + limit - 1) / limit)
-      const filteredUsers = _.map(items, (v) => _.omit(v, ['password']))
-
-      const content: PaginationType<Partial<User>> = {
-        items: filteredUsers,
-        page,
-        limit,
-        total_pages,
-        total_items
-      }
-      return content
-    } catch (error) {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: error.message || DEV_ERRORS_MESSAGES.GET_USER_BY_ROLE
-      })
-    }
-  }
-
   async updateProfile(user: AuthUser, payload: UpdateProfileBody): Promise<void> {
     try {
       if (Object.keys(payload).length === 0) {
@@ -725,18 +639,6 @@ class UserService {
       throw new ErrorWithStatus({
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
         message: error.message || DEV_ERRORS_MESSAGES.UPDATE_PROFILE
-      })
-    }
-  }
-
-  async deleteManyUsers(payload: ParsedQs): Promise<void> {
-    try {
-      const deleteIds = this.extractIds(payload.id)
-      await databaseService.users.updateMany({ _id: { $in: deleteIds } }, { $set: { _destroy: true } }, { upsert: false })
-    } catch (error) {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: error.message || DEV_ERRORS_MESSAGES.DELETED_MANY_USER
       })
     }
   }

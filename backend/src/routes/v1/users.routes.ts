@@ -1,18 +1,15 @@
 import { Router } from 'express'
-import { UserRole } from '~/constants/enums'
 import userController from '~/controllers/users.controllers'
-import { requireLoginMiddleware, requireRoleMiddleware } from '~/middlewares/auth.middlewares'
-import { objectIdValidator, paginationBlockedUserValidators, paginationUserFavoriteValidators, paginationUserValidators, paginationValidator } from '~/middlewares/commons.middleware'
+import { requireLoginMiddleware } from '~/middlewares/auth.middlewares'
+import { objectIdValidator, paginationBlockedUserValidators, paginationUserFavoriteValidators } from '~/middlewares/commons.middleware'
 import { singleImageUpload } from '~/middlewares/uploadFile.middleware'
 import {
   blockedUserValidator,
   changePasswordValidator,
   checkTokenValidator,
-  deleteManyUserValidator,
   favoriteValidator,
   followUserValidator,
   forgotPasswordValidator,
-  getUsersByRoleValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator,
@@ -122,25 +119,6 @@ userRouter.post('/follow/:id', wrapRequestHandler(requireLoginMiddleware), follo
 userRouter.delete('/unfollow/:id', wrapRequestHandler(requireLoginMiddleware), unfollowUserValidator, wrapRequestHandler(userController.unfollow))
 
 /**
- * Description: Get all user by admin
- * Path: '/'
- * Method: GET
- * Header: { Authorization: Bearer <access_token> }
- * Params: { page: number, limit: number, userId: string, sort_by: string, created_at: asc | desc }
- */
-
-userRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), paginationUserValidators, wrapRequestHandler(userController.getAllUser))
-
-/**
- * Description: Delete user by admin
- * Path: '/:id'
- * Method: DELETE
- * Header: { Authorization: Bearer <access_token> }
- */
-
-userRouter.delete('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), deleteManyUserValidator, wrapRequestHandler(userController.deleteManyUser))
-
-/**
  * Description: Get user profile
  * Path: /profile/:id
  * Method: GET
@@ -216,17 +194,6 @@ userRouter.post('/@me/blocked', wrapRequestHandler(requireLoginMiddleware), bloc
  **/
 
 userRouter.delete('/@me/blocked/:id', wrapRequestHandler(requireLoginMiddleware), objectIdValidator, wrapRequestHandler(userController.unBlockedUser))
-
-/**
- * Description: Get user by role
- * Path: /roles
- * Method: GET
- * Header: { Authorization: Bearer <access_token> }
- * query: { includes: string }// user | admin | moderator
- * Note: Feature for ADMIN
- */
-
-userRouter.get('/roles', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), getUsersByRoleValidator, wrapRequestHandler(userController.getUsersByRole))
 
 /**
  * Description: Make a list of your closest pals.

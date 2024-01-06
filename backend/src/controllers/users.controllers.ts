@@ -59,11 +59,6 @@ const userController = {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.OTP_SUCCESS.VERIFY_OTP)
   },
 
-  getAllUser: async (req: Request<ParamsDictionary, any, any, ParsedGetAllUserUrlQuery>, res: Response, next: NextFunction) => {
-    const result = await userServices.getAllUser(req.query)
-    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ALL_USER)
-  },
-
   resetPassword: async (req: Request<ParamsDictionary, any, ResetPasswordBody>, res: Response, next: NextFunction) => {
     await userServices.resetPassword({ email: req.body.email, password: req.body.password } as ResetPasswordBody)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.RESET_PASSWORD)
@@ -108,18 +103,9 @@ const userController = {
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.TEST_TOKEN)
   },
 
-  getUsersByRole: async (req: Request<ParamsDictionary, any, any, ParsedGetUserByRoleUrlQuery>, res: Response, next: NextFunction) => {
-    const result = await userServices.getUsersByRole(req.query)
-    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ROLE_USER)
-  },
-
   updateMe: async (req: Request<ParamsDictionary, any, UpdateProfileBody>, res: Response, next: NextFunction) => {
     await userServices.updateProfile(req.user, req.body)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UPDATE_USER)
-  },
-  deleteManyUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    await userServices.deleteManyUsers(req.query)
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_MANY_USER)
   },
 
   getMeBlockedUsers: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {

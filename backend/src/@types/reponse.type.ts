@@ -5,6 +5,7 @@ export type ResultRegisterType = {
   _id: string
   username: string
   email: string
+  age?: number
   access_token: string
   refresh_token: string
 }
