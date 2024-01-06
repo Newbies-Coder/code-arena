@@ -19,7 +19,6 @@ import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
 import userServices from '~/services/users.service'
 import { ObjectId } from 'mongodb'
 import { env } from '~/config/environment.config'
-import { ParsedGetAllUserUrlQuery, ParsedGetUserByRoleUrlQuery } from '~/@types/reponse.type'
 
 const userController = {
   login: async (req: Request<ParamsDictionary, any, LoginPayload>, res: Response, next: NextFunction) => {

@@ -2274,9 +2274,6 @@ paths:
                 slug:
                   type: string
                   description: The slug for the banner
-                description:
-                  type: string
-                  description: Description for the banner
                 image:
                   type: array
                   items:
