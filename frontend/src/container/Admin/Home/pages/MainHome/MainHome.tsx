@@ -8,17 +8,16 @@ import './style.scss'
 
 const MainHome = () => {
   return (
-    <Row className="bg-[#001529] h-full border-t border-[#949a9f]">
+    <Row className="border-t border-[#949a9f]">
       <Col xs={24} lg={18} xl={18} className="p-2">
         <h2 className="ml-2 text-3xl font-bold font-popins leading-9 text-orange-500">Number progression chart</h2>
         <Progression />
         <Statistic />
       </Col>
-      <Col xs={24} lg={6} xl={6} className="p-2">
-        <h2 className="ml-2 text-3xl font-bold font-popins leading-9 text-orange-500">Overviews</h2>
+      <Col xs={24} lg={6} xl={6} className="p-2 mb-20 flex flex-col gap-10">
         <Overview />
         <Calendar
-          className="border border-white "
+          className="border border-white"
           fullscreen={false}
           mode="month"
           headerRender={({ value, onChange }) => {

@@ -9,10 +9,11 @@ import {
   Title,
   Tooltip,
   Legend,
+  Filler,
 } from 'chart.js'
 import { Line } from 'react-chartjs-2'
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
 
 const handleMenuClick: MenuProps['onClick'] = (e) => {
   message.info('Click on menu item.')
@@ -55,8 +56,25 @@ export const data = {
     {
       label: 'Quantity User',
       data: [2800, 3700, 4221, 3000, 6000],
-      backgroundColor: 'rgba(75, 192, 192, 0.2)',
-      borderColor: 'rgba(255, 206, 86, 0.2)',
+      borderColor: '#5185F7',
+      fill: true,
+      backgroundColor: (context: any) => {
+        const canvas = context.chart.canvas as HTMLCanvasElement
+        // #FFFFFF, #0050FFDA, #0F2E7400
+        if (canvas) {
+          const ctx = canvas.getContext('2d')
+          if (ctx) {
+            const gradient = ctx.createLinearGradient(0, 0, 0, 510)
+            gradient.addColorStop(0, '#FFFFFF')
+            gradient.addColorStop(0.5, '#0050FFDA')
+            gradient.addColorStop(1, '#0F2E7400')
+            return gradient
+          }
+        }
+
+        return '#fff'
+      },
+      tension: 0.4,
     },
   ],
 }

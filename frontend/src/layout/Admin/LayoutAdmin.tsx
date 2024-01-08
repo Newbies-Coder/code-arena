@@ -29,6 +29,21 @@ const items: MenuItemType[] = [
 export default function LayoutAdmin({ children }: { children: JSX.Element }) {
   const [collapsed, setCollapsed] = useState(false)
   const [windowSize, setWindowSize] = useState([window.innerWidth, window.innerHeight])
+  const href = window.location.href
+  const [title, setTitle] = useState('')
+
+  useEffect(() => {
+    const url = href.slice(href.indexOf('/admin', 1)) as keyof typeof titles
+    const titles = {
+      '/admin': 'Dashboard',
+      '/admin/user': 'User',
+      '/admin/course': 'Course',
+      '/admin/message': 'Message',
+      '/admin/profile': 'Personal information',
+    }
+
+    setTitle(titles[url] || '')
+  }, [href])
 
   useEffect(() => {
     const handleWindowResize = () => {
@@ -49,12 +64,12 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
   }, [windowSize])
 
   return (
-    <Layout className="min-h-[100vh]">
+    <Layout className="min-h-screen bg-[#001529]">
       <Sider
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
-        className="relative border-r border-[#cccc]"
+        className="border-r border-[#6e7479]"
       >
         <Link to={'/admin'} className={`fixed top-0 flex justify-center mb-2 ${collapsed && 'w-20'}`}>
           {!collapsed ? (
@@ -87,9 +102,14 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
           </Button>
         </div>
       </Sider>
-      <Layout className="w-full md:w-9/12">
-        <Header className="flex justify-between">
-          <h3 className="text-white text-xl">{window.location.href.includes('/profile') && 'Personal information'}</h3>
+      <Layout className="w-full md:w-9/12 h-full">
+        <Header
+          className={clsx(
+            'flex justify-between fixed top-0 right-0 h-16 border-bottom border-[#6e7479]',
+            !collapsed ? 'left-[200px]' : 'left-[80px]',
+          )}
+        >
+          <h3 className="text-white text-xl">{title}</h3>
           <div className="flex items-center">
             <Button className="h-10 w-10 px-2 mx-1 rounded-full border-yellow-400 flex justify-center items-center">
               <NoNotiIcon />
@@ -97,7 +117,14 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
             <AvatarProfile />
           </div>
         </Header>
-        <Content className="h-full">{children}</Content>
+        <Content
+          className={clsx(
+            'fixed top-16 bottom-0 right-0 overflow-y-scroll',
+            !collapsed ? 'left-[200px]' : 'left-[80px]',
+          )}
+        >
+          {children}
+        </Content>
       </Layout>
     </Layout>
   )
