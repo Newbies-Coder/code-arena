@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { userState } from '@/@types/user'
 import { DispatchType } from '@/redux/config'
 import { registerApi } from '@/redux/userReducer/userReducer'
-import moment from 'moment'
 
 const onFinishFailed = (errorInfo: any) => {
   console.log('Failed:', errorInfo)
@@ -29,7 +28,6 @@ const Register = () => {
       confirm_password: values.confirm_password,
       date_of_birth: birthday,
     })
-
     await dispatch(registerData)
     console.log(values)
   }

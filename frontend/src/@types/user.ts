@@ -1,11 +1,17 @@
-export interface userType {
+export type userType = {
+  username?: string
   email?: string
-  passWord?: string
+  password?: string
+  confirm_password?: string
+  date_of_birth?: string
   accessToken?: string
   refreshToken?: string
+  message?: string
 }
 
-export interface userState {
+export type userState = {
   userLogin: userType
   userRegister: userType
+  userVerify: userType
+  userResendOTP: userType
 }

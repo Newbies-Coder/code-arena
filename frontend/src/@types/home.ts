@@ -1,4 +1,5 @@
 export type CourseType = {
+  id: number
   bgImage: string
   Icon: React.ElementType
   title: string

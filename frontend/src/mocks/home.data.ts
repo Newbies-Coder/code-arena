@@ -22,6 +22,7 @@ import { BG } from '@/constants/images'
 
 export const courseList: CourseType[] = [
   {
+    id: 0,
     bgImage: BG.APP_BG,
     Icon: FrontendIcon,
     progressPercent: 90,
@@ -29,6 +30,7 @@ export const courseList: CourseType[] = [
     description: "Beginner's Guide to Becoming a Professional Front-End Developer",
   },
   {
+    id: 1,
     bgImage: BG.APP_BG,
     Icon: DesignIcon,
     progressPercent: 50,
@@ -36,6 +38,7 @@ export const courseList: CourseType[] = [
     description: 'Optimizing User Experience with The Best UI/UX Desgin',
   },
   {
+    id: 2,
     bgImage: BG.APP_BG,
     Icon: BackendIcon,
     progressPercent: 50,
@@ -43,6 +46,7 @@ export const courseList: CourseType[] = [
     description: "Beginner's Guide to Becoming a Professional Front-End Developer",
   },
   {
+    id: 3,
     bgImage: BG.APP_BG,
     Icon: FrontendIcon,
     progressPercent: 90,
@@ -50,6 +54,7 @@ export const courseList: CourseType[] = [
     description: "Beginner's Guide to Becoming a Professional Front-End Developer",
   },
   {
+    id: 4,
     bgImage: BG.APP_BG,
     Icon: FrontendIcon,
     progressPercent: 90,
@@ -107,22 +112,3 @@ export const menuItems: MenuType[] = [
     active: true,
   },
 ]
-
-// export const bottomMenu: MenuType[] = [
-//   {
-//     key: 1,
-//     label: 'Theme',
-//     Icon: StoreIcon,
-//     IconActive: SelectedStoreIcon,
-//     LineIcon: LiPurpleLineIcon,
-//     color: 'bg-purple-500',
-//   },
-//   {
-//     key: 2,
-//     label: 'Setting',
-//     Icon: SettingIcon,
-//     IconActive: SelectedStoreIcon,
-//     LineIcon: LiPurpleLineIcon,
-//     color: 'bg-purple-700',
-//   },
-// ]

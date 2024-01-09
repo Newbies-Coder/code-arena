@@ -1,11 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DispatchType } from '../config'
 import { userState, userType } from 'src/@types/user'
-import axios from 'axios'
+import { ACCESS_TOKEN, http, setStore } from '@/utils/setting'
+import { history } from '@/main'
 
 const initialState: userState = {
   userLogin: {},
   userRegister: {},
+  userVerify: {},
+  userResendOTP: {},
 }
 
 const userReducer = createSlice({
@@ -18,35 +21,78 @@ const userReducer = createSlice({
     registerAction: (state: userState, action: PayloadAction<userType>) => {
       state.userRegister = action.payload
     },
+    verifyAction: (state: userState, action: PayloadAction<userType>) => {
+      state.userVerify = action.payload
+    },
+    resendOTPAction: (state: userState, action: PayloadAction<userType>) => {
+      state.userVerify = action.payload
+    },
   },
 })
 
-export const { loginAction, registerAction } = userReducer.actions
+export const { loginAction, registerAction, verifyAction, resendOTPAction } = userReducer.actions
 
 export default userReducer.reducer
 
 /*--------------- Action async --------------- */
 
-export const loginApi = (userLogin: any) => {
+export const loginApi = (userLogin: userType) => {
   return async (dispatch: DispatchType) => {
     try {
-      const response = await axios.post(`http://localhost:8080/api/v1/users/login`, userLogin)
-      const userData = response.data
-      dispatch(loginAction(userData))
+      const response = await http.post('/users/login', userLogin)
+      let { data } = response.data
+      const action: PayloadAction<userType> = loginAction(data)
+      dispatch(action)
+      setStore(ACCESS_TOKEN, data.access_token)
+      history.push('/')
     } catch (error) {
-      console.log(error)
+      // Log the error for debugging purposes, and provide user-friendly feedback
+      console.error('Login error:', error)
     }
   }
 }
 
-export const registerApi = (userRegister: any) => {
+export const registerApi = (userRegister: userType) => {
   return async (dispatch: DispatchType) => {
     try {
-      const response = await axios.post(`http://localhost:8080/api/v1/users/register`, userRegister)
-      const userData = response.data
-      dispatch(registerAction(userData))
+      const response = await http.post('/users/register', userRegister)
+      let { data } = response.data
+      const action: PayloadAction<userType> = registerAction(data)
+      dispatch(action)
+      setStore(ACCESS_TOKEN, data.access_token)
+      history.push('/verification')
     } catch (error) {
-      console.log(error)
+      console.error('Login error:', error)
+    }
+  }
+}
+
+export const verifyApi = (userVerify: userType) => {
+  return async (dispatch: DispatchType) => {
+    try {
+      const response = await http.post('/users/verify-otp', userVerify)
+      let { data } = response.data
+      const action: PayloadAction<userType> = verifyAction(data)
+      dispatch(action)
+      setStore(ACCESS_TOKEN, data.access_token)
+      history.push('/')
+    } catch (error) {
+      console.error('Login error:', error)
+    }
+  }
+}
+
+export const resendOTPApi = (userResendOTP: userType) => {
+  return async (dispatch: DispatchType) => {
+    try {
+      const response = await http.post('/users/resend-verify-otp', userResendOTP)
+      let { data } = response.data
+      const action: PayloadAction<userType> = resendOTPAction(data)
+      dispatch(action)
+      setStore(ACCESS_TOKEN, data.access_token)
+      history.push('/')
+    } catch (error) {
+      console.error('Login error:', error)
     }
   }
 }

@@ -22,12 +22,7 @@ const Login = () => {
     await dispatch(loginData)
   }
 
-  // useEffect(() => {
-  //   ;(async () => {
-  //     const loginData = loginApi({})
-  //     await dispatch(loginData)
-  //   })()
-  // }, [])
+  console.log(data)
 
   const renderButtonContent = (button: SocialMediaType) => {
     if (button.url) {

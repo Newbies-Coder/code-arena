@@ -541,7 +541,7 @@ export const StoreIcon: React.FC<IconPropsType> = ({ width = '1.6rem', height = 
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0_770_81)">
+    <g clipPath="url(#clip0_770_81)">
       <path
         d="M7.5013 18.3327C7.96154 18.3327 8.33464 17.9596 8.33464 17.4993C8.33464 17.0391 7.96154 16.666 7.5013 16.666C7.04106 16.666 6.66797 17.0391 6.66797 17.4993C6.66797 17.9596 7.04106 18.3327 7.5013 18.3327Z"
         stroke="#5F3EBC"
@@ -581,7 +581,7 @@ export const SelectedStoreIcon: React.FC<IconPropsType> = ({ width = '1.188rem',
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0_741_1487)">
+    <g clipPath="url(#clip0_741_1487)">
       <path
         d="M7.1237 13.75C7.56092 13.75 7.91536 13.4702 7.91536 13.125C7.91536 12.7798 7.56092 12.5 7.1237 12.5C6.68647 12.5 6.33203 12.7798 6.33203 13.125C6.33203 13.4702 6.68647 13.75 7.1237 13.75Z"
         stroke="white"
@@ -621,7 +621,7 @@ export const SettingIcon: React.FC<IconPropsType> = ({ width = '1.5rem', height 
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0_737_177)">
+    <g clipPath="url(#clip0_737_177)">
       <path
         d="M12.1829 15C13.8652 15 15.229 13.6569 15.229 12C15.229 10.3431 13.8652 9 12.1829 9C10.5005 9 9.13672 10.3431 9.13672 12C9.13672 13.6569 10.5005 15 12.1829 15Z"
         stroke="#C1C6FB"
