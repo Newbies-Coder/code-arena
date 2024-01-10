@@ -53,6 +53,40 @@ export const CLIENT_MESSAGE = {
   SECRET_COOKIE_NAME: 'Cookies_name when user login and register success and save local'
 } as const
 
+export const DEV_ERRORS_MESSAGES = {
+  LOGIN: 'Error during login process',
+  REGISTER: 'Error during register process',
+  FIND_OTP: 'Error finding OTP',
+  REFESH_TOKEN: 'Error refresh token',
+  GENERATED_OTP: 'Error generated OTP',
+  VERIFY_OTP: 'Error verifying OTP',
+  GET_ALL_USER: 'Error retrieving users',
+  DELETED_BANNER: 'Error delete banner',
+  GET_ALL_BANNER: 'Error get all banners',
+  GET_BANNER_WITH_ID: 'Error get banners by banner_id',
+  INSERT_BANNER: 'Error inert banner',
+  LOGOUT: 'Error occurred during logout.',
+  CHANGE_PASSWORD: 'Error changing password',
+  FORGOT_PASSWORD: 'Error in forgot-password',
+  SEND_FAILURE: 'Error in send OTP',
+  GET_ROLE_USER: 'Error fetching users by role',
+  VALIDATION_EMAIL_AND_PASSWORD: 'Error validating email and password',
+  CHECK_TOKEN: 'Error checking token',
+  GET_USER_BY_ID: 'Error fetching user',
+  FOLLOW_USER: 'Error in follow operation',
+  UNFOLLOW_USER: 'Error in unfollow operation',
+  UPLOAD_AVATAR: 'Error updating avatar',
+  UPLOAD_THUMBNAIL: 'Error updating thumbnail',
+  GET_USER_BY_ROLE: 'Error get user by role',
+  UPDATE_PROFILE: 'Error update profile user',
+  DELETED_MANY_USER: 'Error deleting users',
+  BLOCKED_USER: 'Error fetching blocked users',
+  UNBLOCKED_USER: 'Error fetching unblocked users',
+  INSERT_USER_FAVORITES: 'Error fetching insert users into favorite list',
+  REMOVED_USER_FAVORITES: 'Error fetching remove users into favorite list',
+  GET_ALL_USER_FAVORITE: 'Error fetching favorites'
+}
+
 export const RESULT_RESPONSE_MESSAGES = {
   AUTH_SUCCESS: {
     LOGIN: 'Login successfully!',
@@ -91,8 +125,8 @@ export const RESULT_RESPONSE_MESSAGES = {
     FOLLOW: 'Follow user successfully!',
     UNFOLLOW: 'Unfollow user successfully!',
     GET_BLOCKED_USER: 'Get blocked users successfully',
-    INSERT_BLOCKED_USER: 'Insert blocked users successfully',
-    DELETE_BLOCKED_USER: 'Delete blocked users successfully'
+    INSERT_BLOCKED_USER: 'Blocked users successfully',
+    DELETE_BLOCKED_USER: 'Unblocked users successfully'
   },
   OTP_SUCCESS: {
     VERIFY_OTP: 'Verify OTP successfully!', //
@@ -127,13 +161,17 @@ export const VALIDATION_MESSAGES = {
   },
   USER: {
     COMMONS: {
+      USER_RESET_PASSWORD_FAILED: 'Reset password failed!',
+      USER_CHANGE_PASSWORD_FAILED: 'Change password failed!',
       USER_WITH_ID_IS_NOT_EXIST: 'User with id is not exist',
       USER_ID_MUST_BE_A_STRING: 'User id must be a string',
       USER_ID_CAN_NOT_BE_EMPTY: 'User id cannot be empty',
       USER_NOT_LOGIN: 'You must logged in to continue',
       USER_NOT_ROLE_NOT_SATISFIED: 'You don not have the right role to access this resources',
       USER_ID_IS_INVALID: 'User id is invalid',
-      USERNAME_MUST_BE_STRING: 'Username must be a string'
+      USERNAME_MUST_BE_STRING: 'Username must be a string',
+      INVALID_INCLUDES: 'Invalid includes pagination',
+      INVALID_SORT_ORDER_CREATED_AT: 'Invalid sort order created_at pagination'
     },
     LOGIN: {
       EMAIL_IS_REQUIRED: 'Email is required',
@@ -145,7 +183,9 @@ export const VALIDATION_MESSAGES = {
       PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Password must be between 8 and 16 characters long',
       PASSWORD_IS_INCORRECT: 'Password is incorrect',
       ACCOUNT_IS_UNVERIFIED: 'Account is unverified',
-      ACCOUNT_IS_BANNED: 'Account is banned'
+      ACCOUNT_IS_BANNED: 'Account is banned',
+      ACCOUNT_NOT_FOUND: 'Account not found',
+      USER_NOT_FOUND: 'User not found'
     },
     REGISTER: {
       NAME_IS_REQUIRED: 'Username is required',
@@ -165,7 +205,7 @@ export const VALIDATION_MESSAGES = {
       CONFIRM_PASSWORD_MUST_BE_STRONG: 'Confirm_password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
       CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Confirm_password must be between 8 and 16 characters long',
       DATE_OF_BIRTH_IS_REQUIRED: 'Date of birth is required',
-      DATE_OF_BIRTH_IS_ISO8601: 'Date of birth must be a YYYY-MM-DDTHH:mm:ss.ssssZ',
+      DATE_OF_BIRTH_MUST_BE_A_STRING: 'Date of birth must be a string',
       DATE_OF_BIRTH_ERROR_FORMAT: 'Date_of_birth must be yyyy-mm-dd',
       AGE_IS_NOT_ENOUGH: 'You must above 12 years old to register'
     },
@@ -173,12 +213,16 @@ export const VALIDATION_MESSAGES = {
       OTP_IS_REQUIRED: 'OTP is required',
       OTP_MUST_BE_A_STRING: 'OTP must be a string',
       OPT_LENGTH_MUST_BE_6: 'OTP length must be 6 characters long',
-      OTP_IS_NOT_EXIST: 'OTP is not exist',
-      OTP_IS_EXPIRED: 'OTP is not exist'
+      OTP_IS_NOT_EXIST: 'OTP is not found',
+      OTP_IS_EXPIRED: 'OTP expired!',
+      NOT_FOUND_OR_ALREADY_VERIFIED: 'User not found or OTP already verified',
+      INVALID_OTP: 'Invalid OTP',
+      OTP_IS_NUMBERIC: 'Please enter OTP must be numberic'
     },
     REFRESH_TOKEN: {
       REFRESH_TOKEN_IS_REQUIRED: 'Refresh token is required',
-      REFRESH_TOKEN_IS_NOT_EXIST: 'Refresh token is not exist'
+      REFRESH_TOKEN_IS_NOT_EXIST: 'Refresh token is not exist',
+      TOKEN_NOT_FOUND: 'Attempted to delete non-existent refresh token.'
     },
     LOGOUT: {
       HEADER_AUTHORIZATION_IS_INVALID: 'Header authorization is invalid'
@@ -202,7 +246,10 @@ export const VALIDATION_MESSAGES = {
       EMAIL_IS_REQUIRED: 'Email is required',
       EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
       EMAIL_ACCESSABILITY: 'The email address exist. Please go to login or try the another one',
-      EMAIL_IS_NOT_EXIT: 'Email is not exits'
+      EMAIL_IS_NOT_EXIT: 'Email is not exits',
+      EMAIL_IS_NOT_REGISTER: 'Email is not register',
+      VALID_USERNAME_PART_OF_EMAIL: 'Username part of the email must not contain special characters',
+      EMAIL_ALREADY_EXISTS: 'Email already exists'
     },
     USER_PROFILE: {
       USER_ID_IS_REQUIRED: 'User id is required',
@@ -214,17 +261,24 @@ export const VALIDATION_MESSAGES = {
       USER_NAME_LENGTH_MUST_BE_FROM_4_TO_20: 'User name length must be from 4 to 20',
       PHONE_MUST_BE_A_STRING: 'Phone must be a string',
       PHONE_LENGTH_MUST_BE_10_CHARACTER: 'Phone length must be 10 character',
-      PHONE_LENGTH_MUST_BE_STRING_NUMBER: 'Phone length must be a string number',
+      PHONE_INVALID: 'Phone number invalid',
       DATE_OF_BIRTH_IS_ISO8601: 'Date of birth must be a YYYY-MM-DDTHH:mm:ss.ssssZ',
       BIO_MUST_BE_STRING: 'Bio must be a string',
-      BIO_MAX_LENGTH_IS_150: 'Bio max length is 50 character',
+      BIO_MAX_LENGTH_IS_500: 'Bio max length is 500 character',
       ADDRESS_MUST_BE_STRING: 'Address must be a string',
       ADDRESS_MAX_LENGTH_IS_255: 'Address max length is 255 character',
-      FIELD_UPDATE_IS_REQUIRED: 'Must be at least 1 field that to updating'
+      FIELD_UPDATE_IS_REQUIRED: 'Must be at least 1 field that to updating',
+      EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
+      VALID_USERNAME_PART_OF_EMAIL: 'Username part of the email must not contain special characters',
+      DATE_OF_BIRTH_IS_REQUIRED: 'Date of birth is required',
+      DATE_OF_BIRTH_ERROR_FORMAT: 'Date_of_birth must be yyyy-mm-dd',
+      DATE_OF_BIRTH_MUST_BE_A_STRING: 'Date_of_birth must be string'
     },
-    BLOCK: {
+    BLOCKED: {
       USER_ALREADY_BLOCKED: 'User already been blocked',
-      USER_ID_IS_INVALID: 'User id is invalid'
+      USER_ID_IS_INVALID: 'User id is invalid',
+      USER_NOT_ALREADY_BLOCKED_USER: 'User has not already been blocked',
+      USER_BLOCK_THEMSELVES: 'Users cannot block themselves'
     },
     GET_USERS_BY_ROLE: {
       ROLE_IS_REQUIRED: 'Role is required',
@@ -235,7 +289,15 @@ export const VALIDATION_MESSAGES = {
       FRIEND_ID_NOT_USER_ID: 'Friend id not user id',
       FRIEND_ID_IS_REQUIRED: 'Friend id is required',
       FRIEND_ID_IS_EXIT: 'Friend id is exit',
-      FAVORITE_NOT_EXIT: 'Favorite not exit'
+      FAVORITE_NOT_EXIT: 'Favorite not exit',
+      USER_FAVOTITE_THEMSELVES: 'Users cannot favorite themselves',
+      FRIEND_ALREADY_FAVORITE: 'Friend already been favorite list',
+      FRIEND_NOT_ALREADY_FAVORITE_USER: 'Friend has not already been favorite list'
+    },
+    FOLLOW: {
+      INVALID_ID: 'Invalid user or follow target ID.',
+      NOT_ALREADY_FOLLOW_USER: 'User not already follows user',
+      ALREADY_FOLLOW_USER: 'User already follows user'
     }
   },
   TOKEN: {
@@ -247,15 +309,19 @@ export const VALIDATION_MESSAGES = {
     REFRESH_TOKEN_USED_OR_NOT_EXIST: 'Used refresh token or not exist',
     REFRESH_TOKEN_IS_NOT_EXIST_IN_COOKIES: 'No refresh token in cookies!',
     EMAIL_VERIFY_TOKEN_IS_REQUIRED: 'Email verify token is required',
-    EMAIL_VERIFY_TOKEN_MUST_BE_A_STRING: 'Email verify token must be a string'
+    EMAIL_VERIFY_TOKEN_MUST_BE_A_STRING: 'Email verify token must be a string',
+    EXPIRED_TIME: 'Token has expired.',
+    INVALID_TOKEN: 'Invalid token missing iat or exp'
   },
   AUTHORIZATION: {
     HEADER_AUTHORIZATION_IS_INVALID: 'Header authorization is invalid'
   },
   BANNER: {
-    BANNER_NOT_FOUND: 'Banner not found',
-    BANNER_ID_INVALID: 'Banner id is invalid',
-    BANNER_IMAGE_IS_REQUIRED: 'Banner image is required'
+    ID_IS_REQUIRED: 'Banner id is required',
+    IMAGE_IS_REQUIRED: 'Banner image is required',
+    NOT_FOUND: 'Banner does not exists',
+    INVALID_ID: 'Invalid banner id',
+    INVALID_SORT_ORDER: 'Invalid sorting order'
   }
 } as const
 

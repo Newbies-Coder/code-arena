@@ -66,6 +66,266 @@ paths:
       responses:
         '200':
           description: Login successfully
+  /auth/roles:
+    get:
+      tags:
+        - auth
+      summary: Get all list user by role into the system
+      description: Get all list user by role into the system
+      operationId: getAllUserByRole
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            example: 1
+        - name: limit
+          in: query
+          description: Number of users on a page
+          required: false
+          schema:
+            type: integer
+            example: 10
+        - name: includes
+          in: query
+          description: Please enter includes contains roles_name
+          required: false
+          schema:
+            type: string
+            example: user
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Get user role successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Get user role successfully
+                  data:
+                    $ref: '#/components/schemas/ProfileSchema'
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '422':
+          description: Please provide complete input info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  message:
+                    example: Validation error
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Please fill all required details.
+                      path:
+                        type: string
+                        example: includes
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /auth:
+    get:
+      tags:
+        - auth
+      summary: Get all user into the system
+      description: Get all user into the system
+      operationId: getAllUser
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            example: 1
+        - name: limit
+          in: query
+          description: Number of users on a page
+          required: false
+          schema:
+            type: integer
+            example: 10
+        - in: query
+          name: userId
+          description: Optional query string to filter users
+          schema:
+            type: string
+        - in: query
+          name: sort_by
+          schema:
+            type: string
+            example: _id
+          description: Optional filter to get a specific _id by its type
+        - in: query
+          name: created_at
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: 'asc'
+          description: Order of sorting (ascending or descending)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProfileSchema'
+                  page:
+                    type: integer
+                  per_page:
+                    type: integer
+                  total_page:
+                    type: integer
+                  total_items:
+                    type: integer
+        '400':
+          description: Bad request (e.g., invalid query parameters)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    example: Bad request (e.g., invalid query parameters)
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+    delete:
+      tags:
+        - auth
+      summary: Delete user
+      description: Delete user by user_id and delete a many user
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: query
+          description: Please enter the user_id you want to delete
+          schema:
+            type: array
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Delete many user successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Delete many user successfully
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /users/login:
     post:
       tags:
@@ -323,8 +583,8 @@ paths:
     post:
       tags:
         - user
-      summary: User verify OTP
-      description: User verify OTP
+      summary: Verify OTP
+      description: Verifies the One-Time Password (OTP) sent to the user's email.
       operationId: verifyUserOTP
       requestBody:
         description: Auth verify OTP
@@ -336,10 +596,11 @@ paths:
                 otp:
                   type: string
                   example: string
+                  description: The OTP to be verified
         required: true
       responses:
         '200':
-          description: Successful user authentication
+          description: OTP successfully verified
           content:
             application/json:
               schema:
@@ -375,6 +636,24 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+        '404':
+          description: User not found or already verified
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    example: User not found or already verified
+                  data:
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
         '422':
           description: Please provide complete input info.
           content:
@@ -400,17 +679,31 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /users/resend-verify-otp:
     post:
       tags:
         - user
-      summary: User verification OTP resent
+      summary: User verification OTP resend
       description: Send again to confirm the OTP user
       operationId: resendVerifyOTP
-      security:
-        - BearerAuth: []
       requestBody:
-        description: Information resend verify OTP
+        description: Resend email verify OTP
         content:
           application/json:
             schema:
@@ -419,6 +712,7 @@ paths:
                 email:
                   type: string
                   example: string
+                  description: Resend email resend verify OTP
         required: true
       responses:
         '200':
@@ -459,6 +753,22 @@ paths:
                       refresh-token:
                         type: string
                         example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
                   dateTime:
                     type: string
                     format: date-time
@@ -535,6 +845,22 @@ paths:
                       refresh-token:
                         type: string
                         example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
                   dateTime:
                     type: string
                     format: date-time
@@ -617,6 +943,22 @@ paths:
                       path:
                         type: string
                         example: forgot-password
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
                   dateTime:
                     type: string
                     format: date-time
@@ -863,122 +1205,6 @@ paths:
                     example: 200
                   message:
                     example: Follow user successfully
-                  data:
-                    type: string
-                    example: ''
-                  dateTime:
-                    type: string
-                    format: date-time
-                    example: '2024-02-22T00:00:00.000Z'
-        '401':
-          description: You are not authorized to carry out this task
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 401
-                  message:
-                    example: You do not have permission to perform this task. Please login again!
-                  data:
-                    type: string
-                    example: ''
-                  dateTime:
-                    type: string
-                    format: date-time
-                    example: '2024-02-22T00:00:00.000Z'
-  /users:
-    get:
-      tags:
-        - user
-      summary: Get all user into the system
-      description: Get all user into the system
-      operationId: getAllUser
-      parameters:
-        - name: pageIndex
-          in: query
-          description: Page number
-          required: false
-          schema:
-            type: integer
-            example: 1
-        - name: pageSize
-          in: query
-          description: Number of users on a page
-          required: false
-          schema:
-            type: integer
-            example: 10
-      security:
-        - BearerAuth: []
-      responses:
-        '200':
-          description: Get all user successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 200
-                  message:
-                    example: Get all user successfully
-                  data:
-                    type: string
-                    example: ''
-                  dateTime:
-                    type: string
-                    format: date-time
-                    example: '2024-02-22T00:00:00.000Z'
-        '401':
-          description: You are not authorized to carry out this task
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 401
-                  message:
-                    example: You do not have permission to perform this task. Please login again!
-                  data:
-                    type: string
-                    example: ''
-                  dateTime:
-                    type: string
-                    format: date-time
-                    example: '2024-02-22T00:00:00.000Z'
-    delete:
-      tags:
-        - user
-      summary: Delete user
-      description: Delete user by user_id and delete a many user
-      operationId: deleteUser
-      parameters:
-        - name: id
-          in: query
-          description: Please enter the user_id you want to delete
-          schema:
-            type: array
-      security:
-        - BearerAuth: []
-      responses:
-        '200':
-          description: Delete many user successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 200
-                  message:
-                    example: Delete many user successfully
                   data:
                     type: string
                     example: ''
@@ -1322,20 +1548,27 @@ paths:
       description: Get all list user blocked into the system
       operationId: getAllUserBlocked
       parameters:
-        - name: pageIndex
+        - name: page
           in: query
           description: Page number
           required: false
           schema:
             type: integer
-            example: 0
-        - name: pageSize
+            example: 1
+        - name: limit
           in: query
           description: Number of users on a page
           required: false
           schema:
             type: integer
             example: 10
+        - in: query
+          name: created_at
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: 'asc'
+          description: Order of sorting (ascending or descending)
       security:
         - BearerAuth: []
       responses:
@@ -1530,6 +1763,28 @@ paths:
       summary: Get list closed friends into the system
       description: Get list closed friends into the system
       operationId: getUserFavorite
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            example: 1
+        - name: limit
+          in: query
+          description: Number of users on a page
+          required: false
+          schema:
+            type: integer
+            example: 10
+        - in: query
+          name: created_at
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: 'asc'
+          description: Order of sorting (ascending or descending)
       security:
         - BearerAuth: []
       responses:
@@ -1587,6 +1842,25 @@ paths:
                   message:
                     example: You do not have permission to perform this task. Please login again!
                   data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  messages:
                     type: string
                     example: ''
                   dateTime:
@@ -1670,6 +1944,25 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  messages:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /users/favorite/{id}:
     delete:
       tags:
@@ -1727,26 +2020,8 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /users/roles:
-    get:
-      tags:
-        - user
-      summary: Get all list user by role into the system
-      description: Get all list user by role into the system
-      operationId: getAllUserByRole
-      parameters:
-        - name: includes
-          in: query
-          description: Please enter includes contains roles_name
-          required: false
-          schema:
-            type: string
-            example: user
-      security:
-        - BearerAuth: []
-      responses:
-        '200':
-          description: Get user role successfully
+        '400':
+          description: Invalid input or user_id format
           content:
             application/json:
               schema:
@@ -1754,27 +2029,9 @@ paths:
                 properties:
                   statusCode:
                     type: integer
-                    example: 200
+                    example: 400
                   message:
-                    example: Get user role successfully
-                  data:
-                    $ref: '#/components/schemas/ProfileSchema'
-                  dateTime:
-                    type: string
-                    format: date-time
-                    example: '2024-02-22T00:00:00.000Z'
-        '401':
-          description: You are not authorized to carry out this task
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 401
-                  message:
-                    example: You do not have permission to perform this task. Please login again!
+                    example: Invalid input or user_id format
                   data:
                     type: string
                     example: ''
@@ -1782,8 +2039,8 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-        '422':
-          description: Please provide complete input info.
+        '404':
+          description: user not found
           content:
             application/json:
               schema:
@@ -1791,18 +2048,31 @@ paths:
                 properties:
                   statusCode:
                     type: integer
-                    example: 422
+                    example: 404
                   message:
-                    example: Validation error
+                    example: user not found
                   data:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                        example: Please fill all required details.
-                      path:
-                        type: string
-                        example: includes
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  messages:
+                    type: string
+                    example: ''
                   dateTime:
                     type: string
                     format: date-time
@@ -1882,31 +2152,39 @@ paths:
     get:
       tags:
         - banner
-      summary: Get all banner into the system
-      description: Obtain all banners in the system.
-      operationId: getAllBanner
+      summary: Get all banner
+      description: Retrieve a list of banners with pagination, sorting, and optional filtering by banner_id.
       parameters:
-        - name: pageIndex
-          in: query
-          description: Page index
-          required: false
+        - in: query
+          name: page
           schema:
             type: integer
-            example: 0
-        - name: pageSize
-          in: query
-          description: Number of banner on a page
-          required: false
+            default: 1
+          description: Page index for pagination
+        - in: query
+          name: limit
           schema:
             type: integer
-            example: 10
-        - name: userId
-          in: query
-          description: User create banner
-          required: false
+            default: 10
+          description: Number of items per page
+        - in: query
+          name: bannerId
           schema:
             type: string
-            example: 'string'
+          description: Optional filter to get a specific banner by its ID
+        - in: query
+          name: sort_by
+          schema:
+            type: string
+            default: '_id'
+          description: Field to sort the results by
+        - in: query
+          name: sort_order
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: 'asc'
+          description: Order of sorting (ascending or descending)
       responses:
         '200':
           description: Get all banner successfully
@@ -1925,33 +2203,26 @@ paths:
                     properties:
                       items:
                         type: array
-                        example:
-                          [
-                            {
-                              id: '656b0bbd3b0e9defe34fcaq2',
-                              user_id: '656b0bbd3b0e9defe34fca1a',
-                              url: 'http://res.cloudinary.com/de7hnxr0e/image/upload/v1701942785/avatar/it3nquretum21jkqv2ii.jpg',
-                              slug: 'banner-test-1',
-                              created_at: '2000-02-22T00:00:00.000Z',
-                              updated_at: '2023-12-01T00:00:00.000Z',
-                              _destroy: false
-                            }
-                          ]
-                      pageIndex:
-                        type: number
-                        example: 0
-                      pageSize:
-                        type: number
-                        example: 10
-                      totalRow:
-                        type: number
+                        items:
+                          $ref: '#/components/schemas/BannerSchema'
+                      page:
+                        type: integer
                         example: 1
+                      per_page:
+                        type: integer
+                        example: 3
+                      total_page:
+                        type: integer
+                        example: 2
+                      total_items:
+                        type: integer
+                        example: 4
                   dateTime:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-        '422':
-          description: Please provide complete input info.
+        '401':
+          description: You are not authorized to carry out this task
           content:
             application/json:
               schema:
@@ -1959,18 +2230,31 @@ paths:
                 properties:
                   statusCode:
                     type: integer
-                    example: 422
+                    example: 401
                   message:
-                    example: Validation error
+                    example: You do not have permission to perform this task. Please login again!
                   data:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                        example: Please fill all required details.
-                      path:
-                        type: string
-                        example: /banners
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  messages:
+                    type: string
+                    example: ''
                   dateTime:
                     type: string
                     format: date-time
@@ -1978,28 +2262,29 @@ paths:
     post:
       tags:
         - banner
-      summary: Insert multiple banner
-      description: Insert multiple banner
-      operationId: insertMultipleBanner
-      security:
-        - BearerAuth: []
+      summary: Insert a new banner with images
+      description: Uploads multiple images for a new banner and inserts the banner details into the database.
       requestBody:
-        description: Imformation upload banner
+        required: true
         content:
           multipart/form-data:
             schema:
               type: object
               properties:
-                image:
-                  type: string
-                  format: binary
                 slug:
                   type: string
-                  example: 'string'
-        required: true
+                  description: The slug for the banner
+                image:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: Multiple image files for the banner
+      security:
+        - BearerAuth: []
       responses:
-        '200':
-          description: Insert banner successfully
+        '201':
+          description: Banner and images successfully uploaded
           content:
             application/json:
               schema:
@@ -2007,25 +2292,19 @@ paths:
                 properties:
                   statusCode:
                     type: integer
-                    example: 200
+                    example: 201
                   message:
                     example: Insetrt banner successfully
                   data:
-                    type: object
-                    properties:
-                      avatarUrl:
-                        type: array
-                        example:
-                          [
-                            'http://res.cloudinary.com/de7hnxr0e/image/upload/v1701942785/avatar/it3nquretum21jkqv2ii.jpg',
-                            'http://res.cloudinary.com/de7hnxr0e/image/upload/v1701942785/avatar/it3nquretum21jkqv2ii.jpg'
-                          ]
+                    type: array
+                    description: URLs of the uploaded images
+                    example: ['http://res.cloudinary.com/de7hnxr0e/image/upload/v1701942785/avatar/it3nquretum21jkqv2ii.jpg']
                   dateTime:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
         '400':
-          description: Upload maximum 4 images
+          description: Bad request (e.g., missing images or invalid data)
           content:
             application/json:
               schema:
@@ -2035,7 +2314,10 @@ paths:
                     type: integer
                     example: 400
                   message:
-                    example: Upload maximum 4 images
+                    example: Bad request (e.g., missing images or invalid data)
+                  data:
+                    type: string
+                    example: ''
                   dateTime:
                     type: string
                     format: date-time
@@ -2059,27 +2341,41 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  messages:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /banners/{id}:
-    delete:
+    get:
       tags:
         - banner
-      summary: Delete banner
-      description: Delete banner
-      operationId: deleteBanner
+      summary: Get banner by user_id
+      description: Retrieve a list of banners with pagination, sorting, and optional filtering by user_id.
       parameters:
-        - name: id
-          in: path
-          description: 'The banner_id that needs to be delete'
+        - in: path
+          name: id
           required: true
           schema:
             type: string
-            format: MongoId
-            example: 64be0ad2e43d2464394feedb
-      security:
-        - BearerAuth: []
+          description: Unique ID of the user
       responses:
         '200':
-          description: Delete banners successfully
+          description: Get all banner with user_id successfully
           content:
             application/json:
               schema:
@@ -2089,10 +2385,26 @@ paths:
                     type: integer
                     example: 200
                   message:
-                    example: Delete banners successfully
+                    example: Get all banner with user_id successfully
                   data:
-                    type: string
-                    example: ''
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/BannerSchema'
+                      page:
+                        type: integer
+                        example: 1
+                      per_page:
+                        type: integer
+                        example: 3
+                      total_page:
+                        type: integer
+                        example: 2
+                      total_items:
+                        type: integer
+                        example: 4
                   dateTime:
                     type: string
                     format: date-time
@@ -2116,8 +2428,8 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-        '422':
-          description: Please provide complete input info.
+        '500':
+          description: Internal server error
           content:
             application/json:
               schema:
@@ -2125,18 +2437,103 @@ paths:
                 properties:
                   statusCode:
                     type: integer
-                    example: 422
+                    example: 500
                   message:
-                    example: Validation error
+                    example: Internal server error
+                  messages:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+    delete:
+      tags:
+        - banner
+      summary: Delete a banner
+      description: Deletes a banner from the database and associated storage based on its unique ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Unique ID of the banner to delete
+      security:
+        - BearerAuth: []
+      responses:
+        '204':
+          description: Banner successfully deleted (No Content)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 204
+                  message:
+                    example: Delete banners successfully
                   data:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                        example: Please fill all required details.
-                      path:
-                        type: string
-                        example: /banner
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '400':
+          description: Invalid banner ID format
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    example: Invalid banner ID format
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '404':
+          description: Banner not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    example: Banner not found
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  messages:
+                    type: string
+                    example: ''
                   dateTime:
                     type: string
                     format: date-time
@@ -2314,3 +2711,18 @@ components:
           example: 'string'
       xml:
         name: user
+    BannerSchema:
+      type: object
+      properties:
+        _id:
+          type: string
+        user_id:
+          type: string
+        url:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+      xml:
+        name: banner

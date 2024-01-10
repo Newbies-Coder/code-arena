@@ -7,6 +7,8 @@ export type userType = {
   accessToken?: string
   refreshToken?: string
   message?: string
+  access_token?: string
+  refresh_token?: string
 }
 
 export type userState = {

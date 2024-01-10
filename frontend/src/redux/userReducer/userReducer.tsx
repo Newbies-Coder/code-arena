@@ -3,6 +3,7 @@ import { DispatchType } from '../config'
 import { userState, userType } from 'src/@types/user'
 import { ACCESS_TOKEN, http, setStore } from '@/utils/setting'
 import { history } from '@/main'
+import { AxiosError } from 'axios'
 
 const initialState: userState = {
   userLogin: {},
@@ -48,6 +49,9 @@ export const loginApi = (userLogin: userType) => {
     } catch (error) {
       // Log the error for debugging purposes, and provide user-friendly feedback
       console.error('Login error:', error)
+      if (error instanceof AxiosError) {
+        alert(error.response?.data.message)
+      }
     }
   }
 }

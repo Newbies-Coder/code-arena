@@ -93,7 +93,8 @@ export const env = {
   },
   database: {
     main: {
-      url: `mongodb+srv://${envVars.DATABASE_CODE_ARENA}:${envVars.PASSWORD_CODE_ARENA}@codearena.b9lkxsv.mongodb.net/?retryWrites=true&w=majority`,
+			url: `mongodb+srv://${envVars.DATABASE_CODE_ARENA}:${envVars.PASSWORD_CODE_ARENA}@codearena.b9lkxsv.mongodb.net/?retryWrites=true&w=majority`,
+		
       name: envVars.DB_NAME,
       collection: {
         users: envVars.DB_USER_COLLECTION,

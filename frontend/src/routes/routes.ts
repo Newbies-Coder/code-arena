@@ -13,6 +13,16 @@ const NotFoundPage = React.lazy(() => import('@components/NotFound'))
 const DetailCodingPage = React.lazy(() => import('@container/Detail/pages/MainDetail'))
 const ProfilePage = React.lazy(() => import('@container/Profile/pages/MainProfile'))
 
+const HomePageAdmin = React.lazy(() => import('@/container/Admin/Home/pages/MainHome'))
+const LoginAdmin = React.lazy(() => import('@container/Admin/Auth/pages/Login'))
+const ResetPasswordAdmin = React.lazy(() => import('@container/Admin/Auth/pages/ResetPassword'))
+const CreateNewPasswordAdmin = React.lazy(() => import('@/container/Admin/Auth/pages/CreateNewPassword'))
+const ProfileAdmin = React.lazy(() => import('@/container/Admin/Profile/pages/MainProfile'))
+const UserAdmin = React.lazy(() => import('@/container/Admin/User/pages/MainUser'))
+const CourseAdmin = React.lazy(() => import('@/container/Admin/Course/pages/MainCourse'))
+const MessageAdmin = React.lazy(() => import('@/container/Admin/Message/pages/MainMessage'))
+const LayoutAdmin = React.lazy(() => import('@/layout/Admin'))
+
 const publicRoute = [
   {
     path: config.routes.home,
@@ -59,6 +69,46 @@ const publicRoute = [
     path: config.routes.profile,
     component: ProfilePage,
   },
+  {
+    path: config.routes.admin.login,
+    component: LoginAdmin,
+  },
 ]
 
-export { publicRoute }
+const privateRoute = [
+  {
+    path: config.routes.admin.home,
+    component: HomePageAdmin,
+    layout: LayoutAdmin,
+  },
+  {
+    path: config.routes.admin.resetPassword,
+    component: ResetPasswordAdmin,
+  },
+  {
+    path: config.routes.admin.createNewPassword,
+    component: CreateNewPasswordAdmin,
+  },
+  {
+    path: config.routes.admin.profile,
+    component: ProfileAdmin,
+    layout: LayoutAdmin,
+  },
+  {
+    path: config.routes.admin.user,
+    component: UserAdmin,
+    layout: LayoutAdmin,
+  },
+  {
+    path: config.routes.admin.course,
+    component: CourseAdmin,
+    layout: LayoutAdmin,
+  },
+  {
+    path: config.routes.admin.message,
+    component: MessageAdmin,
+    layout: LayoutAdmin,
+  },
+]
+
+export { publicRoute, privateRoute }

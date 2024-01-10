@@ -9,5 +9,17 @@ export type routeTypes = {
   congratulation: string
   passwordResetSuccess: string
   notFound: string
+  admin: routeAdminTypes
   detailCoding: string
+}
+
+export type routeAdminTypes = {
+  home: string
+  login: string
+  resetPassword: string
+  createNewPassword: string
+  profile: string
+  user: string
+  course: string
+  message: string
 }
