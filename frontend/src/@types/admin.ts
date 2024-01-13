@@ -10,3 +10,13 @@ export type MenuItemType = {
   active: boolean
   color: string
 }
+
+export type DataType = {
+  key: React.Key
+  id: string
+  name: string
+  phone: string
+  email: string
+  role: string
+  status: React.ReactElement | string
+}
