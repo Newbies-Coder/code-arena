@@ -19,6 +19,8 @@ const ResetPasswordAdmin = React.lazy(() => import('@container/Admin/Auth/pages/
 const CreateNewPasswordAdmin = React.lazy(() => import('@/container/Admin/Auth/pages/CreateNewPassword'))
 const ProfileAdmin = React.lazy(() => import('@/container/Admin/Profile/pages/MainProfile'))
 const UserAdmin = React.lazy(() => import('@/container/Admin/User/pages/MainUser'))
+const AddUserAdmin = React.lazy(() => import('@/container/Admin/User/pages/AddAccount'))
+const UpdateUserAdmin = React.lazy(() => import('@/container/Admin/User/pages/UpdateAccount'))
 const CourseAdmin = React.lazy(() => import('@/container/Admin/Course/pages/MainCourse'))
 const MessageAdmin = React.lazy(() => import('@/container/Admin/Message/pages/MainMessage'))
 const LayoutAdmin = React.lazy(() => import('@/layout/Admin'))
@@ -97,6 +99,16 @@ const privateRoute = [
   {
     path: config.routes.admin.user,
     component: UserAdmin,
+    layout: LayoutAdmin,
+  },
+  {
+    path: config.routes.admin.addUser,
+    component: AddUserAdmin,
+    layout: LayoutAdmin,
+  },
+  {
+    path: config.routes.admin.updateUser,
+    component: UpdateUserAdmin,
     layout: LayoutAdmin,
   },
   {

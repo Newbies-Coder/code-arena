@@ -20,6 +20,8 @@ export type routeAdminTypes = {
   createNewPassword: string
   profile: string
   user: string
+  addUser: string
+  updateUser: string
   course: string
   message: string
 }

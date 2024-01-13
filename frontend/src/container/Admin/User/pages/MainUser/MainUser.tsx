@@ -2,8 +2,10 @@ import { Button } from 'antd'
 import RoleDropdown from '../../components/RoleDropdown'
 import SearchKeyword from '../../components/SearchKeyword'
 import TableAccount from '../../components/TableAccount'
+import { useNavigate } from 'react-router-dom'
 
 export default function MainUser() {
+  const navigate = useNavigate()
   return (
     <div className="px-10 py-5">
       <h2 className="text-orange-400 text-3xl font-medium font-['Poppins'] leading-9">List of accounts</h2>
@@ -14,7 +16,7 @@ export default function MainUser() {
           <Button type="primary" className="bg-[#8001FF] h-12 w-36">
             Delete
           </Button>
-          <Button type="primary" className="bg-[#8001FF] h-12 w-36">
+          <Button type="primary" className="bg-[#8001FF] h-12 w-36" onClick={() => navigate('/admin/user/add')}>
             Add account
           </Button>
         </div>
