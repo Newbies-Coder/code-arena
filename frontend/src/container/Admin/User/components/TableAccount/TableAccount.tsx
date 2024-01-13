@@ -34,7 +34,7 @@ const columns: ColumnsType<DataType> = [
   },
   {
     dataIndex: 'id',
-    render: (id: string) => <Link to={`admin/user/update/${id}`}>Update</Link>,
+    render: (id: string) => <Link to={`/admin/user/update/${id}`}>Update</Link>,
   },
 ]
 
