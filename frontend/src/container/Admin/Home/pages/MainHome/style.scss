@@ -1,0 +1,45 @@
+.ant-picker-body {
+  background-color: #001529;
+  border-bottom-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+  padding: 8px 16px !important;
+
+  thead {
+    tr {
+      th {
+        color: #725bed !important;
+        font-weight: bold !important;
+        margin-bottom: 2px !important;
+      }
+    }
+  }
+  tbody {
+    .ant-picker-cell {
+      color: #535261 !important;
+    }
+    .ant-picker-cell.ant-picker-cell-in-view {
+      color: #7e7d88 !important;
+      font-weight: 600 !important;
+    }
+  }
+}
+
+:where(.css-dev-only-do-not-override-r1lc3v).ant-picker-calendar
+  .ant-picker-cell-in-view.ant-picker-cell-selected
+  .ant-picker-cell-inner {
+  background-color: #ff7506 !important;
+}
+
+:where(.css-dev-only-do-not-override-r1lc3v).ant-picker-calendar
+  .ant-picker-cell-in-view.ant-picker-cell-today
+  .ant-picker-cell-inner::before {
+  background-color: aliceblue;
+  z-index: -1;
+  border: none;
+}
+
+:where(.css-dev-only-do-not-override-r1lc3v).ant-picker-calendar
+  .ant-picker-cell-in-view.ant-picker-cell-selected
+  .ant-picker-cell-inner {
+  color: #535261;
+}

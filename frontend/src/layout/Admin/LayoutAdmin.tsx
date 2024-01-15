@@ -1,34 +1,49 @@
-import { CourserIcon, DashboardIcon, LogoutIcon, MessageIcon, UsersIcon } from '@/components/Icons'
+import { MenuItemType } from '@/@types/admin'
+import DarkMode from '@/components/DarkMode'
+import {
+  CourserIcon,
+  DashboardIcon,
+  LogoutIcon,
+  MessageIcon,
+  NoNotiIcon,
+  SettingIcon,
+  UsersIcon,
+} from '@/components/Icons'
+import Menu from '@/components/Menu'
 import { HOME_ICON, LOGO } from '@/constants/images'
 import AvatarProfile from '@/container/Detail/components/AvatarProfile'
-import { BellOutlined } from '@ant-design/icons'
-import { Button, Layout, Menu, MenuProps } from 'antd'
+import { Button, Layout } from 'antd'
 import Sider from 'antd/es/layout/Sider'
-import { Content, Header, Footer } from 'antd/es/layout/layout'
+import { Content, Header } from 'antd/es/layout/layout'
+import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-type MenuItem = Required<MenuProps>['items'][number]
-
-function getItem(label: React.ReactNode, key: React.Key, icon?: React.ReactNode, children?: MenuItem[]): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem
-}
-
-const items: MenuItem[] = [
-  getItem(<Link to={'/admin'}>Dashboard</Link>, '1', <DashboardIcon />),
-  getItem(<Link to={'/admin/user'}>User</Link>, '2', <UsersIcon />),
-  getItem(<Link to={'/admin/course'}>Course</Link>, '3', <CourserIcon />),
-  getItem(<Link to={'/admin/message'}>Message</Link>, '4', <MessageIcon />),
+const items: MenuItemType[] = [
+  { label: 'Dashboard', icon: <DashboardIcon color="#00D1FF" />, link: '/admin', active: false, color: '#00D1FF' },
+  { label: 'User', icon: <UsersIcon color="#F449F4" />, link: '/admin/user', active: false, color: '#F449F4' },
+  { label: 'Course', icon: <CourserIcon color="#FFE500" />, link: '/admin/course', active: false, color: '#FFE500' },
+  { label: 'Message', icon: <MessageIcon color="#5F3EBC" />, link: '/admin/message', active: false, color: '#5F3EBC' },
 ]
 
 export default function LayoutAdmin({ children }: { children: JSX.Element }) {
   const [collapsed, setCollapsed] = useState(false)
   const [windowSize, setWindowSize] = useState([window.innerWidth, window.innerHeight])
+  const href = window.location.href
+  const [title, setTitle] = useState('')
+
+  useEffect(() => {
+    const url = href.slice(href.indexOf('/admin', 1)) as keyof typeof titles
+    const titles = {
+      '/admin': 'Dashboard',
+      '/admin/user': 'User',
+      '/admin/course': 'Course',
+      '/admin/message': 'Message',
+      '/admin/profile': 'Personal information',
+    }
+
+    setTitle(titles[url] || '')
+  }, [href])
 
   useEffect(() => {
     const handleWindowResize = () => {
@@ -49,44 +64,67 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
   }, [windowSize])
 
   return (
-    <Layout className="min-h-[100vh]">
+    <Layout className="min-h-screen bg-[#001529]">
       <Sider
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
-        className="border-r border-[#cccc]"
+        className="border-r border-[#6e7479]"
       >
-        <Link to={'/admin'} className="flex justify-center mb-2">
+        <Link to={'/admin'} className={`fixed top-0 flex justify-center mb-2 ${collapsed && 'w-20'}`}>
           {!collapsed ? (
             <img src={HOME_ICON.LOGO_TEXT} alt="logo" />
           ) : (
-            <img src={LOGO.APP_LOGO} alt="logo" className="mt-1 p-1 bg-gray-300 rounded-full" />
+            <img src={LOGO.APP_LOGO} alt="logo" className="mt-1 p-2 bg-gray-300 rounded-full" />
           )}
         </Link>
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
-        {!collapsed ? (
+        <Menu items={items} collapsed={collapsed} />
+        <div
+          className={clsx([
+            'flex flex-col items-center fixed bottom-14 left-2 gap-2',
+            !collapsed ? 'w-[180px]' : 'w-[60px]',
+          ])}
+        >
+          <div className="w-full h-8 flex items-center justify-between px-2">
+            {!collapsed && <span className="text-sm font-semibold text-white">Theme</span>}
+            <DarkMode />
+          </div>
+          <Button type="text" className="w-full h-8 flex items-center justify-between px-2">
+            {!collapsed && <span className="text-sm font-semibold text-white">Settings</span>}
+            <SettingIcon className={collapsed ? 'w-full' : ''} />
+          </Button>
           <Button
-            icon={<LogoutIcon />}
-            className="m-1 pl-4 h-10 w-48 text-white flex items-center fixed bottom-12"
+            icon={!collapsed && <LogoutIcon />}
+            className={clsx(['h-10 text-white flex items-center w-full'])}
             classNames={{ icon: 'ml-2' }}
           >
-            Log out
+            {!collapsed ? 'Log out' : <LogoutIcon />}
           </Button>
-        ) : (
-          <Button className="m-1 px-6 fixed bottom-12">
-            <LogoutIcon />
-          </Button>
-        )}
+        </div>
       </Sider>
-      <Layout className="w-full md:w-9/12">
-        <Header className="flex justify-between">
-          <h3 className="text-white text-xl">{window.location.href.includes('/profile') && 'Personal information'}</h3>
+      <Layout className="w-full md:w-9/12 h-full">
+        <Header
+          className={clsx(
+            'flex justify-between fixed top-0 right-0 h-16 border-bottom border-[#6e7479]',
+            !collapsed ? 'left-[200px]' : 'left-[80px]',
+          )}
+        >
+          <h3 className="text-white text-xl">{title}</h3>
           <div className="flex items-center">
-            <BellOutlined className="text-white text-xl mr-2" />
+            <Button className="h-10 w-10 px-2 mx-1 rounded-full border-yellow-400 flex justify-center items-center">
+              <NoNotiIcon />
+            </Button>
             <AvatarProfile />
           </div>
         </Header>
-        <Content className="h-full">{children}</Content>
+        <Content
+          className={clsx(
+            'fixed top-16 bottom-0 right-0 overflow-y-scroll',
+            !collapsed ? 'left-[200px]' : 'left-[80px]',
+          )}
+        >
+          {children}
+        </Content>
       </Layout>
     </Layout>
   )
