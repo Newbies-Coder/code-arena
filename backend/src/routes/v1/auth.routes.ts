@@ -3,8 +3,8 @@ import passport from 'passport'
 import { UserRole } from '~/constants/enums'
 import authController from '~/controllers/auth.controllers'
 import { requireRoleMiddleware } from '~/middlewares/auth.middlewares'
-import { paginationUserValidators } from '~/middlewares/commons.middleware'
-import { deleteManyUserValidator, getUsersByRoleValidator } from '~/middlewares/users.middlewares'
+import { paginationGetUsersByRoleValidator, paginationUserValidators } from '~/middlewares/commons.middleware'
+import { deleteManyUserValidator } from '~/middlewares/users.middlewares'
 import authService from '~/services/oauth.service'
 import { wrapRequestHandler } from '~/utils/handler'
 
@@ -57,9 +57,9 @@ authRouter.delete('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin))
  * Path: /roles
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
- * query: { includes: string }// user | admin | moderator
+ * query: { page: number, limit: number, includes: string }
  */
 
-authRouter.get('/roles', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), getUsersByRoleValidator, wrapRequestHandler(authController.getUsersByRole))
+authRouter.get('/roles', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), paginationGetUsersByRoleValidator, wrapRequestHandler(authController.getUsersByRole))
 
 export default authRouter

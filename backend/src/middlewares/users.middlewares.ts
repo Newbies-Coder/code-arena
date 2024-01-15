@@ -12,8 +12,7 @@ import { JsonWebTokenError } from 'jsonwebtoken'
 import { capitalize } from 'lodash'
 import { TokenPayloadType } from '~/@types/tokenPayload.type'
 import { ObjectId } from 'mongodb'
-import { UserRole } from '~/constants/enums'
-import { isValidDateOfBirth, isValidEmail, isValidMulName, isValidNameCharater, isValidPassword, validateEmail } from '~/utils/helper'
+import { isValidDateOfBirth, isValidEmail, isValidMulName, isValidNameCharater, isValidPassword, validateEmail, validatePhone } from '~/utils/helper'
 
 export const registerValidator = validate(
   checkSchema(
@@ -802,38 +801,25 @@ export const unfollowUserValidator = validate(
   )
 )
 
-export const blockedUserValidator = validate(
+export const userProfileValidator = validate(
   checkSchema(
     {
-      blockedId: {
+      id: {
         trim: true,
+        escape: true,
         notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
-        },
-        isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_REQUIRED
         },
         custom: {
           options: async (value) => {
             if (!ObjectId.isValid(value)) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID
-              })
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_INVALID)
             }
-            const user = await userServices.isUserExist(value)
-            if (!user) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.NOT_FOUND,
-                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
-              })
-            }
-            return true
           }
         }
       }
     },
-    ['body']
+    ['params']
   )
 )
 
@@ -845,70 +831,75 @@ export const updateProfileValidator = validate(
         isString: {
           errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.FULL_NAME_MUST_BE_A_STRING
         },
+        trim: true,
         isLength: {
           options: {
             min: 4,
             max: 50
           },
           errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.FULL_NAME_MAX_LENGTH_IS_50
+        },
+        custom: {
+          options: async (value) => {
+            const checkValidCharater = isValidNameCharater(value)
+            if (!checkValidCharater) {
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.INVALID_FULLNAME)
+            }
+            return true
+          }
         }
       },
       username: {
         optional: true,
         isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.FULL_NAME_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USERNAME_IS_REQUIRED
         },
         isLength: {
           options: {
-            min: 4,
-            max: 20
+            min: 2,
+            max: 30
           },
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_NAME_LENGTH_MUST_BE_FROM_4_TO_20
-        },
-        trim: true
-      },
-      email: {
-        optional: true,
-        isEmail: {
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.EMAIL_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USERNAME_LENGTH_MUST_BE_FROM_2_TO_30
         },
         trim: true,
         custom: {
           options: async (value) => {
-            const specialCharacters = /[^a-zA-Z0-9.-]/
-            const username = value.split('@')[0]
-            if (specialCharacters.test(username)) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.USER_PROFILE.VALID_USERNAME_PART_OF_EMAIL
-              })
+            const checkValidCharater = isValidNameCharater(value)
+            const checkMulWhitespace = isValidMulName(value)
+            if (!checkValidCharater) {
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.INVALID_USERNAME)
             }
-            await userServices.validateAccountAccessibility(value)
+            if (!checkMulWhitespace) {
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.USERNAME_INCLUDES_MUL_WHITESPACE)
+            }
             return true
           }
         }
       },
       phone: {
         optional: true,
+        trim: true,
         isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.PHONE_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.PHONE_MUST_BE_STRING
         },
-        isLength: {
-          options: { min: 10, max: 10 },
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.PHONE_LENGTH_MUST_BE_10_CHARACTER
-        },
-        matches: {
-          options: /^[0-9]+$/,
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.PHONE_INVALID
+        custom: {
+          options: async (value) => {
+            const isValidPhone = validatePhone(value)
+            if (!isValidPhone) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.USER_PROFILE.PHONE_IS_INVALID
+              })
+            }
+            return true
+          }
         }
       },
       date_of_birth: {
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.DATE_OF_BIRTH_IS_REQUIRED
-        },
         isString: {
           errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.DATE_OF_BIRTH_MUST_BE_A_STRING
         },
+        optional: true,
         trim: true,
         custom: {
           options: (value) => {
@@ -939,52 +930,14 @@ export const updateProfileValidator = validate(
         },
         isLength: {
           options: {
+            min: 10,
             max: 255
           },
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.ADDRESS_MAX_LENGTH_IS_255
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.ADDRESS_LENGTH_IS_VALID
         }
       }
     },
     ['body']
-  )
-)
-
-export const getUsersByRoleValidator = validate(
-  checkSchema(
-    {
-      page: {
-        trim: true,
-        optional: { options: { nullable: true } },
-        isInt: {
-          options: { min: 1 },
-          errorMessage: VALIDATION_MESSAGES.PAGINATION.PAGE_CAN_NOT_LESS_THAN_ZERO
-        },
-        toInt: true
-      },
-      limit: {
-        trim: true,
-        optional: { options: { nullable: true } },
-        isInt: {
-          options: { min: 1, max: 100 },
-          errorMessage: VALIDATION_MESSAGES.PAGINATION.ITEMS_IS_NOT_IN_RANGE
-        },
-        toInt: true
-      },
-      includes: {
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.GET_USERS_BY_ROLE.ROLE_IS_REQUIRED
-        },
-        custom: {
-          options: (value: string) => {
-            if (!Object.values(UserRole).includes((value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()) as UserRole)) {
-              throw new Error(VALIDATION_MESSAGES.USER.GET_USERS_BY_ROLE.ROLE_IS_INVALID)
-            }
-            return true
-          }
-        }
-      }
-    },
-    ['query']
   )
 )
 
@@ -1051,7 +1004,7 @@ export const removeFavoriteValidator = validate(
               throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_NOT_ALREADY_FAVORITE_USER })
             }
             if (value === req.user._id) {
-              throw new ErrorWithStatus({ statusCode: StatusCodes.FORBIDDEN, message: VALIDATION_MESSAGES.USER.FAVORITE.USER_FAVOTITE_THEMSELVES })
+              throw new ErrorWithStatus({ statusCode: StatusCodes.FORBIDDEN, message: VALIDATION_MESSAGES.USER.FAVORITE.USER_FAVOTITE_REMOVE_THEMSELVES })
             }
             return true
           }
@@ -1062,24 +1015,37 @@ export const removeFavoriteValidator = validate(
   )
 )
 
-export const userProfileValidator = validate(
+export const blockedUserValidator = validate(
   checkSchema(
     {
-      id: {
+      blockedId: {
         trim: true,
-        escape: true,
         notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_REQUIRED
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
         },
         custom: {
           options: async (value) => {
             if (!ObjectId.isValid(value)) {
-              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_INVALID)
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID
+              })
             }
+            const user = await userServices.isUserExist(value)
+            if (!user) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
+              })
+            }
+            return true
           }
         }
       }
     },
-    ['params']
+    ['body']
   )
 )

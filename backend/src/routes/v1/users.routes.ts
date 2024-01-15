@@ -1,6 +1,7 @@
 import { Router } from 'express'
+import { UserRole } from '~/constants/enums'
 import userController from '~/controllers/users.controllers'
-import { requireLoginMiddleware } from '~/middlewares/auth.middlewares'
+import { requireLoginMiddleware, requireRoleMiddleware } from '~/middlewares/auth.middlewares'
 import { objectIdValidator, paginationBlockedUserValidators, paginationUserFavoriteValidators } from '~/middlewares/commons.middleware'
 import { singleImageUpload } from '~/middlewares/uploadFile.middleware'
 import {
@@ -135,7 +136,7 @@ userRouter.delete('/unfollow/:id', wrapRequestHandler(requireLoginMiddleware), u
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.get('/profile/:id', wrapRequestHandler(requireLoginMiddleware), userProfileValidator, wrapRequestHandler(userController.getUser))
+userRouter.get('/profile/:id', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), userProfileValidator, wrapRequestHandler(userController.getUser))
 
 /**
  * Description: Get my profile
@@ -197,7 +198,7 @@ userRouter.get('/@me/blocked', wrapRequestHandler(requireLoginMiddleware), pagin
 userRouter.post('/@me/blocked', wrapRequestHandler(requireLoginMiddleware), blockedUserValidator, wrapRequestHandler(userController.blockedUser))
 
 /**
- * Description: Delete blocked user list aka unblock
+ * Description: Unblocked user list aka unblock
  * Path: /@me/blocked/:id
  * Method: DELETE
  * Header: { Authorization: Bearer <access_token> }
