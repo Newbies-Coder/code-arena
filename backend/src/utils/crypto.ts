@@ -9,4 +9,4 @@ export const hashPassword = (password: string) => sha256(password + env.server.p
 
 export const generateOTPCode = () => randomInt(100000, 999999).toString()
 
-export const hashOTP = (password: string) => sha256(password + env.server.otp_secret)
+export const hashOTP = (otpCOde: string) => sha256(otpCOde + env.server.otp_secret)
