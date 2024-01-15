@@ -25,8 +25,6 @@ import {
   PaginationType,
   ParsedGetAllUserBlockedUrlQuery,
   ParsedGetAllUserFavoriteUrlQuery,
-  ParsedGetAllUserUrlQuery,
-  ParsedGetUserByRoleUrlQuery,
   ResultCheckTokenType,
   ResultRefreshTokenType,
   ResultRegisterType,
@@ -46,16 +44,16 @@ import Follow from '~/models/schemas/Follow.schema'
 import { AuthUser } from '~/@types/auth.type'
 import _ from 'lodash'
 import cloudinaryService from '~/services/cloudinary.service'
-import { ParsedQs } from 'qs'
 import BlockedUser from '~/models/schemas/BlockedUser.schema'
 import CloseFriends from '~/models/schemas/CloseFriends'
 import { SignOptions } from 'jsonwebtoken'
 
 class UserService {
-  signAccessToken(_id: string, email: string, role: UserRole): Promise<string> {
+  signAccessToken(_id: string, email: string, username: string, role: UserRole): Promise<string> {
     const { access_token_exp, jwt_algorithm, secret_key } = env.jwt
     const payload: AccessTokenPayload = {
       _id,
+      username,
       email,
       role,
       token_type: TokenType.AccessToken
@@ -67,10 +65,11 @@ class UserService {
     return signToken({ payload, privateKey: secret_key as string, options })
   }
 
-  signRefreshToken(_id: string, email: string, role: UserRole): Promise<string> {
+  signRefreshToken(_id: string, email: string, username: string, role: UserRole): Promise<string> {
     const { refresh_token_exp, jwt_algorithm, refresh_token_key } = env.jwt
     const payload: RefreshTokenPayload = {
       _id,
+      username,
       email,
       role,
       token_type: TokenType.RefreshToken
@@ -86,8 +85,8 @@ class UserService {
     })
   }
 
-  signAccessAndRefreshToken(user_id: string, email: string, role: UserRole): Promise<[string, string]> {
-    return Promise.all([this.signAccessToken(user_id, email, role), this.signRefreshToken(user_id, email, role)])
+  signAccessAndRefreshToken(user_id: string, email: string, username: string, role: UserRole): Promise<[string, string]> {
+    return Promise.all([this.signAccessToken(user_id, email, username, role), this.signRefreshToken(user_id, email, username, role)])
   }
 
   private validateIds(followerId: string, followedId: string): void {
@@ -230,7 +229,7 @@ class UserService {
         })
       }
 
-      const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user._id.toString(), user.email, user.role)
+      const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user._id.toString(), user.email, user.username, user.role)
 
       await databaseService.refreshTokens.updateOne(
         { user_id: user._id },
@@ -323,7 +322,7 @@ class UserService {
       })
       const userResult = await databaseService.users.insertOne(newUser)
       const user_id = userResult.insertedId.toString()
-      const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id, email, UserRole.User)
+      const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id, email, username, UserRole.User)
       const refreshTokenObj = new RefreshToken({
         token: refresh_token,
         user_id: new ObjectId(user_id)
@@ -364,13 +363,13 @@ class UserService {
       const { refresh_token } = payload
       const { refresh_token_key } = env.jwt
 
-      const { _id, role, email } = await verifyToken({
+      const { _id, role, email, username } = await verifyToken({
         token: refresh_token,
         secretOrPublicKey: refresh_token_key
       })
 
       const deleteRefreshToken = databaseService.refreshTokens.deleteOne({ user_id: _id })
-      const signToken = await this.signAccessAndRefreshToken(_id, email, role)
+      const signToken = await this.signAccessAndRefreshToken(_id, email, username, role)
       const [tokens] = await Promise.all([signToken, deleteRefreshToken])
       const [newAccessToken, newRefreshToken] = tokens
 

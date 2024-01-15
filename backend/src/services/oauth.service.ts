@@ -170,8 +170,8 @@ class AuthService {
   }
 
   async callback(provider: AuthProvider, req: Request, res: Response) {
-    const { _id, role, email } = req.user
-    const refresh_token = await userServices.signRefreshToken(_id.toString(), email, role)
+    const { _id, role, email, username } = req.user
+    const refresh_token = await userServices.signRefreshToken(_id.toString(), email, username, role)
     // if user is logged in but still login again
     await databaseService.refreshTokens.deleteOne({ user_id: _id })
     await databaseService.refreshTokens.insertOne(

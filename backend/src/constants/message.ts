@@ -188,9 +188,11 @@ export const VALIDATION_MESSAGES = {
       USER_NOT_FOUND: 'User not found'
     },
     REGISTER: {
-      NAME_IS_REQUIRED: 'Username is required',
-      NAME_MUST_BE_A_STRING: 'Username must be a string',
-      NAME_LENGTH_MUST_BE_FROM_4_TO_20: 'Username must be between 4 and 20 characters long',
+      USERNAME_IS_REQUIRED: 'Username is required',
+      USERNAME_MUST_BE_A_STRING: 'Username must be a string',
+      USERNAME_LENGTH_MUST_BE_FROM_2_TO_30: 'Username must be between 2 and 30 characters long',
+      INVALID_USERNAME: 'Must be a valid username',
+      USERNAME_INCLUDES_MUL_WHITESPACE: 'Username can not contains multiple consecutive whitespace',
       EMAIL_IS_REQUIRED: 'Email is required',
       EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
       EMAIL_ACCESSIBILITY: 'The email address is already subscribed. Please use a different email.',
@@ -206,7 +208,7 @@ export const VALIDATION_MESSAGES = {
       CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Confirm_password must be between 8 and 16 characters long',
       DATE_OF_BIRTH_IS_REQUIRED: 'Date of birth is required',
       DATE_OF_BIRTH_MUST_BE_A_STRING: 'Date of birth must be a string',
-      DATE_OF_BIRTH_ERROR_FORMAT: 'Date_of_birth must be yyyy-mm-dd',
+      DATE_OF_BIRTH_ERROR_FORMAT: 'Invalid date format. Please using dd-mm-yyyy.',
       AGE_IS_NOT_ENOUGH: 'You must above 12 years old to register'
     },
     VERIFY_OTP: {
@@ -240,16 +242,20 @@ export const VALIDATION_MESSAGES = {
       CONFIRM_PASSWORD_MUST_BE_STRONG: 'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
       OLD_PASSWORD_IS_REQUIRED: 'Old password is required',
       OLD_PASSWORD_IS_INCORRECT: 'Old password is incorrect',
-      PASSWORD_NOT_SAME_OLD_PASSWORD: 'New password must be not same as old password'
+      PASSWORD_NOT_SAME_OLD_PASSWORD: 'New password must be not same as old password',
+      PASSWORD_CONTAINS_EMOJI: 'Password cannot contains emoji symbol and white space',
+      CONFIRM_PASSWORD_CONTAINS_EMOJI: 'Confirm password cannot contains emoji symbol and white space'
     },
     EMAIL: {
       EMAIL_IS_REQUIRED: 'Email is required',
-      EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
-      EMAIL_ACCESSABILITY: 'The email address exist. Please go to login or try the another one',
-      EMAIL_IS_NOT_EXIT: 'Email is not exits',
+      EMAIL_MUST_BE_A_STRING: 'Email address must be a string',
+      EMAIL_ACCESSABILITY: "The email address doesn't exist. Please try the valid one or simply register",
       EMAIL_IS_NOT_REGISTER: 'Email is not register',
-      VALID_USERNAME_PART_OF_EMAIL: 'Username part of the email must not contain special characters',
-      EMAIL_ALREADY_EXISTS: 'Email already exists'
+      EMAIL_OR_PASSWORD_IS_INCORRECT: 'Email or password is incorrect',
+      EMAIL_ALREADY_EXISTS: 'Email already exists',
+      VALID_EMAIL: 'Email address is invalid',
+      VALID_DOMAIN: 'Email must end with @gmail.com or @gmail.edu.com',
+      CONTAIN_SPECAIL_CHARACTER: 'Email must contain at least one special character.'
     },
     USER_PROFILE: {
       USER_ID_IS_REQUIRED: 'User id is required',

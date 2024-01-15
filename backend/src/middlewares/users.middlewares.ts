@@ -13,46 +13,51 @@ import { capitalize } from 'lodash'
 import { TokenPayloadType } from '~/@types/tokenPayload.type'
 import { ObjectId } from 'mongodb'
 import { UserRole } from '~/constants/enums'
-import { isIsoDate } from '~/utils/helper'
+import { isValidDateOfBirth, isValidEmail, isValidMulName, isValidNameCharater, isValidPassword, validateEmail } from '~/utils/helper'
 
 export const registerValidator = validate(
   checkSchema(
     {
       username: {
         notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.NAME_IS_REQUIRED
+          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.USERNAME_IS_REQUIRED
         },
         isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.NAME_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.USERNAME_MUST_BE_A_STRING
         },
         isLength: {
           options: {
-            min: 4,
-            max: 20
+            min: 2,
+            max: 30
           },
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.NAME_LENGTH_MUST_BE_FROM_4_TO_20
+          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.USERNAME_LENGTH_MUST_BE_FROM_2_TO_30
         },
-        trim: true
+        trim: true,
+        custom: {
+          options: async (value) => {
+            const checkValidCharater = isValidNameCharater(value)
+            const checkMulWhitespace = isValidMulName(value)
+            if (!checkValidCharater) {
+              throw new Error(VALIDATION_MESSAGES.USER.REGISTER.INVALID_USERNAME)
+            }
+            if (!checkMulWhitespace) {
+              throw new Error(VALIDATION_MESSAGES.USER.REGISTER.USERNAME_INCLUDES_MUL_WHITESPACE)
+            }
+            return true
+          }
+        }
       },
       email: {
         notEmpty: {
           errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_REQUIRED
         },
-        isEmail: {
-          errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_MUST_BE_A_STRING
-        },
         trim: true,
         custom: {
           options: async (value) => {
-            const specialCharacters = /[^a-zA-Z0-9.-]/
-            const username = value.split('@')[0]
-            if (specialCharacters.test(username)) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.EMAIL.VALID_USERNAME_PART_OF_EMAIL
-              })
+            const { valid, message } = validateEmail(value)
+            if (!valid) {
+              throw new Error(message)
             }
-
             const user = await userServices.findUserByEmail(value)
             if (user) {
               throw new ErrorWithStatus({
@@ -92,13 +97,13 @@ export const registerValidator = validate(
         },
         custom: {
           options: (value: string) => {
-            if (value.includes(' ')) {
+            const validPasswordEmoji = isValidPassword(value)
+            if (!validPasswordEmoji) {
               throw new ErrorWithStatus({
-                message: VALIDATION_MESSAGES.USER.REGISTER.PASSWORD_CAN_NOT_CONTAIN_SPACE,
-                statusCode: StatusCodes.BAD_REQUEST
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_CONTAINS_EMOJI
               })
             }
-
             return true
           }
         }
@@ -114,6 +119,13 @@ export const registerValidator = validate(
         trim: true,
         custom: {
           options: (value, { req }) => {
+            const validPasswordEmoji = isValidPassword(value)
+            if (!validPasswordEmoji) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_CONTAINS_EMOJI
+              })
+            }
             if (value !== req.body.password) {
               throw new Error(VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD)
             }
@@ -135,12 +147,14 @@ export const registerValidator = validate(
         isString: {
           errorMessage: VALIDATION_MESSAGES.USER.REGISTER.DATE_OF_BIRTH_MUST_BE_A_STRING
         },
-        trim: true,
         custom: {
-          options: (value) => {
-            const val = isIsoDate(value)
-            if (!val) {
-              throw new Error(VALIDATION_MESSAGES.USER.REGISTER.DATE_OF_BIRTH_ERROR_FORMAT)
+          options: (value: string) => {
+            const validDateOfBirth = isValidDateOfBirth(value)
+            if (!validDateOfBirth) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.REGISTER.DATE_OF_BIRTH_ERROR_FORMAT
+              })
             }
             return true
           }
@@ -164,12 +178,11 @@ export const loginValidator = validate(
         trim: true,
         custom: {
           options: async (value) => {
-            const specialCharacters = /[^a-zA-Z0-9.-]/
-            const username = value.split('@')[0]
-            if (specialCharacters.test(username)) {
+            const validEmail = isValidEmail(value)
+            if (!validEmail) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.EMAIL.VALID_USERNAME_PART_OF_EMAIL
+                message: VALIDATION_MESSAGES.USER.EMAIL.VALID_EMAIL
               })
             }
             await userServices.validateAccountAccessibility(value)
@@ -182,7 +195,7 @@ export const loginValidator = validate(
           errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_REQUIRED
         },
         isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_A_STRING
         },
         isStrongPassword: {
           options: {
@@ -200,6 +213,18 @@ export const loginValidator = validate(
           options: {
             min: 8,
             max: 16
+          }
+        },
+        custom: {
+          options: async (value) => {
+            const validPasswordEmoji = isValidPassword(value)
+            if (!validPasswordEmoji) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_CONTAINS_EMOJI
+              })
+            }
+            return true
           }
         }
       }
@@ -266,7 +291,7 @@ export const forgotPasswordValidator = validate(
             if (specialCharacters.test(username)) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.EMAIL.VALID_USERNAME_PART_OF_EMAIL
+                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ALREADY_EXISTS
               })
             }
             const user = await userServices.findUserByEmail(value)
@@ -529,7 +554,7 @@ export const resetPasswordValidator = validate(
             if (specialCharacters.test(username)) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.EMAIL.VALID_USERNAME_PART_OF_EMAIL
+                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ALREADY_EXISTS
               })
             }
             const user = await userServices.findUserByEmail(value)
@@ -810,7 +835,7 @@ export const updateProfileValidator = validate(
         trim: true,
         custom: {
           options: (value) => {
-            const val = isIsoDate(value)
+            const val = isValidDateOfBirth(value)
             if (!val) {
               throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.DATE_OF_BIRTH_ERROR_FORMAT)
             }

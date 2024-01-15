@@ -8,6 +8,7 @@ export interface LoginPayload {
 
 export interface AccessTokenPayload {
   _id: string
+  username: string
   email: string
   role: UserRole
   token_type: TokenType.AccessToken
@@ -15,6 +16,7 @@ export interface AccessTokenPayload {
 
 export interface RefreshTokenPayload {
   _id: string
+  username: string
   email: string
   role: UserRole
   token_type: TokenType.RefreshToken

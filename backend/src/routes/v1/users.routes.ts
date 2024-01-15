@@ -26,7 +26,7 @@ const userRouter = Router()
 
 /**
  * Description: Login a user with email and password
- * Path: /login/password
+ * Path: /login
  * Method: POST
  * Body: { email: string, password: string }
  */
