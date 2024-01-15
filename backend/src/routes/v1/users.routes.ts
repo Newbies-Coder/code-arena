@@ -14,10 +14,12 @@ import {
   refreshTokenValidator,
   registerValidator,
   removeFavoriteValidator,
+  resendVerifyValidator,
   resetPasswordValidator,
   unfollowUserValidator,
   updateProfileValidator,
   userProfileValidator,
+  verifyForgotpasswordValidator,
   verifyOTPValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
@@ -66,13 +68,13 @@ userRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(user
 userRouter.post('/verify-otp', verifyOTPValidator, wrapRequestHandler(userController.verifyOTP))
 
 /**
- * Description. Verify otp when user client click on the button resend otp
+ * Description. Verify otp when user client click on the button resend verify otp
  * Path: /resend-verify-email
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
  * Body: {}
  */
-userRouter.post('/resend-verify-otp', wrapRequestHandler(userController.resendVerifyOTP))
+userRouter.post('/resend-verify-otp', resendVerifyValidator, wrapRequestHandler(userController.resendVerifyOTP))
 
 /**
  * Description. Submit email to reset password, send email to user
@@ -81,6 +83,14 @@ userRouter.post('/resend-verify-otp', wrapRequestHandler(userController.resendVe
  * Body: {email: string}
  */
 userRouter.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(userController.forgotPassword))
+
+/**
+ * Description. Verify link in email to reset password
+ * Path: /verify-forgot-password
+ * Method: POST
+ * Body: {forgot_password_token: string}
+ */
+userRouter.post('/verify-forgot-password', verifyForgotpasswordValidator, wrapRequestHandler(userController.verifyForgotPassword))
 
 /**
  * Description: Reset password

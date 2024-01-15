@@ -84,7 +84,8 @@ export const DEV_ERRORS_MESSAGES = {
   UNBLOCKED_USER: 'Error fetching unblocked users',
   INSERT_USER_FAVORITES: 'Error fetching insert users into favorite list',
   REMOVED_USER_FAVORITES: 'Error fetching remove users into favorite list',
-  GET_ALL_USER_FAVORITE: 'Error fetching favorites'
+  GET_ALL_USER_FAVORITE: 'Error fetching favorites',
+  VERIFY_FORGOT_PASSWORD_TOKEN: 'Error verifying forgot-password token'
 }
 
 export const RESULT_RESPONSE_MESSAGES = {
@@ -137,6 +138,9 @@ export const RESULT_RESPONSE_MESSAGES = {
     GET_WITH_USER_ID: 'Get banners with user id successfully!',
     INSERT: 'Insert banners successfully!',
     DELETE: 'Delete banners successfully!'
+  },
+  VERIFY_FORGOT_PASSWORD_TOKEN: {
+    CHECK_EMAIL_TO_RESET_PASSWORD: 'User already exist in database'
   }
 } as const
 
@@ -172,6 +176,16 @@ export const VALIDATION_MESSAGES = {
       USERNAME_MUST_BE_STRING: 'Username must be a string',
       INVALID_INCLUDES: 'Invalid includes pagination',
       INVALID_SORT_ORDER_CREATED_AT: 'Invalid sort order created_at pagination'
+    },
+    VERIFY_FORGOT_PASSWORD_TOKEN: {
+      IS_REQUIRED: 'Forgot-password token is required',
+      MUST_BE_A_STRING: 'Forgot-password token must be a string',
+      LENGTH_MUST_BE_6: 'Forgot-password token length must be 6 characters long',
+      IS_NOT_EXIST: 'Forgot-password token is not found',
+      IS_EXPIRED: 'Forgot-password token expired!',
+      NOT_FOUND_OR_ALREADY_VERIFIED: 'User not found or forgot-password token already verified',
+      INVALID_TOKEN: 'Invalid forgot-password token',
+      IS_NUMBERIC: 'Please enter forgot-password token must be numberic'
     },
     LOGIN: {
       EMAIL_IS_REQUIRED: 'Email is required',

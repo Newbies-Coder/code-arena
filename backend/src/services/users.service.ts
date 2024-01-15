@@ -16,6 +16,7 @@ import {
   RegisterBody,
   ResetPasswordBody,
   UpdateProfileBody,
+  VerifyForgotPasswordReqBody,
   VerifyOTPBody
 } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
@@ -28,6 +29,7 @@ import {
   ResultCheckTokenType,
   ResultRefreshTokenType,
   ResultRegisterType,
+  ResultVerifyForgotPasswordType,
   UploadAvatarType,
   UploadThumbnailType
 } from '~/@types/reponse.type'
@@ -35,7 +37,7 @@ import { hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import { StatusCodes } from 'http-status-codes'
-import { DEV_ERRORS_MESSAGES, VALIDATION_MESSAGES } from '~/constants/message'
+import { DEV_ERRORS_MESSAGES, RESULT_RESPONSE_MESSAGES, VALIDATION_MESSAGES } from '~/constants/message'
 import moment from 'moment'
 import emailService from '~/services/email.service'
 import otpService from '~/services/otp.service'
@@ -323,11 +325,12 @@ class UserService {
       const userResult = await databaseService.users.insertOne(newUser)
       const user_id = userResult.insertedId.toString()
       const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id, email, username, UserRole.User)
-      const refreshTokenObj = new RefreshToken({
-        token: refresh_token,
-        user_id: new ObjectId(user_id)
-      })
-      await databaseService.refreshTokens.insertOne(refreshTokenObj)
+      await databaseService.refreshTokens.insertOne(
+        new RefreshToken({
+          token: refresh_token,
+          user_id: new ObjectId(user_id)
+        })
+      )
       await this.sendOTP(email)
       const content: ResultRegisterType = { _id: user_id, username, email, access_token, refresh_token }
       return content
@@ -354,6 +357,24 @@ class UserService {
       throw new ErrorWithStatus({
         statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
         message: error.message || DEV_ERRORS_MESSAGES.LOGOUT
+      })
+    }
+  }
+
+  async verifyForgotPassword(payload: VerifyForgotPasswordReqBody): Promise<ResultVerifyForgotPasswordType> {
+    try {
+      let { forgot_password_token } = payload
+      const otpData = await otpService.findOTP(forgot_password_token)
+      let { email } = otpData
+      await databaseService.otps.deleteMany({ email })
+      return {
+        userExist: true,
+        message: RESULT_RESPONSE_MESSAGES.VERIFY_FORGOT_PASSWORD_TOKEN.CHECK_EMAIL_TO_RESET_PASSWORD
+      }
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.VERIFY_FORGOT_PASSWORD_TOKEN
       })
     }
   }

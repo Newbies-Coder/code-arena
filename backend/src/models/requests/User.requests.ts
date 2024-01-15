@@ -50,6 +50,10 @@ export interface ResendVerifyOTPBody {
   email: string
 }
 
+export interface VerifyForgotPasswordReqBody {
+  forgot_password_token: string
+}
+
 export interface ResetPasswordBody {
   email: string
   password: string

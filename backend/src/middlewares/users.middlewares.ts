@@ -246,7 +246,6 @@ export const refreshTokenValidator = validate(
                 message: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.REFRESH_TOKEN_IS_REQUIRED
               })
             }
-
             try {
               const result = await databaseService.refreshTokens.findOne({ token: value })
               if (!result) {
@@ -286,22 +285,63 @@ export const forgotPasswordValidator = validate(
         trim: true,
         custom: {
           options: async (value) => {
-            const specialCharacters = /[^a-zA-Z0-9.-]/
-            const username = value.split('@')[0]
-            if (specialCharacters.test(username)) {
+            const validEmail = isValidEmail(value)
+            if (!validEmail) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ALREADY_EXISTS
+                message: VALIDATION_MESSAGES.USER.EMAIL.VALID_EMAIL
               })
             }
             const user = await userServices.findUserByEmail(value)
             if (user === null) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.NOT_FOUND,
-                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_NOT_REGISTER
+                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
               })
             }
             await userServices.validateAccountAccessibility(value)
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
+
+export const verifyForgotpasswordValidator = validate(
+  checkSchema(
+    {
+      forgot_password_token: {
+        trim: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.VERIFY_FORGOT_PASSWORD_TOKEN.IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.VERIFY_FORGOT_PASSWORD_TOKEN.MUST_BE_A_STRING
+        },
+        isLength: {
+          options: {
+            min: 6,
+            max: 6
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.VERIFY_FORGOT_PASSWORD_TOKEN.LENGTH_MUST_BE_6
+        },
+        custom: {
+          options: async (value) => {
+            const checkOTP = isNaN(value)
+            if (checkOTP) {
+              throw new Error(VALIDATION_MESSAGES.USER.VERIFY_FORGOT_PASSWORD_TOKEN.IS_NUMBERIC)
+            }
+            const otpRecord = await OPTService.findOTP(value)
+            if (!otpRecord) {
+              throw new Error(VALIDATION_MESSAGES.USER.VERIFY_FORGOT_PASSWORD_TOKEN.IS_NOT_EXIST)
+            }
+            const { expiredIn } = otpRecord
+            const currentTime = new Date()
+            if (currentTime > expiredIn) {
+              throw new Error(VALIDATION_MESSAGES.USER.VERIFY_FORGOT_PASSWORD_TOKEN.IS_EXPIRED)
+            }
             return true
           }
         }
@@ -343,6 +383,39 @@ export const verifyOTPValidator = validate(
             const currentTime = new Date()
             if (currentTime > expiredIn) {
               throw new Error(VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_EXPIRED)
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
+
+export const resendVerifyValidator = validate(
+  checkSchema(
+    {
+      email: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_REQUIRED
+        },
+        trim: true,
+        custom: {
+          options: async (value) => {
+            const validEmail = isValidEmail(value)
+            if (!validEmail) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.EMAIL.VALID_EMAIL
+              })
+            }
+            const user = await userServices.findUserByEmail(value)
+            if (user === null) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
+              })
             }
             return true
           }
@@ -489,8 +562,16 @@ export const changePasswordValidator = validate(
         },
         custom: {
           options: async (value, { req }) => {
+            const validPasswordEmoji = isValidPassword(value)
+
             if (value === req.body.old_password) {
               throw new Error(VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_NOT_SAME_OLD_PASSWORD)
+            }
+            if (!validPasswordEmoji) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_CONTAINS_EMOJI
+              })
             }
             return true
           }
@@ -549,19 +630,18 @@ export const resetPasswordValidator = validate(
         trim: true,
         custom: {
           options: async (value) => {
-            const specialCharacters = /[^a-zA-Z0-9.-]/
-            const username = value.split('@')[0]
-            if (specialCharacters.test(username)) {
+            const validEmail = isValidEmail(value)
+            if (!validEmail) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ALREADY_EXISTS
+                message: VALIDATION_MESSAGES.USER.EMAIL.VALID_EMAIL
               })
             }
             const user = await userServices.findUserByEmail(value)
             if (user === null) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.NOT_FOUND,
-                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_NOT_REGISTER
+                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
               })
             }
             await userServices.validateAccountAccessibility(value)
@@ -587,6 +667,18 @@ export const resetPasswordValidator = validate(
             minSymbols: 1
           },
           errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_STRONG
+        },
+        custom: {
+          options: async (value) => {
+            const validPasswordEmoji = isValidPassword(value)
+            if (!validPasswordEmoji) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_CONTAINS_EMOJI
+              })
+            }
+            return true
+          }
         },
         isLength: {
           options: {

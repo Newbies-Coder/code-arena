@@ -22,6 +22,11 @@ export type LoginResultType = {
   refresh_token: string
 }
 
+export type ResultVerifyForgotPasswordType = {
+  userExist: boolean
+  message: string
+}
+
 export type ResultCheckTokenType = {
   _id: ObjectId
   email: string
