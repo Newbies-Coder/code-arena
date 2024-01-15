@@ -1,33 +1,36 @@
 import { AuthUser } from '~/@types/auth.type'
 import cloudinaryService from './cloudinary.service'
-import { env } from '~/config/environment.config'
 import { DEV_ERRORS_MESSAGES, VALIDATION_MESSAGES } from '~/constants/message'
 import { databaseService } from './connectDB.service'
 import Banner from '~/models/schemas/Banner.schema'
 import { ObjectId } from 'mongodb'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import { StatusCodes } from 'http-status-codes'
-import { PaginationType, ParsedBannerUrlQuery } from '~/@types/reponse.type'
+import { InsertBanner, PaginationType, ParsedBannerUrlQuery } from '~/@types/reponse.type'
 
 class BannersService {
-  async insertBanners({ _id }: AuthUser, slug: string, files: Express.Multer.File[]) {
-    if (files.length === 0) {
-      throw new ErrorWithStatus({ statusCode: StatusCodes.BAD_REQUEST, message: VALIDATION_MESSAGES.BANNER.IMAGE_IS_REQUIRED })
-    }
+  async insertBanners({ _id }: AuthUser, payload: InsertBanner): Promise<any> {
     try {
-      const result = await Promise.all(
-        files.map(async (file) => {
-          const result = await cloudinaryService.uploadImage(env.cloudinary.banner_folder, file.buffer)
-          const imageUrl = result.secure_url
-          await databaseService.banners.insertOne(new Banner({ user_id: new ObjectId(_id), slug, url: imageUrl }))
-          return imageUrl
+      const user = await databaseService.users.findOne({ _id: new ObjectId(_id) })
+      if (user === null) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
+        })
+      }
+      let { slug, description, url } = payload
+      await databaseService.banners.insertOne(
+        new Banner({
+          user_id: new ObjectId(_id),
+          slug,
+          description,
+          url
         })
       )
-      return result
     } catch (error) {
       throw new ErrorWithStatus({
         statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
-        message: error.message || DEV_ERRORS_MESSAGES.INSERT_BANNER
+        message: error.message || VALIDATION_MESSAGES.UPLOAD.IMAGE.ERROR_INSERT_BANNERS
       })
     }
   }
@@ -48,16 +51,17 @@ class BannersService {
         .limit(per_page)
         .sort({ [sort_by]: sort_order })
         .toArray()
+
       const total_items = await databaseService.banners.countDocuments(query)
       const total_pages = Math.floor((total_items + per_page - 1) / per_page)
-      const content: PaginationType<Partial<Banner>> = {
+
+      return {
         items,
         page,
         limit: per_page,
         total_pages,
         total_items
       }
-      return content
     } catch (error) {
       throw new ErrorWithStatus({
         statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
@@ -66,26 +70,21 @@ class BannersService {
     }
   }
 
-  async getBannerByUserId(id: string): Promise<Banner> {
+  async getBannerByUserId(id: string): Promise<any> {
     try {
-      if (!ObjectId.isValid(id)) {
+      const checkUser = await databaseService.users.findOne({ _id: new ObjectId(id) })
+      if (!checkUser) {
         throw new ErrorWithStatus({
           statusCode: StatusCodes.BAD_REQUEST,
-          message: VALIDATION_MESSAGES.BANNER.INVALID_ID
+          message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
         })
       }
-      const result = await databaseService.banners.findOne({ _id: new ObjectId(id) })
-      if (!result) {
-        throw new ErrorWithStatus({
-          statusCode: StatusCodes.BAD_REQUEST,
-          message: VALIDATION_MESSAGES.BANNER.NOT_FOUND
-        })
-      }
+      const result = await databaseService.banners.find({ user_id: new ObjectId(id) })
       return result
     } catch (error) {
       throw new ErrorWithStatus({
         statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
-        message: error.message || DEV_ERRORS_MESSAGES.GET_BANNER_WITH_ID
+        message: error.message || DEV_ERRORS_MESSAGES.GET_BANNER_WITH_USER_ID
       })
     }
   }
@@ -95,7 +94,7 @@ class BannersService {
       if (!ObjectId.isValid(id)) {
         throw new ErrorWithStatus({
           statusCode: StatusCodes.BAD_REQUEST,
-          message: VALIDATION_MESSAGES.BANNER.INVALID_ID
+          message: VALIDATION_MESSAGES.BANNER.BANNER_ID_INVALID
         })
       }
 
@@ -104,7 +103,7 @@ class BannersService {
       if (!banner) {
         throw new ErrorWithStatus({
           statusCode: StatusCodes.NOT_FOUND,
-          message: VALIDATION_MESSAGES.BANNER.NOT_FOUND
+          message: VALIDATION_MESSAGES.BANNER.BANNER_NOT_FOUND
         })
       }
       await cloudinaryService.deleteImage(banner.url)

@@ -1,6 +1,7 @@
 import { checkSchema } from 'express-validator'
 import { StatusCodes } from 'http-status-codes'
 import { ObjectId } from 'mongodb'
+import { UserRole } from '~/constants/enums'
 import { VALIDATION_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import { databaseService } from '~/services/connectDB.service'
@@ -184,15 +185,15 @@ export const paginationBannerValidators = validate(
         trim: true,
         optional: { options: { nullable: true } },
         isMongoId: {
-          errorMessage: VALIDATION_MESSAGES.BANNER.INVALID_ID
+          errorMessage: VALIDATION_MESSAGES.BANNER.BANNER_ID_INVALID
         },
         custom: {
           options: async (value) => {
             const banner = await databaseService.banners.findOne({ _id: new ObjectId(value) })
-            if (banner === null) {
+            if (!banner) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.CONFLICT,
-                message: VALIDATION_MESSAGES.BANNER.NOT_FOUND
+                message: VALIDATION_MESSAGES.BANNER.BANNER_NOT_FOUND
               })
             }
             return true
@@ -237,5 +238,44 @@ export const objectIdValidator = validate(
       }
     },
     ['params']
+  )
+)
+
+export const paginationGetUsersByRoleValidator = validate(
+  checkSchema(
+    {
+      page: {
+        trim: true,
+        optional: { options: { nullable: true } },
+        isInt: {
+          options: { min: 1 },
+          errorMessage: VALIDATION_MESSAGES.PAGINATION.PAGE_CAN_NOT_LESS_THAN_ZERO
+        },
+        toInt: true
+      },
+      limit: {
+        trim: true,
+        optional: { options: { nullable: true } },
+        isInt: {
+          options: { min: 1, max: 100 },
+          errorMessage: VALIDATION_MESSAGES.PAGINATION.ITEMS_IS_NOT_IN_RANGE
+        },
+        toInt: true
+      },
+      includes: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.GET_USERS_BY_ROLE.ROLE_IS_REQUIRED
+        },
+        custom: {
+          options: (value: string) => {
+            if (!Object.values(UserRole).includes((value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()) as UserRole)) {
+              throw new Error(VALIDATION_MESSAGES.USER.GET_USERS_BY_ROLE.ROLE_IS_INVALID)
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['query']
   )
 )

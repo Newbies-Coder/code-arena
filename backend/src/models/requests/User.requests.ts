@@ -8,6 +8,7 @@ export interface LoginPayload {
 
 export interface AccessTokenPayload {
   _id: string
+  username: string
   email: string
   role: UserRole
   token_type: TokenType.AccessToken
@@ -15,6 +16,7 @@ export interface AccessTokenPayload {
 
 export interface RefreshTokenPayload {
   _id: string
+  username: string
   email: string
   role: UserRole
   token_type: TokenType.RefreshToken
@@ -46,6 +48,10 @@ export interface VerifyOTPBody {
 
 export interface ResendVerifyOTPBody {
   email: string
+}
+
+export interface VerifyForgotPasswordReqBody {
+  forgot_password_token: string
 }
 
 export interface ResetPasswordBody {

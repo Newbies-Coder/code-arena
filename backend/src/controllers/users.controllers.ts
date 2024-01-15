@@ -13,6 +13,7 @@ import {
   ResendVerifyOTPBody,
   ResetPasswordBody,
   UpdateProfileBody,
+  VerifyForgotPasswordReqBody,
   VerifyOTPBody
 } from '~/models/requests/User.requests'
 import { RESULT_RESPONSE_MESSAGES } from '~/constants/message'
@@ -56,6 +57,11 @@ const userController = {
   resendVerifyOTP: async (req: Request<ParamsDictionary, any, ResendVerifyOTPBody>, res: Response, next: NextFunction) => {
     await userServices.sendOTP(req.body.email)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.OTP_SUCCESS.VERIFY_OTP)
+  },
+
+  verifyForgotPassword: async (req: Request<ParamsDictionary, any, VerifyForgotPasswordReqBody>, res: Response, next: NextFunction) => {
+    const result = await userServices.verifyForgotPassword(req.body)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.VERIFY_FORGOT_PASSWORD)
   },
 
   resetPassword: async (req: Request<ParamsDictionary, any, ResetPasswordBody>, res: Response, next: NextFunction) => {

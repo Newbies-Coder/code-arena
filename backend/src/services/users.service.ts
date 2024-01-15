@@ -16,6 +16,7 @@ import {
   RegisterBody,
   ResetPasswordBody,
   UpdateProfileBody,
+  VerifyForgotPasswordReqBody,
   VerifyOTPBody
 } from '~/models/requests/User.requests'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
@@ -25,11 +26,10 @@ import {
   PaginationType,
   ParsedGetAllUserBlockedUrlQuery,
   ParsedGetAllUserFavoriteUrlQuery,
-  ParsedGetAllUserUrlQuery,
-  ParsedGetUserByRoleUrlQuery,
   ResultCheckTokenType,
   ResultRefreshTokenType,
   ResultRegisterType,
+  ResultVerifyForgotPasswordType,
   UploadAvatarType,
   UploadThumbnailType
 } from '~/@types/reponse.type'
@@ -37,7 +37,7 @@ import { hashPassword } from '~/utils/crypto'
 import User from '~/models/schemas/Users.schema'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import { StatusCodes } from 'http-status-codes'
-import { DEV_ERRORS_MESSAGES, VALIDATION_MESSAGES } from '~/constants/message'
+import { DEV_ERRORS_MESSAGES, RESULT_RESPONSE_MESSAGES, VALIDATION_MESSAGES } from '~/constants/message'
 import moment from 'moment'
 import emailService from '~/services/email.service'
 import otpService from '~/services/otp.service'
@@ -46,16 +46,16 @@ import Follow from '~/models/schemas/Follow.schema'
 import { AuthUser } from '~/@types/auth.type'
 import _ from 'lodash'
 import cloudinaryService from '~/services/cloudinary.service'
-import { ParsedQs } from 'qs'
 import BlockedUser from '~/models/schemas/BlockedUser.schema'
 import CloseFriends from '~/models/schemas/CloseFriends'
 import { SignOptions } from 'jsonwebtoken'
 
 class UserService {
-  signAccessToken(_id: string, email: string, role: UserRole): Promise<string> {
+  signAccessToken(_id: string, email: string, username: string, role: UserRole): Promise<string> {
     const { access_token_exp, jwt_algorithm, secret_key } = env.jwt
     const payload: AccessTokenPayload = {
       _id,
+      username,
       email,
       role,
       token_type: TokenType.AccessToken
@@ -67,10 +67,11 @@ class UserService {
     return signToken({ payload, privateKey: secret_key as string, options })
   }
 
-  signRefreshToken(_id: string, email: string, role: UserRole): Promise<string> {
+  signRefreshToken(_id: string, email: string, username: string, role: UserRole): Promise<string> {
     const { refresh_token_exp, jwt_algorithm, refresh_token_key } = env.jwt
     const payload: RefreshTokenPayload = {
       _id,
+      username,
       email,
       role,
       token_type: TokenType.RefreshToken
@@ -86,17 +87,8 @@ class UserService {
     })
   }
 
-  signAccessAndRefreshToken(user_id: string, email: string, role: UserRole): Promise<[string, string]> {
-    return Promise.all([this.signAccessToken(user_id, email, role), this.signRefreshToken(user_id, email, role)])
-  }
-
-  private validateIds(followerId: string, followedId: string): void {
-    if (!ObjectId.isValid(followerId) || !ObjectId.isValid(followedId)) {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.UNAUTHORIZED,
-        message: VALIDATION_MESSAGES.USER.FOLLOW.INVALID_ID
-      })
-    }
+  signAccessAndRefreshToken(user_id: string, email: string, username: string, role: UserRole): Promise<[string, string]> {
+    return Promise.all([this.signAccessToken(user_id, email, username, role), this.signRefreshToken(user_id, email, username, role)])
   }
 
   private validateBlockedIds(blockerId: string, blockedId: string): void {
@@ -122,11 +114,6 @@ class UserService {
       blockedId: new ObjectId(blockedId)
     })
     return blocked !== null
-  }
-
-  private async checkUserExistence(userId: string): Promise<boolean> {
-    const user = await databaseService.users.findOne({ _id: new ObjectId(userId) })
-    return Boolean(user)
   }
 
   private async upload(file: Express.Multer.File, folderName: string): Promise<string> {
@@ -230,7 +217,7 @@ class UserService {
         })
       }
 
-      const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user._id.toString(), user.email, user.role)
+      const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user._id.toString(), user.email, user.username, user.role)
 
       await databaseService.refreshTokens.updateOne(
         { user_id: user._id },
@@ -323,12 +310,13 @@ class UserService {
       })
       const userResult = await databaseService.users.insertOne(newUser)
       const user_id = userResult.insertedId.toString()
-      const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id, email, UserRole.User)
-      const refreshTokenObj = new RefreshToken({
-        token: refresh_token,
-        user_id: new ObjectId(user_id)
-      })
-      await databaseService.refreshTokens.insertOne(refreshTokenObj)
+      const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id, email, username, UserRole.User)
+      await databaseService.refreshTokens.insertOne(
+        new RefreshToken({
+          token: refresh_token,
+          user_id: new ObjectId(user_id)
+        })
+      )
       await this.sendOTP(email)
       const content: ResultRegisterType = { _id: user_id, username, email, access_token, refresh_token }
       return content
@@ -359,18 +347,36 @@ class UserService {
     }
   }
 
+  async verifyForgotPassword(payload: VerifyForgotPasswordReqBody): Promise<ResultVerifyForgotPasswordType> {
+    try {
+      let { forgot_password_token } = payload
+      const otpData = await otpService.findOTP(forgot_password_token)
+      let { email } = otpData
+      await databaseService.otps.deleteMany({ email })
+      return {
+        userExist: true,
+        message: RESULT_RESPONSE_MESSAGES.VERIFY_FORGOT_PASSWORD_TOKEN.CHECK_EMAIL_TO_RESET_PASSWORD
+      }
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.VERIFY_FORGOT_PASSWORD_TOKEN
+      })
+    }
+  }
+
   async refreshToken(payload: RefreshTokenBody): Promise<ResultRefreshTokenType> {
     try {
       const { refresh_token } = payload
       const { refresh_token_key } = env.jwt
 
-      const { _id, role, email } = await verifyToken({
+      const { _id, role, email, username } = await verifyToken({
         token: refresh_token,
         secretOrPublicKey: refresh_token_key
       })
 
       const deleteRefreshToken = databaseService.refreshTokens.deleteOne({ user_id: _id })
-      const signToken = await this.signAccessAndRefreshToken(_id, email, role)
+      const signToken = await this.signAccessAndRefreshToken(_id, email, username, role)
       const [tokens] = await Promise.all([signToken, deleteRefreshToken])
       const [newAccessToken, newRefreshToken] = tokens
 
@@ -549,7 +555,6 @@ class UserService {
   async follow(user: AuthUser, payload: ParamsDictionary): Promise<void> {
     try {
       const { id } = payload
-      this.validateIds(user._id, id)
       const isAlreadyFollowed = await this.checkIfAlreadyFollowed(user._id, id)
       if (isAlreadyFollowed) {
         throw new ErrorWithStatus({
@@ -573,13 +578,6 @@ class UserService {
   async unfollow(user: AuthUser, payload: ParamsDictionary): Promise<void> {
     try {
       const { id } = payload
-      const userToUnfollowExists = await this.checkUserExistence(id)
-      if (!userToUnfollowExists) {
-        throw new ErrorWithStatus({
-          statusCode: StatusCodes.NOT_FOUND,
-          message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
-        })
-      }
       const followingExists = await this.checkIfAlreadyFollowed(user._id, id)
       if (!followingExists) {
         throw new ErrorWithStatus({
@@ -732,13 +730,6 @@ class UserService {
 
   async unBlockedUser({ _id }: AuthUser, payload: ParamsDictionary): Promise<void> {
     const { id } = payload
-    const userToUnBlockExists = await this.checkUserExistence(id)
-    if (!userToUnBlockExists) {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.NOT_FOUND,
-        message: VALIDATION_MESSAGES.USER.BLOCKED.USER_ID_IS_INVALID
-      })
-    }
     const blockExists = await this.checkIfAlreadyBlocked(_id, id)
     if (!blockExists) {
       throw new ErrorWithStatus({

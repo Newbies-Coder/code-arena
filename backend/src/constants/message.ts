@@ -63,7 +63,7 @@ export const DEV_ERRORS_MESSAGES = {
   GET_ALL_USER: 'Error retrieving users',
   DELETED_BANNER: 'Error delete banner',
   GET_ALL_BANNER: 'Error get all banners',
-  GET_BANNER_WITH_ID: 'Error get banners by banner_id',
+  GET_BANNER_WITH_USER_ID: 'Error get banners by user_id',
   INSERT_BANNER: 'Error inert banner',
   LOGOUT: 'Error occurred during logout.',
   CHANGE_PASSWORD: 'Error changing password',
@@ -84,7 +84,8 @@ export const DEV_ERRORS_MESSAGES = {
   UNBLOCKED_USER: 'Error fetching unblocked users',
   INSERT_USER_FAVORITES: 'Error fetching insert users into favorite list',
   REMOVED_USER_FAVORITES: 'Error fetching remove users into favorite list',
-  GET_ALL_USER_FAVORITE: 'Error fetching favorites'
+  GET_ALL_USER_FAVORITE: 'Error fetching favorites',
+  VERIFY_FORGOT_PASSWORD_TOKEN: 'Error verifying forgot-password token'
 }
 
 export const RESULT_RESPONSE_MESSAGES = {
@@ -126,10 +127,12 @@ export const RESULT_RESPONSE_MESSAGES = {
     UNFOLLOW: 'Unfollow user successfully!',
     GET_BLOCKED_USER: 'Get blocked users successfully',
     INSERT_BLOCKED_USER: 'Blocked users successfully',
-    DELETE_BLOCKED_USER: 'Unblocked users successfully'
+    DELETE_BLOCKED_USER: 'Unblocked users successfully',
+    UPLOAD_IMAGE: 'Upload image sucessfully!',
+    UPLOAD_MUL_IMAGE: 'Upload multiple image sucessfully!'
   },
   OTP_SUCCESS: {
-    VERIFY_OTP: 'Verify OTP successfully!', //
+    VERIFY_OTP: 'Verify OTP successfully!',
     RESEND_OTP: 'Resend OTP successfully!'
   },
   BANNERS_SUCCESS: {
@@ -137,6 +140,9 @@ export const RESULT_RESPONSE_MESSAGES = {
     GET_WITH_USER_ID: 'Get banners with user id successfully!',
     INSERT: 'Insert banners successfully!',
     DELETE: 'Delete banners successfully!'
+  },
+  VERIFY_FORGOT_PASSWORD_TOKEN: {
+    CHECK_EMAIL_TO_RESET_PASSWORD: 'User already exist in database'
   }
 } as const
 
@@ -173,6 +179,16 @@ export const VALIDATION_MESSAGES = {
       INVALID_INCLUDES: 'Invalid includes pagination',
       INVALID_SORT_ORDER_CREATED_AT: 'Invalid sort order created_at pagination'
     },
+    VERIFY_FORGOT_PASSWORD_TOKEN: {
+      IS_REQUIRED: 'Forgot-password token is required',
+      MUST_BE_A_STRING: 'Forgot-password token must be a string',
+      LENGTH_MUST_BE_6: 'Forgot-password token length must be 6 characters long',
+      IS_NOT_EXIST: 'Forgot-password token is not found',
+      IS_EXPIRED: 'Forgot-password token expired!',
+      NOT_FOUND_OR_ALREADY_VERIFIED: 'User not found or forgot-password token already verified',
+      INVALID_TOKEN: 'Invalid forgot-password token',
+      IS_NUMBERIC: 'Please enter forgot-password token must be numberic'
+    },
     LOGIN: {
       EMAIL_IS_REQUIRED: 'Email is required',
       EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
@@ -188,9 +204,11 @@ export const VALIDATION_MESSAGES = {
       USER_NOT_FOUND: 'User not found'
     },
     REGISTER: {
-      NAME_IS_REQUIRED: 'Username is required',
-      NAME_MUST_BE_A_STRING: 'Username must be a string',
-      NAME_LENGTH_MUST_BE_FROM_4_TO_20: 'Username must be between 4 and 20 characters long',
+      USERNAME_IS_REQUIRED: 'Username is required',
+      USERNAME_MUST_BE_A_STRING: 'Username must be a string',
+      USERNAME_LENGTH_MUST_BE_FROM_2_TO_30: 'Username must be between 2 and 30 characters long',
+      INVALID_USERNAME: 'Must be a valid username',
+      USERNAME_INCLUDES_MUL_WHITESPACE: 'Username can not contains multiple consecutive whitespace',
       EMAIL_IS_REQUIRED: 'Email is required',
       EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
       EMAIL_ACCESSIBILITY: 'The email address is already subscribed. Please use a different email.',
@@ -206,7 +224,7 @@ export const VALIDATION_MESSAGES = {
       CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Confirm_password must be between 8 and 16 characters long',
       DATE_OF_BIRTH_IS_REQUIRED: 'Date of birth is required',
       DATE_OF_BIRTH_MUST_BE_A_STRING: 'Date of birth must be a string',
-      DATE_OF_BIRTH_ERROR_FORMAT: 'Date_of_birth must be yyyy-mm-dd',
+      DATE_OF_BIRTH_ERROR_FORMAT: 'Invalid date format. Please using dd-mm-yyyy.',
       AGE_IS_NOT_ENOUGH: 'You must above 12 years old to register'
     },
     VERIFY_OTP: {
@@ -240,16 +258,20 @@ export const VALIDATION_MESSAGES = {
       CONFIRM_PASSWORD_MUST_BE_STRONG: 'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
       OLD_PASSWORD_IS_REQUIRED: 'Old password is required',
       OLD_PASSWORD_IS_INCORRECT: 'Old password is incorrect',
-      PASSWORD_NOT_SAME_OLD_PASSWORD: 'New password must be not same as old password'
+      PASSWORD_NOT_SAME_OLD_PASSWORD: 'New password must be not same as old password',
+      PASSWORD_CONTAINS_EMOJI: 'Password cannot contains emoji symbol and white space',
+      CONFIRM_PASSWORD_CONTAINS_EMOJI: 'Confirm password cannot contains emoji symbol and white space'
     },
     EMAIL: {
       EMAIL_IS_REQUIRED: 'Email is required',
-      EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
-      EMAIL_ACCESSABILITY: 'The email address exist. Please go to login or try the another one',
-      EMAIL_IS_NOT_EXIT: 'Email is not exits',
+      EMAIL_MUST_BE_A_STRING: 'Email address must be a string',
+      EMAIL_ACCESSABILITY: "The email address doesn't exist. Please try the valid one or simply register",
       EMAIL_IS_NOT_REGISTER: 'Email is not register',
-      VALID_USERNAME_PART_OF_EMAIL: 'Username part of the email must not contain special characters',
-      EMAIL_ALREADY_EXISTS: 'Email already exists'
+      EMAIL_OR_PASSWORD_IS_INCORRECT: 'Email or password is incorrect',
+      EMAIL_ALREADY_EXISTS: 'Email already exists',
+      VALID_EMAIL: 'Email address is invalid',
+      VALID_DOMAIN: 'Email must end with @gmail.com or @gmail.edu.com',
+      CONTAIN_SPECAIL_CHARACTER: 'Email must contain at least one special character.'
     },
     USER_PROFILE: {
       USER_ID_IS_REQUIRED: 'User id is required',
@@ -257,8 +279,12 @@ export const VALIDATION_MESSAGES = {
       USER_ID_IS_INVALID: 'User id is invalid',
       FULL_NAME_MUST_BE_A_STRING: 'Full name must be a string',
       FULL_NAME_MAX_LENGTH_IS_50: 'Full name length must be from 4 to 50',
-      USER_NAME_MUST_BE_A_STRING: 'User name must be a string',
-      USER_NAME_LENGTH_MUST_BE_FROM_4_TO_20: 'User name length must be from 4 to 20',
+      INVALID_FULLNAME: 'Must be a valid fullname',
+      USERNAME_IS_REQUIRED: 'Username is required',
+      USERNAME_MUST_BE_A_STRING: 'Username must be a string',
+      USERNAME_LENGTH_MUST_BE_FROM_2_TO_30: 'Username must be between 2 and 30 characters long',
+      USERNAME_INCLUDES_MUL_WHITESPACE: 'Username can not contains multiple consecutive whitespace',
+      INVALID_USERNAME: 'Must be a valid username',
       PHONE_MUST_BE_A_STRING: 'Phone must be a string',
       PHONE_LENGTH_MUST_BE_10_CHARACTER: 'Phone length must be 10 character',
       PHONE_INVALID: 'Phone number invalid',
@@ -266,13 +292,22 @@ export const VALIDATION_MESSAGES = {
       BIO_MUST_BE_STRING: 'Bio must be a string',
       BIO_MAX_LENGTH_IS_500: 'Bio max length is 500 character',
       ADDRESS_MUST_BE_STRING: 'Address must be a string',
-      ADDRESS_MAX_LENGTH_IS_255: 'Address max length is 255 character',
+      ADDRESS_LENGTH_IS_VALID: 'Address length must be from 10 to 255 characters',
       FIELD_UPDATE_IS_REQUIRED: 'Must be at least 1 field that to updating',
       EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
       VALID_USERNAME_PART_OF_EMAIL: 'Username part of the email must not contain special characters',
       DATE_OF_BIRTH_IS_REQUIRED: 'Date of birth is required',
       DATE_OF_BIRTH_ERROR_FORMAT: 'Date_of_birth must be yyyy-mm-dd',
-      DATE_OF_BIRTH_MUST_BE_A_STRING: 'Date_of_birth must be string'
+      DATE_OF_BIRTH_MUST_BE_A_STRING: 'Date_of_birth must be string',
+      PHONE_IS_REQUIRED: 'Phone is required',
+      PHONE_MUST_BE_STRING: 'Phone is must be string',
+      PHONE_IS_INVALID: 'Valid the input phone is a Vietnamese phone number',
+      GENDER_MUST_BE_STRING: 'Gender is must be string',
+      GENDER_IS_INVALID: 'Gender is invalid. Please enter like: Male, Female, Other,..',
+      AVATAR_MUST_BE_STRING: 'Avatar image is must be string',
+      THUMBNAIL_MUST_BE_STRING: 'Cover_photo is must be string',
+      VALID_URL_AVATAR: 'Valid URL avatar and image extension',
+      VALID_URL_COVER_PHOTO: 'Valid URL cover_photo and image extension'
     },
     BLOCKED: {
       USER_ALREADY_BLOCKED: 'User already been blocked',
@@ -291,6 +326,7 @@ export const VALIDATION_MESSAGES = {
       FRIEND_ID_IS_EXIT: 'Friend id is exit',
       FAVORITE_NOT_EXIT: 'Favorite not exit',
       USER_FAVOTITE_THEMSELVES: 'Users cannot favorite themselves',
+      USER_FAVOTITE_REMOVE_THEMSELVES: 'Users cannot remove themselves',
       FRIEND_ALREADY_FAVORITE: 'Friend already been favorite list',
       FRIEND_NOT_ALREADY_FAVORITE_USER: 'Friend has not already been favorite list'
     },
@@ -317,10 +353,20 @@ export const VALIDATION_MESSAGES = {
     HEADER_AUTHORIZATION_IS_INVALID: 'Header authorization is invalid'
   },
   BANNER: {
-    ID_IS_REQUIRED: 'Banner id is required',
-    IMAGE_IS_REQUIRED: 'Banner image is required',
-    NOT_FOUND: 'Banner does not exists',
-    INVALID_ID: 'Invalid banner id',
+    BANNER_NOT_FOUND: 'Banner not found',
+    BANNER_ID_INVALID: 'Banner_id is invalid',
+    BANNER_ID_IS_REQUIRED: 'Banner_id is required',
+    SLUG_IS_REQUIRED: 'Slug is required',
+    SLUG_MUST_BE_STRING: 'Slug is must be string',
+    SLUG_LENGTH_IS_INVALID: 'Slug length must be from 10 to 50 characters',
+    INVALID_SLUG: 'Must be a valid slug',
+    SLUG_INCLUDES_MUL_WHITESPACE: 'Slug can not contains multiple consecutive whitespace',
+    DESCRIPTION_IS_REQUIRED: 'Description is required',
+    DESCRIPTION_MUST_BE_STRING: 'Description is must be string',
+    DESCRIPTION_LENGTH_IS_INVALID: 'Description length must be from 0 to 500 characters',
+    URL_IS_REQUIRED: 'Url image is required',
+    URL_MUST_BE_STRING: 'Url image is must be string',
+    VALID_URL_IMAGE: 'Valid url image and image extension',
     INVALID_SORT_ORDER: 'Invalid sorting order'
   }
 } as const
@@ -335,7 +381,8 @@ export const CLOUDINARY_MESSAGES = {
   CLOUDINARY_NAME: 'Cloud name of current cloudinary account',
   CLOUDINARY_AVATAR_FOLDER: 'Folder that contain avatar images on cloudinary',
   CLOUDINARY_THUMBNAIL_FOLDER: 'Folder that contain thumbnail images on cloudinary',
-  CLOUDINARY_BANNER_FOLDER: 'Folder that contain banner images on cloudinary'
+  CLOUDINARY_BANNER_FOLDER: 'Folder that contain banner images on cloudinary',
+  CLOUDINARY_IMAGE_FOLDER: 'Folder that contain image images on cloudinary'
 }
 
 export const AUTH_MESSAGES = {

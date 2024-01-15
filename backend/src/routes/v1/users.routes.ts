@@ -1,6 +1,7 @@
 import { Router } from 'express'
+import { UserRole } from '~/constants/enums'
 import userController from '~/controllers/users.controllers'
-import { requireLoginMiddleware } from '~/middlewares/auth.middlewares'
+import { requireLoginMiddleware, requireRoleMiddleware } from '~/middlewares/auth.middlewares'
 import { objectIdValidator, paginationBlockedUserValidators, paginationUserFavoriteValidators } from '~/middlewares/commons.middleware'
 import { singleImageUpload } from '~/middlewares/uploadFile.middleware'
 import {
@@ -14,10 +15,12 @@ import {
   refreshTokenValidator,
   registerValidator,
   removeFavoriteValidator,
+  resendVerifyValidator,
   resetPasswordValidator,
   unfollowUserValidator,
   updateProfileValidator,
   userProfileValidator,
+  verifyForgotpasswordValidator,
   verifyOTPValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
@@ -26,7 +29,7 @@ const userRouter = Router()
 
 /**
  * Description: Login a user with email and password
- * Path: /login/password
+ * Path: /login
  * Method: POST
  * Body: { email: string, password: string }
  */
@@ -66,13 +69,13 @@ userRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(user
 userRouter.post('/verify-otp', verifyOTPValidator, wrapRequestHandler(userController.verifyOTP))
 
 /**
- * Description. Verify otp when user client click on the button resend otp
+ * Description. Verify otp when user client click on the button resend verify otp
  * Path: /resend-verify-email
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
  * Body: {}
  */
-userRouter.post('/resend-verify-otp', wrapRequestHandler(userController.resendVerifyOTP))
+userRouter.post('/resend-verify-otp', resendVerifyValidator, wrapRequestHandler(userController.resendVerifyOTP))
 
 /**
  * Description. Submit email to reset password, send email to user
@@ -81,6 +84,14 @@ userRouter.post('/resend-verify-otp', wrapRequestHandler(userController.resendVe
  * Body: {email: string}
  */
 userRouter.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(userController.forgotPassword))
+
+/**
+ * Description. Verify link in email to reset password
+ * Path: /verify-forgot-password
+ * Method: POST
+ * Body: {forgot_password_token: string}
+ */
+userRouter.post('/verify-forgot-password', verifyForgotpasswordValidator, wrapRequestHandler(userController.verifyForgotPassword))
 
 /**
  * Description: Reset password
@@ -187,13 +198,13 @@ userRouter.get('/@me/blocked', wrapRequestHandler(requireLoginMiddleware), pagin
 userRouter.post('/@me/blocked', wrapRequestHandler(requireLoginMiddleware), blockedUserValidator, wrapRequestHandler(userController.blockedUser))
 
 /**
- * Description: Delete blocked user list aka unblock
+ * Description: Unblocked user list aka unblock
  * Path: /@me/blocked/:id
  * Method: DELETE
  * Header: { Authorization: Bearer <access_token> }
  **/
 
-userRouter.delete('/@me/blocked/:id', wrapRequestHandler(requireLoginMiddleware), objectIdValidator, wrapRequestHandler(userController.unBlockedUser))
+userRouter.delete('/@me/unblocked/:id', wrapRequestHandler(requireLoginMiddleware), objectIdValidator, wrapRequestHandler(userController.unBlockedUser))
 
 /**
  * Description: Make a list of your closest pals.

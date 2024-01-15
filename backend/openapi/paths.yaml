@@ -155,7 +155,7 @@ paths:
                         example: Please fill all required details.
                       path:
                         type: string
-                        example: includes
+                        example: /auth/roles
                   dateTime:
                     type: string
                     format: date-time
@@ -216,7 +216,7 @@ paths:
                       $ref: '#/components/schemas/ProfileSchema'
                   page:
                     type: integer
-                  per_page:
+                  limit:
                     type: integer
                   total_page:
                     type: integer
@@ -963,6 +963,126 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+  /users/verify-forgot-password:
+    post:
+      tags:
+        - user
+      summary: Verify forgot-password token
+      description: Verifies the One-Time Password (forgot-password token) sent to the user's email.
+      operationId: verifyForgotpasswordToken
+      requestBody:
+        description: Auth verify forgot-password token
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                forgot_password_token:
+                  type: string
+                  example: string
+                  description: The forgot-password token to be verified
+        required: true
+      responses:
+        '200':
+          description: Verifies forgot-password token successfully!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Verify forgot-password token successfully!
+                  data:
+                    type: object
+                    properties:
+                      userExist:
+                        type: boolean
+                      message:
+                        type: string
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: forgot-password token has expired
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: Forgot-passwor token has expired
+                  data:
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '404':
+          description: User not found or already verified
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    example: User not found or already verified
+                  data:
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '422':
+          description: Please provide complete input info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  message:
+                    example: Validation error
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Please fill all required details.
+                      path:
+                        type: string
+                        example: /verify-forgot-password
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /users/reset-password:
     post:
       tags:
@@ -1034,6 +1154,22 @@ paths:
                       path:
                         type: string
                         example: reset-password
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
                   dateTime:
                     type: string
                     format: date-time
@@ -1119,6 +1255,22 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /users/follow/{id}:
     post:
       tags:
@@ -1157,6 +1309,25 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+        '400':
+          description: User_id is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    example: User_id is invalid
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
         '401':
           description: You are not authorized to carry out this task
           content:
@@ -1172,6 +1343,22 @@ paths:
                   data:
                     type: string
                     example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
                   dateTime:
                     type: string
                     format: date-time
@@ -1186,10 +1373,12 @@ paths:
       parameters:
         - name: id
           in: path
-          description: Please enter the user id you want to unfollow
+          description: Please enter the user_id you want to unfollow
           required: true
           schema:
             type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
       security:
         - BearerAuth: []
       responses:
@@ -1204,7 +1393,26 @@ paths:
                     type: integer
                     example: 200
                   message:
-                    example: Follow user successfully
+                    example: Unfollow user successfully
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '400':
+          description: User_id is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    example: User_id is invalid
                   data:
                     type: string
                     example: ''
@@ -1227,6 +1435,22 @@ paths:
                   data:
                     type: string
                     example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
                   dateTime:
                     type: string
                     format: date-time
@@ -1268,6 +1492,25 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+        '400':
+          description: User_id is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    example: User_id is invalid
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
         '401':
           description: You are not authorized to carry out this task
           content:
@@ -1287,8 +1530,8 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-        '422':
-          description: Please provide complete input info.
+        '500':
+          description: Internal server error
           content:
             application/json:
               schema:
@@ -1296,18 +1539,9 @@ paths:
                 properties:
                   statusCode:
                     type: integer
-                    example: 422
+                    example: 500
                   message:
-                    example: Validation error
-                  data:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                        example: Please fill all required details.
-                      path:
-                        type: string
-                        example: profile
+                    example: Internal server error
                   dateTime:
                     type: string
                     format: date-time
@@ -1358,6 +1592,22 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
     put:
       tags:
         - user
@@ -1377,7 +1627,53 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProfileSchema'
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Update profile user successfully!
+                  data:
+                    $ref: '#/components/schemas/ProfileSchema'
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: Header authorization is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You are not currently logged in to the system!
+                  data:
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /users/@me/avatar:
     post:
       tags:
@@ -1459,6 +1755,22 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /users/@me/thumbnail:
     post:
       tags:
@@ -1481,7 +1793,7 @@ paths:
         required: true
       responses:
         '200':
-          description: Upload successfully
+          description: Upload thumbnail successfully!
           content:
             application/json:
               schema:
@@ -1491,7 +1803,7 @@ paths:
                     type: integer
                     example: 200
                   message:
-                    example: Upload successfully
+                    example: Upload thumbnail successfully!
                   data:
                     type: object
                     properties:
@@ -1536,6 +1848,22 @@ paths:
                   data:
                     type: string
                     example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
                   dateTime:
                     type: string
                     format: date-time
@@ -1622,6 +1950,22 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
     post:
       tags:
         - user
@@ -1699,12 +2043,28 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /users/@me/blocked/{id}:
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /users/@me/unblocked/{id}:
     delete:
       tags:
         - user
-      summary: Delete blocked user list aka unblock
-      description: Delete blocked user list aka unblock
+      summary: Delete blocked user list unblock
+      description: Delete blocked user list unblock
       operationId: deleteBlockedUser
       parameters:
         - name: id
@@ -1752,6 +2112,22 @@ paths:
                   data:
                     type: string
                     example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
                   dateTime:
                     type: string
                     format: date-time
@@ -2123,8 +2499,8 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-        '422':
-          description: Please provide complete input info.
+        '500':
+          description: Internal server error
           content:
             application/json:
               schema:
@@ -2132,18 +2508,9 @@ paths:
                 properties:
                   statusCode:
                     type: integer
-                    example: 422
+                    example: 500
                   message:
-                    example: Validation error
-                  data:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                        example: Please fill all required details.
-                      path:
-                        type: string
-                        example: favorite
+                    example: Internal server error
                   dateTime:
                     type: string
                     format: date-time
@@ -2208,7 +2575,7 @@ paths:
                       page:
                         type: integer
                         example: 1
-                      per_page:
+                      limit:
                         type: integer
                         example: 3
                       total_page:
@@ -2263,28 +2630,28 @@ paths:
       tags:
         - banner
       summary: Insert a new banner with images
-      description: Uploads multiple images for a new banner and inserts the banner details into the database.
+      description: Inserts the banner details into the database.
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               type: object
               properties:
                 slug:
                   type: string
                   description: The slug for the banner
-                image:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
-                  description: Multiple image files for the banner
+                description:
+                  type: string
+                  description: Description image for the banner
+                url:
+                  type: string
+                  description: Image for the banner
       security:
         - BearerAuth: []
       responses:
         '201':
-          description: Banner and images successfully uploaded
+          description: Insert banner successfully!
           content:
             application/json:
               schema:
@@ -2294,27 +2661,7 @@ paths:
                     type: integer
                     example: 201
                   message:
-                    example: Insetrt banner successfully
-                  data:
-                    type: array
-                    description: URLs of the uploaded images
-                    example: ['http://res.cloudinary.com/de7hnxr0e/image/upload/v1701942785/avatar/it3nquretum21jkqv2ii.jpg']
-                  dateTime:
-                    type: string
-                    format: date-time
-                    example: '2024-02-22T00:00:00.000Z'
-        '400':
-          description: Bad request (e.g., missing images or invalid data)
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 400
-                  message:
-                    example: Bad request (e.g., missing images or invalid data)
+                    example: Insert banner successfully!
                   data:
                     type: string
                     example: ''
@@ -2337,6 +2684,31 @@ paths:
                   data:
                     type: string
                     example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '422':
+          description: Please provide complete input info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  message:
+                    example: Validation error
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Please fill all required details.
+                      path:
+                        type: string
+                        example: /banners
                   dateTime:
                     type: string
                     format: date-time
@@ -2396,7 +2768,7 @@ paths:
                       page:
                         type: integer
                         example: 1
-                      per_page:
+                      limit:
                         type: integer
                         example: 3
                       total_page:
@@ -2481,6 +2853,25 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
         '400':
           description: Invalid banner ID format
           content:
@@ -2512,6 +2903,208 @@ paths:
                     example: 404
                   message:
                     example: Banner not found
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  messages:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /upload/media:
+    post:
+      tags:
+        - upload
+      summary: Upload single image
+      description: Upload single image
+      operationId: uploadSingleImage
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Imformation image upload
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        '200':
+          description: Upload single image successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Upload single image successfully
+                  data:
+                    type: object
+                    properties:
+                      avatarUrl:
+                        type: string
+                        example: 'http://res.cloudinary.com/de7hnxr0e/image/upload/v1701942785/avatar/it3nquretum21jkqv2ii.jpg'
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '400':
+          description: Image extension is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    example: Image extension is invalid
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  messages:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /upload/media_multiple:
+    post:
+      tags:
+        - upload
+      summary: Uploads multiple images
+      description: Allows for uploading multiple image files.
+      operationId: uploadMultipleImage
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Imformation image upload
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+        required: true
+      responses:
+        '200':
+          description: Upload multiple image successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Upload multiple image successfully
+                  data:
+                    type: object
+                    properties:
+                      avatarUrl:
+                        type: string
+                        example: 'http://res.cloudinary.com/de7hnxr0e/image/upload/v1701942785/avatar/it3nquretum21jkqv2ii.jpg'
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '400':
+          description: Image extension is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    example: Image extension is invalid
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
                   data:
                     type: string
                     example: ''
@@ -2704,9 +3297,6 @@ components:
           type: string
           example: 'string'
         address:
-          type: string
-          example: 'string'
-        website:
           type: string
           example: 'string'
       xml:

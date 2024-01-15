@@ -22,6 +22,11 @@ export type LoginResultType = {
   refresh_token: string
 }
 
+export type ResultVerifyForgotPasswordType = {
+  userExist: boolean
+  message: string
+}
+
 export type ResultCheckTokenType = {
   _id: ObjectId
   email: string
@@ -101,4 +106,13 @@ export type ParsedGetAllUserBlockedUrlQuery = {
   page?: string
   limit?: string
   created_at?: 'asc' | 'desc'
+}
+
+export type InsertBanner = {
+  slug: string
+  description?: string
+  url: string
+}
+export type UploadSingleType = {
+  imageUrl: string
 }
