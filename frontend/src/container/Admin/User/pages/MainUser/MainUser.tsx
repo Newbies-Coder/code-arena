@@ -8,14 +8,10 @@ export default function MainUser() {
   const navigate = useNavigate()
   return (
     <div className="px-10 py-5">
-      <h2 className="text-orange-400 text-3xl font-medium font-['Poppins'] leading-9">List of accounts</h2>
       <div className="flex justify-between mb-4 h-full">
         <RoleDropdown />
         <div className="flex items-end gap-8">
           <SearchKeyword />
-          <Button type="primary" className="bg-[#8001FF] h-12 w-36">
-            Delete
-          </Button>
           <Button type="primary" className="bg-[#8001FF] h-12 w-36" onClick={() => navigate('/admin/user/add')}>
             Add account
           </Button>
