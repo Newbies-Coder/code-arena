@@ -136,7 +136,7 @@ userRouter.delete('/unfollow/:id', wrapRequestHandler(requireLoginMiddleware), u
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.get('/profile/:id', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), userProfileValidator, wrapRequestHandler(userController.getUser))
+userRouter.get('/profile/:id', wrapRequestHandler(requireLoginMiddleware), userProfileValidator, wrapRequestHandler(userController.getUser))
 
 /**
  * Description: Get my profile

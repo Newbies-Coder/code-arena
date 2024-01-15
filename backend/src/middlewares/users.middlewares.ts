@@ -12,7 +12,7 @@ import { JsonWebTokenError } from 'jsonwebtoken'
 import { capitalize } from 'lodash'
 import { TokenPayloadType } from '~/@types/tokenPayload.type'
 import { ObjectId } from 'mongodb'
-import { isValidDateOfBirth, isValidEmail, isValidMulName, isValidNameCharater, isValidPassword, validateEmail, validatePhone } from '~/utils/helper'
+import { isValidDateOfBirth, isValidEmail, isValidGender, isValidMulName, isValidNameCharater, isValidPassword, validateEmail, validatePhone } from '~/utils/helper'
 
 export const registerValidator = validate(
   checkSchema(
@@ -910,6 +910,25 @@ export const updateProfileValidator = validate(
             return true
           }
         }
+      },
+      gender: {
+        trim: true,
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.GENDER_MUST_BE_STRING
+        },
+        custom: {
+          options: async (value) => {
+            const checkGender = isValidGender(value)
+            if (!checkGender) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.USER_PROFILE.GENDER_IS_INVALID
+              })
+            }
+            return true
+          }
+        },
+        optional: true
       },
       bio: {
         optional: true,
