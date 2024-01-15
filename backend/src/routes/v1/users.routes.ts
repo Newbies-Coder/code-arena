@@ -204,7 +204,7 @@ userRouter.post('/@me/blocked', wrapRequestHandler(requireLoginMiddleware), bloc
  * Header: { Authorization: Bearer <access_token> }
  **/
 
-userRouter.delete('/@me/blocked/:id', wrapRequestHandler(requireLoginMiddleware), objectIdValidator, wrapRequestHandler(userController.unBlockedUser))
+userRouter.delete('/@me/unblocked/:id', wrapRequestHandler(requireLoginMiddleware), objectIdValidator, wrapRequestHandler(userController.unBlockedUser))
 
 /**
  * Description: Make a list of your closest pals.

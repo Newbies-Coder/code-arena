@@ -63,7 +63,7 @@ export const DEV_ERRORS_MESSAGES = {
   GET_ALL_USER: 'Error retrieving users',
   DELETED_BANNER: 'Error delete banner',
   GET_ALL_BANNER: 'Error get all banners',
-  GET_BANNER_WITH_ID: 'Error get banners by banner_id',
+  GET_BANNER_WITH_USER_ID: 'Error get banners by user_id',
   INSERT_BANNER: 'Error inert banner',
   LOGOUT: 'Error occurred during logout.',
   CHANGE_PASSWORD: 'Error changing password',
@@ -351,10 +351,20 @@ export const VALIDATION_MESSAGES = {
     HEADER_AUTHORIZATION_IS_INVALID: 'Header authorization is invalid'
   },
   BANNER: {
-    ID_IS_REQUIRED: 'Banner id is required',
-    IMAGE_IS_REQUIRED: 'Banner image is required',
-    NOT_FOUND: 'Banner does not exists',
-    INVALID_ID: 'Invalid banner id',
+    BANNER_NOT_FOUND: 'Banner not found',
+    BANNER_ID_INVALID: 'Banner_id is invalid',
+    BANNER_ID_IS_REQUIRED: 'Banner_id is required',
+    SLUG_IS_REQUIRED: 'Slug is required',
+    SLUG_MUST_BE_STRING: 'Slug is must be string',
+    SLUG_LENGTH_IS_INVALID: 'Slug length must be from 10 to 50 characters',
+    INVALID_SLUG: 'Must be a valid slug',
+    SLUG_INCLUDES_MUL_WHITESPACE: 'Slug can not contains multiple consecutive whitespace',
+    DESCRIPTION_IS_REQUIRED: 'Description is required',
+    DESCRIPTION_MUST_BE_STRING: 'Description is must be string',
+    DESCRIPTION_LENGTH_IS_INVALID: 'Description length must be from 0 to 500 characters',
+    URL_IS_REQUIRED: 'Url image is required',
+    URL_MUST_BE_STRING: 'Url image is must be string',
+    VALID_URL_IMAGE: 'Valid url image and image extension',
     INVALID_SORT_ORDER: 'Invalid sorting order'
   }
 } as const

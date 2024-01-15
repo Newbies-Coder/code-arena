@@ -107,3 +107,9 @@ export type ParsedGetAllUserBlockedUrlQuery = {
   limit?: string
   created_at?: 'asc' | 'desc'
 }
+
+export type InsertBanner = {
+  slug: string
+  description?: string
+  url: string
+}

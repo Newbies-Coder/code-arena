@@ -185,15 +185,15 @@ export const paginationBannerValidators = validate(
         trim: true,
         optional: { options: { nullable: true } },
         isMongoId: {
-          errorMessage: VALIDATION_MESSAGES.BANNER.INVALID_ID
+          errorMessage: VALIDATION_MESSAGES.BANNER.BANNER_ID_INVALID
         },
         custom: {
           options: async (value) => {
             const banner = await databaseService.banners.findOne({ _id: new ObjectId(value) })
-            if (banner === null) {
+            if (!banner) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.CONFLICT,
-                message: VALIDATION_MESSAGES.BANNER.NOT_FOUND
+                message: VALIDATION_MESSAGES.BANNER.BANNER_NOT_FOUND
               })
             }
             return true

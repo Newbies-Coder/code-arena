@@ -155,7 +155,7 @@ paths:
                         example: Please fill all required details.
                       path:
                         type: string
-                        example: includes
+                        example: /auth/roles
                   dateTime:
                     type: string
                     format: date-time
@@ -216,7 +216,7 @@ paths:
                       $ref: '#/components/schemas/ProfileSchema'
                   page:
                     type: integer
-                  per_page:
+                  limit:
                     type: integer
                   total_page:
                     type: integer
@@ -1062,7 +1062,7 @@ paths:
                         example: Please fill all required details.
                       path:
                         type: string
-                        example: verify-otp
+                        example: /verify-forgot-password
                   dateTime:
                     type: string
                     format: date-time
@@ -1286,6 +1286,7 @@ paths:
           schema:
             type: string
             format: MongoId
+            example: 64be0ad2e43d2464394feedb
       security:
         - BearerAuth: []
       responses:
@@ -1377,6 +1378,7 @@ paths:
           schema:
             type: string
             format: MongoId
+            example: 64be0ad2e43d2464394feedb
       security:
         - BearerAuth: []
       responses:
@@ -1468,6 +1470,7 @@ paths:
           schema:
             type: string
             format: MongoId
+            example: 64be0ad2e43d2464394feedb
       security:
         - BearerAuth: []
       responses:
@@ -2056,12 +2059,12 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-  /users/@me/blocked/{id}:
+  /users/@me/unblocked/{id}:
     delete:
       tags:
         - user
-      summary: Delete blocked user list aka unblock
-      description: Delete blocked user list aka unblock
+      summary: Delete blocked user list unblock
+      description: Delete blocked user list unblock
       operationId: deleteBlockedUser
       parameters:
         - name: id
@@ -2572,7 +2575,7 @@ paths:
                       page:
                         type: integer
                         example: 1
-                      per_page:
+                      limit:
                         type: integer
                         example: 3
                       total_page:
@@ -2627,28 +2630,28 @@ paths:
       tags:
         - banner
       summary: Insert a new banner with images
-      description: Uploads multiple images for a new banner and inserts the banner details into the database.
+      description: Inserts the banner details into the database.
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               type: object
               properties:
                 slug:
                   type: string
                   description: The slug for the banner
-                image:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
-                  description: Multiple image files for the banner
+                description:
+                  type: string
+                  description: Description image for the banner
+                url:
+                  type: string
+                  description: Image for the banner
       security:
         - BearerAuth: []
       responses:
         '201':
-          description: Banner and images successfully uploaded
+          description: Insert banner successfully!
           content:
             application/json:
               schema:
@@ -2658,27 +2661,7 @@ paths:
                     type: integer
                     example: 201
                   message:
-                    example: Insetrt banner successfully
-                  data:
-                    type: array
-                    description: URLs of the uploaded images
-                    example: ['http://res.cloudinary.com/de7hnxr0e/image/upload/v1701942785/avatar/it3nquretum21jkqv2ii.jpg']
-                  dateTime:
-                    type: string
-                    format: date-time
-                    example: '2024-02-22T00:00:00.000Z'
-        '400':
-          description: Bad request (e.g., missing images or invalid data)
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    example: 400
-                  message:
-                    example: Bad request (e.g., missing images or invalid data)
+                    example: Insert banner successfully!
                   data:
                     type: string
                     example: ''
@@ -2701,6 +2684,31 @@ paths:
                   data:
                     type: string
                     example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '422':
+          description: Please provide complete input info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  message:
+                    example: Validation error
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Please fill all required details.
+                      path:
+                        type: string
+                        example: /banners
                   dateTime:
                     type: string
                     format: date-time
@@ -2760,7 +2768,7 @@ paths:
                       page:
                         type: integer
                         example: 1
-                      per_page:
+                      limit:
                         type: integer
                         example: 3
                       total_page:
@@ -2838,6 +2846,25 @@ paths:
                     example: 204
                   message:
                     example: Delete banners successfully
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
                   data:
                     type: string
                     example: ''
