@@ -380,7 +380,6 @@ export const verifyOTPValidator = validate(
             }
             const { expiredIn } = otpRecord
             const currentTime = new Date()
-            currentTime.setMinutes(currentTime.getMinutes() + 5) // Add 5 minutes
             if (currentTime > expiredIn) {
               throw new Error(VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_EXPIRED)
             }

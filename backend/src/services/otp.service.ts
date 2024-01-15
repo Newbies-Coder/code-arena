@@ -19,6 +19,7 @@ class OTPService {
     const result: GenerateOTPResult = { code: otpCode, email: email }
     return result
   }
+
   async isOtpExpired(otp: string): Promise<Boolean> {
     // Retrieve the OTP document by ID or some unique identifier
     console.log(hashOTP(otp))
