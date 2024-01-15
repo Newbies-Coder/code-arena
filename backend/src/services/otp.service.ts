@@ -12,8 +12,7 @@ class OTPService {
     const otpCode = generateOTPCode()
     const otp = new OTP({
       email,
-      otp: hashOTP(otpCode),
-      expiredIn: new Date()
+      otp: hashOTP(otpCode)
     })
 
     await databaseService.otps.insertOne(otp)
