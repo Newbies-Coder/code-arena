@@ -1,10 +1,11 @@
 import { ObjectId } from 'mongodb'
-import { UserGenderType, UserRole, UserVerifyStatus } from '~/constants/enums'
+import { TokenType, UserGenderType, UserRole, UserVerifyStatus } from '~/constants/enums'
 
 export type ResultRegisterType = {
   _id: string
   username: string
   email: string
+  age?: number
   access_token: string
   refresh_token: string
 }
@@ -13,13 +14,26 @@ export type ResultRefreshTokenType = {
   access_token: string
   refresh_token: string
 }
-
-export type ResultLoginType = {
+export type LoginResultType = {
   _id: string
-  fullName: string
   email: string
+  username: string
   access_token: string
   refresh_token: string
+}
+
+export type ResultVerifyForgotPasswordType = {
+  userExist: boolean
+  message: string
+}
+
+export type ResultCheckTokenType = {
+  _id: ObjectId
+  email: string
+  role: string
+  token_type: TokenType.AccessToken | TokenType.RefreshToken
+  iat: string
+  exp: string
 }
 
 export type UserResponseType = {
@@ -48,9 +62,57 @@ export type UploadAvatarType = {
   avatarUrl: string
 }
 
+export type UploadThumbnailType = {
+  thumbnailUrl: string
+}
+
 export type PaginationType<T> = {
   items: T[]
-  pageIndex: number
-  pageSize: number
-  totalRow: number
+  page: number
+  limit: number
+  total_pages: number
+  total_items: number
+}
+
+export type ParsedGetAllUserUrlQuery = {
+  page?: string
+  limit?: string
+  userId?: string
+  sort_by?: string
+  created_at?: string
+}
+
+export type ParsedGetUserByRoleUrlQuery = {
+  page?: string
+  limit?: string
+  includes?: UserRole.User | UserRole.Admin | UserRole.Moderator
+}
+
+export type ParsedGetAllUserFavoriteUrlQuery = {
+  page?: string
+  limit?: string
+  created_at?: string
+}
+
+export type ParsedBannerUrlQuery = {
+  page?: string
+  limit?: string
+  bannerId?: string
+  sort_by?: string
+  sort_order?: string
+}
+
+export type ParsedGetAllUserBlockedUrlQuery = {
+  page?: string
+  limit?: string
+  created_at?: 'asc' | 'desc'
+}
+
+export type InsertBanner = {
+  slug: string
+  description?: string
+  url: string
+}
+export type UploadSingleType = {
+  imageUrl: string
 }

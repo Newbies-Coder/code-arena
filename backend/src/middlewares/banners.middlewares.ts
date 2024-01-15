@@ -1,82 +1,93 @@
 import { checkSchema } from 'express-validator'
 import { StatusCodes } from 'http-status-codes'
-import { ObjectId } from 'mongodb'
 import { VALIDATION_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
-import userServices from '~/services/users.service'
-import validate from '~/utils/validate'
+import { isValidImageUrl, isValidMulName } from '~/utils/helper'
+import validate, { validateObjectId } from '~/utils/validate'
 
-export const getBannerWithIdValidator = validate(
+export const insertBannerValidators = validate(
   checkSchema(
     {
-      id: {
+      slug: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.BANNER.SLUG_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.BANNER.SLUG_MUST_BE_STRING
+        },
+        isLength: {
+          options: {
+            min: 10,
+            max: 50
+          },
+          errorMessage: VALIDATION_MESSAGES.BANNER.SLUG_LENGTH_IS_INVALID
+        },
         trim: true,
         custom: {
           options: async (value) => {
-            if (!ObjectId.isValid(value)) {
-              throw new Error(VALIDATION_MESSAGES.BANNER.BANNER_ID_INVALID)
+            const checkMulWhitespace = isValidMulName(value)
+            if (!checkMulWhitespace) {
+              throw new Error(VALIDATION_MESSAGES.BANNER.SLUG_INCLUDES_MUL_WHITESPACE)
             }
+            return true
+          }
+        }
+      },
+      description: {
+        trim: true,
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.BANNER.DESCRIPTION_MUST_BE_STRING
+        },
+        isLength: {
+          options: {
+            min: 0,
+            max: 500
+          },
+          errorMessage: VALIDATION_MESSAGES.BANNER.DESCRIPTION_LENGTH_IS_INVALID
+        },
+        optional: true
+      },
+      url: {
+        trim: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.BANNER.URL_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.BANNER.URL_MUST_BE_STRING
+        },
+        custom: {
+          options: async (value) => {
+            const isValidAvatar = isValidImageUrl(value)
+            if (!isValidAvatar) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.BANNER.VALID_URL_IMAGE
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
 
+export const checkParamValidator = validate(
+  checkSchema(
+    {
+      id: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.BANNER.BANNER_ID_IS_REQUIRED
+        },
+        custom: {
+          options: async (value: string) => {
+            validateObjectId(value, VALIDATION_MESSAGES.BANNER.BANNER_ID_INVALID)
             return true
           }
         }
       }
     },
     ['params']
-  )
-)
-
-export const getBannersWithUserIdValidator = validate(
-  checkSchema(
-    {
-      userId: {
-        trim: true,
-        optional: true,
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
-        },
-        isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
-        },
-        custom: {
-          options: async (value) => {
-            if (!ObjectId.isValid(value)) {
-              throw new Error(VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID)
-            }
-
-            const user = await userServices.isUserExist(value)
-
-            if (!user) {
-              throw new ErrorWithStatus({
-                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST,
-                statusCode: StatusCodes.NOT_FOUND
-              })
-            }
-
-            return true
-          }
-        }
-      },
-      pageIndex: {
-        trim: true,
-        isInt: {
-          options: {
-            min: 1
-          },
-          errorMessage: VALIDATION_MESSAGES.PAGINATION.PAGE_CAN_NOT_LESS_THAN_ZERO
-        }
-      },
-      pageSize: {
-        trim: true,
-        isInt: {
-          options: {
-            min: 1,
-            max: 100
-          },
-          errorMessage: VALIDATION_MESSAGES.PAGINATION.ITEMS_IS_NOT_IN_RANGE
-        }
-      }
-    },
-    ['query']
   )
 )

@@ -2,26 +2,25 @@ import { Router } from 'express'
 import { UserRole } from '~/constants/enums'
 import userController from '~/controllers/users.controllers'
 import { requireLoginMiddleware, requireRoleMiddleware } from '~/middlewares/auth.middlewares'
-import { objectIdValidator, paginationValidator } from '~/middlewares/commons.middleware'
+import { objectIdValidator, paginationBlockedUserValidators, paginationUserFavoriteValidators } from '~/middlewares/commons.middleware'
 import { singleImageUpload } from '~/middlewares/uploadFile.middleware'
 import {
+  blockedUserValidator,
   changePasswordValidator,
   checkTokenValidator,
-  deleteManyUserValidator,
-  insertMeBlockedUserValidator,
   favoriteValidator,
   followUserValidator,
   forgotPasswordValidator,
-  getAllUserValidator,
-  getUsersByRoleValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator,
   removeFavoriteValidator,
+  resendVerifyValidator,
   resetPasswordValidator,
   unfollowUserValidator,
   updateProfileValidator,
   userProfileValidator,
+  verifyForgotpasswordValidator,
   verifyOTPValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
@@ -30,28 +29,27 @@ const userRouter = Router()
 
 /**
  * Description: Login a user with email and password
- * Path: /login/password
+ * Path: /login
  * Method: POST
  * Body: { email: string, password: string }
  */
 userRouter.post('/login', loginValidator, wrapRequestHandler(userController.login))
 
 /**
- * Description. Register a new user
+ * Description: Register a new user
  * Path: /register
  * Method: POST
- * Body: { name: string, email: string, password: string, confirm_password: string, date_of_birth: ISO8601 }
+ * Body: { name: string, email: string, password: string, confirm_password: string, date_of_birth: string }
  */
 userRouter.post('/register', registerValidator, wrapRequestHandler(userController.register))
 
 /**
- * Description. Logout a user
+ * Description: Logout a user
  * Path: /logout
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
  * Body: { refresh_token: string }
  */
-
 userRouter.post('/logout', wrapRequestHandler(requireLoginMiddleware), refreshTokenValidator, wrapRequestHandler(userController.logout))
 
 /**
@@ -71,13 +69,13 @@ userRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(user
 userRouter.post('/verify-otp', verifyOTPValidator, wrapRequestHandler(userController.verifyOTP))
 
 /**
- * Description. Verify otp when user client click on the button resend otp
+ * Description. Verify otp when user client click on the button resend verify otp
  * Path: /resend-verify-email
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
  * Body: {}
  */
-userRouter.post('/resend-verify-otp', wrapRequestHandler(userController.resendVerifyOTP))
+userRouter.post('/resend-verify-otp', resendVerifyValidator, wrapRequestHandler(userController.resendVerifyOTP))
 
 /**
  * Description. Submit email to reset password, send email to user
@@ -86,6 +84,14 @@ userRouter.post('/resend-verify-otp', wrapRequestHandler(userController.resendVe
  * Body: {email: string}
  */
 userRouter.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(userController.forgotPassword))
+
+/**
+ * Description. Verify link in email to reset password
+ * Path: /verify-forgot-password
+ * Method: POST
+ * Body: {forgot_password_token: string}
+ */
+userRouter.post('/verify-forgot-password', verifyForgotpasswordValidator, wrapRequestHandler(userController.verifyForgotPassword))
 
 /**
  * Description: Reset password
@@ -107,41 +113,21 @@ userRouter.post('/change-password', wrapRequestHandler(requireLoginMiddleware), 
 
 /**
  * Description: Follow someone
- * Path: /follow
+ * Path: /follow/:id
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
- * Body: { followed_user_id: string }
  */
 
 userRouter.post('/follow/:id', wrapRequestHandler(requireLoginMiddleware), followUserValidator, wrapRequestHandler(userController.follow))
 
 /**
- * Description: unfollow someone
- * Path: /follow/user_id
+ * Description: Unfollow someone
+ * Path: /follow/:id
  * Method: DELETE
  * Header: { Authorization: Bearer <access_token> }
  */
 
 userRouter.delete('/unfollow/:id', wrapRequestHandler(requireLoginMiddleware), unfollowUserValidator, wrapRequestHandler(userController.unfollow))
-
-/**
- * Description: Get all user by admin
- * Path: '/'
- * Method: GET
- * Header: { Authorization: Bearer <access_token> }
- * Params: { pageIndex: number, pageSize: number, query: string }
- */
-
-userRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), paginationValidator, getAllUserValidator, wrapRequestHandler(userController.getAllUser))
-
-/**
- * Description: Delete user by admin
- * Path: '/:id'
- * Method: DELETE
- * Header: { Authorization: Bearer <access_token> }
- */
-
-userRouter.delete('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), deleteManyUserValidator, wrapRequestHandler(userController.deleteManyUser))
 
 /**
  * Description: Get user profile
@@ -173,62 +159,52 @@ userRouter.put('/@me/profile', wrapRequestHandler(requireLoginMiddleware), updat
 
 /**
  * Description: Upload avatar
- * Path: /
- * Method: POST
- * Description: Upload avatar
  * Path: /@me/avatar
  * Method: POST
- * Body:
+ * Header: { Authorization: Bearer <access_token> }
+ * Body: {image: file}
  */
 
-userRouter.post('/@me/avatar', wrapRequestHandler(requireLoginMiddleware), singleImageUpload, wrapRequestHandler(userController.updateMeAvatar))
+userRouter.post('/@me/avatar', wrapRequestHandler(requireLoginMiddleware), singleImageUpload, wrapRequestHandler(userController.uploadAvatar))
 
 /**
  * Description: Upload thumbnail
  * Path: /@me/thumbnail
  * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ * Body: {image: file}
  */
 
 userRouter.post('/@me/thumbnail', wrapRequestHandler(requireLoginMiddleware), singleImageUpload, wrapRequestHandler(userController.uploadThumbnail))
 
 /**
  * Description: Get blocked user list
- * Path: /@me/profile
+ * Path: /@me/blocked
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
- * Params: { pageIndex: number, pageSize: number }
+ * Params: { page: number, limit: number , created_at: asc | desc}
  **/
 
-userRouter.get('/@me/blocked', paginationValidator, wrapRequestHandler(requireLoginMiddleware), wrapRequestHandler(userController.getMeBlockedUsers))
+userRouter.get('/@me/blocked', wrapRequestHandler(requireLoginMiddleware), paginationBlockedUserValidators, wrapRequestHandler(userController.getMeBlockedUsers))
 
 /**
  * Description: Insert blocked user list
- * Path: /@me/profile
+ * Path: /@me/blocked
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
+ * Body: {}
  **/
 
-userRouter.post('/@me/blocked', wrapRequestHandler(requireLoginMiddleware), insertMeBlockedUserValidator, wrapRequestHandler(userController.insertMeBlockedUser))
+userRouter.post('/@me/blocked', wrapRequestHandler(requireLoginMiddleware), blockedUserValidator, wrapRequestHandler(userController.blockedUser))
 
 /**
- * Description: Delete blocked user list aka unblock
- * Path: /@me/profile
+ * Description: Unblocked user list aka unblock
+ * Path: /@me/blocked/:id
  * Method: DELETE
  * Header: { Authorization: Bearer <access_token> }
  **/
 
-userRouter.delete('/@me/blocked/:id', wrapRequestHandler(requireLoginMiddleware), objectIdValidator, wrapRequestHandler(userController.deleteMeBlockedUser))
-
-/**
- * Description: Get user by role
- * Path: /roles
- * Method: GET
- * Header: { Authorization: Bearer <access_token> }
- * query: { includes: string }// user | admin | moderator
- * Note: Feature for ADMIN
- */
-
-userRouter.get('/roles', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), getUsersByRoleValidator, wrapRequestHandler(userController.getUsersByRole))
+userRouter.delete('/@me/unblocked/:id', wrapRequestHandler(requireLoginMiddleware), objectIdValidator, wrapRequestHandler(userController.unBlockedUser))
 
 /**
  * Description: Make a list of your closest pals.
@@ -237,7 +213,7 @@ userRouter.get('/roles', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin
  * Header: { Authorization: Bearer <access_token> }
  */
 
-userRouter.get('/favorite', wrapRequestHandler(requireLoginMiddleware), wrapRequestHandler(userController.favorite))
+userRouter.get('/favorite', wrapRequestHandler(requireLoginMiddleware), paginationUserFavoriteValidators, wrapRequestHandler(userController.favorite))
 
 /**
  * Description: Add persons to your list of close friends.

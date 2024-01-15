@@ -12,43 +12,56 @@ import { JsonWebTokenError } from 'jsonwebtoken'
 import { capitalize } from 'lodash'
 import { TokenPayloadType } from '~/@types/tokenPayload.type'
 import { ObjectId } from 'mongodb'
-import { UserRole } from '~/constants/enums'
+import { isValidDateOfBirth, isValidEmail, isValidGender, isValidMulName, isValidNameCharater, isValidPassword, validateEmail, validatePhone } from '~/utils/helper'
 
-// Validation register feature
 export const registerValidator = validate(
   checkSchema(
     {
       username: {
         notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.NAME_IS_REQUIRED
+          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.USERNAME_IS_REQUIRED
         },
         isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.NAME_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.USERNAME_MUST_BE_A_STRING
         },
         isLength: {
           options: {
-            min: 4,
-            max: 20
+            min: 2,
+            max: 30
           },
-          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.NAME_LENGTH_MUST_BE_FROM_4_TO_20
+          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.USERNAME_LENGTH_MUST_BE_FROM_2_TO_30
         },
-        trim: true
+        trim: true,
+        custom: {
+          options: async (value) => {
+            const checkValidCharater = isValidNameCharater(value)
+            const checkMulWhitespace = isValidMulName(value)
+            if (!checkValidCharater) {
+              throw new Error(VALIDATION_MESSAGES.USER.REGISTER.INVALID_USERNAME)
+            }
+            if (!checkMulWhitespace) {
+              throw new Error(VALIDATION_MESSAGES.USER.REGISTER.USERNAME_INCLUDES_MUL_WHITESPACE)
+            }
+            return true
+          }
+        }
       },
       email: {
         notEmpty: {
           errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_REQUIRED
         },
-        isEmail: {
-          errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_MUST_BE_A_STRING
-        },
         trim: true,
         custom: {
           options: async (value) => {
-            const isExistEmail = await userServices.validateEmailAccessibility(value)
-            if (isExistEmail) {
+            const { valid, message } = validateEmail(value)
+            if (!valid) {
+              throw new Error(message)
+            }
+            const user = await userServices.findUserByEmail(value)
+            if (user) {
               throw new ErrorWithStatus({
-                statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
+                statusCode: StatusCodes.CONFLICT,
+                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ALREADY_EXISTS
               })
             }
             return true
@@ -83,13 +96,13 @@ export const registerValidator = validate(
         },
         custom: {
           options: (value: string) => {
-            if (value.includes(' ')) {
+            const validPasswordEmoji = isValidPassword(value)
+            if (!validPasswordEmoji) {
               throw new ErrorWithStatus({
-                message: VALIDATION_MESSAGES.USER.REGISTER.PASSWORD_CAN_NOT_CONTAIN_SPACE,
-                statusCode: StatusCodes.BAD_REQUEST
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_CONTAINS_EMOJI
               })
             }
-
             return true
           }
         }
@@ -105,6 +118,13 @@ export const registerValidator = validate(
         trim: true,
         custom: {
           options: (value, { req }) => {
+            const validPasswordEmoji = isValidPassword(value)
+            if (!validPasswordEmoji) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_CONTAINS_EMOJI
+              })
+            }
             if (value !== req.body.password) {
               throw new Error(VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD)
             }
@@ -118,13 +138,32 @@ export const registerValidator = validate(
           },
           errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16
         }
+      },
+      date_of_birth: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.DATE_OF_BIRTH_IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.REGISTER.DATE_OF_BIRTH_MUST_BE_A_STRING
+        },
+        custom: {
+          options: (value: string) => {
+            const validDateOfBirth = isValidDateOfBirth(value)
+            if (!validDateOfBirth) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.REGISTER.DATE_OF_BIRTH_ERROR_FORMAT
+              })
+            }
+            return true
+          }
+        }
       }
     },
     ['body']
   )
 )
 
-// Validation login feature
 export const loginValidator = validate(
   checkSchema(
     {
@@ -138,13 +177,14 @@ export const loginValidator = validate(
         trim: true,
         custom: {
           options: async (value) => {
-            const isExistEmail = await userServices.validateEmailAccessibility(value)
-            if (!isExistEmail) {
+            const validEmail = isValidEmail(value)
+            if (!validEmail) {
               throw new ErrorWithStatus({
-                statusCode: StatusCodes.NOT_FOUND,
-                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.EMAIL.VALID_EMAIL
               })
             }
+            await userServices.validateAccountAccessibility(value)
             return true
           }
         }
@@ -154,7 +194,7 @@ export const loginValidator = validate(
           errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_REQUIRED
         },
         isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_A_STRING
         },
         isStrongPassword: {
           options: {
@@ -164,24 +204,23 @@ export const loginValidator = validate(
             minNumbers: 1,
             minSymbols: 1
           },
-          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_STRONG
         },
         trim: true,
-        escape: true,
         isLength: {
-          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT,
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16,
           options: {
             min: 8,
             max: 16
           }
         },
         custom: {
-          options: async (value, { req }) => {
-            const isExistPassword = await userServices.validatePassword(req.body.email, value)
-            if (isExistPassword) {
+          options: async (value) => {
+            const validPasswordEmoji = isValidPassword(value)
+            if (!validPasswordEmoji) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT
+                message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_CONTAINS_EMOJI
               })
             }
             return true
@@ -193,7 +232,45 @@ export const loginValidator = validate(
   )
 )
 
-// Validation forgot password feature
+export const refreshTokenValidator = validate(
+  checkSchema(
+    {
+      refresh_token: {
+        trim: true,
+        custom: {
+          options: async (value) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.UNAUTHORIZED,
+                message: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.REFRESH_TOKEN_IS_REQUIRED
+              })
+            }
+            try {
+              const result = await databaseService.refreshTokens.findOne({ token: value })
+              if (!result) {
+                throw new ErrorWithStatus({
+                  message: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.REFRESH_TOKEN_IS_NOT_EXIST,
+                  statusCode: StatusCodes.UNAUTHORIZED
+                })
+              }
+            } catch (error) {
+              if (error instanceof JsonWebTokenError) {
+                throw new ErrorWithStatus({
+                  message: capitalize(error.message),
+                  statusCode: StatusCodes.UNAUTHORIZED
+                })
+              }
+              throw error
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
+
 export const forgotPasswordValidator = validate(
   checkSchema(
     {
@@ -207,14 +284,63 @@ export const forgotPasswordValidator = validate(
         trim: true,
         custom: {
           options: async (value) => {
-            const isExistEmail = await userServices.validateEmailAccessibility(value)
-            if (!isExistEmail) {
+            const validEmail = isValidEmail(value)
+            if (!validEmail) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_NOT_EXIT
+                message: VALIDATION_MESSAGES.USER.EMAIL.VALID_EMAIL
+              })
+            }
+            const user = await userServices.findUserByEmail(value)
+            if (user === null) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
               })
             }
             await userServices.validateAccountAccessibility(value)
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
+
+export const verifyForgotpasswordValidator = validate(
+  checkSchema(
+    {
+      forgot_password_token: {
+        trim: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.VERIFY_FORGOT_PASSWORD_TOKEN.IS_REQUIRED
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.VERIFY_FORGOT_PASSWORD_TOKEN.MUST_BE_A_STRING
+        },
+        isLength: {
+          options: {
+            min: 6,
+            max: 6
+          },
+          errorMessage: VALIDATION_MESSAGES.USER.VERIFY_FORGOT_PASSWORD_TOKEN.LENGTH_MUST_BE_6
+        },
+        custom: {
+          options: async (value) => {
+            const checkOTP = isNaN(value)
+            if (checkOTP) {
+              throw new Error(VALIDATION_MESSAGES.USER.VERIFY_FORGOT_PASSWORD_TOKEN.IS_NUMBERIC)
+            }
+            const otpRecord = await OPTService.findOTP(value)
+            if (!otpRecord) {
+              throw new Error(VALIDATION_MESSAGES.USER.VERIFY_FORGOT_PASSWORD_TOKEN.IS_NOT_EXIST)
+            }
+            const { expiredIn } = otpRecord
+            const currentTime = new Date()
+            if (currentTime > expiredIn) {
+              throw new Error(VALIDATION_MESSAGES.USER.VERIFY_FORGOT_PASSWORD_TOKEN.IS_EXPIRED)
+            }
             return true
           }
         }
@@ -244,18 +370,19 @@ export const verifyOTPValidator = validate(
         },
         custom: {
           options: async (value) => {
-            const otp = await OPTService.findOTP(value)
-            if (!otp) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.UNAUTHORIZED,
-                message: VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_NOT_EXIST
-              })
+            const checkOTP = isNaN(value)
+            if (checkOTP) {
+              throw new Error(VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_NUMBERIC)
             }
-
-            if (otp.expiredIn > new Date()) {
+            const otpRecord = await OPTService.findOTP(value)
+            if (!otpRecord) {
+              throw new Error(VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_NOT_EXIST)
+            }
+            const { expiredIn } = otpRecord
+            const currentTime = new Date()
+            if (currentTime > expiredIn) {
               throw new Error(VALIDATION_MESSAGES.USER.VERIFY_OTP.OTP_IS_EXPIRED)
             }
-
             return true
           }
         }
@@ -265,36 +392,29 @@ export const verifyOTPValidator = validate(
   )
 )
 
-export const refreshTokenValidator = validate(
+export const resendVerifyValidator = validate(
   checkSchema(
     {
-      refresh_token: {
+      email: {
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_IS_REQUIRED
+        },
         trim: true,
         custom: {
           options: async (value) => {
-            if (!value) {
+            const validEmail = isValidEmail(value)
+            if (!validEmail) {
               throw new ErrorWithStatus({
-                statusCode: StatusCodes.UNAUTHORIZED,
-                message: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.REFRESH_TOKEN_IS_REQUIRED
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.EMAIL.VALID_EMAIL
               })
             }
-
-            try {
-              const result = await databaseService.refreshTokens.findOne({ token: value })
-              if (!result) {
-                throw new ErrorWithStatus({
-                  message: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.REFRESH_TOKEN_IS_NOT_EXIST,
-                  statusCode: StatusCodes.UNAUTHORIZED
-                })
-              }
-            } catch (error) {
-              if (error instanceof JsonWebTokenError) {
-                throw new ErrorWithStatus({
-                  message: capitalize(error.message),
-                  statusCode: StatusCodes.UNAUTHORIZED
-                })
-              }
-              throw error
+            const user = await userServices.findUserByEmail(value)
+            if (user === null) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
+              })
             }
             return true
           }
@@ -302,20 +422,6 @@ export const refreshTokenValidator = validate(
       }
     },
     ['body']
-  )
-)
-
-export const getAllUserValidator = validate(
-  checkSchema(
-    {
-      query: {
-        trim: true,
-        isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USERNAME_MUST_BE_STRING
-        }
-      }
-    },
-    ['query']
   )
 )
 
@@ -350,56 +456,6 @@ export const deleteManyUserValidator = validate(
   )
 )
 
-export const insertMeBlockedUserValidator = validate(
-  checkSchema(
-    {
-      blockedId: {
-        trim: true,
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
-        },
-        isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
-        },
-        custom: {
-          options: async (value, { req }) => {
-            if (!ObjectId.isValid(value)) {
-              throw new ErrorWithStatus({
-                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID,
-                statusCode: StatusCodes.BAD_REQUEST
-              })
-            }
-
-            const user = await userServices.isUserExist(value)
-
-            if (!user) {
-              throw new ErrorWithStatus({
-                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST,
-                statusCode: StatusCodes.NOT_FOUND
-              })
-            }
-
-            const blocked = await databaseService.blocked_users.findOne({
-              blockerId: new ObjectId(req.user._id),
-              blockedId: new ObjectId(value)
-            })
-
-            if (blocked) {
-              throw new ErrorWithStatus({
-                message: VALIDATION_MESSAGES.USER.BLOCK.USER_ALREADY_BLOCKED,
-                statusCode: StatusCodes.CONFLICT
-              })
-            }
-
-            return true
-          }
-        }
-      }
-    },
-    ['body']
-  )
-)
-
 export const changePasswordValidator = validate(
   checkSchema(
     {
@@ -431,8 +487,8 @@ export const changePasswordValidator = validate(
         },
         custom: {
           options: async (value, { req }) => {
-            const isExistPassword = await userServices.validatePassword(req.user.email, value)
-            if (isExistPassword) {
+            const hasUserExist = await userServices.validateEmailAndPasswordExist(req.user.email, value)
+            if (!hasUserExist) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.NOT_FOUND,
                 message: VALIDATION_MESSAGES.USER.PASSWORD.OLD_PASSWORD_IS_INCORRECT
@@ -470,8 +526,16 @@ export const changePasswordValidator = validate(
         },
         custom: {
           options: async (value, { req }) => {
+            const validPasswordEmoji = isValidPassword(value)
+
             if (value === req.body.old_password) {
               throw new Error(VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_NOT_SAME_OLD_PASSWORD)
+            }
+            if (!validPasswordEmoji) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_CONTAINS_EMOJI
+              })
             }
             return true
           }
@@ -530,8 +594,15 @@ export const resetPasswordValidator = validate(
         trim: true,
         custom: {
           options: async (value) => {
-            const isExistEmail = await userServices.validateEmailAccessibility(value)
-            if (!isExistEmail) {
+            const validEmail = isValidEmail(value)
+            if (!validEmail) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.EMAIL.VALID_EMAIL
+              })
+            }
+            const user = await userServices.findUserByEmail(value)
+            if (user === null) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.NOT_FOUND,
                 message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
@@ -560,6 +631,18 @@ export const resetPasswordValidator = validate(
             minSymbols: 1
           },
           errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_STRONG
+        },
+        custom: {
+          options: async (value) => {
+            const validPasswordEmoji = isValidPassword(value)
+            if (!validPasswordEmoji) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_CONTAINS_EMOJI
+              })
+            }
+            return true
+          }
         },
         isLength: {
           options: {
@@ -609,82 +692,6 @@ export const resetPasswordValidator = validate(
   )
 )
 
-export const followUserValidator = validate(
-  checkSchema(
-    {
-      id: {
-        trim: true,
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
-        },
-        isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
-        },
-        custom: {
-          options: async (value) => {
-            if (!ObjectId.isValid(value)) {
-              throw new ErrorWithStatus({
-                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID,
-                statusCode: StatusCodes.BAD_REQUEST
-              })
-            }
-
-            const user = await userServices.isUserExist(value)
-
-            if (!user) {
-              throw new ErrorWithStatus({
-                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST,
-                statusCode: StatusCodes.NOT_FOUND
-              })
-            }
-
-            return true
-          }
-        }
-      }
-    },
-    ['params']
-  )
-)
-export const userProfileValidator = validate(
-  checkSchema(
-    {
-      id: {
-        trim: true,
-        escape: true,
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_REQUIRED
-        },
-        custom: {
-          options: async (value) => {
-            if (!ObjectId.isValid(value)) {
-              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_INVALID)
-            }
-          }
-        }
-      }
-    },
-    ['params']
-  )
-)
-
-export const unfollowUserValidator = validate(
-  checkSchema(
-    {
-      id: {
-        trim: true,
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
-        },
-        isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
-        }
-      }
-    },
-    ['params']
-  )
-)
-
 export const checkTokenValidator = validate(
   checkSchema(
     {
@@ -724,6 +731,98 @@ export const checkTokenValidator = validate(
   )
 )
 
+export const followUserValidator = validate(
+  checkSchema(
+    {
+      id: {
+        trim: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
+        },
+        custom: {
+          options: async (value) => {
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID
+              })
+            }
+            const user = await userServices.isUserExist(value)
+            if (!user) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
+export const unfollowUserValidator = validate(
+  checkSchema(
+    {
+      id: {
+        trim: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
+        },
+        custom: {
+          options: async (value) => {
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID
+              })
+            }
+            const user = await userServices.isUserExist(value)
+            if (!user) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
+export const userProfileValidator = validate(
+  checkSchema(
+    {
+      id: {
+        trim: true,
+        escape: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_REQUIRED
+        },
+        custom: {
+          options: async (value) => {
+            if (!ObjectId.isValid(value)) {
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_INVALID)
+            }
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
 export const updateProfileValidator = validate(
   checkSchema(
     {
@@ -732,42 +831,46 @@ export const updateProfileValidator = validate(
         isString: {
           errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.FULL_NAME_MUST_BE_A_STRING
         },
+        trim: true,
         isLength: {
           options: {
             min: 4,
             max: 50
           },
           errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.FULL_NAME_MAX_LENGTH_IS_50
+        },
+        custom: {
+          options: async (value) => {
+            const checkValidCharater = isValidNameCharater(value)
+            if (!checkValidCharater) {
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.INVALID_FULLNAME)
+            }
+            return true
+          }
         }
       },
       username: {
         optional: true,
         isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.FULL_NAME_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USERNAME_IS_REQUIRED
         },
         isLength: {
           options: {
-            min: 4,
-            max: 20
+            min: 2,
+            max: 30
           },
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_NAME_LENGTH_MUST_BE_FROM_4_TO_20
-        },
-        trim: true
-      },
-      email: {
-        optional: true,
-        isEmail: {
-          errorMessage: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USERNAME_LENGTH_MUST_BE_FROM_2_TO_30
         },
         trim: true,
         custom: {
           options: async (value) => {
-            const isExistEmail = await userServices.validateEmailAccessibility(value)
-            if (isExistEmail) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.EMAIL.EMAIL_ACCESSABILITY
-              })
+            const checkValidCharater = isValidNameCharater(value)
+            const checkMulWhitespace = isValidMulName(value)
+            if (!checkValidCharater) {
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.INVALID_USERNAME)
+            }
+            if (!checkMulWhitespace) {
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.USERNAME_INCLUDES_MUL_WHITESPACE)
             }
             return true
           }
@@ -775,27 +878,57 @@ export const updateProfileValidator = validate(
       },
       phone: {
         optional: true,
+        trim: true,
         isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.PHONE_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.PHONE_MUST_BE_STRING
         },
-        isLength: {
-          options: { min: 10, max: 10 },
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.PHONE_LENGTH_MUST_BE_10_CHARACTER
-        },
-        matches: {
-          options: /^[0-9]+$/,
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.PHONE_LENGTH_MUST_BE_STRING_NUMBER
+        custom: {
+          options: async (value) => {
+            const isValidPhone = validatePhone(value)
+            if (!isValidPhone) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.USER_PROFILE.PHONE_IS_INVALID
+              })
+            }
+            return true
+          }
         }
       },
       date_of_birth: {
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.DATE_OF_BIRTH_MUST_BE_A_STRING
+        },
         optional: true,
-        isISO8601: {
-          options: {
-            strict: true,
-            strictSeparator: true
-          },
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.DATE_OF_BIRTH_IS_ISO8601
+        trim: true,
+        custom: {
+          options: (value) => {
+            const val = isValidDateOfBirth(value)
+            if (!val) {
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.DATE_OF_BIRTH_ERROR_FORMAT)
+            }
+            return true
+          }
         }
+      },
+      gender: {
+        trim: true,
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.GENDER_MUST_BE_STRING
+        },
+        custom: {
+          options: async (value) => {
+            const checkGender = isValidGender(value)
+            if (!checkGender) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.USER_PROFILE.GENDER_IS_INVALID
+              })
+            }
+            return true
+          }
+        },
+        optional: true
       },
       bio: {
         optional: true,
@@ -804,46 +937,26 @@ export const updateProfileValidator = validate(
         },
         isLength: {
           options: {
-            max: 150
+            max: 500
           },
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.BIO_MAX_LENGTH_IS_150
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.BIO_MAX_LENGTH_IS_500
         }
       },
       address: {
         optional: true,
         isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.FULL_NAME_MUST_BE_A_STRING
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.ADDRESS_MUST_BE_STRING
         },
         isLength: {
           options: {
+            min: 10,
             max: 255
           },
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_NAME_LENGTH_MUST_BE_FROM_4_TO_20
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.ADDRESS_LENGTH_IS_VALID
         }
       }
     },
     ['body']
-  )
-)
-
-export const getUsersByRoleValidator = validate(
-  checkSchema(
-    {
-      includes: {
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.GET_USERS_BY_ROLE.ROLE_IS_REQUIRED
-        },
-        custom: {
-          options: (value: string) => {
-            if (!Object.values(UserRole).includes((value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()) as UserRole)) {
-              throw new Error(VALIDATION_MESSAGES.USER.GET_USERS_BY_ROLE.ROLE_IS_INVALID)
-            }
-            return true
-          }
-        }
-      }
-    },
-    ['query']
   )
 )
 
@@ -860,18 +973,19 @@ export const favoriteValidator = validate(
         custom: {
           options: async (value, { req }) => {
             if (!ObjectId.isValid(value)) {
-              throw Error(VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID)
+              throw new ErrorWithStatus({ statusCode: StatusCodes.BAD_REQUEST, message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID })
             }
-            const user = await userServices.getUserByID(new ObjectId(value))
-            if (!user) {
-              throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST })
+            const user = await databaseService.users.findOne({ _id: new ObjectId(value) })
+            if (user === null) {
+              throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ID_IS_EXIT })
             }
-            if (value === req.user._id) {
-              throw Error(VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ID_NOT_USER_ID)
+            if (value === req.user?._id) {
+              throw new ErrorWithStatus({ statusCode: StatusCodes.FORBIDDEN, message: VALIDATION_MESSAGES.USER.FAVORITE.USER_FAVOTITE_THEMSELVES })
             }
-            const isExist = await userServices.isExitInCloseFriends(new ObjectId(req.user._id), new ObjectId(value))
-            if (isExist) {
-              throw Error(VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ID_IS_EXIT)
+            const isFriendAlreadyFavorites = await databaseService.closeFriends.findOne({ userId: new ObjectId(req.user?._id), friendId: new ObjectId(value) })
+
+            if (isFriendAlreadyFavorites) {
+              throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ALREADY_FAVORITE })
             }
             return true
           }
@@ -895,14 +1009,21 @@ export const removeFavoriteValidator = validate(
         custom: {
           options: async (value, { req }) => {
             if (!ObjectId.isValid(value)) {
-              throw Error(VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID)
+              throw new ErrorWithStatus({ statusCode: StatusCodes.BAD_REQUEST, message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID })
             }
-            const user = await userServices.isExitInCloseFriends(new ObjectId(req.user._id), new ObjectId(value))
+            const user = await databaseService.users.findOne({ _id: new ObjectId(value) })
             if (!user) {
-              throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.FAVORITE.FAVORITE_NOT_EXIT })
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
+              })
+            }
+            const isFriendAlreadyFavorites = await databaseService.closeFriends.findOne({ userId: new ObjectId(req.user?._id), friendId: new ObjectId(value) })
+            if (!isFriendAlreadyFavorites) {
+              throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_NOT_ALREADY_FAVORITE_USER })
             }
             if (value === req.user._id) {
-              throw Error(VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ID_NOT_USER_ID)
+              throw new ErrorWithStatus({ statusCode: StatusCodes.FORBIDDEN, message: VALIDATION_MESSAGES.USER.FAVORITE.USER_FAVOTITE_REMOVE_THEMSELVES })
             }
             return true
           }
@@ -910,5 +1031,40 @@ export const removeFavoriteValidator = validate(
       }
     },
     ['params']
+  )
+)
+
+export const blockedUserValidator = validate(
+  checkSchema(
+    {
+      blockedId: {
+        trim: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
+        },
+        custom: {
+          options: async (value) => {
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID
+              })
+            }
+            const user = await userServices.isUserExist(value)
+            if (!user) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
   )
 )

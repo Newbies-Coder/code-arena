@@ -10,6 +10,14 @@ import { Request, Response } from 'express'
 import { AuthProvider } from '~/@types/auth.type'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import { Strategy as LinkedinStrategy } from 'passport-linkedin-oauth2'
+import { ParsedQs } from 'qs'
+import { ErrorWithStatus } from '~/models/errors/Errors.schema'
+import { StatusCodes } from 'http-status-codes'
+import { DEV_ERRORS_MESSAGES, VALIDATION_MESSAGES } from '~/constants/message'
+import { ObjectId } from 'mongodb'
+import { PaginationType, ParsedGetAllUserUrlQuery, ParsedGetUserByRoleUrlQuery } from '~/@types/reponse.type'
+import _ from 'lodash'
+import { UserRole } from '~/constants/enums'
 
 class AuthService {
   init() {
@@ -135,9 +143,35 @@ class AuthService {
       )
     )
   }
+  private extractIds(id: unknown): ObjectId[] {
+    if (Array.isArray(id)) {
+      return id.map((item) => new ObjectId(item))
+    } else if (typeof id === 'string') {
+      return [new ObjectId(id)]
+    } else {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.NOT_FOUND,
+        message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
+      })
+    }
+  }
+
+  private getRoleFromPayload(roleString: string): UserRole {
+    switch (roleString) {
+      case 'user':
+        return UserRole.User
+      case 'admin':
+        return UserRole.Admin
+      case 'moderator':
+        return UserRole.Moderator
+      default:
+        return UserRole.User
+    }
+  }
+
   async callback(provider: AuthProvider, req: Request, res: Response) {
-    const { _id, role, email } = req.user
-    const refresh_token = await userServices.signRefreshToken(_id.toString(), email, role)
+    const { _id, role, email, username } = req.user
+    const refresh_token = await userServices.signRefreshToken(_id.toString(), email, username, role)
     // if user is logged in but still login again
     await databaseService.refreshTokens.deleteOne({ user_id: _id })
     await databaseService.refreshTokens.insertOne(
@@ -148,6 +182,86 @@ class AuthService {
     )
 
     res.redirect(`${env.url.auth_success}?provider=${provider}&refresh_token=${refresh_token}`)
+  }
+
+  async getAllUser(payload: ParsedGetAllUserUrlQuery): Promise<PaginationType<Partial<User>>> {
+    try {
+      const page = Number(payload.page) || 1
+      const limit = Number(payload.limit) || 10
+      const userId = payload.userId ? new ObjectId(payload.userId) : null
+      const sort_by = payload.sort_by || '_id'
+      const sortByCreatedAt = payload.created_at === 'desc' ? -1 : 1
+
+      let query = userId ? { _id: userId } : {}
+
+      const items = await databaseService.users
+        .find(query)
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .sort({ [sort_by]: sortByCreatedAt })
+        .toArray()
+      const total_items = await databaseService.users.countDocuments(query)
+      const total_pages = Math.floor((total_items + limit - 1) / limit)
+      const filteredUsers = _.map(items, (v) => _.omit(v, ['password', 'created_at', 'updated_at', 'email', 'phone', 'forgot_password_token', 'verify', '_destroy', 'password_change_at']))
+
+      const content: PaginationType<Partial<User>> = {
+        items: filteredUsers,
+        page,
+        limit,
+        total_pages,
+        total_items
+      }
+      return content
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.GET_ALL_USER
+      })
+    }
+  }
+
+  async getUsersByRole(payload: ParsedGetUserByRoleUrlQuery): Promise<PaginationType<Partial<User>>> {
+    try {
+      const page = Number(payload.page) || 1
+      const limit = Number(payload.limit) || 10
+      const role = this.getRoleFromPayload(payload.includes)
+
+      const items = await databaseService.users
+        .find({ role })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .toArray()
+
+      const total_items = await databaseService.users.countDocuments()
+      const total_pages = Math.floor((total_items + limit - 1) / limit)
+      const filteredUsers = _.map(items, (v) => _.omit(v, ['password']))
+
+      const content: PaginationType<Partial<User>> = {
+        items: filteredUsers,
+        page,
+        limit,
+        total_pages,
+        total_items
+      }
+      return content
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.GET_USER_BY_ROLE
+      })
+    }
+  }
+
+  async deleteManyUsers(payload: ParsedQs): Promise<void> {
+    try {
+      const deleteIds = this.extractIds(payload.id)
+      await databaseService.users.updateMany({ _id: { $in: deleteIds } }, { $set: { _destroy: true } }, { upsert: false })
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.DELETED_MANY_USER
+      })
+    }
   }
 }
 

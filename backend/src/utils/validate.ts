@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import { validationResult, ValidationChain } from 'express-validator'
 import { RunnableValidationChains } from 'express-validator/src/middlewares/schema'
 import { StatusCodes } from 'http-status-codes'
+import { ObjectId } from 'mongodb'
 import { ErrorEnity, ErrorWithStatus } from '~/models/errors/Errors.schema'
 
 const validate = (validations: RunnableValidationChains<ValidationChain>) => {
@@ -29,6 +30,17 @@ const validate = (validations: RunnableValidationChains<ValidationChain>) => {
     // Lỗi do validation thông thường
     next(entityError)
   }
+}
+
+export const validateObjectId = (value: string, message: string) => {
+  if (!ObjectId.isValid(value)) {
+    throw new ErrorWithStatus({
+      message: message,
+      statusCode: StatusCodes.NOT_FOUND
+    })
+  }
+
+  return true
 }
 
 export default validate
