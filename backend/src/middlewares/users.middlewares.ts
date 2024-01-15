@@ -457,41 +457,6 @@ export const deleteManyUserValidator = validate(
   )
 )
 
-export const blockedUserValidator = validate(
-  checkSchema(
-    {
-      blockedId: {
-        trim: true,
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
-        },
-        isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
-        },
-        custom: {
-          options: async (value) => {
-            if (!ObjectId.isValid(value)) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID
-              })
-            }
-            const user = await userServices.isUserExist(value)
-            if (!user) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.NOT_FOUND,
-                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
-              })
-            }
-            return true
-          }
-        }
-      }
-    },
-    ['body']
-  )
-)
-
 export const changePasswordValidator = validate(
   checkSchema(
     {
@@ -728,91 +693,6 @@ export const resetPasswordValidator = validate(
   )
 )
 
-export const followUserValidator = validate(
-  checkSchema(
-    {
-      id: {
-        trim: true,
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
-        },
-        isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
-        },
-        custom: {
-          options: async (value) => {
-            if (!ObjectId.isValid(value)) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID
-              })
-            }
-            const user = await userServices.isUserExist(value)
-            if (!user) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.NOT_FOUND,
-                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
-              })
-            }
-            return true
-          }
-        }
-      }
-    },
-    ['params']
-  )
-)
-
-export const userProfileValidator = validate(
-  checkSchema(
-    {
-      id: {
-        trim: true,
-        escape: true,
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_REQUIRED
-        },
-        custom: {
-          options: async (value) => {
-            if (!ObjectId.isValid(value)) {
-              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_INVALID)
-            }
-          }
-        }
-      }
-    },
-    ['params']
-  )
-)
-
-export const unfollowUserValidator = validate(
-  checkSchema(
-    {
-      id: {
-        trim: true,
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
-        },
-        isString: {
-          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
-        },
-        custom: {
-          options: async (value) => {
-            if (!ObjectId.isValid(value)) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.BAD_REQUEST,
-                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID
-              })
-            }
-            return true
-          }
-        }
-      }
-    },
-    ['params']
-  )
-)
-
 export const checkTokenValidator = validate(
   checkSchema(
     {
@@ -849,6 +729,111 @@ export const checkTokenValidator = validate(
       }
     },
     ['headers']
+  )
+)
+
+export const followUserValidator = validate(
+  checkSchema(
+    {
+      id: {
+        trim: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
+        },
+        custom: {
+          options: async (value) => {
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID
+              })
+            }
+            const user = await userServices.isUserExist(value)
+            if (!user) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
+export const unfollowUserValidator = validate(
+  checkSchema(
+    {
+      id: {
+        trim: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
+        },
+        custom: {
+          options: async (value) => {
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID
+              })
+            }
+            const user = await userServices.isUserExist(value)
+            if (!user) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
+export const blockedUserValidator = validate(
+  checkSchema(
+    {
+      blockedId: {
+        trim: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
+        },
+        custom: {
+          options: async (value) => {
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID
+              })
+            }
+            const user = await userServices.isUserExist(value)
+            if (!user) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['body']
   )
 )
 
@@ -1069,6 +1054,28 @@ export const removeFavoriteValidator = validate(
               throw new ErrorWithStatus({ statusCode: StatusCodes.FORBIDDEN, message: VALIDATION_MESSAGES.USER.FAVORITE.USER_FAVOTITE_THEMSELVES })
             }
             return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
+export const userProfileValidator = validate(
+  checkSchema(
+    {
+      id: {
+        trim: true,
+        escape: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_REQUIRED
+        },
+        custom: {
+          options: async (value) => {
+            if (!ObjectId.isValid(value)) {
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_IS_INVALID)
+            }
           }
         }
       }

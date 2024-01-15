@@ -91,15 +91,6 @@ class UserService {
     return Promise.all([this.signAccessToken(user_id, email, username, role), this.signRefreshToken(user_id, email, username, role)])
   }
 
-  private validateIds(followerId: string, followedId: string): void {
-    if (!ObjectId.isValid(followerId) || !ObjectId.isValid(followedId)) {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.UNAUTHORIZED,
-        message: VALIDATION_MESSAGES.USER.FOLLOW.INVALID_ID
-      })
-    }
-  }
-
   private validateBlockedIds(blockerId: string, blockedId: string): void {
     if (!ObjectId.isValid(blockerId) || !ObjectId.isValid(blockedId)) {
       throw new ErrorWithStatus({
@@ -123,11 +114,6 @@ class UserService {
       blockedId: new ObjectId(blockedId)
     })
     return blocked !== null
-  }
-
-  private async checkUserExistence(userId: string): Promise<boolean> {
-    const user = await databaseService.users.findOne({ _id: new ObjectId(userId) })
-    return Boolean(user)
   }
 
   private async upload(file: Express.Multer.File, folderName: string): Promise<string> {
@@ -569,7 +555,6 @@ class UserService {
   async follow(user: AuthUser, payload: ParamsDictionary): Promise<void> {
     try {
       const { id } = payload
-      this.validateIds(user._id, id)
       const isAlreadyFollowed = await this.checkIfAlreadyFollowed(user._id, id)
       if (isAlreadyFollowed) {
         throw new ErrorWithStatus({
@@ -593,13 +578,6 @@ class UserService {
   async unfollow(user: AuthUser, payload: ParamsDictionary): Promise<void> {
     try {
       const { id } = payload
-      const userToUnfollowExists = await this.checkUserExistence(id)
-      if (!userToUnfollowExists) {
-        throw new ErrorWithStatus({
-          statusCode: StatusCodes.NOT_FOUND,
-          message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
-        })
-      }
       const followingExists = await this.checkIfAlreadyFollowed(user._id, id)
       if (!followingExists) {
         throw new ErrorWithStatus({
@@ -752,13 +730,6 @@ class UserService {
 
   async unBlockedUser({ _id }: AuthUser, payload: ParamsDictionary): Promise<void> {
     const { id } = payload
-    const userToUnBlockExists = await this.checkUserExistence(id)
-    if (!userToUnBlockExists) {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.NOT_FOUND,
-        message: VALIDATION_MESSAGES.USER.BLOCKED.USER_ID_IS_INVALID
-      })
-    }
     const blockExists = await this.checkIfAlreadyBlocked(_id, id)
     if (!blockExists) {
       throw new ErrorWithStatus({
