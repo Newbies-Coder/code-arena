@@ -10,7 +10,7 @@ let { REQ_DURATION, REQ_POINT, COOKIES_EXPIRES_IN, SECRET_COOKIE_NAME, PASSWORD_
 let { JWT_SECRET_KEY, JWT_ALGORITHM, JWT_REFRESH_TOKEN_KEY, ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } = JWT_MESSAGES
 let { OTP_EMAIL_ACCOUNT, OTP_EMAIL_PASSWORD, OTP_EMAIL_NAME } = OTP_EMAIL_MESSAGES
 let { MAX_ITEM_PER_PAGE } = REQUEST_QUERY_MESSAGES
-let { CLOUDINARY_KEY, CLOUDINARY_SECRET, CLOUDINARY_NAME, CLOUDINARY_AVATAR_FOLDER, CLOUDINARY_THUMBNAIL_FOLDER, CLOUDINARY_BANNER_FOLDER } = CLOUDINARY_MESSAGES
+let { CLOUDINARY_KEY, CLOUDINARY_SECRET, CLOUDINARY_NAME, CLOUDINARY_AVATAR_FOLDER, CLOUDINARY_THUMBNAIL_FOLDER, CLOUDINARY_BANNER_FOLDER, CLOUDINARY_IMAGE_FOLDER } = CLOUDINARY_MESSAGES
 let { FACEBOOK, GITHUB, LINKEDIN, GOOGLE } = AUTH_MESSAGES
 let { AUTH_SUCCESS_URL, AUTH_FAIL_URL } = URL_MESSAGES
 
@@ -51,6 +51,7 @@ const envSchema = Joi.object({
   CLOUDINARY_SECRET: Joi.string().required().description(CLOUDINARY_SECRET),
   CLOUDINARY_NAME: Joi.string().required().description(CLOUDINARY_NAME),
   CLOUDINARY_AVATAR_FOLDER: Joi.string().required().description(CLOUDINARY_AVATAR_FOLDER),
+  CLOUDINARY_IMAGE_FOLDER: Joi.string().required().description(CLOUDINARY_IMAGE_FOLDER),
   CLOUDINARY_THUMBNAIL_FOLDER: Joi.string().required().description(CLOUDINARY_THUMBNAIL_FOLDER),
   CLOUDINARY_BANNER_FOLDER: Joi.string().required().description(CLOUDINARY_BANNER_FOLDER),
   FACEBOOK_AUTH_CLIENT_ID: Joi.string().required().description(FACEBOOK.CLIENT_ID),
@@ -93,8 +94,8 @@ export const env = {
   },
   database: {
     main: {
-			url: `mongodb+srv://${envVars.DATABASE_CODE_ARENA}:${envVars.PASSWORD_CODE_ARENA}@codearena.b9lkxsv.mongodb.net/?retryWrites=true&w=majority`,
-		
+      url: `mongodb+srv://${envVars.DATABASE_CODE_ARENA}:${envVars.PASSWORD_CODE_ARENA}@codearena.b9lkxsv.mongodb.net/?retryWrites=true&w=majority`,
+
       name: envVars.DB_NAME,
       collection: {
         users: envVars.DB_USER_COLLECTION,
@@ -133,6 +134,7 @@ export const env = {
     secret: envVars.CLOUDINARY_SECRET,
     key: envVars.CLOUDINARY_KEY,
     cloud_name: envVars.CLOUDINARY_NAME,
+    image_folder: envVars.CLOUDINARY_IMAGE_FOLDER,
     avatar_folder: envVars.CLOUDINARY_AVATAR_FOLDER,
     thumbnail_folder: envVars.THUMBNAIL_AVATAR_FOLDER,
     banner_folder: envVars.CLOUDINARY_BANNER_FOLDER

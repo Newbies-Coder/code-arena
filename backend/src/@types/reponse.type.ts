@@ -113,3 +113,6 @@ export type InsertBanner = {
   description?: string
   url: string
 }
+export type UploadSingleType = {
+  imageUrl: string
+}

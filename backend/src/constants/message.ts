@@ -127,10 +127,12 @@ export const RESULT_RESPONSE_MESSAGES = {
     UNFOLLOW: 'Unfollow user successfully!',
     GET_BLOCKED_USER: 'Get blocked users successfully',
     INSERT_BLOCKED_USER: 'Blocked users successfully',
-    DELETE_BLOCKED_USER: 'Unblocked users successfully'
+    DELETE_BLOCKED_USER: 'Unblocked users successfully',
+    UPLOAD_IMAGE: 'Upload image sucessfully!',
+    UPLOAD_MUL_IMAGE: 'Upload multiple image sucessfully!'
   },
   OTP_SUCCESS: {
-    VERIFY_OTP: 'Verify OTP successfully!', //
+    VERIFY_OTP: 'Verify OTP successfully!',
     RESEND_OTP: 'Resend OTP successfully!'
   },
   BANNERS_SUCCESS: {
@@ -379,7 +381,8 @@ export const CLOUDINARY_MESSAGES = {
   CLOUDINARY_NAME: 'Cloud name of current cloudinary account',
   CLOUDINARY_AVATAR_FOLDER: 'Folder that contain avatar images on cloudinary',
   CLOUDINARY_THUMBNAIL_FOLDER: 'Folder that contain thumbnail images on cloudinary',
-  CLOUDINARY_BANNER_FOLDER: 'Folder that contain banner images on cloudinary'
+  CLOUDINARY_BANNER_FOLDER: 'Folder that contain banner images on cloudinary',
+  CLOUDINARY_IMAGE_FOLDER: 'Folder that contain image images on cloudinary'
 }
 
 export const AUTH_MESSAGES = {
