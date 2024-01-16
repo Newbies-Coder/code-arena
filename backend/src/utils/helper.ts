@@ -18,6 +18,12 @@ export const generateSlug = (name: string): string => {
   })
 }
 
+// Validation using hot key enter username
+export const containsNewline = (username: string): boolean => {
+  const newlineRegex = /[\r\n]+/
+  return newlineRegex.test(username)
+}
+
 // Validation email domain
 export const validateEmailDomain = (email: string): boolean => {
   const regex = /^[a-zA-Z0-9._-]+@(gmail\.com|gmail\.edu\.com)$/

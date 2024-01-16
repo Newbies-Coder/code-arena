@@ -56,7 +56,7 @@ const userController = {
 
   resendVerifyOTP: async (req: Request<ParamsDictionary, any, ResendVerifyOTPBody>, res: Response, next: NextFunction) => {
     await userServices.sendOTP(req.body.email)
-    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.OTP_SUCCESS.VERIFY_OTP)
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.OTP_SUCCESS.RESEND_OTP)
   },
 
   verifyForgotPassword: async (req: Request<ParamsDictionary, any, VerifyForgotPasswordReqBody>, res: Response, next: NextFunction) => {
