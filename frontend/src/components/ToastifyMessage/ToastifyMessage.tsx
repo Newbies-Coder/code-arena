@@ -1,4 +1,4 @@
-import { ToastifyType } from '@/@types/home'
+import { ToastifyType } from '@/@types/home.type'
 import CustomedButton from '@/container/Detail/components/CustomedButton'
 import { PlayCircleOutlined } from '@ant-design/icons'
 import { notification } from 'antd'

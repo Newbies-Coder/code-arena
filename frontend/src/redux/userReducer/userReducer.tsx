@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DispatchType } from '../config'
-import { userState, userType } from 'src/@types/user'
+import { userLoginType, userState, userType } from '@/@types/user.type'
 import { ACCESS_TOKEN, http, setStore } from '@/utils/setting'
 import { history } from '@/main'
 
 const initialState: userState = {
-  userLogin: {},
+  userLogin: null,
   userRegister: {},
   userVerify: {},
   userResendOTP: {},
@@ -15,7 +15,8 @@ const userReducer = createSlice({
   name: 'userReducer',
   initialState,
   reducers: {
-    loginAction: (state: userState, action: PayloadAction<userType>) => {
+    loginAction: (state: userState, action: PayloadAction<userLoginType>) => {
+      console.log(action.payload)
       state.userLogin = action.payload
     },
     registerAction: (state: userState, action: PayloadAction<userType>) => {
@@ -47,9 +48,6 @@ export const loginApi = (userLogin: userType) => {
       history.push('/')
     } catch (error) {
       console.error('error:', error)
-      // if (error instanceof AxiosError) {
-      //   alert(error.response?.data.message)
-      // }
     }
   }
 }

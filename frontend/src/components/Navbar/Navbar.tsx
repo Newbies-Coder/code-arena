@@ -1,4 +1,4 @@
-import { MenuType } from '@/@types/home'
+import { MenuType } from '@/@types/home.type'
 import { menuItems } from '@/mocks/home.data'
 import { useState } from 'react'
 

@@ -4,7 +4,7 @@ import { BG, LOGO } from '@/constants/images'
 import { Link } from 'react-router-dom'
 import { DateOfBirthIcon, GmailIcon, LockIcon, UserIcon } from '@/components/Icons'
 import { useDispatch, useSelector } from 'react-redux'
-import { userState } from '@/@types/user'
+import { userState } from '@/@types/user.type'
 import { DispatchType } from '@/redux/config'
 import { registerApi } from '@/redux/userReducer/userReducer'
 

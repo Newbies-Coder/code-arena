@@ -1,4 +1,4 @@
-import { IconPropsType } from 'src/@types/icon'
+import { IconPropsType } from '@/@types/icon.type'
 
 export const NotFoundSVG: React.FC<IconPropsType> = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 441.85 285.44" className={className}>

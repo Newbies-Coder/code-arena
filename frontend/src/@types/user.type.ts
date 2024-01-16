@@ -12,8 +12,16 @@ export type userType = {
   otp?: string
 }
 
+export type userLoginType = {
+  _id: string
+  username: string
+  email: string
+  access_token: string
+  refresh_token: string
+}
+
 export type userState = {
-  userLogin: userType
+  userLogin: userLoginType | null
   userRegister: userType
   userVerify: userType
   userResendOTP: userType

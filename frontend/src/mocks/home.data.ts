@@ -1,4 +1,4 @@
-import { CourseType, FriendType, MenuType, ProfileMenuType } from '@/@types/home'
+import { CourseType, FriendType, MenuType, ProfileMenuType } from '@/@types/home.type'
 import {
   BackendIcon,
   CircleHexIcon,

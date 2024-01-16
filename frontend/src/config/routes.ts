@@ -1,4 +1,4 @@
-import { routeTypes } from '@/@types/global'
+import { routeTypes } from '@/@types/global.type'
 
 const routes: routeTypes = {
   home: '/',

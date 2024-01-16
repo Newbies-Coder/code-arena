@@ -1,4 +1,4 @@
-import { FormItemPropsType } from '@/@types/form'
+import { FormItemPropsType } from '@/@types/form.type'
 import { Alert, Form, Input } from 'antd'
 
 const validationRule = (message: string) => ({
