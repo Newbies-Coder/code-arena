@@ -9,6 +9,7 @@ export type userType = {
   message?: string
   access_token?: string
   refresh_token?: string
+  otp?: string
 }
 
 export type userState = {

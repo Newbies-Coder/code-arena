@@ -38,3 +38,9 @@ export type ToastifyType = {
   type: 'success' | 'info' | 'warning' | 'error'
   onButtonClick?: (type: 'success' | 'info' | 'warning' | 'error') => void
 }
+
+export type ProfileMenuType = {
+  key: number
+  label: string
+  Icon: React.ElementType
+}

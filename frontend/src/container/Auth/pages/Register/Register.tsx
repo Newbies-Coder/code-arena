@@ -1,6 +1,6 @@
 import { Form, Button, Row, Col, Input, Alert, DatePicker, DatePickerProps } from 'antd'
 import './style.scss'
-import { LOGO } from '@/constants/images'
+import { BG, LOGO } from '@/constants/images'
 import { Link } from 'react-router-dom'
 import { DateOfBirthIcon, GmailIcon, LockIcon, UserIcon } from '@/components/Icons'
 import { useDispatch, useSelector } from 'react-redux'
@@ -29,7 +29,6 @@ const Register = () => {
       date_of_birth: birthday,
     })
     await dispatch(registerData)
-    console.log(values)
   }
   return (
     <Row className="min-h-screen register">
@@ -212,7 +211,7 @@ const Register = () => {
         </div>
       </Col>
       <Col xs={{ span: 0 }} lg={{ span: 12 }} className="min-h-screen">
-        <img src="https://i.imgur.com/en3BKmy.png" alt="boys" className="w-full h-screen" />
+        <img src={BG.APP_BG} alt="boys" className="w-full h-screen" />
       </Col>
     </Row>
   )

@@ -1,12 +1,14 @@
-import { CourseType, FriendType, MenuType } from '@/@types/home'
+import { CourseType, FriendType, MenuType, ProfileMenuType } from '@/@types/home'
 import {
   BackendIcon,
+  CircleHexIcon,
+  ContactIcon,
   CyanLineIcon,
   DesignIcon,
   FrontendIcon,
   HomeIcon,
-  LiPurpleLineIcon,
   LibraryIcon,
+  MessageFilledIcon,
   NewsIcon,
   PinkLineIcon,
   PurpleLineIcon,
@@ -14,7 +16,7 @@ import {
   SelectedLibraryIcon,
   SelectedNewsIcon,
   SelectedStoreIcon,
-  SettingIcon,
+  StarIcon,
   StoreIcon,
   YellowLineIcon,
 } from '@/components/Icons'
@@ -111,4 +113,11 @@ export const menuItems: MenuType[] = [
     color: 'bg-purple-700',
     active: true,
   },
+]
+
+export const ProfileMenuItems: ProfileMenuType[] = [
+  { key: 0, label: 'Dashboard', Icon: CircleHexIcon },
+  { key: 1, label: 'Contacts', Icon: MessageFilledIcon },
+  { key: 2, label: 'Watchlist', Icon: ContactIcon },
+  { key: 3, label: 'Message', Icon: StarIcon },
 ]

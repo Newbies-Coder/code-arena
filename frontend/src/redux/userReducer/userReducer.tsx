@@ -3,7 +3,6 @@ import { DispatchType } from '../config'
 import { userState, userType } from 'src/@types/user'
 import { ACCESS_TOKEN, http, setStore } from '@/utils/setting'
 import { history } from '@/main'
-import { AxiosError } from 'axios'
 
 const initialState: userState = {
   userLogin: {},
@@ -47,11 +46,10 @@ export const loginApi = (userLogin: userType) => {
       setStore(ACCESS_TOKEN, data.access_token)
       history.push('/')
     } catch (error) {
-      // Log the error for debugging purposes, and provide user-friendly feedback
-      console.error('Login error:', error)
-      if (error instanceof AxiosError) {
-        alert(error.response?.data.message)
-      }
+      console.error('error:', error)
+      // if (error instanceof AxiosError) {
+      //   alert(error.response?.data.message)
+      // }
     }
   }
 }
@@ -66,7 +64,7 @@ export const registerApi = (userRegister: userType) => {
       setStore(ACCESS_TOKEN, data.access_token)
       history.push('/verification')
     } catch (error) {
-      console.error('Login error:', error)
+      console.error('error:', error)
     }
   }
 }
@@ -79,9 +77,9 @@ export const verifyApi = (userVerify: userType) => {
       const action: PayloadAction<userType> = verifyAction(data)
       dispatch(action)
       setStore(ACCESS_TOKEN, data.access_token)
-      history.push('/')
+      history.push('/login')
     } catch (error) {
-      console.error('Login error:', error)
+      console.error('error:', error)
     }
   }
 }
@@ -96,7 +94,7 @@ export const resendOTPApi = (userResendOTP: userType) => {
       setStore(ACCESS_TOKEN, data.access_token)
       history.push('/')
     } catch (error) {
-      console.error('Login error:', error)
+      console.error('error:', error)
     }
   }
 }

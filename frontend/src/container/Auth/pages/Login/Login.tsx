@@ -22,8 +22,6 @@ const Login = () => {
     await dispatch(loginData)
   }
 
-  console.log(data)
-
   const renderButtonContent = (button: SocialMediaType) => {
     if (button.url) {
       return <img src={button.url} alt={button.alt} className={button.key === 'github' ? 'h-11 w-11' : ''} />
