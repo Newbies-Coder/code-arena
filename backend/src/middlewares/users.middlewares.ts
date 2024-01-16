@@ -12,7 +12,7 @@ import { JsonWebTokenError } from 'jsonwebtoken'
 import { capitalize } from 'lodash'
 import { TokenPayloadType } from '~/@types/tokenPayload.type'
 import { ObjectId } from 'mongodb'
-import { isValidDateOfBirth, isValidEmail, isValidGender, isValidMulName, isValidNameCharater, isValidPassword, validateEmail, validatePhone } from '~/utils/helper'
+import { containsNewline, isValidDateOfBirth, isValidEmail, isValidGender, isValidMulName, isValidNameCharater, isValidPassword, validateEmail, validatePhone } from '~/utils/helper'
 
 export const registerValidator = validate(
   checkSchema(
@@ -34,8 +34,12 @@ export const registerValidator = validate(
         trim: true,
         custom: {
           options: async (value) => {
+            const checkEnter = containsNewline(value)
             const checkValidCharater = isValidNameCharater(value)
             const checkMulWhitespace = isValidMulName(value)
+            if (checkEnter) {
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.INVALID_USERNAME)
+            }
             if (!checkValidCharater) {
               throw new Error(VALIDATION_MESSAGES.USER.REGISTER.INVALID_USERNAME)
             }
@@ -184,6 +188,7 @@ export const loginValidator = validate(
                 message: VALIDATION_MESSAGES.USER.EMAIL.VALID_EMAIL
               })
             }
+            await userServices.checkAccountExist(value)
             await userServices.validateAccountAccessibility(value)
             return true
           }
@@ -757,6 +762,14 @@ export const followUserValidator = validate(
                 message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
               })
             }
+            const userBlocked = await databaseService.blocked_users.findOne({ blockedId: new ObjectId(value) })
+            if (userBlocked) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_BLOCKED
+              })
+            }
+            await userServices.validateWithIDAccountAccessibility(value)
             return true
           }
         }
@@ -792,6 +805,14 @@ export const unfollowUserValidator = validate(
                 message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
               })
             }
+            const userBlocked = await databaseService.blocked_users.findOne({ blockedId: new ObjectId(value) })
+            if (userBlocked) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_BLOCKED
+              })
+            }
+            await userServices.validateWithIDAccountAccessibility(value)
             return true
           }
         }
@@ -841,9 +862,17 @@ export const updateProfileValidator = validate(
         },
         custom: {
           options: async (value) => {
+            const checkEnter = containsNewline(value)
+            const checkMulWhitespace = isValidMulName(value)
             const checkValidCharater = isValidNameCharater(value)
+            if (checkEnter) {
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.INVALID_USERNAME)
+            }
             if (!checkValidCharater) {
               throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.INVALID_FULLNAME)
+            }
+            if (!checkMulWhitespace) {
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.USERNAME_INCLUDES_MUL_WHITESPACE)
             }
             return true
           }
@@ -864,8 +893,12 @@ export const updateProfileValidator = validate(
         trim: true,
         custom: {
           options: async (value) => {
+            const checkEnter = containsNewline(value)
             const checkValidCharater = isValidNameCharater(value)
             const checkMulWhitespace = isValidMulName(value)
+            if (checkEnter) {
+              throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.INVALID_USERNAME)
+            }
             if (!checkValidCharater) {
               throw new Error(VALIDATION_MESSAGES.USER.USER_PROFILE.INVALID_USERNAME)
             }
@@ -987,6 +1020,13 @@ export const favoriteValidator = validate(
             if (isFriendAlreadyFavorites) {
               throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ALREADY_FAVORITE })
             }
+            const userBlocked = await databaseService.blocked_users.findOne({ blockedId: new ObjectId(value) })
+            if (userBlocked) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_BLOCKED
+              })
+            }
             return true
           }
         }
@@ -1024,6 +1064,13 @@ export const removeFavoriteValidator = validate(
             }
             if (value === req.user._id) {
               throw new ErrorWithStatus({ statusCode: StatusCodes.FORBIDDEN, message: VALIDATION_MESSAGES.USER.FAVORITE.USER_FAVOTITE_REMOVE_THEMSELVES })
+            }
+            const userBlocked = await databaseService.blocked_users.findOne({ blockedId: new ObjectId(value) })
+            if (userBlocked) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_BLOCKED
+              })
             }
             return true
           }

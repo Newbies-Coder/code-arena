@@ -165,6 +165,17 @@ class UserService {
     }
   }
 
+  async checkAccountExist(email: string): Promise<void> {
+    const user = await databaseService.users.findOne({ email })
+    const { _destroy } = user
+    if (_destroy) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.NOT_FOUND,
+        message: VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_NOT_EXISTS
+      })
+    }
+  }
+
   async findUserByEmail(email: string): Promise<User | null> {
     try {
       const user = await databaseService.users.findOne({ email })
@@ -181,6 +192,21 @@ class UserService {
 
   async validateAccountAccessibility(email: string): Promise<boolean> {
     const user = await databaseService.users.findOne({ email })
+    if (!user || ['Unverified', 'Banned'].includes(user.verify)) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.FORBIDDEN,
+        message: user
+          ? user.verify === 'Unverified'
+            ? VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_UNVERIFIED
+            : VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_BANNED
+          : VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_NOT_FOUND
+      })
+    }
+    return true
+  }
+
+  async validateWithIDAccountAccessibility(id: string): Promise<boolean> {
+    const user = await databaseService.users.findOne({ _id: new ObjectId(id) })
     if (!user || ['Unverified', 'Banned'].includes(user.verify)) {
       throw new ErrorWithStatus({
         statusCode: StatusCodes.FORBIDDEN,
@@ -301,6 +327,12 @@ class UserService {
       let { email, username, password, date_of_birth } = payload
       const hashedPassword = hashPassword(password)
       const age = this.calculateAge(date_of_birth)
+      if (age < 12) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.FORBIDDEN,
+          message: VALIDATION_MESSAGES.USER.REGISTER.AGE_IS_NOT_ENOUGH
+        })
+      }
       const newUser = new User({
         ...payload,
         password: hashedPassword,
@@ -555,6 +587,12 @@ class UserService {
   async follow(user: AuthUser, payload: ParamsDictionary): Promise<void> {
     try {
       const { id } = payload
+      if (user._id === id) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.BAD_REQUEST,
+          message: VALIDATION_MESSAGES.USER.FOLLOW.USER_FOLLOW_THEMSELVES
+        })
+      }
       const isAlreadyFollowed = await this.checkIfAlreadyFollowed(user._id, id)
       if (isAlreadyFollowed) {
         throw new ErrorWithStatus({

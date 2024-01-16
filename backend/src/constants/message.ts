@@ -177,7 +177,8 @@ export const VALIDATION_MESSAGES = {
       USER_ID_IS_INVALID: 'User id is invalid',
       USERNAME_MUST_BE_STRING: 'Username must be a string',
       INVALID_INCLUDES: 'Invalid includes pagination',
-      INVALID_SORT_ORDER_CREATED_AT: 'Invalid sort order created_at pagination'
+      INVALID_SORT_ORDER_CREATED_AT: 'Invalid sort order created_at pagination',
+      USER_BLOCKED: 'User account has been blocked'
     },
     VERIFY_FORGOT_PASSWORD_TOKEN: {
       IS_REQUIRED: 'Forgot-password token is required',
@@ -201,7 +202,8 @@ export const VALIDATION_MESSAGES = {
       ACCOUNT_IS_UNVERIFIED: 'Account is unverified',
       ACCOUNT_IS_BANNED: 'Account is banned',
       ACCOUNT_NOT_FOUND: 'Account not found',
-      USER_NOT_FOUND: 'User not found'
+      USER_NOT_FOUND: 'User not found',
+      ACCOUNT_NOT_EXISTS: "The user's account has been removed."
     },
     REGISTER: {
       USERNAME_IS_REQUIRED: 'Username is required',
@@ -224,7 +226,7 @@ export const VALIDATION_MESSAGES = {
       CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Confirm_password must be between 8 and 16 characters long',
       DATE_OF_BIRTH_IS_REQUIRED: 'Date of birth is required',
       DATE_OF_BIRTH_MUST_BE_A_STRING: 'Date of birth must be a string',
-      DATE_OF_BIRTH_ERROR_FORMAT: 'Invalid date format. Please using dd-mm-yyyy.',
+      DATE_OF_BIRTH_ERROR_FORMAT: 'Invalid date format. Please using yyyy-mm-dd',
       AGE_IS_NOT_ENOUGH: 'You must above 12 years old to register'
     },
     VERIFY_OTP: {
@@ -333,7 +335,8 @@ export const VALIDATION_MESSAGES = {
     FOLLOW: {
       INVALID_ID: 'Invalid user or follow target ID.',
       NOT_ALREADY_FOLLOW_USER: 'User not already follows user',
-      ALREADY_FOLLOW_USER: 'User already follows user'
+      ALREADY_FOLLOW_USER: 'User already follows user',
+      USER_FOLLOW_THEMSELVES: 'Users may not follow themselves'
     }
   },
   TOKEN: {
