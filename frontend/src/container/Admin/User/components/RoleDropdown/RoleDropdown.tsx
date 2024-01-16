@@ -14,7 +14,7 @@ export default function RoleDropdown() {
   }
 
   return (
-    <div className="w-[300px]">
+    <div className="min-w-[300px]">
       <p className="text-white">Role name</p>
       <div className="relative">
         <Button

@@ -1,0 +1,65 @@
+.ant-table-tbody .ant-table-row {
+  background-color: #001529;
+  color: white;
+  border: none;
+}
+
+.ant-table-tbody .ant-table-row:nth-child(even) {
+  background-color: #7b61ff;
+}
+
+.ant-table-row {
+  font-size: 20px;
+  height: 64px;
+}
+
+.ant-table-tbody > tr.ant-table-row:hover > td,
+.ant-table-tbody > tr > td.ant-table-cell-row-hover {
+  background-color: #001529 !important;
+  color: white;
+}
+
+.ant-table-tbody > tr.ant-table-row:nth-child(even):hover > td,
+.ant-table-tbody > tr > td.ant-table-cell-row-hover {
+  background-color: #7b61ff !important;
+  color: white;
+}
+
+:where(.css-dev-only-do-not-override-r1lc3v).ant-table-wrapper .ant-table-tbody > tr > td {
+  transition: none;
+  border-bottom: none;
+}
+
+:where(.css-dev-only-do-not-override-r1lc3v).ant-table-wrapper .ant-table-thead > tr > th,
+:where(.css-dev-only-do-not-override-r1lc3v).ant-table-wrapper .ant-table-thead > tr > td {
+  background-color: #5e00bf;
+  color: white;
+  border-bottom: none;
+}
+
+:where(.css-dev-only-do-not-override-r1lc3v).ant-pagination .ant-pagination-disabled .ant-pagination-item-link,
+:where(.css-dev-only-do-not-override-r1lc3v).ant-pagination .ant-pagination-disabled:hover .ant-pagination-item-link {
+  cursor: not-allowed;
+  color: white;
+}
+
+:where(.css-dev-only-do-not-override-r1lc3v).ant-pagination .ant-pagination-next button {
+  color: white;
+  cursor: pointer;
+  user-select: none;
+}
+
+:where(.css-dev-only-do-not-override-r1lc3v).ant-pagination .ant-pagination-item a {
+  display: block;
+  padding: 0 6px;
+  color: white;
+}
+
+:where(.css-dev-only-do-not-override-r1lc3v).ant-pagination .ant-pagination-item-active a {
+  color: #1677ff;
+  color: black !important;
+}
+
+:where(.css-dev-only-do-not-override-r1lc3v).ant-pagination .ant-pagination-prev .ant-pagination-item-link {
+  color: white;
+}

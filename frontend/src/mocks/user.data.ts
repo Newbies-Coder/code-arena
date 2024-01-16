@@ -26,7 +26,7 @@ export const data: DataType[] = [
     name: 'Jane Smith',
     phone: '987-654-3210',
     email: 'jane.smith@example.com',
-    role: 'User',
+    role: 'Moderator',
     status: 'Unverify',
   },
   {
