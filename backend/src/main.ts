@@ -51,8 +51,8 @@ const options: swaggerJSDoc.Options = {
 const app = express()
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(options)))
 const httpServer = createServer(app)
-logServices.connect()
-app.use((req, res, next) => logServices.logRequest(req, res, next))
+// logServices.connect()
+// app.use((req, res, next) => logServices.logRequest(req, res, next))
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -103,6 +103,6 @@ httpServer.listen(env.server.port, env.server.host, () => {
 exitHook(() => {
   databaseService.disConnect()
   console.log(DATABASE_MESSAGE.DB_MAIN.DISCONNECT)
-  logServices.disConnectLogs()
-  console.log(DATABASE_MESSAGE.DB_LOGS.DISCONNECT)
+  // logServices.disConnectLogs()
+  // console.log(DATABASE_MESSAGE.DB_LOGS.DISCONNECT)
 })

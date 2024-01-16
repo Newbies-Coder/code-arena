@@ -757,6 +757,14 @@ export const followUserValidator = validate(
                 message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
               })
             }
+            const userBlocked = await databaseService.blocked_users.findOne({ blockedId: new ObjectId(value) })
+            if (userBlocked) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_BLOCKED
+              })
+            }
+            await userServices.validateWithIDAccountAccessibility(value)
             return true
           }
         }
@@ -792,6 +800,14 @@ export const unfollowUserValidator = validate(
                 message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
               })
             }
+            const userBlocked = await databaseService.blocked_users.findOne({ blockedId: new ObjectId(value) })
+            if (userBlocked) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_BLOCKED
+              })
+            }
+            await userServices.validateWithIDAccountAccessibility(value)
             return true
           }
         }
@@ -987,6 +1003,13 @@ export const favoriteValidator = validate(
             if (isFriendAlreadyFavorites) {
               throw new ErrorWithStatus({ statusCode: StatusCodes.NOT_FOUND, message: VALIDATION_MESSAGES.USER.FAVORITE.FRIEND_ALREADY_FAVORITE })
             }
+            const userBlocked = await databaseService.blocked_users.findOne({ blockedId: new ObjectId(value) })
+            if (userBlocked) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_BLOCKED
+              })
+            }
             return true
           }
         }
@@ -1024,6 +1047,13 @@ export const removeFavoriteValidator = validate(
             }
             if (value === req.user._id) {
               throw new ErrorWithStatus({ statusCode: StatusCodes.FORBIDDEN, message: VALIDATION_MESSAGES.USER.FAVORITE.USER_FAVOTITE_REMOVE_THEMSELVES })
+            }
+            const userBlocked = await databaseService.blocked_users.findOne({ blockedId: new ObjectId(value) })
+            if (userBlocked) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_BLOCKED
+              })
             }
             return true
           }

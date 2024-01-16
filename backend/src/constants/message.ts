@@ -177,7 +177,8 @@ export const VALIDATION_MESSAGES = {
       USER_ID_IS_INVALID: 'User id is invalid',
       USERNAME_MUST_BE_STRING: 'Username must be a string',
       INVALID_INCLUDES: 'Invalid includes pagination',
-      INVALID_SORT_ORDER_CREATED_AT: 'Invalid sort order created_at pagination'
+      INVALID_SORT_ORDER_CREATED_AT: 'Invalid sort order created_at pagination',
+      USER_BLOCKED: 'User account has been blocked'
     },
     VERIFY_FORGOT_PASSWORD_TOKEN: {
       IS_REQUIRED: 'Forgot-password token is required',
@@ -333,7 +334,8 @@ export const VALIDATION_MESSAGES = {
     FOLLOW: {
       INVALID_ID: 'Invalid user or follow target ID.',
       NOT_ALREADY_FOLLOW_USER: 'User not already follows user',
-      ALREADY_FOLLOW_USER: 'User already follows user'
+      ALREADY_FOLLOW_USER: 'User already follows user',
+      USER_FOLLOW_THEMSELVES: 'Users may not follow themselves'
     }
   },
   TOKEN: {

@@ -194,6 +194,21 @@ class UserService {
     return true
   }
 
+  async validateWithIDAccountAccessibility(id: string): Promise<boolean> {
+    const user = await databaseService.users.findOne({ _id: new ObjectId(id) })
+    if (!user || ['Unverified', 'Banned'].includes(user.verify)) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.FORBIDDEN,
+        message: user
+          ? user.verify === 'Unverified'
+            ? VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_UNVERIFIED
+            : VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_BANNED
+          : VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_NOT_FOUND
+      })
+    }
+    return true
+  }
+
   async validateRefreshToken(refresh_token: string): Promise<boolean> {
     const token = await databaseService.refreshTokens.findOne({ token: refresh_token })
     return Boolean(token)
@@ -555,6 +570,12 @@ class UserService {
   async follow(user: AuthUser, payload: ParamsDictionary): Promise<void> {
     try {
       const { id } = payload
+      if (user._id === id) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.BAD_REQUEST,
+          message: VALIDATION_MESSAGES.USER.FOLLOW.USER_FOLLOW_THEMSELVES
+        })
+      }
       const isAlreadyFollowed = await this.checkIfAlreadyFollowed(user._id, id)
       if (isAlreadyFollowed) {
         throw new ErrorWithStatus({
