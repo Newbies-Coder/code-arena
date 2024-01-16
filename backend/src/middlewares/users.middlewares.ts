@@ -87,7 +87,7 @@ export const registerValidator = validate(
             minNumbers: 1,
             minSymbols: 1
           },
-          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_STRONG
+          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_A_STRING
         },
         trim: true,
         escape: true,
@@ -209,7 +209,7 @@ export const loginValidator = validate(
             minNumbers: 1,
             minSymbols: 1
           },
-          errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_STRONG
+          errorMessage: VALIDATION_MESSAGES.USER.LOGIN.EMAIL_OR_PASSWORD_IS_INCORRECT
         },
         trim: true,
         isLength: {
