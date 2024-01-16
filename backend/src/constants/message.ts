@@ -202,7 +202,8 @@ export const VALIDATION_MESSAGES = {
       ACCOUNT_IS_UNVERIFIED: 'Account is unverified',
       ACCOUNT_IS_BANNED: 'Account is banned',
       ACCOUNT_NOT_FOUND: 'Account not found',
-      USER_NOT_FOUND: 'User not found'
+      USER_NOT_FOUND: 'User not found',
+      ACCOUNT_NOT_EXISTS: "The user's account has been removed."
     },
     REGISTER: {
       USERNAME_IS_REQUIRED: 'Username is required',

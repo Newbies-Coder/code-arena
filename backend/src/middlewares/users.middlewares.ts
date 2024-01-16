@@ -184,6 +184,7 @@ export const loginValidator = validate(
                 message: VALIDATION_MESSAGES.USER.EMAIL.VALID_EMAIL
               })
             }
+            await userServices.checkAccountExist(value)
             await userServices.validateAccountAccessibility(value)
             return true
           }

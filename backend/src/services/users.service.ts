@@ -165,6 +165,17 @@ class UserService {
     }
   }
 
+  async checkAccountExist(email: string): Promise<void> {
+    const user = await databaseService.users.findOne({ email })
+    const { _destroy } = user
+    if (_destroy) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.NOT_FOUND,
+        message: VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_NOT_EXISTS
+      })
+    }
+  }
+
   async findUserByEmail(email: string): Promise<User | null> {
     try {
       const user = await databaseService.users.findOne({ email })
