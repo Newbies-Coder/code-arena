@@ -316,6 +316,12 @@ class UserService {
       let { email, username, password, date_of_birth } = payload
       const hashedPassword = hashPassword(password)
       const age = this.calculateAge(date_of_birth)
+      if (age < 12) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.FORBIDDEN,
+          message: VALIDATION_MESSAGES.USER.REGISTER.AGE_IS_NOT_ENOUGH
+        })
+      }
       const newUser = new User({
         ...payload,
         password: hashedPassword,
