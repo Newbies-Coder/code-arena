@@ -3,16 +3,16 @@ import RoleDropdown from '../../components/RoleDropdown'
 import SearchKeyword from '../../components/SearchKeyword'
 import { useNavigate } from 'react-router-dom'
 import { ColumnsType } from 'antd/es/table'
-import { DataType } from '@/@types/admin'
 import VerifyStatus from '@/components/VerifyStatus'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import DataTable from '../../components/DataTable'
-import { data } from '@/mocks/user.data'
+import { UserDataType } from '@/@types/admin'
+import { userData } from '@/mocks/user.data'
 
 export default function MainUser() {
   const navigate = useNavigate()
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<UserDataType> = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -76,7 +76,7 @@ export default function MainUser() {
           </Button>
         </div>
       </div>
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={userData} />
     </div>
   )
 }

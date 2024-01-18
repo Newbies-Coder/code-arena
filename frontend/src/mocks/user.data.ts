@@ -1,7 +1,7 @@
-import { DataType, LoginInfoDataType } from '@/@types/admin'
+import { UserDataType, LoginInfoDataType } from '@/@types/admin'
 
 // Sample account data
-export const data: DataType[] = [
+export const userData: UserDataType[] = [
   {
     key: '1',
     id: '656b0bbd3b0e9defe34fca1a',

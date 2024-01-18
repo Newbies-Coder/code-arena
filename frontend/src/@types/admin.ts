@@ -11,7 +11,7 @@ export type MenuItemType = {
   color: string
 }
 
-export type DataType = {
+export type UserDataType = {
   key: React.Key
   id: string
   name: string
