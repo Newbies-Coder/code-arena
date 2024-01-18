@@ -20,3 +20,13 @@ export type DataType = {
   role: string
   status: React.ReactElement | string
 }
+
+export type LoginInfoDataType = {
+  key: React.Key
+  id: string
+  name: string
+  email: string
+  role: string
+  loginTime: string
+  logoutTime: string
+}

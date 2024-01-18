@@ -1,6 +1,6 @@
-import { DataType } from '@/@types/admin'
+import { DataType, LoginInfoDataType } from '@/@types/admin'
 
-// Sample data
+// Sample account data
 export const data: DataType[] = [
   {
     key: '1',
@@ -82,5 +82,27 @@ export const data: DataType[] = [
     email: 'jane.smith@example.com',
     role: 'User',
     status: 'Unverify',
+  },
+]
+
+// Sample login info data
+export const loginInfoData: LoginInfoDataType[] = [
+  {
+    key: 1,
+    id: '656b0bbd3b0e9defe34fca1b',
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    role: 'Admin',
+    loginTime: '2024-01-18 10:00:00',
+    logoutTime: '2024-01-18 18:00:00',
+  },
+  {
+    key: 2,
+    id: '656b0bbd3b0e9defe34fca1a',
+    name: 'Jane Smith',
+    email: 'jane.smith@example.com',
+    role: 'User',
+    loginTime: '2024-01-18 09:30:00',
+    logoutTime: '2024-01-18 17:45:00',
   },
 ]
