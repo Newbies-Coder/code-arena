@@ -152,6 +152,7 @@ export const USER_VALIDATOR_MESSAGES = {
 
 export const VALIDATION_MESSAGES = {
   TITLE: 'Validation Error',
+  ERROR_MANY_REQ: 'Too many request from this IP, please try again in an hour',
   PAGINATION: {
     PAGE_CAN_NOT_LESS_THAN_ZERO: 'Page number cannot less than zero',
     ITEMS_IS_NOT_IN_RANGE: 'Item per page can not less than zero and greater than 100'
