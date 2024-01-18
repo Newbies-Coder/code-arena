@@ -118,7 +118,10 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
           </div>
         </Header>
         <Content
-          className={clsx('fixed top-16 bottom-0 right-0 overflow-y-auto', !collapsed ? 'left-[200px]' : 'left-[80px]')}
+          className={clsx(
+            'fixed top-16 bottom-0 right-0 overflow-y-auto no-scrollbar',
+            !collapsed ? 'left-[200px]' : 'left-[80px]',
+          )}
         >
           {children}
         </Content>
