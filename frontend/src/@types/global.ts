@@ -24,4 +24,5 @@ export type routeAdminTypes = {
   updateUser: string
   course: string
   message: string
+  loginInfo: string
 }

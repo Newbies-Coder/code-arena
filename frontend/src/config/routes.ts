@@ -23,6 +23,7 @@ const routes: routeTypes = {
     message: '/admin/message',
     addUser: '/admin/user/add',
     updateUser: '/admin/user/update/:userID',
+    loginInfo: '/admin/user/loginInfo',
   },
 } as const
 
