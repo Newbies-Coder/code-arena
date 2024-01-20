@@ -234,7 +234,7 @@ class UserService {
       if (!isPasswordCorrect) {
         throw new ErrorWithStatus({
           statusCode: StatusCodes.UNAUTHORIZED,
-          message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT
+          message: VALIDATION_MESSAGES.USER.LOGIN.EMAIL_OR_PASSWORD_IS_INCORRECT
         })
       }
 
