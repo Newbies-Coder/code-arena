@@ -7,6 +7,7 @@ import { Provider } from 'react-redux'
 import { store } from '@redux/config'
 import { ConfigProvider } from 'antd'
 import App from './App'
+import { ToastContainer } from 'react-toastify'
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 export const history: any = createBrowserHistory()
 
@@ -37,6 +38,7 @@ root.render(
       >
         <App />
       </ConfigProvider>
+      <ToastContainer />
     </HistoryBrowserRouter>
   </Provider>,
 )

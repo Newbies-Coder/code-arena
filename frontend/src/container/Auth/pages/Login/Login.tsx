@@ -9,19 +9,21 @@ import { loginApi } from '@/redux/userReducer/userReducer'
 import { DispatchType, RootState } from '@/redux/config'
 import { LockIcon, UserIcon } from '@/components/Icons'
 import { regexPasswordPattern } from '@/utils/regex'
+import ToastifyMessage from '@/components/ToastifyMessage'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const Login = () => {
   const dispatch: DispatchType = useDispatch()
-  const message = useSelector((state: RootState) => state.userReducer.userError)
+  const messageErr = useSelector((state: RootState) => state.userReducer.error ?? null)
 
-  console.log(typeof message)
-  console.log(message)
-
-  //call api
+  //dispatch form data to store
   const onFinish = async (values: LoginFieldType) => {
     let { email, password } = values
     const loginData = loginApi({ email, password })
     await dispatch(loginData)
+    if (messageErr) toast.error(messageErr)
+    else toast.success('login successfully')
   }
 
   //render url icon button
@@ -135,6 +137,7 @@ const Login = () => {
                 SIGN IN
               </Button>
             </Form.Item>
+            <ToastifyMessage description={messageErr ?? ''} type="error" />
           </Form>
           <Divider orientation="center" plain className="text-lg">
             <strong>Sign in&nbsp;</strong>

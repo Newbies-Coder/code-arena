@@ -4,14 +4,15 @@ import { userLoginType, userState, userType } from '@/@types/user.type'
 import { ACCESS_TOKEN, http, setStore } from '@/utils/setting'
 import { history } from '@/main'
 import { LoginFieldType } from '@/@types/form.type'
+import { AxiosError } from 'axios'
 
 const initialState: userState = {
-  userLogin: null,
-  userRegister: {},
-  userVerify: {},
-  userResendOTP: {},
+  login: null,
+  register: {},
+  verify: {},
+  resendOTP: {},
   loading: false,
-  userError: null,
+  error: null,
 }
 
 const userReducer = createSlice({
@@ -20,44 +21,33 @@ const userReducer = createSlice({
   reducers: {
     //
     loginAction: (state: userState, action: PayloadAction<userLoginType>) => {
-      state.userLogin = action.payload
+      state.login = action.payload
     },
     registerAction: (state: userState, action: PayloadAction<userType>) => {
-      state.userRegister = action.payload
+      state.register = action.payload
     },
     verifyAction: (state: userState, action: PayloadAction<userType>) => {
-      state.userVerify = action.payload
+      state.verify = action.payload
     },
     resendOTPAction: (state: userState, action: PayloadAction<userType>) => {
-      state.userVerify = action.payload
+      state.verify = action.payload
     },
     loadingAction: (state: userState, action: PayloadAction<boolean>) => {
       state.loading = action.payload
     },
-    errorAction: (state: userState, action: PayloadAction<string>) => {
-      state.userError = action.payload
-    },
     loginFailAction: (state: userState, action: PayloadAction<string>) => {
-      state.userError = action.payload
+      state.error = action.payload
     },
   },
 })
 
-export const {
-  loginAction,
-  registerAction,
-  verifyAction,
-  resendOTPAction,
-  loadingAction,
-  errorAction,
-  loginFailAction,
-} = userReducer.actions
+export const { loginAction, registerAction, verifyAction, resendOTPAction, loadingAction, loginFailAction } =
+  userReducer.actions
 
 export default userReducer.reducer
 
 /*--------------- Action async --------------- */
 
-//fetch login api
 export const loginApi = (userLogin: LoginFieldType) => {
   return async (dispatch: DispatchType) => {
     try {
@@ -69,7 +59,12 @@ export const loginApi = (userLogin: LoginFieldType) => {
       setStore(ACCESS_TOKEN, data.access_token)
       history.push('/')
     } catch (error: any) {
-      dispatch(loginFailAction(error.response?.data || 'login fail'))
+      let errorMessage = 'login fail'
+      if (error instanceof AxiosError && error.response) {
+        errorMessage = error.response?.data.message || errorMessage
+      }
+      // dispatch(loginFailAction(error.response?.data.message || 'login fail'))
+      dispatch(loginFailAction(errorMessage))
     }
   }
 }
