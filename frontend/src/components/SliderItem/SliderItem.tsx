@@ -1,10 +1,10 @@
-import { Button, Card, Carousel, Image, Progress } from 'antd'
+import { Button, Card, Carousel, CarouselProps, Image, Progress } from 'antd'
 import { LeftArrowIcon, PlayIcon, RightArrowIcon } from '../Icons'
 import { useState } from 'react'
 import { courseList } from '@/mocks/home.data'
 import { HeartOutlined, HeartFilled } from '@ant-design/icons'
 import './style.scss'
-const settings = {
+const settings: CarouselProps = {
   dots: false,
   infinite: true,
   speed: 500,
@@ -54,7 +54,7 @@ const SliderItem = () => {
   return (
     <Carousel {...settings} style={{ width: '100%' }} arrows={true} draggable>
       {courseList.map((course) => (
-        <div className="p-3">
+        <div className="p-3" key={course.id}>
           <Card
             hoverable
             className="border-2 bg-blue-900 border-gray-opacity w-56 hover:border-gray-500 rounded-xl"

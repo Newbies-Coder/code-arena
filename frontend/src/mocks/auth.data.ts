@@ -1,4 +1,4 @@
-import { FormItemPropsType, SocialMediaType } from '@/@types/form'
+import { FormItemPropsType, SocialMediaType } from '@/@types/form.type'
 import { DateOfBirthIcon, FacebookIcon, GmailIcon, LinkedinIcon, LockIcon, UserIcon } from '@/components/Icons'
 import { SOCIAL_ICON } from '@/constants/images'
 

@@ -1,4 +1,4 @@
-import { ButtonType } from '@/@types/button'
+import { ButtonType } from '@/@types/button.type'
 import { Button } from 'antd'
 
 const CustomedButton: React.FC<ButtonType> = ({ label, Icon, classNameButton, classNameIcon, onClick }) => {

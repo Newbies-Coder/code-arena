@@ -33,7 +33,7 @@ export const { getStore, setStore, setStoreJson, getStoreJson, clearStore, ACCES
 
 const DOMAIN = 'http://localhost:8080/api/v1'
 const TOKEN_CODEARENA =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTZiNGZmNTAxMmQ4ODAwZTFkNjZlMTAiLCJlbWFpbCI6Im5nb2N1eWVubGVwaGFtQGdtYWlsLmNvbSIsInJvbGUiOiJBZG1pbiIsInRva2VuX3R5cGUiOiJBY2Nlc3NUb2tlbiIsImlhdCI6MTcwMzQxNzYzOCwiZXhwIjoxNzAzNDE4NTM4fQ.Tc-vA8NBr2O_QoLrKePdgweqGWQ99tfzSVwOb7E3AyE'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTZiNGZmNTAxMmQ4ODAwZTFkNjZlMTAiLCJlbWFpbCI6Im5nb2N1eWVubGVwaGFtQGdtYWlsLmNvbSIsInJvbGUiOiJBZG1pbiIsInRva2VuX3R5cGUiOiJBY2Nlc3NUb2tlbiIsImlhdCI6MTcwNDgwODM5NywiZXhwIjoxNzA0ODA5Mjk3fQ.DZiSldDODlbh2jmxUvC3aAiUZPCb81_kMeo91Pos6bk '
 
 /* Cấu hình request cho tất cả api - response cho tất cả kết quả từ api trả về */
 
@@ -45,7 +45,7 @@ export const http = axios.create({
 //Cấu hình request header
 http.interceptors.request.use(
   (config: any) => {
-    const token = getStoreJson(ACCESS_TOKEN)
+    const token = getStore(ACCESS_TOKEN)
     config.headers = {
       ...config.headers,
       // eslint-disable-next-line no-useless-computed-key
@@ -67,19 +67,19 @@ http.interceptors.response.use(
   },
   (err) => {
     // const originalRequest = error.config;
-    console.log(err.response.status)
-    if (err.response.status === 400 || err.response.status === 404) {
+    // console.log(err)
+    if (err?.response?.status === 400 || err?.response?.status === 404) {
     }
-    if (err.response.status === 401 || err.response.status === 403) {
-      const isMyTokenExpired = isExpired(getStoreJson(ACCESS_TOKEN))
+    if (err?.response?.status === 401 || err?.response?.status === 403) {
+      const token = localStorage.getItem(ACCESS_TOKEN)
       //token hết hạn
-      if (isMyTokenExpired) {
-        alert('Hết phiên đăng nhập yêu cầu đăng nhập lại !')
-        clearStore(ACCESS_TOKEN)
-        clearStore(USER_LOGIN)
-        //Chuyển hướng trang dạng f5
-        window.location.href = '/login'
-      }
+      // if (!token || isExpired(token)) {
+      //   alert('Hết phiên đăng nhập yêu cầu đăng nhập lại !')
+      //   clearStore(ACCESS_TOKEN)
+      //   clearStore(USER_LOGIN)
+      //   //Chuyển hướng trang dạng f5
+      //   window.location.href = '/login'
+      // }
       history.push('/login')
     }
     return Promise.reject(err)

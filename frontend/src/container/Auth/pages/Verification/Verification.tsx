@@ -3,6 +3,9 @@ import { Button, Col, Form, Row, Statistic } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import './style.scss'
+import { verifyApi } from '@/redux/userReducer/userReducer'
+import { DispatchType } from '@/redux/config'
+import { useDispatch } from 'react-redux'
 const { Countdown } = Statistic
 
 let currentIndex: number = 0
@@ -13,6 +16,8 @@ const Verification = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0)
 
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const dispatch: DispatchType = useDispatch()
 
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = target
@@ -31,6 +36,21 @@ const Verification = () => {
   useEffect(() => {
     inputRef.current?.focus()
   }, [activeIndex])
+
+  const handleConfirmClick = async () => {
+    try {
+      const exactOTP = otp.join('')
+      console
+      if (exactOTP.length === 6) {
+        const sendOTP = verifyApi({ otp: exactOTP })
+        await dispatch(sendOTP)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+
+  const handleResendClick = async () => {}
 
   return (
     <Row className="min-h-screen">
@@ -75,6 +95,7 @@ const Verification = () => {
           <Form name="basic" className="mt-3 w-full">
             <Form.Item>
               <Button
+                onClick={handleConfirmClick}
                 htmlType="submit"
                 className="mt-2 w-full h-14 bg-black text-white text-lg font-bold rounded-xl border-0"
               >
@@ -82,7 +103,11 @@ const Verification = () => {
               </Button>
               <div className="flex justify-center items-center my-3">
                 <p className="m-0">Don't receive the OTP?&nbsp;</p>
-                <Button type="link" className="text-orange-500 font-bold p-0 hover:text-orange-500">
+                <Button
+                  onClick={handleResendClick}
+                  type="link"
+                  className="text-orange-500 font-bold p-0 hover:text-orange-500"
+                >
                   Resend OTP
                 </Button>
               </div>
