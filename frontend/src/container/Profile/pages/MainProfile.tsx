@@ -2,9 +2,6 @@ import { HOME_ICON, LOGO } from '@/constants/images'
 import { Alert, Avatar, Button, Form, Input, Layout, Row, Upload, message } from 'antd'
 import './style.scss'
 import { ProfileMenuItems } from '@/mocks/home.data'
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-import { useState } from 'react'
-import { FieldType } from '@/@types/form.type'
 
 const { Sider, Content } = Layout
 

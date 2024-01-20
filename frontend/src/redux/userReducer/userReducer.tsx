@@ -3,20 +3,22 @@ import { DispatchType } from '../config'
 import { userLoginType, userState, userType } from '@/@types/user.type'
 import { ACCESS_TOKEN, http, setStore } from '@/utils/setting'
 import { history } from '@/main'
+import { LoginFieldType } from '@/@types/form.type'
 
 const initialState: userState = {
   userLogin: null,
   userRegister: {},
   userVerify: {},
   userResendOTP: {},
+  loading: false,
 }
 
 const userReducer = createSlice({
   name: 'userReducer',
   initialState,
   reducers: {
+    //
     loginAction: (state: userState, action: PayloadAction<userLoginType>) => {
-      console.log(action.payload)
       state.userLogin = action.payload
     },
     registerAction: (state: userState, action: PayloadAction<userType>) => {
@@ -28,22 +30,27 @@ const userReducer = createSlice({
     resendOTPAction: (state: userState, action: PayloadAction<userType>) => {
       state.userVerify = action.payload
     },
+    loadingAction: (state: userState, action: PayloadAction<boolean>) => {
+      state.loading = action.payload
+    },
   },
 })
 
-export const { loginAction, registerAction, verifyAction, resendOTPAction } = userReducer.actions
+export const { loginAction, registerAction, verifyAction, resendOTPAction, loadingAction } = userReducer.actions
 
 export default userReducer.reducer
 
 /*--------------- Action async --------------- */
 
-export const loginApi = (userLogin: userType) => {
+//fetch login api
+export const loginApi = (userLogin: LoginFieldType) => {
   return async (dispatch: DispatchType) => {
     try {
       const response = await http.post('/users/login', userLogin)
-      let { data } = response.data
-      const action: PayloadAction<userType> = loginAction(data)
+      let { data, message } = response.data
+      const action: PayloadAction<userLoginType> = loginAction(data)
       dispatch(action)
+      //save access token to local storage
       setStore(ACCESS_TOKEN, data.access_token)
       history.push('/')
     } catch (error) {

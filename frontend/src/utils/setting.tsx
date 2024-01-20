@@ -45,14 +45,14 @@ export const http = axios.create({
 //Cấu hình request header
 http.interceptors.request.use(
   (config: any) => {
-    // const token = getStoreJson(ACCESS_TOKEN)
-    // config.headers = {
-    //   ...config.headers,
-    //   // eslint-disable-next-line no-useless-computed-key
-    //   ['Authorization']: `Bearer ${token}`,
-    //   // eslint-disable-next-line no-useless-computed-key
-    //   ['TokenCodeArena']: TOKEN_CODEARENA,
-    // }
+    const token = getStore(ACCESS_TOKEN)
+    config.headers = {
+      ...config.headers,
+      // eslint-disable-next-line no-useless-computed-key
+      ['Authorization']: `Bearer ${token}`,
+      // eslint-disable-next-line no-useless-computed-key
+      ['TokenCodeArena']: TOKEN_CODEARENA,
+    }
     config.headers['Content-Type'] = 'application/json'
     return config
   },
@@ -71,9 +71,9 @@ http.interceptors.response.use(
     if (err?.response?.status === 400 || err?.response?.status === 404) {
     }
     if (err?.response?.status === 401 || err?.response?.status === 403) {
-      const isMyTokenExpired = isExpired(getStoreJson(ACCESS_TOKEN))
+      const token = localStorage.getItem(ACCESS_TOKEN)
       //token hết hạn
-      if (isMyTokenExpired) {
+      if (!token || isExpired(token)) {
         alert('Hết phiên đăng nhập yêu cầu đăng nhập lại !')
         clearStore(ACCESS_TOKEN)
         clearStore(USER_LOGIN)
