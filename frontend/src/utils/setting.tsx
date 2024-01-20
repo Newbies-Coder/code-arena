@@ -67,19 +67,19 @@ http.interceptors.response.use(
   },
   (err) => {
     // const originalRequest = error.config;
-    console.log(err)
+    // console.log(err)
     if (err?.response?.status === 400 || err?.response?.status === 404) {
     }
     if (err?.response?.status === 401 || err?.response?.status === 403) {
       const token = localStorage.getItem(ACCESS_TOKEN)
       //token hết hạn
-      if (!token || isExpired(token)) {
-        alert('Hết phiên đăng nhập yêu cầu đăng nhập lại !')
-        clearStore(ACCESS_TOKEN)
-        clearStore(USER_LOGIN)
-        //Chuyển hướng trang dạng f5
-        window.location.href = '/login'
-      }
+      // if (!token || isExpired(token)) {
+      //   alert('Hết phiên đăng nhập yêu cầu đăng nhập lại !')
+      //   clearStore(ACCESS_TOKEN)
+      //   clearStore(USER_LOGIN)
+      //   //Chuyển hướng trang dạng f5
+      //   window.location.href = '/login'
+      // }
       history.push('/login')
     }
     return Promise.reject(err)

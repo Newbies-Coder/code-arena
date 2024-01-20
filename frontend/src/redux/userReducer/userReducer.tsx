@@ -11,6 +11,7 @@ const initialState: userState = {
   userVerify: {},
   userResendOTP: {},
   loading: false,
+  userError: null,
 }
 
 const userReducer = createSlice({
@@ -33,10 +34,24 @@ const userReducer = createSlice({
     loadingAction: (state: userState, action: PayloadAction<boolean>) => {
       state.loading = action.payload
     },
+    errorAction: (state: userState, action: PayloadAction<string>) => {
+      state.userError = action.payload
+    },
+    loginFailAction: (state: userState, action: PayloadAction<string>) => {
+      state.userError = action.payload
+    },
   },
 })
 
-export const { loginAction, registerAction, verifyAction, resendOTPAction, loadingAction } = userReducer.actions
+export const {
+  loginAction,
+  registerAction,
+  verifyAction,
+  resendOTPAction,
+  loadingAction,
+  errorAction,
+  loginFailAction,
+} = userReducer.actions
 
 export default userReducer.reducer
 
@@ -47,14 +62,14 @@ export const loginApi = (userLogin: LoginFieldType) => {
   return async (dispatch: DispatchType) => {
     try {
       const response = await http.post('/users/login', userLogin)
-      let { data, message } = response.data
+      let { data } = response.data
       const action: PayloadAction<userLoginType> = loginAction(data)
       dispatch(action)
       //save access token to local storage
       setStore(ACCESS_TOKEN, data.access_token)
       history.push('/')
-    } catch (error) {
-      console.error('error:', error)
+    } catch (error: any) {
+      dispatch(loginFailAction(error.response?.data || 'login fail'))
     }
   }
 }

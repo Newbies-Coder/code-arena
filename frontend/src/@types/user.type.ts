@@ -26,4 +26,5 @@ export type userState = {
   userVerify: userType
   userResendOTP: userType
   loading: boolean
+  userError: string | null
 }

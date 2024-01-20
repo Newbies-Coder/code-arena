@@ -4,14 +4,18 @@ import { LOGO, BG } from '@/constants/images'
 import { Link } from 'react-router-dom'
 import { socialMediaLogin } from '@/mocks/auth.data'
 import { LoginFieldType, SocialMediaType } from '@/@types/form.type'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { loginApi } from '@/redux/userReducer/userReducer'
-import { DispatchType } from '@/redux/config'
+import { DispatchType, RootState } from '@/redux/config'
 import { LockIcon, UserIcon } from '@/components/Icons'
 import { regexPasswordPattern } from '@/utils/regex'
 
 const Login = () => {
   const dispatch: DispatchType = useDispatch()
+  const message = useSelector((state: RootState) => state.userReducer.userError)
+
+  console.log(typeof message)
+  console.log(message)
 
   //call api
   const onFinish = async (values: LoginFieldType) => {
