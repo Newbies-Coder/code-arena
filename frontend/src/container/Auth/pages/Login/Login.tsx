@@ -3,32 +3,28 @@ import './style.scss'
 import { LOGO, BG } from '@/constants/images'
 import { Link } from 'react-router-dom'
 import { socialMediaLogin } from '@/mocks/auth.data'
-import { SocialMediaType } from '@/@types/form'
+import { LoginFieldType, SocialMediaType } from '@/@types/form.type'
 import { useDispatch, useSelector } from 'react-redux'
-import { userState } from '@/@types/user'
 import { loginApi } from '@/redux/userReducer/userReducer'
-import { DispatchType } from '@/redux/config'
+import { DispatchType, RootState } from '@/redux/config'
 import { LockIcon, UserIcon } from '@/components/Icons'
-
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo)
-}
+import { regexPasswordPattern } from '@/utils/regex'
 
 const Login = () => {
-  const data = useSelector((state: userState) => state.userLogin)
   const dispatch: DispatchType = useDispatch()
-  const onFinish = async (values: any) => {
-    const loginData = loginApi({ email: values.email, password: values.password })
+  const message = useSelector((state: RootState) => state.userReducer.userError)
+
+  console.log(typeof message)
+  console.log(message)
+
+  //call api
+  const onFinish = async (values: LoginFieldType) => {
+    let { email, password } = values
+    const loginData = loginApi({ email, password })
     await dispatch(loginData)
   }
 
-  // useEffect(() => {
-  //   ;(async () => {
-  //     const loginData = loginApi({})
-  //     await dispatch(loginData)
-  //   })()
-  // }, [])
-
+  //render url icon button
   const renderButtonContent = (button: SocialMediaType) => {
     if (button.url) {
       return <img src={button.url} alt={button.alt} className={button.key === 'github' ? 'h-11 w-11' : ''} />
@@ -54,7 +50,7 @@ const Login = () => {
           <p className="text-black font-popins text-sm -mt-9 mb-10 text-center font-medium">
             Welcome to the Code Arena free coding learning page!
           </p>
-          <Form name="basic" className="mt-3 w-full" onFinish={onFinish} onFinishFailed={onFinishFailed}>
+          <Form name="basic" className="mt-3 w-full" onFinish={onFinish}>
             <Form.Item
               name="email"
               rules={[
@@ -93,7 +89,7 @@ const Login = () => {
               name="password"
               rules={[
                 {
-                  pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$/,
+                  pattern: regexPasswordPattern,
                   message: (
                     <Alert
                       className="ml-2 bg-transparent text-base text-red-700"
@@ -108,7 +104,7 @@ const Login = () => {
                   message: (
                     <Alert
                       className="ml-2 bg-transparent text-base text-red-700"
-                      message="please input your email"
+                      message="please input your password"
                       banner
                       type="error"
                     />

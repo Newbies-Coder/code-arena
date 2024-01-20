@@ -1,4 +1,4 @@
-import { MenuItemType } from '@/@types/admin'
+import { MenuItemType } from '@/@types/admin.type'
 import DarkMode from '@/components/DarkMode'
 import {
   CourserIcon,
