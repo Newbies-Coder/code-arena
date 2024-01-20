@@ -152,6 +152,7 @@ export const USER_VALIDATOR_MESSAGES = {
 
 export const VALIDATION_MESSAGES = {
   TITLE: 'Validation Error',
+  ERROR_MANY_REQ: 'Too many request from this IP, please try again in an hour',
   PAGINATION: {
     PAGE_CAN_NOT_LESS_THAN_ZERO: 'Page number cannot less than zero',
     ITEMS_IS_NOT_IN_RANGE: 'Item per page can not less than zero and greater than 100'
@@ -203,7 +204,8 @@ export const VALIDATION_MESSAGES = {
       ACCOUNT_IS_BANNED: 'Account is banned',
       ACCOUNT_NOT_FOUND: 'Account not found',
       USER_NOT_FOUND: 'User not found',
-      ACCOUNT_NOT_EXISTS: "The user's account has been removed."
+      ACCOUNT_NOT_EXISTS: "The user's account has been removed.",
+      EMAIL_OR_PASSWORD_IS_INCORRECT: 'Email or password is incorrect'
     },
     REGISTER: {
       USERNAME_IS_REQUIRED: 'Username is required',

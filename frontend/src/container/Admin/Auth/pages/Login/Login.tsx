@@ -1,5 +1,9 @@
+import { LoginFieldType } from '@/@types/form.type'
+import { userLoginType } from '@/@types/user.type'
+import { useLoginMutation } from '@/apis/api'
 import { DispatchType } from '@/redux/config'
-import { loginApi } from '@/redux/userReducer/userReducer'
+import { authAction } from '@/redux/userReducer/userReducer'
+import { ACCESS_TOKEN, setStore } from '@/utils/setting'
 import { LOGO, SYS } from '@constants/images'
 import { Alert, Button, Checkbox, Form, Input } from 'antd'
 import { useDispatch } from 'react-redux'
@@ -12,18 +16,26 @@ type FieldType = {
 }
 
 const Login = () => {
-  const dispatch: DispatchType = useDispatch()
   const navigate = useNavigate()
+  const [login, { isLoading }] = useLoginMutation()
+  const dispatch: DispatchType = useDispatch()
 
-  const onFinish = async (values: FieldType) => {
-    await dispatch(loginApi({ email: values.email, password: values.password }))
-    if (localStorage.getItem('accessToken')) {
-      navigate('/admin')
+  const onFinish = async (values: LoginFieldType) => {
+    try {
+      const { email, password } = values
+      const res = await login({ email: email, password: password })
+
+      if ('data' in res) {
+        const { access_token } = res.data.data as userLoginType
+        setStore(ACCESS_TOKEN, access_token)
+        dispatch(authAction(true))
+        navigate('/admin')
+      }
+    } catch (error) {
+      console.log('====================================')
+      console.log(error)
+      console.log('====================================')
     }
-  }
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo)
   }
 
   return (
@@ -54,7 +66,6 @@ const Login = () => {
               initialValues={{ remember: true }}
               className="w-full md:w-2/3 flex flex-col items-center relative"
               onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
             >
               <h3 className="absolute -top-2 left-3 px-2 mb-0 text-[#6a5af9] bg-black z-10 rounded-md">Email</h3>
               <Form.Item<FieldType>
@@ -133,7 +144,7 @@ const Login = () => {
                   htmlType="submit"
                   className="flex items-center justify-center bg-gradient-to-tr --tw-gradient-stops from-[#6A5AF9] to-[#D66EFD] py-4 px-8 text-3xl font-bold h-16 w-full border-none rounded-tl-[30px] rounded-bl-[50px] rounded-tr-[50px] rounded-br-[30px] hover:bg-gradient-to-l hover:bg-white hover:duration-500 hover:ease-linear"
                 >
-                  Sign-in
+                  {isLoading ? 'Wait...' : 'Sign-in'}
                 </Button>
               </Form.Item>
             </Form>

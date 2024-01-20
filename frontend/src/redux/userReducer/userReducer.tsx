@@ -13,6 +13,7 @@ const initialState: userState = {
   resendOTP: {},
   loading: false,
   error: null,
+  isAdmin: false,
 }
 
 const userReducer = createSlice({
@@ -38,11 +39,21 @@ const userReducer = createSlice({
     loginFailAction: (state: userState, action: PayloadAction<string>) => {
       state.error = action.payload
     },
+    authAction: (state: userState, action: PayloadAction<boolean>) => {
+      state.isAdmin = action.payload
+    },
   },
 })
 
-export const { loginAction, registerAction, verifyAction, resendOTPAction, loadingAction, loginFailAction } =
-  userReducer.actions
+export const {
+  loginAction,
+  registerAction,
+  verifyAction,
+  resendOTPAction,
+  loadingAction,
+  loginFailAction,
+  authAction,
+} = userReducer.actions
 
 export default userReducer.reducer
 
