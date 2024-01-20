@@ -17,6 +17,7 @@ export default function MainUser() {
       title: 'ID',
       dataIndex: 'id',
       className: 'text-sm',
+      width: 200,
     },
     {
       title: 'Name',
@@ -27,10 +28,16 @@ export default function MainUser() {
       title: 'Phone',
       dataIndex: 'phone',
       className: 'text-sm',
+      width: 120,
     },
     {
       title: 'Email',
       dataIndex: 'email',
+      className: 'text-sm',
+    },
+    {
+      title: 'Date of birth',
+      dataIndex: 'dateOfBirth',
       className: 'text-sm',
     },
     {

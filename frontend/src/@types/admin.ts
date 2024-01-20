@@ -17,6 +17,7 @@ export type UserDataType = {
   name: string
   phone: string
   email: string
+  dateOfBirth: string
   role: string
   status: React.ReactElement | string
 }

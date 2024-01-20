@@ -2,21 +2,20 @@
 .ant-table-tbody .ant-table-row {
   background-color: #001529;
   color: white;
-  border: none;
 
   &:nth-child(even) {
     background-color: #7b61ff;
   }
 
-  &:hover > td,
-  > td.ant-table-cell-row-hover {
-    background-color: #001529 !important;
-    color: white;
-  }
-
   &:nth-child(even):hover > td,
   > td.ant-table-cell-row-hover {
     background-color: #7b61ff !important;
+    color: white;
+  }
+
+  &:nth-child(odd):hover > td,
+  > td.ant-table-cell-row-hover {
+    background-color: #001529 !important;
     color: white;
   }
 }
