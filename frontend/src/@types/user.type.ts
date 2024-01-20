@@ -27,4 +27,5 @@ export type userState = {
   userResendOTP: userType
   loading: boolean
   userError: string | null
+  isAdmin: boolean
 }
