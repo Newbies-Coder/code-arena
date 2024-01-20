@@ -13,11 +13,7 @@ export default function MainProfile() {
       <div className="flex flex-col items-center w-full h-full lg:flex-row p-4">
         <div className="w-full lg:justify-center lg:w-2/5 lg:flex lg:flex-col lg:items-center">
           <div className="relative flex justify-center">
-            <img
-              src="https://s3-alpha-sig.figma.com/img/4a21/e3f0/85ed310d00fbbd294eb2392cde7f9acc?Expires=1704672000&Signature=lwRZizoL~HW8ZBcUCKvejDyRnT0PSAqW8CMA5AHVPY693S015cadWaO3uvcsjYbPIZapiddWSiu8pA4hIC87lPDNKDoGCYxiEr1viQE04hMWR3-1snxKAvzsRapQy-0JTHFO8sCHjuboVy-hq6VM9ZA984ZrIvdHaICbwQ6lvT-O18JE7nzOdlNfl4O2gsOL9uCASc3f8cItPLSSetJGuUCMqiZH8KYxMUCzZ89MIOmOT0o9FXC7mTKtCQndQfAQAP~lkg9HGd2cuT1J8oFDTZFjShIZ72h~8H62vB8ayyg7yYN1zaW77uYHLD3eX1xO-0MQy7Hc99CHgNuGkuNuhg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
-              alt=""
-              className="w-64 h-64 rounded-full"
-            />
+            <img src="https://i.imgur.com/en3BKmy.png" alt="" className="w-64 h-64 rounded-full" />
             <CameraOutlined className="text-2xl bg-[#7b61ff] p-3 rounded-full text-white absolute bottom-0 ml-24 border border-black" />
           </div>
           <h3 className="mt-4 text-4xl text-center">Alex Jordan</h3>

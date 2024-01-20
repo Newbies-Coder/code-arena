@@ -1,4 +1,4 @@
-import { MenuType } from '@/@types/home'
+import { MenuType } from '@/@types/home.type'
 import { menuItems } from '@/mocks/home.data'
 import { useState } from 'react'
 
@@ -13,7 +13,7 @@ const Navbar: React.FC = () => {
     <div>
       <ul>
         {menuItems.map((item) => (
-          <>
+          <div key={item.key}>
             <li
               key={item.key}
               onClick={() => {
@@ -43,7 +43,7 @@ const Navbar: React.FC = () => {
                 <item.IconActive />
               </div>
             </li>
-          </>
+          </div>
         ))}
       </ul>
     </div>

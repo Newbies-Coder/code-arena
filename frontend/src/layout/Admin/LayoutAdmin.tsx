@@ -1,4 +1,4 @@
-import { MenuItemType } from '@/@types/admin'
+import { MenuItemType } from '@/@types/admin.type'
 import DarkMode from '@/components/DarkMode'
 import {
   CourserIcon,
@@ -119,7 +119,7 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
         </Header>
         <Content
           className={clsx(
-            'fixed top-16 bottom-0 right-0 overflow-y-scroll',
+            'fixed top-16 bottom-0 right-0 overflow-y-auto no-scrollbar',
             !collapsed ? 'left-[200px]' : 'left-[80px]',
           )}
         >

@@ -1,4 +1,4 @@
-import { MenuItemType, MenuType } from '@/@types/admin'
+import { MenuItemType, MenuType } from '@/@types/admin.type'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'

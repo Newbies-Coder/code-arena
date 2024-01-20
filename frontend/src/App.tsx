@@ -3,9 +3,12 @@ import { Routes, Route } from 'react-router-dom'
 import { publicRoute } from './routes'
 import Loading from '@components/Loading'
 import { privateRoute } from './routes/routes'
+import { useSelector } from 'react-redux'
+import { userState } from './@types/user.type'
 
 const App = () => {
-  const accessToken = localStorage.getItem('accessToken')
+  const isAdmin = useSelector((state: userState) => state.isAdmin)
+
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
@@ -13,7 +16,7 @@ const App = () => {
           const Page = route.component
           return <Route key={idx} path={route.path} element={<Page />}></Route>
         })}
-        {accessToken &&
+        {isAdmin &&
           privateRoute.map((route, idx) => {
             const Page = route.component
             const Layout = route.layout
