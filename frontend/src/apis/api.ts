@@ -1,6 +1,4 @@
 import { LoginFieldType } from '@/@types/form.type'
-import { userLoginType } from '@/@types/user.type'
-import { loginAction } from '@/redux/userReducer/userReducer'
 import { getStore } from '@/utils/setting'
 import { createApi } from '@reduxjs/toolkit/query/react'
 import type { BaseQueryFn } from '@reduxjs/toolkit/query/react'
@@ -52,8 +50,11 @@ export const api = createApi({
       login: build.mutation({
         query: (data: LoginFieldType) => ({ url: '/users/login', method: 'post', data: data }),
       }),
+      testToken: build.mutation({
+        query: () => ({ url: '/users/test-token', method: 'post' }),
+      }),
     }
   },
 })
 
-export const { useGetUsersQuery, useLoginMutation } = api
+export const { useGetUsersQuery, useLoginMutation, useTestTokenMutation } = api
