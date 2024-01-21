@@ -9,14 +9,15 @@ import { generateSlug } from '~/utils/helper'
 
 class CourseService {
   async create(body: CreateCourseBody) {
-    const { name } = body
+    const { name, category } = body
     const slug = generateSlug(name)
 
-    const result = await databaseService.course.insertOne(
+    const result = await databaseService.courses.insertOne(
       new Course({
         name,
         slug,
-        ...body
+        ...body,
+        category: new ObjectId(category)
       })
     )
 
@@ -24,16 +25,17 @@ class CourseService {
   }
 
   async update(id: string, body: UpdateCourseBody) {
-    const { name } = body
+    const { name, category } = body
     const slug = generateSlug(name)
 
-    const result = await databaseService.course.updateOne(
+    const result = await databaseService.courses.updateOne(
       { _id: new ObjectId(id) },
       {
         $set: new Course({
           name,
           slug,
-          ...body
+          ...body,
+          category: new ObjectId(category)
         })
       },
       { upsert: false }
@@ -47,7 +49,7 @@ class CourseService {
   }
 
   async delete(id: string) {
-    const result = await databaseService.course.deleteOne({ _id: new ObjectId(id) })
+    const result = await databaseService.courses.deleteOne({ _id: new ObjectId(id) })
 
     return result
   }

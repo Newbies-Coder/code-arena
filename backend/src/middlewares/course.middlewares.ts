@@ -28,7 +28,7 @@ export const createCourseValidator = validate(
         options: async (value) => {
           const slug = generateSlug(value)
 
-          const result = await databaseService.course.findOne({ slug })
+          const result = await databaseService.courses.findOne({ slug })
           if (!!result) {
             throw new ErrorWithStatus({
               message: VALIDATION_MESSAGES.COURSE.COURSE_NAME_EXIST,
@@ -87,7 +87,6 @@ export const updateCourseValidator = validate(
   checkSchema({
     name: {
       trim: true,
-      optional: true,
       notEmpty: {
         errorMessage: VALIDATION_MESSAGES.COURSE.COURSE_NAME_IS_REQUIRED
       },
@@ -105,7 +104,7 @@ export const updateCourseValidator = validate(
         options: async (value) => {
           const slug = generateSlug(value)
 
-          const result = await databaseService.course.findOne({ slug })
+          const result = await databaseService.courses.findOne({ slug })
           if (!!result) {
             throw new ErrorWithStatus({
               message: VALIDATION_MESSAGES.COURSE.COURSE_NAME_EXIST,
@@ -119,7 +118,6 @@ export const updateCourseValidator = validate(
     },
     content: {
       trim: true,
-      optional: true,
       notEmpty: {
         errorMessage: VALIDATION_MESSAGES.COURSE.COURSE_CONTENT_IS_REQUIRED
       },
@@ -136,7 +134,6 @@ export const updateCourseValidator = validate(
     },
     category: {
       trim: true,
-      optional: true,
       notEmpty: {
         errorMessage: VALIDATION_MESSAGES.COURSE.COURSE_CATEGORY_IS_REQUIRED
       },

@@ -30,6 +30,8 @@ const envSchema = Joi.object({
   DB_BANNERS_COLLECTION: Joi.string().required().description(DB_MAIN.BANNERS_COLLECTION),
   DB_COURSE_CATEGORY_COLLECTION: Joi.string().required().description(DB_MAIN.COURSE_CATEGORY_COLLECTION),
   DB_COURSE_COLLECTION: Joi.string().required().description(DB_MAIN.COURSE_COLLECTION),
+  DB_MESSAGE_COLLECTION: Joi.string().required().description(DB_MAIN.MESSAGE_COLLECTION),
+  DB_ROOM_COLLECTION: Joi.string().required().description(DB_MAIN.ROOM_COLLECTION),
   DATABASE_USER_LOGS: Joi.string().required().description(DB_LOGS.USERNAME),
   PASSWORD_USER_LOGS: Joi.string().required().description(DB_LOGS.PASSWORD),
   DATABASE_CODE_ARENA: Joi.string().required().description(DB_MAIN.USERNAME),
@@ -108,7 +110,9 @@ export const env = {
         close_friends: envVars.DB_CLOSE_FRIENDS_COLLECTION,
         banners: envVars.DB_BANNERS_COLLECTION,
         course_category: envVars.DB_COURSE_CATEGORY_COLLECTION,
-        course: envVars.DB_COURSE_COLLECTION
+        courses: envVars.DB_COURSE_COLLECTION,
+        messages: envVars.DB_MESSAGE_COLLECTION,
+        rooms: envVars.DB_ROOM_COLLECTION
       }
     },
     logs: {

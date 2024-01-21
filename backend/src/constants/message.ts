@@ -20,7 +20,9 @@ export const DATABASE_MESSAGE = {
     CLOSE_FRIENDS_COLLECTION: 'The table holds close friends information in the database.',
     BANNERS_COLLECTION: 'The table holds banners in the database.',
     COURSE_CATEGORY_COLLECTION: 'The table holds course category in the database.',
-    COURSE_COLLECTION: 'The table holds course in the database.'
+    COURSE_COLLECTION: 'The table holds course in the database.',
+    MESSAGE_COLLECTION: 'The table holds message in the database.',
+    ROOM_COLLECTION: 'The table holds room in the database.'
   }
 } as const
 

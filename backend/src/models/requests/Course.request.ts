@@ -5,7 +5,7 @@ export interface CreateCourseBody {
 }
 
 export interface UpdateCourseBody {
-  name?: string
-  content?: string
-  category?: string
+  name: string
+  content: string
+  category: string
 }

@@ -7,8 +7,10 @@ import CloseFriends from '~/models/schemas/CloseFriends'
 import Course from '~/models/schemas/Course.schema'
 import CourseCategory from '~/models/schemas/CourseCategory.schema'
 import Follow from '~/models/schemas/Follow.schema'
+import Message from '~/models/schemas/Message.schema'
 import OTP from '~/models/schemas/Otps.schema'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
+import Room from '~/models/schemas/Room.schema'
 import User from '~/models/schemas/Users.schema'
 class DatabaseServices {
   private client: MongoClient | undefined
@@ -74,8 +76,16 @@ class DatabaseServices {
     return this.db.collection(env.database.main.collection.course_category)
   }
 
-  get course(): Collection<Course> {
-    return this.db.collection(env.database.main.collection.course)
+  get courses(): Collection<Course> {
+    return this.db.collection(env.database.main.collection.courses)
+  }
+
+  get messages(): Collection<Message> {
+    return this.db.collection(env.database.main.collection.messages)
+  }
+
+  get rooms(): Collection<Room> {
+    return this.db.collection(env.database.main.collection.rooms)
   }
 }
 

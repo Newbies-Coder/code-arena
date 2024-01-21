@@ -4,7 +4,7 @@ interface CourseType {
   _id?: ObjectId
   name?: string
   slug?: string
-  category?: string
+  category?: ObjectId
   content?: string
   updated_at?: Date
   created_at?: Date
@@ -14,8 +14,8 @@ export default class Course {
   _id?: ObjectId
   name: string
   slug: string
+  category: ObjectId
   content: string
-  category: string
   updated_at: Date
   created_at: Date
 
