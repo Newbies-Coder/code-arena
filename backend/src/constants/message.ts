@@ -18,7 +18,9 @@ export const DATABASE_MESSAGE = {
     FOLLOW_COLLECTION: 'The table holds follow information in the database.',
     BLOCKED_USER_COLLECTION: 'The table holds user block user information in the database.',
     CLOSE_FRIENDS_COLLECTION: 'The table holds close friends information in the database.',
-    BANNERS_COLLECTION: 'The table holds banners in the database.'
+    BANNERS_COLLECTION: 'The table holds banners in the database.',
+    COURSE_CATEGORY_COLLECTION: 'The table holds course category in the database.',
+    COURSE_COLLECTION: 'The table holds course in the database.'
   }
 } as const
 
@@ -89,6 +91,16 @@ export const DEV_ERRORS_MESSAGES = {
 }
 
 export const RESULT_RESPONSE_MESSAGES = {
+  COURSE_CATEGORY: {
+    INSERT: 'Insert course category successfully',
+    UPDATE: 'Update course category successfully',
+    DELETE: 'Delete course category successfully'
+  },
+  COURSE: {
+    INSERT: 'Insert course successfully',
+    UPDATE: 'Update course successfully',
+    DELETE: 'Delete course successfully'
+  },
   AUTH_SUCCESS: {
     LOGIN: 'Login successfully!',
     LOGIN_GOOGLE: 'Login google successfully!',
@@ -373,6 +385,29 @@ export const VALIDATION_MESSAGES = {
     URL_MUST_BE_STRING: 'Url image is must be string',
     VALID_URL_IMAGE: 'Valid url image and image extension',
     INVALID_SORT_ORDER: 'Invalid sorting order'
+  },
+  COURSE_CATEGORY: {
+    CATEGORY_ID_IS_REQUIRED: 'Category id is required',
+    CATEGORY_NOT_FOUND: 'Category not found',
+    CATEGORY_ID_IS_INVALID: 'Category id is invalid',
+    CATEGORY_NAME_IS_REQUIRED: 'Category name is required',
+    CATEGORY_NAME_MUST_BE_A_STRING: 'Category name must be a string',
+    CATEGORY_NAME_EXIST: 'Category name exists',
+    CATEGORY_NAME_LENGTH_IS_INVALID: 'Category name must be longer than 4 characters and less than 30 characters'
+  },
+  COURSE: {
+    COURSE_ID_IS_REQUIRED: 'Course id is required',
+    COURSE_NOT_FOUND: 'Course not found',
+    COURSE_ID_IS_INVALID: 'Course id is invalid',
+    COURSE_NAME_IS_REQUIRED: 'Course name is required',
+    COURSE_NAME_MUST_BE_A_STRING: 'Course name must be a string',
+    COURSE_CONTENT_MUST_BE_A_STRING: 'Course content must be a string',
+    COURSE_NAME_EXIST: 'Course name exists',
+    COURSE_NAME_LENGTH_IS_INVALID: 'Course name must be longer than 4 characters and less than 30 characters',
+    COURSE_CONTENT_IS_REQUIRED: 'Course content is required',
+    COURSE_CONTENT_LENGTH_IS_INVALID: 'Course content must be longer than 10 characters and less than 100000 characters',
+    COURSE_CATEGORY_MUST_BE_A_STRING: 'Course content must be a string',
+    COURSE_CATEGORY_IS_REQUIRED: 'Course name is required'
   }
 } as const
 

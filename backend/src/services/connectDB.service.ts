@@ -4,6 +4,8 @@ import { DATABASE_MESSAGE } from '~/constants/message'
 import Banner from '~/models/schemas/Banner.schema'
 import BlockedUser from '~/models/schemas/BlockedUser.schema'
 import CloseFriends from '~/models/schemas/CloseFriends'
+import Course from '~/models/schemas/Course.schema'
+import CourseCategory from '~/models/schemas/CourseCategory.schema'
 import Follow from '~/models/schemas/Follow.schema'
 import OTP from '~/models/schemas/Otps.schema'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
@@ -66,6 +68,14 @@ class DatabaseServices {
   // Get collection banners
   get banners(): Collection<Banner> {
     return this.db.collection(env.database.main.collection.banners)
+  }
+
+  get course_category(): Collection<CourseCategory> {
+    return this.db.collection(env.database.main.collection.course_category)
+  }
+
+  get course(): Collection<Course> {
+    return this.db.collection(env.database.main.collection.course)
   }
 }
 
