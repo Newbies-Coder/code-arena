@@ -37,3 +37,5 @@ courseRouter.put('/:id', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin
  */
 
 courseRouter.delete('/:id', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), checkParamValidator, wrapRequestHandler(courseController.delete))
+
+export default courseRouter

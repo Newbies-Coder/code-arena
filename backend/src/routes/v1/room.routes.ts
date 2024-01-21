@@ -1,42 +1,42 @@
 import { Router } from 'express'
 
-const chatRouter = Router()
+const roomRouter = Router()
 
 /**
- * Description: Get list of channel
+ * Description: Get list of room
  * Path: /
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
  * Query: { page: number, limit: number }
  */
-chatRouter.get('/')
+roomRouter.get('/')
 
 /**
- * Description: Create channel
+ * Description: Create room
  * Path: /
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
  * Body: { name: string, type: string }
  */
-chatRouter.post('/')
+roomRouter.post('/')
 
 /**
- * Description: Update channel
- * Path: /
- * Method: POST
+ * Description: Update room
+ * Path: /:id
+ * Method: PUT
  * Header: { Authorization: Bearer <access_token> }
- * Body: { name: string, type: string }
+ * Body: { name: string }
  */
 
-chatRouter.put('/:id')
+roomRouter.put('/:id')
 
 /**
- * Description: Delete channel
- * Path: /
- * Method: POST
+ * Description: Delete room
+ * Path: /:id
+ * Method: DELETE
  * Header: { Authorization: Bearer <access_token> }
- * Body: { name: string, type: string }
+ * Param: { id: string }
  */
-chatRouter.delete('/:id')
+roomRouter.delete('/:id')
 
-export default chatRouter
+export default roomRouter
