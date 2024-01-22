@@ -1,4 +1,5 @@
 export type CourseType = {
+  id: number
   bgImage: string
   Icon: React.ElementType
   title: string
@@ -36,4 +37,10 @@ export type ToastifyType = {
   description: string
   type: 'success' | 'info' | 'warning' | 'error'
   onButtonClick?: (type: 'success' | 'info' | 'warning' | 'error') => void
+}
+
+export type ProfileMenuType = {
+  key: number
+  label: string
+  Icon: React.ElementType
 }

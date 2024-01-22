@@ -1,5 +1,5 @@
 import MonacoEditor, { OnMount } from '@monaco-editor/react'
-import { CodeEditorType } from '@/@types/home'
+import { CodeEditorType } from '@/@types/home.type'
 
 const CodeEditor: React.FC<CodeEditorType> = ({ onChange, initialValue }) => {
   const onEditorDidMount: OnMount = (editor) => {

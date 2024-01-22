@@ -1,4 +1,4 @@
-import { MenuItemType } from '@/@types/admin'
+import { MenuItemType } from '@/@types/admin.type'
 import DarkMode from '@/components/DarkMode'
 import {
   CourserIcon,
@@ -12,12 +12,16 @@ import {
 import Menu from '@/components/Menu'
 import { HOME_ICON, LOGO } from '@/constants/images'
 import AvatarProfile from '@/container/Detail/components/AvatarProfile'
+import { DispatchType } from '@/redux/config'
+import { authAction } from '@/redux/userReducer/userReducer'
+import { ACCESS_TOKEN, clearStore } from '@/utils/setting'
 import { Button, Layout } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import { Content, Header } from 'antd/es/layout/layout'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 
 const items: MenuItemType[] = [
   { label: 'Dashboard', icon: <DashboardIcon color="#00D1FF" />, link: '/admin', active: false, color: '#00D1FF' },
@@ -31,6 +35,8 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
   const [windowSize, setWindowSize] = useState([window.innerWidth, window.innerHeight])
   const href = window.location.href
   const [title, setTitle] = useState('')
+  const dispatch: DispatchType = useDispatch()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const url = href.slice(href.indexOf('/admin', 1)) as keyof typeof titles
@@ -62,6 +68,12 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
       window.removeEventListener('resize', handleWindowResize)
     }
   }, [windowSize])
+
+  const handleLogout = () => {
+    dispatch(authAction(false))
+    clearStore(ACCESS_TOKEN)
+    navigate('/admin/login')
+  }
 
   return (
     <Layout className="min-h-screen bg-[#001529]">
@@ -97,6 +109,7 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
             icon={!collapsed && <LogoutIcon />}
             className={clsx(['h-10 text-white flex items-center w-full'])}
             classNames={{ icon: 'ml-2' }}
+            onClick={handleLogout}
           >
             {!collapsed ? 'Log out' : <LogoutIcon />}
           </Button>
@@ -119,7 +132,7 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
         </Header>
         <Content
           className={clsx(
-            'fixed top-16 bottom-0 right-0 overflow-y-scroll',
+            'fixed top-16 bottom-0 right-0 overflow-y-auto no-scrollbar',
             !collapsed ? 'left-[200px]' : 'left-[80px]',
           )}
         >

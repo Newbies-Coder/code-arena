@@ -1,4 +1,4 @@
-import { routeTypes } from '@/@types/global'
+import { routeTypes } from '@/@types/global.type'
 
 const routes: routeTypes = {
   home: '/',
@@ -21,6 +21,9 @@ const routes: routeTypes = {
     user: '/admin/user',
     course: '/admin/course',
     message: '/admin/message',
+    addUser: '/admin/user/add',
+    updateUser: '/admin/user/update/:userID',
+    loginInfo: '/admin/user/login-info',
   },
 } as const
 
