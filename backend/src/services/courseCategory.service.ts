@@ -29,10 +29,11 @@ class CourseCategoryService {
     const result = await databaseService.course_category.updateOne(
       { _id: new ObjectId(id) },
       {
-        $set: new CourseCategory({
+        $set: {
           name,
-          slug
-        })
+          slug,
+          updated_at: new Date()
+        }
       },
       { upsert: false }
     )

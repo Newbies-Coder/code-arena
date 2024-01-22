@@ -1,17 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { DispatchType } from '../config'
+import { DispatchType, RootState } from '../config'
 import { userLoginType, userState, userType } from '@/@types/user.type'
-import { ACCESS_TOKEN, http, setStore } from '@/utils/setting'
+import { ACCESS_TOKEN, getStore, http, setStore } from '@/utils/setting'
 import { history } from '@/main'
 import { LoginFieldType } from '@/@types/form.type'
+import { AxiosError } from 'axios'
 
 const initialState: userState = {
-  userLogin: null,
-  userRegister: {},
-  userVerify: {},
-  userResendOTP: {},
+  login: null,
+  register: {},
+  verify: {},
+  resendOTP: {},
   loading: false,
-  userError: null,
+  error: null,
   isLogin: false,
 }
 
@@ -21,25 +22,22 @@ const userReducer = createSlice({
   reducers: {
     //
     loginAction: (state: userState, action: PayloadAction<userLoginType>) => {
-      state.userLogin = action.payload
+      state.login = action.payload
     },
     registerAction: (state: userState, action: PayloadAction<userType>) => {
-      state.userRegister = action.payload
+      state.register = action.payload
     },
     verifyAction: (state: userState, action: PayloadAction<userType>) => {
-      state.userVerify = action.payload
+      state.verify = action.payload
     },
     resendOTPAction: (state: userState, action: PayloadAction<userType>) => {
-      state.userVerify = action.payload
+      state.verify = action.payload
     },
     loadingAction: (state: userState, action: PayloadAction<boolean>) => {
       state.loading = action.payload
     },
-    errorAction: (state: userState, action: PayloadAction<string>) => {
-      state.userError = action.payload
-    },
     loginFailAction: (state: userState, action: PayloadAction<string>) => {
-      state.userError = action.payload
+      state.error = action.payload
     },
     authAction: (state: userState, action: PayloadAction<boolean>) => {
       state.isLogin = action.payload
@@ -53,7 +51,6 @@ export const {
   verifyAction,
   resendOTPAction,
   loadingAction,
-  errorAction,
   loginFailAction,
   authAction,
 } = userReducer.actions
@@ -62,10 +59,23 @@ export default userReducer.reducer
 
 /*--------------- Action async --------------- */
 
-//fetch login api
 export const loginApi = (userLogin: LoginFieldType) => {
   return async (dispatch: DispatchType) => {
     try {
+      const storedAC = getStore(ACCESS_TOKEN)
+      if (storedAC) {
+        const storedData: userLoginType = {
+          _id: '',
+          username: '',
+          email: '',
+          access_token: storedAC,
+          refresh_token: '',
+        }
+        const action: PayloadAction<userLoginType> = loginAction(storedData)
+        dispatch(action)
+        history.push('/')
+        return
+      }
       const response = await http.post('/users/login', userLogin)
       let { data } = response.data
       const action: PayloadAction<userLoginType> = loginAction(data)
@@ -74,7 +84,11 @@ export const loginApi = (userLogin: LoginFieldType) => {
       setStore(ACCESS_TOKEN, data.access_token)
       history.push('/')
     } catch (error: any) {
-      dispatch(loginFailAction(error.response?.data || 'login fail'))
+      let errorMessage = 'login fail'
+      if (error instanceof AxiosError && error.response) {
+        errorMessage = error.response?.data.message || errorMessage
+      }
+      dispatch(loginFailAction(errorMessage))
     }
   }
 }
