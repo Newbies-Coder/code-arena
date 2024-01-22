@@ -1,4 +1,3 @@
-import { message } from 'antd'
 export type userType = {
   username?: string
   email?: string

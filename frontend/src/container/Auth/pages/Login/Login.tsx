@@ -9,7 +9,6 @@ import { loginApi } from '@/redux/userReducer/userReducer'
 import { DispatchType, RootState } from '@/redux/config'
 import { LockIcon, UserIcon } from '@/components/Icons'
 import { regexPasswordPattern } from '@/utils/regex'
-import ToastifyMessage from '@/components/ToastifyMessage'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -137,7 +136,6 @@ const Login = () => {
                 SIGN IN
               </Button>
             </Form.Item>
-            <ToastifyMessage description={messageErr ?? ''} type="error" />
           </Form>
           <Divider orientation="center" plain className="text-lg">
             <strong>Sign in&nbsp;</strong>

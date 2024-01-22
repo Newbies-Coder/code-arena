@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DispatchType } from '../config'
 import { userLoginType, userState, userType } from '@/@types/user.type'
-import { ACCESS_TOKEN, http, setStore } from '@/utils/setting'
+import { ACCESS_TOKEN, getStore, http, setStore } from '@/utils/setting'
 import { history } from '@/main'
 import { LoginFieldType } from '@/@types/form.type'
 import { AxiosError } from 'axios'
@@ -62,6 +62,20 @@ export default userReducer.reducer
 export const loginApi = (userLogin: LoginFieldType) => {
   return async (dispatch: DispatchType) => {
     try {
+      const storedAC = getStore(ACCESS_TOKEN)
+      if (storedAC) {
+        const storedData: userLoginType = {
+          _id: '',
+          username: '',
+          email: '',
+          access_token: storedAC,
+          refresh_token: '',
+        }
+        const action: PayloadAction<userLoginType> = loginAction(storedData)
+        dispatch(action)
+        history.push('/')
+        return
+      }
       const response = await http.post('/users/login', userLogin)
       let { data } = response.data
       const action: PayloadAction<userLoginType> = loginAction(data)
@@ -74,7 +88,6 @@ export const loginApi = (userLogin: LoginFieldType) => {
       if (error instanceof AxiosError && error.response) {
         errorMessage = error.response?.data.message || errorMessage
       }
-      // dispatch(loginFailAction(error.response?.data.message || 'login fail'))
       dispatch(loginFailAction(errorMessage))
     }
   }
