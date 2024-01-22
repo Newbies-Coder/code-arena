@@ -225,7 +225,7 @@ userRouter.get('/favorite', wrapRequestHandler(requireLoginMiddleware), paginati
 userRouter.post('/favorite', wrapRequestHandler(requireLoginMiddleware), favoriteValidator, wrapRequestHandler(userController.insertUserFavorite))
 
 /**
- * Description: Remove the individual from your list of close friends.
+ * Description: Remove the individual from your list of close friends
  * Path: /favorite/:id
  * Method: DELETE
  * Header: { Authorization: Bearer <access_token> }
