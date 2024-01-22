@@ -15,7 +15,7 @@ import { useEffect } from 'react'
 
 const Login = () => {
   const dispatch: DispatchType = useDispatch()
-  const messageErr = useSelector((state: RootState) => state.userReducer.error ?? null)
+  const messageErr = useSelector((state: RootState) => state.user.error ?? null)
 
   //dispatch form data to store
   const onFinish = async (values: LoginFieldType) => {
