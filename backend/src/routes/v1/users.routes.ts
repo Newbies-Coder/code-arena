@@ -1,7 +1,6 @@
 import { Router } from 'express'
-import { UserRole } from '~/constants/enums'
 import userController from '~/controllers/users.controllers'
-import { requireLoginMiddleware, requireRoleMiddleware } from '~/middlewares/auth.middlewares'
+import { requireLoginMiddleware } from '~/middlewares/auth.middlewares'
 import { objectIdValidator, paginationBlockedUserValidators, paginationUserFavoriteValidators } from '~/middlewares/commons.middleware'
 import { singleImageUpload } from '~/middlewares/uploadFile.middleware'
 import {
