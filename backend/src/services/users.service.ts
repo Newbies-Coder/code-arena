@@ -245,7 +245,6 @@ class UserService {
           message: VALIDATION_MESSAGES.USER.LOGIN.EMAIL_OR_PASSWORD_IS_INCORRECT
         })
       }
-
       const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user._id.toString(), user.email, user.username, user.role)
 
       await databaseService.refreshTokens.updateOne(
