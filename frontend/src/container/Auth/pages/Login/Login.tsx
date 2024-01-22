@@ -11,6 +11,7 @@ import { LockIcon, UserIcon } from '@/components/Icons'
 import { regexPasswordPattern } from '@/utils/regex'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useEffect } from 'react'
 
 const Login = () => {
   const dispatch: DispatchType = useDispatch()
@@ -24,6 +25,10 @@ const Login = () => {
     if (messageErr) toast.error(messageErr)
     else toast.success('login successfully')
   }
+
+  useEffect(() => {
+    dispatch(loginApi({ email: '', password: '' }))
+  }, [dispatch])
 
   //render url icon button
   const renderButtonContent = (button: SocialMediaType) => {

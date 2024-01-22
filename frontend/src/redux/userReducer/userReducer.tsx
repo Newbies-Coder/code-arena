@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { DispatchType } from '../config'
+import { DispatchType, RootState } from '../config'
 import { userLoginType, userState, userType } from '@/@types/user.type'
 import { ACCESS_TOKEN, getStore, http, setStore } from '@/utils/setting'
 import { history } from '@/main'
