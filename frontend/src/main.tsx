@@ -7,6 +7,7 @@ import { Provider } from 'react-redux'
 import { persistor, store } from '@redux/config'
 import { ConfigProvider } from 'antd'
 import App from './App'
+import { ToastContainer } from 'react-toastify'
 import { PersistGate } from 'redux-persist/integration/react'
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 export const history: any = createBrowserHistory()
@@ -39,6 +40,7 @@ root.render(
         >
           <App />
         </ConfigProvider>
+        <ToastContainer />
       </HistoryBrowserRouter>
     </PersistGate>
   </Provider>,

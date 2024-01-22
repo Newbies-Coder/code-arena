@@ -21,11 +21,11 @@ export type userLoginType = {
 }
 
 export type userState = {
-  userLogin: userLoginType | null
-  userRegister: userType
-  userVerify: userType
-  userResendOTP: userType
+  login: userLoginType | null
+  register: userType
+  verify: userType
+  resendOTP: userType
   loading: boolean
-  userError: string | null
+  error: string | null
   isLogin: boolean
 }

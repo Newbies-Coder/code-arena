@@ -31,12 +31,13 @@ class CourseService {
     const result = await databaseService.courses.updateOne(
       { _id: new ObjectId(id) },
       {
-        $set: new Course({
+        $set: {
           name,
           slug,
           ...body,
-          category: new ObjectId(category)
-        })
+          category: new ObjectId(category),
+          updated_at: new Date()
+        }
       },
       { upsert: false }
     )

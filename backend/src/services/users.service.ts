@@ -225,7 +225,6 @@ class UserService {
   async login(payload: LoginPayload): Promise<LoginResultType> {
     try {
       const user = await databaseService.users.findOne({ email: payload.email })
-      const { _destroy } = user
       if (!user) {
         throw new ErrorWithStatus({
           statusCode: StatusCodes.NOT_FOUND,

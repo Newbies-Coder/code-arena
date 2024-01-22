@@ -33,7 +33,7 @@ export type CodeEditorType = {
 }
 
 export type ToastifyType = {
-  title: string
+  title?: string
   description: string
   type: 'success' | 'info' | 'warning' | 'error'
   onButtonClick?: (type: 'success' | 'info' | 'warning' | 'error') => void
