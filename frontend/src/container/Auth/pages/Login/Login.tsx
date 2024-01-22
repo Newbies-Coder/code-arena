@@ -12,14 +12,14 @@ import { regexPasswordPattern } from '@/utils/regex'
 
 const Login = () => {
   const dispatch: DispatchType = useDispatch()
-  const message = useSelector((state: RootState) => state.userReducer.userError)
+  const message = useSelector((state: RootState) => state.user.userError)
 
   console.log(typeof message)
   console.log(message)
 
   //call api
   const onFinish = async (values: LoginFieldType) => {
-    let { email, password } = values
+    const { email, password } = values
     const loginData = loginApi({ email, password })
     await dispatch(loginData)
   }

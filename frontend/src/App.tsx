@@ -1,13 +1,27 @@
-import { Suspense } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Suspense, useEffect, useState } from 'react'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import { publicRoute } from './routes'
 import Loading from '@components/Loading'
 import { privateRoute } from './routes/routes'
+import { useTestTokenMutation } from './apis/api'
 import { useSelector } from 'react-redux'
-import { userState } from './@types/user.type'
+import { RootState } from './redux/config'
 
 const App = () => {
-  const isAdmin = useSelector((state: userState) => state.isAdmin)
+  const isLogin = useSelector((state: RootState) => state.user.isLogin)
+  const [testToken] = useTestTokenMutation()
+  const [isAdmin, setIsAdmin] = useState(false)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    ;(async () => {
+      const res = await testToken({})
+
+      if ('data' in res) {
+        setIsAdmin(true)
+      }
+    })()
+  }, [isLogin])
 
   return (
     <Suspense fallback={<Loading />}>
