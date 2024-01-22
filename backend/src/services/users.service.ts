@@ -165,17 +165,6 @@ class UserService {
     }
   }
 
-  async checkAccountExist(email: string): Promise<void> {
-    const user = await databaseService.users.findOne({ email })
-    const { _destroy } = user
-    if (_destroy) {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.NOT_FOUND,
-        message: VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_NOT_EXISTS
-      })
-    }
-  }
-
   async findUserByEmail(email: string): Promise<User | null> {
     try {
       const user = await databaseService.users.findOne({ email })
@@ -192,14 +181,18 @@ class UserService {
 
   async validateAccountAccessibility(email: string): Promise<boolean> {
     const user = await databaseService.users.findOne({ email })
-    if (!user || ['Unverified', 'Banned'].includes(user.verify)) {
+
+    if (!user) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.NOT_FOUND,
+        message: VALIDATION_MESSAGES.USER.LOGIN.USER_NOT_FOUND
+      })
+    }
+
+    if (['Unverified', 'Banned'].includes(user.verify)) {
       throw new ErrorWithStatus({
         statusCode: StatusCodes.FORBIDDEN,
-        message: user
-          ? user.verify === 'Unverified'
-            ? VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_UNVERIFIED
-            : VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_BANNED
-          : VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_NOT_FOUND
+        message: user.verify === 'Unverified' ? VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_UNVERIFIED : VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_BANNED
       })
     }
     return true
@@ -207,14 +200,18 @@ class UserService {
 
   async validateWithIDAccountAccessibility(id: string): Promise<boolean> {
     const user = await databaseService.users.findOne({ _id: new ObjectId(id) })
-    if (!user || ['Unverified', 'Banned'].includes(user.verify)) {
+
+    if (!user) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.NOT_FOUND,
+        message: VALIDATION_MESSAGES.USER.LOGIN.USER_NOT_FOUND
+      })
+    }
+
+    if (['Unverified', 'Banned'].includes(user.verify)) {
       throw new ErrorWithStatus({
         statusCode: StatusCodes.FORBIDDEN,
-        message: user
-          ? user.verify === 'Unverified'
-            ? VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_UNVERIFIED
-            : VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_BANNED
-          : VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_NOT_FOUND
+        message: user.verify === 'Unverified' ? VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_UNVERIFIED : VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_IS_BANNED
       })
     }
     return true
@@ -233,6 +230,15 @@ class UserService {
         throw new ErrorWithStatus({
           statusCode: StatusCodes.NOT_FOUND,
           message: VALIDATION_MESSAGES.USER.LOGIN.USER_NOT_FOUND
+        })
+      }
+
+      const { _destroy } = user
+
+      if (_destroy) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: VALIDATION_MESSAGES.USER.LOGIN.ACCOUNT_NOT_EXISTS
         })
       }
       const isPasswordCorrect = await userServices.validatePassword(payload.password, user.password)
