@@ -18,7 +18,9 @@ const App = () => {
       const res = await testToken({})
 
       if ('data' in res) {
-        setIsAdmin(true)
+        const { role } = res.data.data
+        if (role === 'Admin') setIsAdmin(true)
+        else navigate('/login')
       }
     })()
   }, [isLogin])
