@@ -11,6 +11,7 @@ import {
   CloseCircleFilled,
   CompassOutlined,
   DownOutlined,
+  PlayCircleOutlined,
   SyncOutlined,
 } from '@ant-design/icons'
 import './style.scss'
@@ -18,7 +19,6 @@ import HeaderItem from '@/components/HeaderItem'
 import CodeEditor from '../../components/CodeEditor'
 import { useState } from 'react'
 import CustomedButton from '../../components/CustomedButton'
-import ToastifyMessage from '@/components/ToastifyMessage'
 
 const ThemeItems: MenuProps['items'] = [
   {
@@ -189,7 +189,13 @@ const MainDetail = () => {
                     </Col>
                     <Col xl={6} md={8} sm={12}>
                       <div className="xl:mt-6 md:mt-[38px] flex flex-col items-center">
-                        <ToastifyMessage title="thong bao" description="thong bao" type="success" />
+                        {/* <ToastifyMessage title="thong bao" description="thong bao" type="warning" /> */}
+                        <CustomedButton
+                          label="RUN CODE"
+                          Icon={PlayCircleOutlined}
+                          classNameButton="border-0"
+                          classNameIcon="text-2xl font-popins"
+                        />
                         <CustomedButton
                           label="SUBMIT"
                           Icon={CompassOutlined}

@@ -4,8 +4,7 @@ import { BG, LOGO } from '@/constants/images'
 import { Link } from 'react-router-dom'
 import { DateOfBirthIcon, GmailIcon, LockIcon, UserIcon } from '@/components/Icons'
 import { useDispatch, useSelector } from 'react-redux'
-import { userState } from '@/@types/user.type'
-import { DispatchType } from '@/redux/config'
+import { DispatchType, RootState } from '@/redux/config'
 import { registerApi } from '@/redux/userReducer/userReducer'
 
 const onFinishFailed = (errorInfo: any) => {
@@ -18,7 +17,7 @@ const onChange: DatePickerProps['onChange'] = (date, dateString) => {
 }
 
 const Register = () => {
-  const data = useSelector((state: userState) => state.userRegister)
+  const data = useSelector((state: RootState) => state.userReducer.register)
   const dispatch: DispatchType = useDispatch()
   const onFinish = async (values: any) => {
     const registerData = registerApi({
