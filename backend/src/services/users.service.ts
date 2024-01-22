@@ -231,9 +231,7 @@ class UserService {
           message: VALIDATION_MESSAGES.USER.LOGIN.USER_NOT_FOUND
         })
       }
-
       const { _destroy } = user
-
       if (_destroy) {
         throw new ErrorWithStatus({
           statusCode: StatusCodes.NOT_FOUND,
