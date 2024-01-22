@@ -19,7 +19,7 @@ const Login = () => {
 
   //dispatch form data to store
   const onFinish = async (values: LoginFieldType) => {
-    let { email, password } = values
+    const { email, password } = values
     const loginData = loginApi({ email, password })
     await dispatch(loginData)
     if (messageErr) toast.error(messageErr)
