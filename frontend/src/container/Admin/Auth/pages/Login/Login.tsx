@@ -31,6 +31,16 @@ const Login = () => {
         dispatch(authAction(true))
         navigate('/admin')
       }
+
+      if ('error' in res) {
+        console.log('====================================')
+        if (res.error && 'data' in res.error) {
+          console.log(res.error.data)
+        } else {
+          console.log(res.error)
+        }
+        console.log('====================================')
+      }
     } catch (error) {
       console.log('====================================')
       console.log(error)
