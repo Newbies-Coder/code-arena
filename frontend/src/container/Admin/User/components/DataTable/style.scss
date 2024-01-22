@@ -1,0 +1,71 @@
+// Common styles for ant-table
+.ant-table-tbody .ant-table-row {
+  background-color: #001529;
+  color: white;
+
+  &:nth-child(even) {
+    background-color: #7b61ff;
+  }
+
+  &:nth-child(even):hover > td,
+  > td.ant-table-cell-row-hover {
+    background-color: #7b61ff !important;
+    color: white;
+  }
+
+  &:nth-child(odd):hover > td,
+  > td.ant-table-cell-row-hover {
+    background-color: #001529 !important;
+    color: white;
+  }
+}
+
+.ant-table-row {
+  font-size: 20px;
+  height: 64px;
+}
+
+// Custom styling for ant-table-wrapper
+:where(.css-dev-only-do-not-override-r1lc3v).ant-table-wrapper {
+  .ant-table-tbody > tr > td {
+    transition: none;
+    border-bottom: none;
+  }
+
+  .ant-table-thead > tr > th,
+  .ant-table-thead > tr > td {
+    background-color: #5e00bf;
+    color: white;
+    border-bottom: none;
+  }
+}
+
+// Styling for ant-pagination
+:where(.css-dev-only-do-not-override-r1lc3v).ant-pagination {
+  .ant-pagination-disabled .ant-pagination-item-link,
+  .ant-pagination-disabled:hover .ant-pagination-item-link {
+    cursor: not-allowed;
+    color: white;
+  }
+
+  .ant-pagination-next button {
+    color: white;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .ant-pagination-item a {
+    display: block;
+    padding: 0 6px;
+    color: white;
+  }
+
+  .ant-pagination-item-active a {
+    color: #1677ff;
+    color: black !important;
+  }
+
+  .ant-pagination-prev .ant-pagination-item-link {
+    color: white;
+  }
+}

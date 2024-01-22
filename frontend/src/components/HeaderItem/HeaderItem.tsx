@@ -5,7 +5,7 @@ import { Button, Drawer, Dropdown, Input, MenuProps, Popover, Space, message } f
 import { HOME_ICON, LOGO } from '@/constants/images'
 import { useState } from 'react'
 import AvatarProfile from '@/container/Detail/components/AvatarProfile'
-import { HeaderType } from '@/@types/home'
+import { HeaderType } from '@/@types/home.type'
 import Navbar from '../Navbar'
 
 const onClick: MenuProps['onClick'] = ({ key }) => {

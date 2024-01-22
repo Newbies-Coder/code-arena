@@ -8,6 +8,11 @@ export type FieldType = {
   date?: string
 }
 
+export type LoginFieldType = {
+  email: string
+  password: string
+}
+
 export type FormItemPropsType = {
   name: string
   placeholder: string

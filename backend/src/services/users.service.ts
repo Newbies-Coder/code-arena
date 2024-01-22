@@ -225,7 +225,7 @@ class UserService {
   async login(payload: LoginPayload): Promise<LoginResultType> {
     try {
       const user = await databaseService.users.findOne({ email: payload.email })
-
+      const { _destroy } = user
       if (!user) {
         throw new ErrorWithStatus({
           statusCode: StatusCodes.NOT_FOUND,
@@ -245,7 +245,7 @@ class UserService {
       if (!isPasswordCorrect) {
         throw new ErrorWithStatus({
           statusCode: StatusCodes.UNAUTHORIZED,
-          message: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_IS_INCORRECT
+          message: VALIDATION_MESSAGES.USER.LOGIN.EMAIL_OR_PASSWORD_IS_INCORRECT
         })
       }
 
