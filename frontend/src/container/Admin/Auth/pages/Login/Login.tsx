@@ -8,6 +8,8 @@ import { LOGO, SYS } from '@constants/images'
 import { Alert, Button, Checkbox, Form, Input } from 'antd'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 type FieldType = {
   email?: string
@@ -29,22 +31,20 @@ const Login = () => {
         const { access_token } = res.data.data as userLoginType
         setStore(ACCESS_TOKEN, access_token)
         dispatch(authAction(true))
+        toast.success('Login successfully')
         navigate('/admin')
       }
 
       if ('error' in res) {
-        console.log('====================================')
         if (res.error && 'data' in res.error) {
           console.log(res.error.data)
+          toast.error(res.error.data.message)
         } else {
           console.log(res.error)
         }
-        console.log('====================================')
       }
     } catch (error) {
-      console.log('====================================')
       console.log(error)
-      console.log('====================================')
     }
   }
 
