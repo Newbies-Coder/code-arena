@@ -28,4 +28,6 @@ export type userState = {
   loading: boolean
   error: string | null
   isLogin: boolean
+  isAuthenticated: boolean
+  isAdmin: boolean
 }

@@ -13,6 +13,10 @@ export type LoginFieldType = {
   password: string
 }
 
+export type TokeType = {
+  refresh_token: string
+}
+
 export type FormItemPropsType = {
   name: string
   placeholder: string

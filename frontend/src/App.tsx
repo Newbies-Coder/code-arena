@@ -1,45 +1,50 @@
-import { Suspense, useEffect, useState } from 'react'
-import { Routes, Route, useNavigate } from 'react-router-dom'
-import { publicRoute } from './routes'
+import { Suspense } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import Loading from '@components/Loading'
-import { privateRoute } from './routes/routes'
-import { useTestTokenMutation } from './apis/api'
-import { useSelector } from 'react-redux'
-import { RootState } from './redux/config'
+import { globalRoute, privateRoute, publicRoute } from './routes/routes'
+import PrivateRoute from './components/PrivateRoute'
+
+import MainHomeUser from './container/Home/pages/MainHomeUser/MainHomeUser'
+import AdminRoute from './routes/AdminRoute'
 
 const App = () => {
-  const isLogin = useSelector((state: RootState) => state.user.isLogin)
-  const [testToken] = useTestTokenMutation()
-  const [isAdmin, setIsAdmin] = useState(false)
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    ;(async () => {
-      const res = await testToken({})
-
-      if ('data' in res) {
-        const { role } = res.data.data
-        if (role === 'Admin') setIsAdmin(true)
-        else navigate('/login')
-      }
-    })()
-  }, [isLogin])
+  // const checkRefreshToken = () => {
+  //   const refreshToken = getCookie(REFRESH_TOKEN)
+  //   if (!refreshToken || isExpired(refreshToken)) {
+  //     clearStore(ACCESS_TOKEN)
+  //     navigate('/login')
+  //   }
+  //   return
+  // }
+  // useEffect(() => {
+  //   checkRefreshToken()
+  // }, [])
 
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
-        {publicRoute.map((route, idx) => {
-          const Page = route.component
-          return <Route key={idx} path={route.path} element={<Page />}></Route>
-        })}
-        {isAdmin &&
-          privateRoute.map((route, idx) => {
+        <Route index path="/" element={<MainHomeUser />} />
+        <Route>
+          {globalRoute.map((route, idx) => {
             const Page = route.component
-            const Layout = route.layout
-            return (
-              <Route key={idx} path={route.path} element={Layout ? <Layout children={<Page />} /> : <Page />}></Route>
-            )
+            return <Route key={idx} path={route.path} element={<Page />}></Route>
           })}
+        </Route>
+        <Route element={<PrivateRoute />}>
+          {publicRoute.map((route, idx) => {
+            const Page = route.component
+            return <Route key={idx} path={route.path} element={<Page />}></Route>
+          })}
+          <Route element={<AdminRoute />}>
+            {privateRoute.map((route, idx) => {
+              const Page = route.component
+              const Layout = route.layout
+              return (
+                <Route key={idx} path={route.path} element={Layout ? <Layout children={<Page />} /> : <Page />}></Route>
+              )
+            })}
+          </Route>
+        </Route>
       </Routes>
     </Suspense>
   )

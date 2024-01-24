@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import { DateOfBirthIcon, GmailIcon, LockIcon, UserIcon } from '@/components/Icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { DispatchType, RootState } from '@/redux/config'
-import { registerApi } from '@/redux/userReducer/userReducer'
 
 const onFinishFailed = (errorInfo: any) => {
   console.log('Failed:', errorInfo)
@@ -17,17 +16,10 @@ const onChange: DatePickerProps['onChange'] = (date, dateString) => {
 }
 
 const Register = () => {
-  const data = useSelector((state: RootState) => state.userReducer.register)
+  const data = useSelector((state: RootState) => state.user.register)
   const dispatch: DispatchType = useDispatch()
   const onFinish = async (values: any) => {
-    const registerData = registerApi({
-      username: values.username,
-      email: values.email,
-      password: values.password,
-      confirm_password: values.confirm_password,
-      date_of_birth: birthday,
-    })
-    await dispatch(registerData)
+    console.log(values)
   }
   return (
     <Row className="min-h-screen register">

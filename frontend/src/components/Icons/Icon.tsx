@@ -1244,9 +1244,9 @@ export const MessageFilledIcon: React.FC<IconPropsType> = ({ width = '30px', hei
       d="M26.25 18.75C26.25 19.413 25.9866 20.0489 25.5178 20.5178C25.0489 20.9866 24.413 21.25 23.75 21.25H8.75L3.75 26.25V6.25C3.75 5.58696 4.01339 4.95107 4.48223 4.48223C4.95107 4.01339 5.58696 3.75 6.25 3.75H23.75C24.413 3.75 25.0489 4.01339 25.5178 4.48223C25.9866 4.95107 26.25 5.58696 26.25 6.25V18.75Z"
       fill="white"
       stroke="white"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 )
@@ -1355,13 +1355,13 @@ export const ContactIcon: React.FC<IconPropsType> = ({ width = '30px', height = 
     viewBox="0 0 30 30"
     fill="none"
   >
-    <path d="M27.5 2.5L13.75 16.25" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M27.5 2.5L13.75 16.25" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     <path
       d="M27.5 2.5L18.75 27.5L13.75 16.25L2.5 11.25L27.5 2.5Z"
       stroke="white"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 )
@@ -1379,9 +1379,9 @@ export const StarIcon: React.FC<IconPropsType> = ({ width = '30px', height = '30
       d="M15 2.5L18.8625 10.325L27.5 11.5875L21.25 17.675L22.725 26.275L15 22.2125L7.275 26.275L8.75 17.675L2.5 11.5875L11.1375 10.325L15 2.5Z"
       fill="white"
       stroke="white"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 )
@@ -1398,39 +1398,27 @@ export const CircleHexIcon: React.FC<IconPropsType> = ({ width = '30px', height 
     <path
       d="M15 27.5C21.9036 27.5 27.5 21.9036 27.5 15C27.5 8.09644 21.9036 2.5 15 2.5C8.09644 2.5 2.5 8.09644 2.5 15C2.5 21.9036 8.09644 27.5 15 27.5Z"
       stroke="white"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
-    <path
-      d="M17.8867 10L25.0617 22.425"
-      stroke="white"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path d="M12.1133 10H26.4633" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M17.8867 10L25.0617 22.425" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M12.1133 10H26.4633" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     <path
       d="M9.22656 14.9992L16.4016 2.57422"
       stroke="white"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
     <path
       d="M12.1125 19.9992L4.9375 7.57422"
       stroke="white"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
-    <path d="M17.8891 20H3.53906" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-    <path
-      d="M20.7766 15L13.6016 27.425"
-      stroke="white"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
+    <path d="M17.8891 20H3.53906" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M20.7766 15L13.6016 27.425" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )

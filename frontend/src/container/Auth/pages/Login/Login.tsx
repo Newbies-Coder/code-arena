@@ -1,34 +1,91 @@
 import { Form, Button, Row, Col, Divider, Input, Alert } from 'antd'
 import './style.scss'
 import { LOGO, BG } from '@/constants/images'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { socialMediaLogin } from '@/mocks/auth.data'
 import { LoginFieldType, SocialMediaType } from '@/@types/form.type'
-import { useDispatch, useSelector } from 'react-redux'
-import { loginApi } from '@/redux/userReducer/userReducer'
-import { DispatchType, RootState } from '@/redux/config'
+import { useDispatch } from 'react-redux'
+import { authAction, checkAdminAction } from '@/redux/userReducer/userReducer'
+import { DispatchType } from '@/redux/config'
 import { LockIcon, UserIcon } from '@/components/Icons'
 import { regexPasswordPattern } from '@/utils/regex'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useGetNewTokenMutation, useLoginMutation } from '@/apis/api'
+import { userLoginType } from '@/@types/user.type'
+import { ACCESS_TOKEN, setStore, setCookie, REFRESH_TOKEN, getCookie } from '@/utils/setting'
 import { useEffect } from 'react'
+import { jwtDecode } from 'jwt-decode'
+
+type UserType = {
+  email: string
+  exp: string
+  iat: string
+  role: string
+  token_type: string
+  username: string
+  _id: string
+}
 
 const Login = () => {
+  const navigate = useNavigate()
+  const [login] = useLoginMutation()
+  const [newToken] = useGetNewTokenMutation()
   const dispatch: DispatchType = useDispatch()
-  const messageErr = useSelector((state: RootState) => state.user.error ?? null)
 
-  //dispatch form data to store
-  const onFinish = async (values: LoginFieldType) => {
-    const { email, password } = values
-    const loginData = loginApi({ email, password })
-    await dispatch(loginData)
-    if (messageErr) toast.error(messageErr)
-    else toast.success('login successfully')
-  }
+  // useEffect(() => {
+  //   isLogin === true ? navigate('/') : null
+  // }, [dispatch])
 
   useEffect(() => {
-    dispatch(loginApi({ email: '', password: '' }))
-  }, [dispatch])
+    ;(async () => {
+      const refreshToken = getCookie(REFRESH_TOKEN)
+      if (refreshToken) {
+        try {
+          const response = await newToken({ refresh_token: refreshToken })
+          if ('data' in response) {
+            const { access_token } = response.data.data
+            setStore(ACCESS_TOKEN, access_token)
+            dispatch(authAction(true))
+            navigate('/')
+          }
+        } catch (error) {
+          console.error(error)
+        }
+      } else {
+        navigate('/login')
+      }
+    })()
+  }, [])
+
+  const onFinish = async (values: LoginFieldType) => {
+    try {
+      const { email, password } = values
+      const res = await login({ email, password })
+      if ('data' in res) {
+        const { access_token, refresh_token } = res.data.data as userLoginType
+        const decoded = jwtDecode<UserType>(access_token)
+        if (decoded.role === 'Admin') {
+          dispatch(checkAdminAction(true))
+        }
+        setStore(ACCESS_TOKEN, access_token)
+        setCookie(REFRESH_TOKEN, refresh_token, 7)
+        dispatch(authAction(true))
+        navigate('/')
+      }
+
+      if ('error' in res) {
+        if (res.error && 'data' in res.error) {
+          console.log(res.error.data)
+          toast.error(res.error.data.message)
+        } else {
+          console.log(res.error)
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   //render url icon button
   const renderButtonContent = (button: SocialMediaType) => {
