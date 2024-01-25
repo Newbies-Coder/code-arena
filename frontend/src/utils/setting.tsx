@@ -44,6 +44,9 @@ export const config = {
   clearStore: (name: string) => {
     localStorage.removeItem(name)
   },
+  clearCookie: (name: string) => {
+    document.cookie = name + '=; Path=/; Expires=' + new Date().toUTCString() + ';'
+  },
   ACCESS_TOKEN: 'accessToken',
   USER_LOGIN: 'userLogin',
   REFRESH_TOKEN: 'refreshToken',
@@ -57,6 +60,7 @@ export const {
   clearStore,
   setCookie,
   getCookie,
+  clearCookie,
   ACCESS_TOKEN,
   REFRESH_TOKEN,
   USER_LOGIN,

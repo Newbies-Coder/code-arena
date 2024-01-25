@@ -5,9 +5,12 @@ import { globalRoute, privateRoute, publicRoute } from './routes/routes'
 
 import MainHomeUser from './container/Home/pages/MainHomeUser/MainHomeUser'
 import AdminRoute from './routes/AdminRoute'
-import PrivateRoute from './routes/PrivateRoute'
-import { REFRESH_TOKEN, getCookie } from './utils/setting'
+import { ACCESS_TOKEN, REFRESH_TOKEN, clearCookie, clearStore, getCookie, getStore, setStore } from './utils/setting'
 import { jwtDecode } from 'jwt-decode'
+import { useDispatch } from 'react-redux'
+import { authAction } from './redux/userReducer/userReducer'
+import PrivateRoute from './routes/PrivateRoute'
+import { useGetNewTokenMutation } from './apis/api'
 
 type UserType = {
   email: string
@@ -20,21 +23,43 @@ type UserType = {
 }
 
 const App = () => {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
-  const checkRefreshToken = () => {
+  const [newToken] = useGetNewTokenMutation()
+
+  const checkAuthen = async () => {
     const refreshToken = getCookie(REFRESH_TOKEN)
-    if (refreshToken) {
-      const decoded = jwtDecode<UserType>(refreshToken)
-      const { exp } = decoded
+    const accessToken = getStore(ACCESS_TOKEN)
+    if (refreshToken && accessToken) {
+      const decodedAccessToken = jwtDecode<UserType>(accessToken)
+      const decodedRefreshToken = jwtDecode<UserType>(refreshToken)
       const current = Math.floor(Date.now() / 1000)
-      if (+current > +exp) {
+
+      if (+current > +decodedRefreshToken.exp && +current > +decodedAccessToken.exp) {
+        clearCookie(REFRESH_TOKEN)
+        clearStore(ACCESS_TOKEN)
+        dispatch(authAction(false))
         alert('login session expired')
         navigate('/login')
+      } else if (+current > +decodedAccessToken.exp) {
+        try {
+          const response = await newToken({ refresh_token: refreshToken })
+          if ('data' in response) {
+            const { access_token } = response.data.data
+            setStore(ACCESS_TOKEN, access_token)
+            dispatch(authAction(true))
+            navigate('/')
+          }
+        } catch (error) {
+          console.error(error)
+        }
       }
     }
   }
   useEffect(() => {
-    checkRefreshToken()
+    setInterval(() => {
+      checkAuthen()
+    }, 1000)
   }, [])
 
   return (

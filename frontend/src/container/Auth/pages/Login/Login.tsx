@@ -13,8 +13,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useGetNewTokenMutation, useLoginMutation } from '@/apis/api'
 import { userLoginType } from '@/@types/user.type'
-import { ACCESS_TOKEN, setStore, setCookie, REFRESH_TOKEN, getCookie } from '@/utils/setting'
-import { useEffect } from 'react'
+import { ACCESS_TOKEN, setStore, setCookie, REFRESH_TOKEN, getCookie, getStore } from '@/utils/setting'
 import { jwtDecode } from 'jwt-decode'
 
 type UserType = {
@@ -33,27 +32,6 @@ const Login = () => {
   const [newToken] = useGetNewTokenMutation()
   const dispatch: DispatchType = useDispatch()
 
-  useEffect(() => {
-    ;(async () => {
-      const refreshToken = getCookie(REFRESH_TOKEN)
-      if (refreshToken) {
-        try {
-          const response = await newToken({ refresh_token: refreshToken })
-          if ('data' in response) {
-            const { access_token } = response.data.data
-            setStore(ACCESS_TOKEN, access_token)
-            dispatch(authAction(true))
-            navigate('/')
-          }
-        } catch (error) {
-          console.error(error)
-        }
-      } else {
-        navigate('/login')
-      }
-    })()
-  }, [])
-
   const onFinish = async (values: LoginFieldType) => {
     try {
       const { email, password } = values
@@ -65,7 +43,7 @@ const Login = () => {
           dispatch(checkAdminAction(true))
         }
         setStore(ACCESS_TOKEN, access_token)
-        setCookie(REFRESH_TOKEN, refresh_token, 15)
+        setCookie(REFRESH_TOKEN, refresh_token, 7)
         dispatch(authAction(true))
         navigate('/')
       }
