@@ -1,9 +1,18 @@
 import { LoginFieldType } from '@/@types/form.type'
 import { getStore } from '@/utils/setting'
+import { SerializedError } from '@reduxjs/toolkit'
 import { createApi } from '@reduxjs/toolkit/query/react'
 import type { BaseQueryFn } from '@reduxjs/toolkit/query/react'
 import axios from 'axios'
 import type { AxiosRequestConfig, AxiosError } from 'axios'
+
+type AxiosBaseQueryResult = {
+  data?: any
+  error?: {
+    status: number
+    data: string | AxiosError
+  }
+}
 
 const axiosBaseQuery =
   (
@@ -17,7 +26,7 @@ const axiosBaseQuery =
       headers?: AxiosRequestConfig['headers']
     },
     unknown,
-    unknown
+    AxiosBaseQueryResult
   > =>
   async ({ url, method, data, params, headers }) => {
     const token = getStore('accessToken')
