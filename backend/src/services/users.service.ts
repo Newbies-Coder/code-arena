@@ -394,33 +394,46 @@ class UserService {
   }
 
   async refreshToken(payload: RefreshTokenBody): Promise<ResultRefreshTokenType> {
-    try {
-      const { refresh_token } = payload
-      const { refresh_token_key } = env.jwt
+    const { refresh_token } = payload
+    const { refresh_token_key } = env.jwt
 
+    try {
+      // Verify the provided refresh token
       const { _id, role, email, username } = await verifyToken({
         token: refresh_token,
         secretOrPublicKey: refresh_token_key
       })
-
-      const deleteRefreshToken = databaseService.refreshTokens.deleteOne({ user_id: _id })
+      // Delete the old refresh token from the database
+      const deleteRefreshToken = databaseService.refreshTokens.deleteOne({ user_id: new ObjectId(_id) })
+      // Sign new access and refresh tokens
       const signToken = await this.signAccessAndRefreshToken(_id, email, username, role)
+      // Wait for both operations to complete
       const [tokens] = await Promise.all([signToken, deleteRefreshToken])
       const [newAccessToken, newRefreshToken] = tokens
-
+      // Insert the new refresh token into the database
       await databaseService.refreshTokens.insertOne(
         new RefreshToken({
-          token: refresh_token,
+          token: newRefreshToken,
           user_id: new ObjectId(_id)
         })
       )
+      // Return the new tokens
       const result: ResultRefreshTokenType = { access_token: newAccessToken, refresh_token: newRefreshToken }
       return result
     } catch (error) {
-      throw new ErrorWithStatus({
-        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
-        message: error.message || DEV_ERRORS_MESSAGES.REFESH_TOKEN
-      })
+      if (error.name === 'TokenExpiredError') {
+        // Handle the expired token case, e.g., prompt for re-login
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.UNAUTHORIZED,
+          message: 'Refresh token expired. Please re-authenticate'
+        })
+      } else {
+        // Handle other errors
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.UNAUTHORIZED,
+          message: 'Error refreshing token'
+        })
+      }
     }
   }
 
@@ -449,8 +462,6 @@ class UserService {
           message: VALIDATION_MESSAGES.USER.VERIFY_OTP.NOT_FOUND_OR_ALREADY_VERIFIED
         })
       }
-
-      await databaseService.otps.deleteMany({ email })
     } catch (error) {
       throw new ErrorWithStatus({
         statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,

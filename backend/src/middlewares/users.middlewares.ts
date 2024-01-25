@@ -251,12 +251,13 @@ export const refreshTokenValidator = validate(
             }
             try {
               const result = await databaseService.refreshTokens.findOne({ token: value })
-              if (!result) {
+              if (result === null) {
                 throw new ErrorWithStatus({
                   message: VALIDATION_MESSAGES.USER.REFRESH_TOKEN.REFRESH_TOKEN_IS_NOT_EXIST,
                   statusCode: StatusCodes.UNAUTHORIZED
                 })
-              }
+							}
+							
             } catch (error) {
               if (error instanceof JsonWebTokenError) {
                 throw new ErrorWithStatus({
