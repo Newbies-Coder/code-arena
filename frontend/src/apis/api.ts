@@ -1,6 +1,5 @@
-import { LoginFieldType } from '@/@types/form.type'
+import { LoginFieldType, TokeType } from '@/@types/form.type'
 import { getStore } from '@/utils/setting'
-import { SerializedError } from '@reduxjs/toolkit'
 import { createApi } from '@reduxjs/toolkit/query/react'
 import type { BaseQueryFn } from '@reduxjs/toolkit/query/react'
 import axios from 'axios'
@@ -12,6 +11,16 @@ type AxiosBaseQueryResult = {
     status: number
     data: string | AxiosError
   }
+}
+
+type UserType = {
+  email: string
+  exp: string
+  iat: string
+  role: string
+  token_type: string
+  username: string
+  _id: string
 }
 
 const axiosBaseQuery =
@@ -59,11 +68,14 @@ export const api = createApi({
       login: build.mutation({
         query: (data: LoginFieldType) => ({ url: '/users/login', method: 'post', data: data }),
       }),
-      testToken: build.mutation({
+      isAdmin: build.mutation({
         query: () => ({ url: '/users/test-token', method: 'post' }),
+      }),
+      getNewToken: build.mutation({
+        query: (data: TokeType) => ({ url: '/users/refresh-token', method: 'post', data: data }),
       }),
     }
   },
 })
 
-export const { useGetUsersQuery, useLoginMutation, useTestTokenMutation } = api
+export const { useGetUsersQuery, useLoginMutation, useIsAdminMutation, useGetNewTokenMutation } = api

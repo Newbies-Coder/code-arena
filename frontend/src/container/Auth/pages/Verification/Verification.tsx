@@ -3,12 +3,9 @@ import { Button, Col, Form, Row, Statistic } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import './style.scss'
-import { verifyApi } from '@/redux/userReducer/userReducer'
-import { DispatchType } from '@/redux/config'
-import { useDispatch } from 'react-redux'
 const { Countdown } = Statistic
 
-let currentIndex: number = 0
+let currentIndex = 0
 const deadline = Date.now() + 1000 * 60 * 5
 
 const Verification = () => {
@@ -16,8 +13,6 @@ const Verification = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0)
 
   const inputRef = useRef<HTMLInputElement>(null)
-
-  const dispatch: DispatchType = useDispatch()
 
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = target
@@ -38,22 +33,15 @@ const Verification = () => {
   }, [activeIndex])
 
   const handleConfirmClick = async () => {
-    try {
-      const exactOTP = otp.join('')
-      console
-      if (exactOTP.length === 6) {
-        const sendOTP = verifyApi({ otp: exactOTP })
-        await dispatch(sendOTP)
-      }
-    } catch (error) {
-      console.error('Error:', error)
-    }
+    console.log('handleConfirmClick')
   }
 
-  const handleResendClick = async () => {}
+  const handleResendClick = async () => {
+    console.log('handleResendClick')
+  }
 
   return (
-    <Row className="min-h-screen">
+    <Row className="min-h-screen  bg-white">
       <Col
         xs={{ span: 24 }}
         sm={{ span: 24 }}

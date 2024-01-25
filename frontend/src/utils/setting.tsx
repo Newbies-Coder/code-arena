@@ -2,6 +2,25 @@ import axios from 'axios'
 import { isExpired } from 'react-jwt'
 import { history } from '../main'
 export const config = {
+  setCookie: (name: string, value: string, days: number) => {
+    var expires = ''
+    if (days) {
+      var date = new Date()
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000)
+      expires = '; expires=' + date.toUTCString()
+    }
+    document.cookie = name + '=' + (value || '') + expires + '; path=/'
+  },
+  getCookie: (name: string) => {
+    var nameEQ = name + '='
+    var ca = document.cookie.split(';')
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i]
+      while (c.charAt(0) === ' ') c = c.substring(1, c.length)
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length)
+    }
+    return null
+  },
   getStore: (name: string) => {
     if (localStorage.getItem(name)) {
       return localStorage.getItem(name)
@@ -25,11 +44,27 @@ export const config = {
   clearStore: (name: string) => {
     localStorage.removeItem(name)
   },
+  clearCookie: (name: string) => {
+    document.cookie = name + '=; Path=/; Expires=' + new Date().toUTCString() + ';'
+  },
   ACCESS_TOKEN: 'accessToken',
   USER_LOGIN: 'userLogin',
+  REFRESH_TOKEN: 'refreshToken',
 }
 
-export const { getStore, setStore, setStoreJson, getStoreJson, clearStore, ACCESS_TOKEN, USER_LOGIN } = config
+export const {
+  getStore,
+  setStore,
+  setStoreJson,
+  getStoreJson,
+  clearStore,
+  setCookie,
+  getCookie,
+  clearCookie,
+  ACCESS_TOKEN,
+  REFRESH_TOKEN,
+  USER_LOGIN,
+} = config
 
 const DOMAIN = 'http://localhost:8080/api/v1'
 const TOKEN_CODEARENA =

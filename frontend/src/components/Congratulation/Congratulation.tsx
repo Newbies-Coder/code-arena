@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 const Congratulation = () => {
   return (
-    <Row className="min-h-screen register">
+    <Row className="min-h-screen bg-white">
       <Col sm={{ span: 24 }} lg={{ span: 12 }} className="px-8 sm:px-20 py-20 flex justify-center relative">
         <div className="flex flex-col items-center">
           <Link

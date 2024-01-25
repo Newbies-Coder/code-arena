@@ -1,34 +1,64 @@
 import { Form, Button, Row, Col, Divider, Input, Alert } from 'antd'
 import './style.scss'
 import { LOGO, BG } from '@/constants/images'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { socialMediaLogin } from '@/mocks/auth.data'
 import { LoginFieldType, SocialMediaType } from '@/@types/form.type'
-import { useDispatch, useSelector } from 'react-redux'
-import { loginApi } from '@/redux/userReducer/userReducer'
-import { DispatchType, RootState } from '@/redux/config'
+import { useDispatch } from 'react-redux'
+import { authAction, checkAdminAction } from '@/redux/userReducer/userReducer'
+import { DispatchType } from '@/redux/config'
 import { LockIcon, UserIcon } from '@/components/Icons'
 import { regexPasswordPattern } from '@/utils/regex'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { useEffect } from 'react'
+import { useGetNewTokenMutation, useLoginMutation } from '@/apis/api'
+import { userLoginType } from '@/@types/user.type'
+import { ACCESS_TOKEN, setStore, setCookie, REFRESH_TOKEN, getCookie, getStore } from '@/utils/setting'
+import { jwtDecode } from 'jwt-decode'
+
+type UserType = {
+  email: string
+  exp: string
+  iat: string
+  role: string
+  token_type: string
+  username: string
+  _id: string
+}
 
 const Login = () => {
+  const navigate = useNavigate()
+  const [login] = useLoginMutation()
+  const [newToken] = useGetNewTokenMutation()
   const dispatch: DispatchType = useDispatch()
-  const messageErr = useSelector((state: RootState) => state.user.error ?? null)
 
-  //dispatch form data to store
   const onFinish = async (values: LoginFieldType) => {
-    const { email, password } = values
-    const loginData = loginApi({ email, password })
-    await dispatch(loginData)
-    if (messageErr) toast.error(messageErr)
-    else toast.success('login successfully')
-  }
+    try {
+      const { email, password } = values
+      const res = await login({ email, password })
+      if ('data' in res) {
+        const { access_token, refresh_token } = res.data.data as userLoginType
+        const decoded = jwtDecode<UserType>(access_token)
+        if (decoded.role === 'Admin') {
+          dispatch(checkAdminAction(true))
+        }
+        setStore(ACCESS_TOKEN, access_token)
+        setCookie(REFRESH_TOKEN, refresh_token, 7)
+        dispatch(authAction(true))
+        navigate('/')
+      }
 
-  useEffect(() => {
-    dispatch(loginApi({ email: '', password: '' }))
-  }, [dispatch])
+      if ('error' in res) {
+        if (res.error && 'data' in res.error) {
+          toast.error(res.error.data.message)
+        } else {
+          console.log(res.error)
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   //render url icon button
   const renderButtonContent = (button: SocialMediaType) => {
@@ -43,7 +73,7 @@ const Login = () => {
   }
 
   return (
-    <Row className="min-h-screen login">
+    <Row className="min-h-screen login bg-white">
       <Col xs={{ span: 24 }} lg={{ span: 12 }} className="flex justify-center items-center relative">
         <div className="mx-4 mt-8 pb-16 lg:w-[450px]">
           <Link
@@ -130,7 +160,7 @@ const Login = () => {
                 Forgot password?
               </Button>
               <Button type="link" className="text-gray-700 font-bold p-0">
-                Sign up now
+                <Link to={'/register'}> Sign up now</Link>
               </Button>
             </p>
             <Form.Item>

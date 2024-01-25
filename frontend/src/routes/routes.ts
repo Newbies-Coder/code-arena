@@ -1,7 +1,7 @@
 import React from 'react'
 import config from '@config/index'
 
-const HomePage = React.lazy(() => import('@container/Home/pages/MainHome'))
+const HomePage = React.lazy(() => import('@/container/Home/pages/MainHomeUser'))
 const LoginPage = React.lazy(() => import('@container/Auth/pages/Login'))
 const RegisterPage = React.lazy(() => import('@container/Auth/pages/Register'))
 const ForgotPasswordPage = React.lazy(() => import('@container/Auth/pages/ForgotPassword'))
@@ -26,7 +26,7 @@ const CourseAdmin = React.lazy(() => import('@/container/Admin/Course/pages/Main
 const MessageAdmin = React.lazy(() => import('@/container/Admin/Message/pages/MainMessage'))
 const LayoutAdmin = React.lazy(() => import('@/layout/Admin'))
 
-const publicRoute = [
+const globalRoute = [
   {
     path: config.routes.home,
     component: HomePage,
@@ -40,12 +40,9 @@ const publicRoute = [
     component: RegisterPage,
   },
   {
-    path: config.routes.newPassword,
-    component: NewPasswordPage,
-  },
-  {
-    path: config.routes.forgotPassword,
-    component: ForgotPasswordPage,
+    path: config.routes.notFound,
+    component: NotFoundPage,
+    layout: null,
   },
   {
     path: config.routes.verification,
@@ -55,14 +52,21 @@ const publicRoute = [
     path: config.routes.congratulation,
     component: CongratulationPage,
   },
+]
+
+const publicRoute = [
+  {
+    path: config.routes.newPassword,
+    component: NewPasswordPage,
+  },
+  {
+    path: config.routes.forgotPassword,
+    component: ForgotPasswordPage,
+  },
+
   {
     path: config.routes.passwordResetSuccess,
     component: PasswordResetSuccessPage,
-  },
-  {
-    path: config.routes.notFound,
-    component: NotFoundPage,
-    layout: null,
   },
   {
     path: config.routes.detailCoding,
@@ -129,4 +133,4 @@ const privateRoute = [
   },
 ]
 
-export { publicRoute, privateRoute }
+export { publicRoute, privateRoute, globalRoute }
