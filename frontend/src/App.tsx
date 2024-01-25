@@ -6,18 +6,32 @@ import { globalRoute, privateRoute, publicRoute } from './routes/routes'
 import MainHomeUser from './container/Home/pages/MainHomeUser/MainHomeUser'
 import AdminRoute from './routes/AdminRoute'
 import PrivateRoute from './routes/PrivateRoute'
-import { ACCESS_TOKEN, REFRESH_TOKEN, clearStore, getCookie } from './utils/setting'
-import { isExpired } from 'react-jwt'
+import { REFRESH_TOKEN, getCookie } from './utils/setting'
+import { jwtDecode } from 'jwt-decode'
+
+type UserType = {
+  email: string
+  exp: string
+  iat: string
+  role: string
+  token_type: string
+  username: string
+  _id: string
+}
 
 const App = () => {
   const navigate = useNavigate()
   const checkRefreshToken = () => {
     const refreshToken = getCookie(REFRESH_TOKEN)
-    if (!refreshToken || isExpired(refreshToken)) {
-      clearStore(ACCESS_TOKEN)
-      navigate('/login')
+    if (refreshToken) {
+      const decoded = jwtDecode<UserType>(refreshToken)
+      const { exp } = decoded
+      const current = Math.floor(Date.now() / 1000)
+      if (+current > +exp) {
+        alert('login session expired')
+        navigate('/login')
+      }
     }
-    return
   }
   useEffect(() => {
     checkRefreshToken()

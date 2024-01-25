@@ -33,10 +33,6 @@ const Login = () => {
   const [newToken] = useGetNewTokenMutation()
   const dispatch: DispatchType = useDispatch()
 
-  // useEffect(() => {
-  //   isLogin === true ? navigate('/') : null
-  // }, [dispatch])
-
   useEffect(() => {
     ;(async () => {
       const refreshToken = getCookie(REFRESH_TOKEN)
@@ -69,7 +65,7 @@ const Login = () => {
           dispatch(checkAdminAction(true))
         }
         setStore(ACCESS_TOKEN, access_token)
-        setCookie(REFRESH_TOKEN, refresh_token, 7)
+        setCookie(REFRESH_TOKEN, refresh_token, 15)
         dispatch(authAction(true))
         navigate('/')
       }
