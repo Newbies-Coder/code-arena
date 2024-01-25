@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 const PasswordCongratulation = () => {
   return (
-    <Row className="min-h-screen">
+    <Row className="min-h-screen bg-white">
       <Col
         xs={{ span: 24 }}
         sm={{ span: 24 }}

@@ -6,7 +6,7 @@ import { GmailIcon } from '@/components/Icons'
 
 const ForgotPassword = () => {
   return (
-    <Row className="min-h-screen register">
+    <Row className="min-h-screen bg-white">
       <Col xs={{ span: 24 }} lg={{ span: 12 }} className="py-8 flex justify-center relative">
         <div className="mx-4 mt-16 lg:w-[400px]">
           <Link

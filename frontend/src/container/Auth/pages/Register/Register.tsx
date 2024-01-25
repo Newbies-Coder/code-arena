@@ -22,7 +22,7 @@ const Register = () => {
     console.log(values)
   }
   return (
-    <Row className="min-h-screen register">
+    <Row className="min-h-screen register bg-white">
       <Col xs={{ span: 24 }} lg={{ span: 12 }} className="flex items-center justify-center relative">
         <div className="mx-4 lg:w-[450px]">
           <Link
@@ -202,7 +202,7 @@ const Register = () => {
         </div>
       </Col>
       <Col xs={{ span: 0 }} lg={{ span: 12 }} className="min-h-screen">
-        <img src={BG.APP_BG} alt="boys" className="w-full h-screen" />
+        <img src={BG.APP_BG} alt="boys" className="w-full h-screen object-cover" />
       </Col>
     </Row>
   )

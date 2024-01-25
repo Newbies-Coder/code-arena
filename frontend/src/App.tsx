@@ -1,24 +1,27 @@
-import { Suspense } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Suspense, useEffect } from 'react'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import Loading from '@components/Loading'
 import { globalRoute, privateRoute, publicRoute } from './routes/routes'
-import PrivateRoute from './components/PrivateRoute'
 
 import MainHomeUser from './container/Home/pages/MainHomeUser/MainHomeUser'
 import AdminRoute from './routes/AdminRoute'
+import PrivateRoute from './routes/PrivateRoute'
+import { ACCESS_TOKEN, REFRESH_TOKEN, clearStore, getCookie } from './utils/setting'
+import { isExpired } from 'react-jwt'
 
 const App = () => {
-  // const checkRefreshToken = () => {
-  //   const refreshToken = getCookie(REFRESH_TOKEN)
-  //   if (!refreshToken || isExpired(refreshToken)) {
-  //     clearStore(ACCESS_TOKEN)
-  //     navigate('/login')
-  //   }
-  //   return
-  // }
-  // useEffect(() => {
-  //   checkRefreshToken()
-  // }, [])
+  const navigate = useNavigate()
+  const checkRefreshToken = () => {
+    const refreshToken = getCookie(REFRESH_TOKEN)
+    if (!refreshToken || isExpired(refreshToken)) {
+      clearStore(ACCESS_TOKEN)
+      navigate('/login')
+    }
+    return
+  }
+  useEffect(() => {
+    checkRefreshToken()
+  }, [])
 
   return (
     <Suspense fallback={<Loading />}>

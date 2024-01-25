@@ -76,7 +76,6 @@ const Login = () => {
 
       if ('error' in res) {
         if (res.error && 'data' in res.error) {
-          console.log(res.error.data)
           toast.error(res.error.data.message)
         } else {
           console.log(res.error)
@@ -100,7 +99,7 @@ const Login = () => {
   }
 
   return (
-    <Row className="min-h-screen login">
+    <Row className="min-h-screen login bg-white">
       <Col xs={{ span: 24 }} lg={{ span: 12 }} className="flex justify-center items-center relative">
         <div className="mx-4 mt-8 pb-16 lg:w-[450px]">
           <Link
@@ -187,7 +186,7 @@ const Login = () => {
                 Forgot password?
               </Button>
               <Button type="link" className="text-gray-700 font-bold p-0">
-                Sign up now
+                <Link to={'/register'}> Sign up now</Link>
               </Button>
             </p>
             <Form.Item>

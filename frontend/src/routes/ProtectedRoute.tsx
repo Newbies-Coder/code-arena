@@ -1,6 +1,4 @@
-import { useIsAdminMutation } from '@/apis/api'
 import { RootState } from '@/redux/config'
-import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
