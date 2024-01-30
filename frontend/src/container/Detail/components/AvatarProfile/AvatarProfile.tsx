@@ -4,7 +4,7 @@ import { Avatar, Button, Col, Dropdown, MenuProps, Row, Space } from 'antd'
 
 const menuItems: MenuProps['items'] = [
   {
-    label: <a href="">Profile</a>,
+    label: <a href="/profile">Profile</a>,
     key: '0',
     style: { width: '150px' },
   },
@@ -12,8 +12,13 @@ const menuItems: MenuProps['items'] = [
     type: 'divider',
   },
   {
-    label: 'Log out',
+    label: <a href="/login">Login</a>,
     key: '2',
+    style: { width: '150px' },
+  },
+  {
+    label: 'Log out',
+    key: '3',
     style: { width: '150px' },
   },
 ]

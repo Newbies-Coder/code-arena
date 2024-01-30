@@ -13,7 +13,7 @@ const SidebarRight = () => {
         background: '#0e1820',
         borderLeftColor: 'rgba(255, 255, 255, 0.20)',
       }}
-      width={255}
+      width={'17%'}
     >
       <Card className="bg-blue-900 mx-2 border-gray-opacity px-2">
         <div className="flex justify-between items-end h-full">

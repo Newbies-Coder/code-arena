@@ -2,7 +2,6 @@ import { Suspense, useEffect } from 'react'
 import { Routes, Route, useNavigate } from 'react-router-dom'
 import Loading from '@components/Loading'
 import { globalRoute, privateRoute, publicRoute } from './routes/routes'
-
 import MainHomeUser from './container/Home/pages/MainHomeUser/MainHomeUser'
 import AdminRoute from './routes/AdminRoute'
 import { ACCESS_TOKEN, REFRESH_TOKEN, clearCookie, clearStore, getCookie, getStore, setStore } from './utils/setting'
@@ -10,7 +9,6 @@ import { jwtDecode } from 'jwt-decode'
 import { useDispatch } from 'react-redux'
 import { authAction } from './redux/userReducer/userReducer'
 import PrivateRoute from './routes/PrivateRoute'
-import { useGetNewTokenMutation } from './apis/api'
 
 type UserType = {
   email: string
@@ -25,11 +23,11 @@ type UserType = {
 const App = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [newToken] = useGetNewTokenMutation()
 
   const checkAuthen = async () => {
     const refreshToken = getCookie(REFRESH_TOKEN)
     const accessToken = getStore(ACCESS_TOKEN)
+
     if (refreshToken && accessToken) {
       const decodedAccessToken = jwtDecode<UserType>(accessToken)
       const decodedRefreshToken = jwtDecode<UserType>(refreshToken)
@@ -41,25 +39,12 @@ const App = () => {
         dispatch(authAction(false))
         alert('login session expired')
         navigate('/login')
-      } else if (+current > +decodedAccessToken.exp) {
-        try {
-          const response = await newToken({ refresh_token: refreshToken })
-          if ('data' in response) {
-            const { access_token } = response.data.data
-            setStore(ACCESS_TOKEN, access_token)
-            dispatch(authAction(true))
-            navigate('/')
-          }
-        } catch (error) {
-          console.error(error)
-        }
       }
     }
   }
+
   useEffect(() => {
-    setInterval(() => {
-      checkAuthen()
-    }, 1000)
+    checkAuthen()
   }, [])
 
   return (

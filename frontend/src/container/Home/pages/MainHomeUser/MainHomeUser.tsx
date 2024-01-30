@@ -5,9 +5,21 @@ import SliderItem from '@/components/SliderItem'
 import SidebarLeft from '@/components/SidebarLeft'
 import SidebarRight from '@/components/SidebarRight'
 import HeaderItem from '@/components/HeaderItem'
+import { useEffect } from 'react'
+import requestApi from '@/utils/interceptors'
 const { Content } = Layout
 
 const MainHome = () => {
+  useEffect(() => {
+    requestApi('users/@me/profile', 'GET', {})
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
+
   return (
     <div className="wrapper p-0 m-0 bg-gray-900">
       <Layout style={{ height: '100%', backgroundColor: '#0e1820' }}>

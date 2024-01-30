@@ -1,5 +1,5 @@
 import { Header } from 'antd/es/layout/layout'
-import { HomeIcon, NoNotiIcon, SearchIcon } from '../Icons'
+import { HomeIcon, LiPurpleLineIcon, NoNotiIcon, SearchIcon, SettingIcon } from '../Icons'
 import { DownOutlined, MailOutlined } from '@ant-design/icons'
 import { Button, Drawer, Dropdown, Input, MenuProps, Popover, Space, message } from 'antd'
 import { HOME_ICON, LOGO } from '@/constants/images'
@@ -63,6 +63,27 @@ const HeaderItem: React.FC<HeaderType> = ({ classNameInput }) => {
             open={visible}
           >
             <Navbar />
+            <div className="mt-48">
+              <ul>
+                <li className="flex justify-between hover:bg-gray-opacity py-2 mt-2 pr-3">
+                  <div className="flex items-center">
+                    <LiPurpleLineIcon />
+                    <p className="font-popins text-white m-0 pl-6">Theme</p>
+                  </div>
+                  <div>
+                    <input type="checkbox" id="switch" className="switch-input" />
+                    <label htmlFor="switch" className="switch" />
+                  </div>
+                </li>
+                <li className="flex justify-between hover:bg-gray-opacity py-2 mt-2 pr-3">
+                  <div className="flex items-center">
+                    <LiPurpleLineIcon />
+                    <p className="font-popins text-white m-0 pl-6">Setting</p>
+                  </div>
+                  <SettingIcon />
+                </li>
+              </ul>
+            </div>
           </Drawer>
         </div>
         <div className={`flex justify-between items-center relative px-2 w-full md:w-auto ${classNameInput || ''}`}>

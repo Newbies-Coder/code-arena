@@ -13,8 +13,9 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useGetNewTokenMutation, useLoginMutation } from '@/apis/api'
 import { userLoginType } from '@/@types/user.type'
-import { ACCESS_TOKEN, setStore, setCookie, REFRESH_TOKEN, getCookie, getStore } from '@/utils/setting'
+import { ACCESS_TOKEN, setStore, setCookie, REFRESH_TOKEN } from '@/utils/setting'
 import { jwtDecode } from 'jwt-decode'
+import requestApi from '@/utils/interceptors'
 
 type UserType = {
   email: string
@@ -35,26 +36,23 @@ const Login = () => {
   const onFinish = async (values: LoginFieldType) => {
     try {
       const { email, password } = values
-      const res = await login({ email, password })
-      if ('data' in res) {
-        const { access_token, refresh_token } = res.data.data as userLoginType
-        const decoded = jwtDecode<UserType>(access_token)
-        if (decoded.role === 'Admin') {
-          dispatch(checkAdminAction(true))
-        }
-        setStore(ACCESS_TOKEN, access_token)
-        setCookie(REFRESH_TOKEN, refresh_token, 7)
-        dispatch(authAction(true))
-        navigate('/')
-      }
 
-      if ('error' in res) {
-        if (res.error && 'data' in res.error) {
-          toast.error(res.error.data.message)
-        } else {
-          console.log(res.error)
-        }
-      }
+      requestApi('users/login', 'POST', { email, password })
+        .then((res) => {
+          const { access_token, refresh_token } = res.data.data as userLoginType
+          const decoded = jwtDecode<UserType>(access_token)
+          if (decoded.role === 'Admin') {
+            dispatch(checkAdminAction(true))
+          }
+          toast.success(res.data.message, { autoClose: 2000 })
+          setStore(ACCESS_TOKEN, access_token)
+          setCookie(REFRESH_TOKEN, refresh_token, 7)
+          dispatch(authAction(true))
+          navigate('/')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     } catch (error) {
       console.log(error)
     }

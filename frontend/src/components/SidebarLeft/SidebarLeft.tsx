@@ -14,7 +14,7 @@ const SidebarLeft = () => {
         background: '#0e1820',
         borderRightColor: 'rgba(255, 255, 255, 0.20)',
       }}
-      width={255}
+      width={'17%'}
     >
       <div className="flex flex-col justify-between w-full pt-2">
         <Navbar />
@@ -54,7 +54,7 @@ const SidebarLeft = () => {
             ))}
           </ul>
         </div>
-        <div>
+        <div className="3xl:mt-56">
           <ul>
             <li className="flex justify-between hover:bg-gray-opacity py-2 mt-2 pr-3">
               <div className="flex items-center">

@@ -9,8 +9,9 @@ const initialState: userState = {
   loading: false,
   error: null,
   isLogin: false,
-  isAuthenticated: false,
   isAdmin: false,
+  accessToken: null,
+  refreshToken: null,
 }
 
 const userReducer = createSlice({
@@ -42,6 +43,12 @@ const userReducer = createSlice({
     checkAdminAction: (state: userState, action: PayloadAction<boolean>) => {
       state.isAdmin = action.payload
     },
+    accessTokenReceived: (state: userState, action: PayloadAction<string>) => {
+      state.accessToken = action.payload
+    },
+    logoutAction: (state: userState) => {
+      state.accessToken = null
+    },
   },
 })
 
@@ -54,6 +61,7 @@ export const {
   loginFailAction,
   authAction,
   checkAdminAction,
+  logoutAction,
 } = userReducer.actions
 
 export default userReducer.reducer
