@@ -7,6 +7,11 @@ import { useState } from 'react'
 import AvatarProfile from '@/container/Detail/components/AvatarProfile'
 import { HeaderType } from '@/@types/home.type'
 import Navbar from '../Navbar'
+import CustomedButton from '@/container/Detail/components/CustomedButton'
+import SecondaryButton from '../Button/SecondaryButton'
+import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/config'
 
 const onClick: MenuProps['onClick'] = ({ key }) => {
   message.info(`Click on item ${key}`)
@@ -33,6 +38,8 @@ const content = (
 )
 
 const HeaderItem: React.FC<HeaderType> = ({ classNameInput }) => {
+  const navigate = useNavigate()
+  const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated)
   const [open, setOpen] = useState(false)
 
   const handleOpenChange = (newOpen: boolean) => {
@@ -113,25 +120,34 @@ const HeaderItem: React.FC<HeaderType> = ({ classNameInput }) => {
               </li>
             </ul>
           </div>
-          <div className="flex justify-center items-center pl-6">
-            <Popover placement="bottomRight" content={content} trigger="click" className="xs:hidden xss:block">
-              <Button className="h-10 w-10 px-2 mx-1 rounded-full border-yellow-400 flex justify-center items-center">
-                <NoNotiIcon />
-              </Button>
-            </Popover>
-            <Popover
-              placement="bottomRight"
-              content={content}
-              trigger="click"
-              open={open}
-              onOpenChange={handleOpenChange}
-              className="xs:hidden xss:block"
-            >
-              <Button className="h-10 w-10 px-2 mx-1 rounded-full border-purple-700">
-                <MailOutlined className="text-white pb-2" />
-              </Button>
-            </Popover>
-            <AvatarProfile />
+          <div className="flex justify-center items-center xl:pl-6 xs:pl-0">
+            {isAuthenticated ? (
+              <>
+                <Popover placement="bottomRight" content={content} trigger="click" className="xs:hidden xss:block">
+                  <Button className="h-10 w-10 px-2 mx-1 rounded-full border-yellow-400 flex justify-center items-center">
+                    <NoNotiIcon />
+                  </Button>
+                </Popover>
+                <Popover
+                  placement="bottomRight"
+                  content={content}
+                  trigger="click"
+                  open={open}
+                  onOpenChange={handleOpenChange}
+                  className="xs:hidden xss:block"
+                >
+                  <Button className="h-10 w-10 px-2 mx-1 rounded-full border-purple-700">
+                    <MailOutlined className="text-white pb-2" />
+                  </Button>
+                </Popover>
+                <AvatarProfile />
+              </>
+            ) : (
+              <div className="flex">
+                <SecondaryButton label="Sign In" onClick={() => navigate('/login')} />
+                <SecondaryButton label="Sign Up" onClick={() => navigate('/register')} />
+              </div>
+            )}
           </div>
         </div>
       </div>

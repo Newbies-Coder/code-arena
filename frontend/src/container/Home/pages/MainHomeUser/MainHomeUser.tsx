@@ -12,9 +12,9 @@ import { RootState } from '@/redux/config'
 const { Content } = Layout
 
 const MainHome = () => {
-  const isLogin = useSelector((state: RootState) => state.user.isLogin)
+  const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated)
   useEffect(() => {
-    if (isLogin) {
+    if (isAuthenticated) {
       requestApi('users/@me/profile', 'GET', {})
         .then((res) => {
           // console.log(res)
@@ -23,7 +23,7 @@ const MainHome = () => {
           // console.log(err)
         })
     }
-  }, [isLogin])
+  }, [isAuthenticated])
 
   return (
     <div className="wrapper p-0 m-0 bg-gray-900">

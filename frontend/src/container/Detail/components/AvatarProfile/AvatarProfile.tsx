@@ -1,29 +1,42 @@
 import { UserIcon } from '@/components/Icons'
+import { DispatchType } from '@/redux/config'
+import { authAction } from '@/redux/userReducer/userReducer'
+import { ACCESS_TOKEN, REFRESH_TOKEN, clearCookie, clearStore } from '@/utils/setting'
 import { DownOutlined } from '@ant-design/icons'
 import { Avatar, Button, Col, Dropdown, MenuProps, Row, Space } from 'antd'
-
-const menuItems: MenuProps['items'] = [
-  {
-    label: <a href="/profile">Profile</a>,
-    key: '0',
-    style: { width: '150px' },
-  },
-  {
-    type: 'divider',
-  },
-  {
-    label: <a href="/login">Login</a>,
-    key: '2',
-    style: { width: '150px' },
-  },
-  {
-    label: 'Log out',
-    key: '3',
-    style: { width: '150px' },
-  },
-]
+import { useDispatch } from 'react-redux'
 
 const AvatarProfile = () => {
+  const dispatch: DispatchType = useDispatch()
+
+  const handleLogout = () => {
+    clearStore(ACCESS_TOKEN)
+    clearCookie(REFRESH_TOKEN)
+    dispatch(authAction(false))
+  }
+
+  const menuItems: MenuProps['items'] = [
+    {
+      label: <a href="/profile">Profile</a>,
+      key: '0',
+      style: { width: '150px' },
+    },
+    {
+      type: 'divider',
+    },
+    {
+      label: <a href="/login">Login</a>,
+      key: '2',
+      style: { width: '150px' },
+    },
+    {
+      label: 'Log out',
+      key: '3',
+      style: { width: '150px' },
+      onClick: handleLogout,
+    },
+  ]
+
   return (
     <Row>
       <Col xs={24} sm={24} md={0} lg={0} xl={0}>

@@ -9,6 +9,7 @@ import { jwtDecode } from 'jwt-decode'
 import { useDispatch } from 'react-redux'
 import { authAction } from './redux/userReducer/userReducer'
 import PrivateRoute from './routes/PrivateRoute'
+import { toast } from 'react-toastify'
 
 type UserType = {
   email: string
@@ -37,7 +38,7 @@ const App = () => {
         clearCookie(REFRESH_TOKEN)
         clearStore(ACCESS_TOKEN)
         dispatch(authAction(false))
-        alert('login session expired')
+        toast('login session expired')
         navigate('/login')
       }
     }
