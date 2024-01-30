@@ -11,7 +11,6 @@ import { LockIcon, UserIcon } from '@/components/Icons'
 import { regexPasswordPattern } from '@/utils/regex'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { useGetNewTokenMutation, useLoginMutation } from '@/apis/api'
 import { userLoginType } from '@/@types/user.type'
 import { ACCESS_TOKEN, setStore, setCookie, REFRESH_TOKEN } from '@/utils/setting'
 import { jwtDecode } from 'jwt-decode'
@@ -29,33 +28,30 @@ type UserType = {
 
 const Login = () => {
   const navigate = useNavigate()
-  const [login] = useLoginMutation()
-  const [newToken] = useGetNewTokenMutation()
   const dispatch: DispatchType = useDispatch()
 
   const onFinish = async (values: LoginFieldType) => {
-    try {
-      const { email, password } = values
+    const { email, password } = values
 
-      requestApi('users/login', 'POST', { email, password })
-        .then((res) => {
-          const { access_token, refresh_token } = res.data.data as userLoginType
-          const decoded = jwtDecode<UserType>(access_token)
-          if (decoded.role === 'Admin') {
-            dispatch(checkAdminAction(true))
-          }
-          toast.success(res.data.message, { autoClose: 2000 })
-          setStore(ACCESS_TOKEN, access_token)
-          setCookie(REFRESH_TOKEN, refresh_token, 7)
-          dispatch(authAction(true))
-          navigate('/')
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    } catch (error) {
-      console.log(error)
-    }
+    requestApi('users/login', 'POST', { email, password })
+      .then((res) => {
+        const { access_token, refresh_token } = res.data.data as userLoginType
+        const decoded = jwtDecode<UserType>(access_token)
+        //check if user is admin
+        if (decoded.role === 'Admin') {
+          dispatch(checkAdminAction(true))
+        }
+        toast.success(res.data.message, { autoClose: 2000 })
+        setStore(ACCESS_TOKEN, access_token)
+        setCookie(REFRESH_TOKEN, refresh_token, 7)
+        dispatch(authAction(true))
+        navigate('/')
+      })
+      .catch((err) => {
+        const { status } = err.response
+        const { message, errors } = err.response.data
+        toast.error(status === 422 ? errors.password.msg : message)
+      })
   }
 
   //render url icon button

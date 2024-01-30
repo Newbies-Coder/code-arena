@@ -44,26 +44,18 @@ export default function requestApi(endpoint: string, method: string, body: any) 
     async (err) => {
       const originalResponse = err.config
       const refresh = getCookie(REFRESH_TOKEN)
-      console.log('AT het han')
+
+      //access token expires => status code 401
       if (err.response && err.response.status === 401 && refresh) {
         try {
-          console.log('call refresh token')
-          console.log('rf///' + refresh)
-
           const result = await instance.post('http://localhost:8080/api/v1/users/refresh-token', {
             refresh_token: refresh,
           })
-          console.log('call xong')
-
           const { access_token, refresh_token } = result.data.data
-          console.log('result' + result)
-
-          console.log('ac///' + access_token)
+          //save new AT & RT into storage
           setStore(ACCESS_TOKEN, access_token)
           setCookie(REFRESH_TOKEN, refresh_token, 7)
           originalResponse.headers['Authorization'] = `Bearer ${access_token}`
-          console.log('lay AT moi xong')
-
           return instance(originalResponse)
         } catch (error: any) {
           if (error?.response?.status === 404) {

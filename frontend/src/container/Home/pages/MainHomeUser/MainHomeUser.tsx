@@ -7,18 +7,23 @@ import SidebarRight from '@/components/SidebarRight'
 import HeaderItem from '@/components/HeaderItem'
 import { useEffect } from 'react'
 import requestApi from '@/utils/interceptors'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/config'
 const { Content } = Layout
 
 const MainHome = () => {
+  const isLogin = useSelector((state: RootState) => state.user.isLogin)
   useEffect(() => {
-    requestApi('users/@me/profile', 'GET', {})
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }, [])
+    if (isLogin) {
+      requestApi('users/@me/profile', 'GET', {})
+        .then((res) => {
+          // console.log(res)
+        })
+        .catch((err) => {
+          // console.log(err)
+        })
+    }
+  }, [isLogin])
 
   return (
     <div className="wrapper p-0 m-0 bg-gray-900">
