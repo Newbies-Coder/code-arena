@@ -1,8 +1,12 @@
 import { BG, LOGO } from '@/constants/images'
 import { Button, Col, Form, Row, Statistic } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './style.scss'
+import requestApi from '@/utils/interceptors'
+import { toast } from 'react-toastify'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/config'
 const { Countdown } = Statistic
 
 let currentIndex = 0
@@ -11,8 +15,9 @@ const deadline = Date.now() + 1000 * 60 * 5
 const Verification = () => {
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(''))
   const [activeIndex, setActiveIndex] = useState<number>(0)
-
+  const email = useSelector((state: RootState) => state.user.email)
   const inputRef = useRef<HTMLInputElement>(null)
+  const navigate = useNavigate()
 
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = target
@@ -33,11 +38,32 @@ const Verification = () => {
   }, [activeIndex])
 
   const handleConfirmClick = async () => {
-    console.log('handleConfirmClick')
+    const otpString = otp.join('')
+    const OTP_LENGTH = +import.meta.env.VITE_OTP_LENGTH
+    if (otpString.length === OTP_LENGTH) {
+      requestApi('users/verify-otp', 'POST', { otp: otpString })
+        .then((res) => {
+          const { message } = res.data
+          console.log(message)
+
+          navigate('/')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    } else {
+      toast.warn('Please enter all characters of otp string')
+    }
   }
 
   const handleResendClick = async () => {
-    console.log('handleResendClick')
+    requestApi('users/resend-verify-otp', 'POST', { email })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   return (

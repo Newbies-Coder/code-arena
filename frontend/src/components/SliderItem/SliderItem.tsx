@@ -4,22 +4,48 @@ import { useState } from 'react'
 import { courseList } from '@/mocks/home.data'
 import { HeartOutlined, HeartFilled } from '@ant-design/icons'
 import './style.scss'
+
+const SlickArrowLeft = ({ currentSlide, slideCount, ...props }: any) => (
+  <Button
+    {...props}
+    className={'slick-prev slick-arrow' + (currentSlide === 0 ? ' slick-disabled' : '')}
+    aria-hidden="true"
+    aria-disabled={currentSlide === 0 ? true : false}
+    type="button"
+  >
+    <LeftArrowIcon />
+  </Button>
+)
+const SlickArrowRight = ({ currentSlide, slideCount, ...props }: any) => (
+  <Button
+    {...props}
+    className={'slick-next slick-arrow' + (currentSlide === slideCount - 1 ? ' slick-disabled' : '')}
+    aria-hidden="true"
+    aria-disabled={currentSlide === slideCount - 1 ? true : false}
+    type="button"
+  >
+    <RightArrowIcon />
+  </Button>
+)
+
 const settings: CarouselProps = {
   dots: false,
   infinite: true,
   speed: 500,
   slidesToShow: 3,
   slidesToScroll: 3,
-  prevArrow: (
-    <Button className="flex justify-center items-center border-0 h-10 w-10 p-0 rounded-full">
-      <LeftArrowIcon />
-    </Button>
-  ),
-  nextArrow: (
-    <Button className="flex justify-center items-center border-0 h-10 w-10 p-0 rounded-full">
-      <RightArrowIcon />
-    </Button>
-  ),
+  prevArrow: <SlickArrowLeft />,
+  // (
+  //   <Button className="flex justify-center items-center border-0 h-10 w-10 p-0 rounded-full">
+  //     <LeftArrowIcon />
+  //   </Button>
+  // )
+  nextArrow: <SlickArrowRight />,
+  // (
+  //   <Button className="flex justify-center items-center border-0 h-10 w-10 p-0 rounded-full">
+  //     <RightArrowIcon />
+  //   </Button>
+  // )
   responsive: [
     {
       breakpoint: 1024,
