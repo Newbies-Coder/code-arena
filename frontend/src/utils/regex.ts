@@ -3,4 +3,5 @@ export const regexEmail = (value: string) => {
   return expression.test(value)
 }
 
+///^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$/,
 export const regexPasswordPattern: RegExp = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/

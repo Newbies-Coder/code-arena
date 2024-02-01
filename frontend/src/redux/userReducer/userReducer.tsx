@@ -1,15 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { userLoginType, userState, userType } from '@/@types/user.type'
+import { userType, userState } from '@/@types/user.type'
 
 const initialState: userState = {
   login: null,
-  register: {},
-  verify: {},
-  resendOTP: {},
+  register: null,
+  verify: null,
+  resendOTP: null,
   loading: false,
   error: null,
   isAuthenticated: false,
   isAdmin: false,
+  email: null,
 }
 
 const userReducer = createSlice({
@@ -17,7 +18,7 @@ const userReducer = createSlice({
   initialState,
   reducers: {
     //
-    loginAction: (state: userState, action: PayloadAction<userLoginType>) => {
+    loginAction: (state: userState, action: PayloadAction<userType>) => {
       state.login = action.payload
     },
     registerAction: (state: userState, action: PayloadAction<userType>) => {
@@ -41,6 +42,9 @@ const userReducer = createSlice({
     checkAdminAction: (state: userState, action: PayloadAction<boolean>) => {
       state.isAdmin = action.payload
     },
+    userEmail: (state: userState, action: PayloadAction<string>) => {
+      state.email = action.payload
+    },
   },
 })
 
@@ -53,6 +57,7 @@ export const {
   loginFailAction,
   authAction,
   checkAdminAction,
+  userEmail,
 } = userReducer.actions
 
 export default userReducer.reducer

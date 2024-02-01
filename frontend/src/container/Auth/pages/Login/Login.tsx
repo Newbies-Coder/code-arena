@@ -11,7 +11,7 @@ import { LockIcon, UserIcon } from '@/components/Icons'
 import { regexPasswordPattern } from '@/utils/regex'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { userLoginType } from '@/@types/user.type'
+import { userType } from '@/@types/user.type'
 import { ACCESS_TOKEN, setStore, setCookie, REFRESH_TOKEN } from '@/utils/setting'
 import { jwtDecode } from 'jwt-decode'
 import requestApi from '@/utils/interceptors'
@@ -35,7 +35,7 @@ const Login = () => {
 
     requestApi('users/login', 'POST', { email, password })
       .then((res) => {
-        const { access_token, refresh_token } = res.data.data as userLoginType
+        const { access_token, refresh_token } = res.data.data as userType
         const decoded = jwtDecode<UserType>(access_token)
         //check if user is admin
         if (decoded.role === 'Admin') {

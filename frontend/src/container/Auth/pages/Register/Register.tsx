@@ -1,25 +1,43 @@
 import { Form, Button, Row, Col, Input, Alert, DatePicker, DatePickerProps } from 'antd'
 import './style.scss'
 import { BG, LOGO } from '@/constants/images'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { DateOfBirthIcon, GmailIcon, LockIcon, UserIcon } from '@/components/Icons'
-import { useDispatch, useSelector } from 'react-redux'
-import { DispatchType, RootState } from '@/redux/config'
+import { useDispatch } from 'react-redux'
+import { DispatchType } from '@/redux/config'
+import requestApi from '@/utils/interceptors'
+import { userEmail } from '@/redux/userReducer/userReducer'
+import { toast } from 'react-toastify'
 
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo)
-}
-
-let birthday = ''
+let date_of_birth = ''
 const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-  birthday = dateString
+  date_of_birth = dateString
 }
 
 const Register = () => {
-  const data = useSelector((state: RootState) => state.user.register)
+  const navigate = useNavigate()
   const dispatch: DispatchType = useDispatch()
   const onFinish = async (values: any) => {
-    console.log(values)
+    const { username, email, password, confirm_password } = values
+    requestApi('users/register', 'POST', { username, email, password, confirm_password, date_of_birth })
+      .then((res) => {
+        console.log(res)
+        const { email } = res.data.data
+        dispatch(userEmail(email))
+        const { message } = res.data
+        toast.success(message)
+        navigate('/verification')
+      })
+      .catch((err: any) => {
+        const { status } = err.response
+        const { errors, message } = err.response.data
+        if (status === 422) {
+          const { msg } = errors?.password
+          toast.error(msg)
+          return
+        }
+        toast.warn(message)
+      })
   }
   return (
     <Row className="min-h-screen register bg-white">
@@ -35,7 +53,7 @@ const Register = () => {
           <p className="text-black font-popins text-sm -mt-9 mb-10 text-center font-medium">
             Welcome to the Code Arena free coding learning page!
           </p>
-          <Form name="basic" className="mt-3 w-full" onFinish={onFinish} onFinishFailed={onFinishFailed}>
+          <Form name="basic" className="mt-3 w-full" onFinish={onFinish}>
             <Form.Item
               name="username"
               rules={[
@@ -97,7 +115,7 @@ const Register = () => {
               name="password"
               rules={[
                 {
-                  pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$/,
+                  pattern: /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/,
                   message: (
                     <Alert
                       className="ml-2 bg-transparent text-base text-red-700"
