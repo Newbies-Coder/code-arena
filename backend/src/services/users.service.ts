@@ -462,6 +462,7 @@ class UserService {
           message: VALIDATION_MESSAGES.USER.VERIFY_OTP.NOT_FOUND_OR_ALREADY_VERIFIED
         })
       }
+      await databaseService.otps.deleteMany({ email })
     } catch (error) {
       throw new ErrorWithStatus({
         statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
