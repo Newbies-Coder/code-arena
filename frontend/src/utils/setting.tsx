@@ -1,5 +1,3 @@
-import axios from 'axios'
-import { history } from '../main'
 export const config = {
   setCookie: (name: string, value: string, days: number) => {
     var expires = ''
@@ -46,9 +44,8 @@ export const config = {
   clearCookie: (name: string) => {
     document.cookie = name + '=; Path=/; Expires=' + new Date().toUTCString() + ';'
   },
-  ACCESS_TOKEN: 'accessToken',
-  USER_LOGIN: 'userLogin',
-  REFRESH_TOKEN: 'refreshToken',
+  ACCESS_TOKEN: 'ACCESS_TOKEN',
+  REFRESH_TOKEN: 'REFRESH_TOKEN',
 }
 
 export const {
@@ -62,63 +59,8 @@ export const {
   clearCookie,
   ACCESS_TOKEN,
   REFRESH_TOKEN,
-  USER_LOGIN,
 } = config
 
-const DOMAIN = 'http://localhost:8080/api/v1'
-const TOKEN_CODEARENA =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTZiNGZmNTAxMmQ4ODAwZTFkNjZlMTAiLCJlbWFpbCI6Im5nb2N1eWVubGVwaGFtQGdtYWlsLmNvbSIsInJvbGUiOiJBZG1pbiIsInRva2VuX3R5cGUiOiJBY2Nlc3NUb2tlbiIsImlhdCI6MTcwNDgwODM5NywiZXhwIjoxNzA0ODA5Mjk3fQ.DZiSldDODlbh2jmxUvC3aAiUZPCb81_kMeo91Pos6bk '
-
-/* Cấu hình request cho tất cả api - response cho tất cả kết quả từ api trả về */
-
-//Cấu hình domain gửi đi
-export const http = axios.create({
-  baseURL: DOMAIN,
-  timeout: 30000,
-})
-//Cấu hình request header
-http.interceptors.request.use(
-  (config: any) => {
-    const token = getStore(ACCESS_TOKEN)
-    config.headers = {
-      ...config.headers,
-      // eslint-disable-next-line no-useless-computed-key
-      ['Authorization']: `Bearer ${token}`,
-      // eslint-disable-next-line no-useless-computed-key
-      ['TokenCodeArena']: TOKEN_CODEARENA,
-    }
-    config.headers['Content-Type'] = 'application/json'
-    return config
-  },
-  (error) => {
-    Promise.reject(error)
-  },
-)
-//Cấu hình kết quả trả về
-http.interceptors.response.use(
-  (response) => {
-    return response
-  },
-  (err) => {
-    // const originalRequest = error.config;
-    // console.log(err)
-    if (err?.response?.status === 400 || err?.response?.status === 404) {
-    }
-    if (err?.response?.status === 401 || err?.response?.status === 403) {
-      const token = localStorage.getItem(ACCESS_TOKEN)
-      //token hết hạn
-      // if (!token || isExpired(token)) {
-      //   alert('Hết phiên đăng nhập yêu cầu đăng nhập lại !')
-      //   clearStore(ACCESS_TOKEN)
-      //   clearStore(USER_LOGIN)
-      //   //Chuyển hướng trang dạng f5
-      //   window.location.href = '/login'
-      // }
-      history.push('/login')
-    }
-    return Promise.reject(err)
-  },
-)
 /**
  * status code
  * 400: Tham số gửi lên không hợp lệ => kết quả không tìm được (Badrequest);

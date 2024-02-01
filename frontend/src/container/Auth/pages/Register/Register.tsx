@@ -6,8 +6,10 @@ import { DateOfBirthIcon, GmailIcon, LockIcon, UserIcon } from '@/components/Ico
 import { useDispatch } from 'react-redux'
 import { DispatchType } from '@/redux/config'
 import requestApi from '@/utils/interceptors'
-import { userEmail } from '@/redux/userReducer/userReducer'
+import { setEmailResendOTP } from '@/redux/userReducer/userReducer'
 import { toast } from 'react-toastify'
+import { RegisterFieldType } from '@/@types/form.type'
+import { StatusCodes } from 'http-status-codes'
 
 let date_of_birth = ''
 const onChange: DatePickerProps['onChange'] = (date, dateString) => {
@@ -15,28 +17,32 @@ const onChange: DatePickerProps['onChange'] = (date, dateString) => {
 }
 
 const Register = () => {
+  const TIME_CLOSING_MESSAGE = 2000
+
   const navigate = useNavigate()
   const dispatch: DispatchType = useDispatch()
-  const onFinish = async (values: any) => {
+
+  // Function to handle form submission
+  const onFinish = async (values: RegisterFieldType) => {
+    const id = toast.loading('LOADING...')
     const { username, email, password, confirm_password } = values
     requestApi('users/register', 'POST', { username, email, password, confirm_password, date_of_birth })
       .then((res) => {
-        console.log(res)
         const { email } = res.data.data
-        dispatch(userEmail(email))
+        dispatch(setEmailResendOTP(email))
         const { message } = res.data
-        toast.success(message)
+        toast.update(id, { render: message, type: 'success', isLoading: false, autoClose: TIME_CLOSING_MESSAGE })
         navigate('/verification')
       })
       .catch((err: any) => {
         const { status } = err.response
         const { errors, message } = err.response.data
-        if (status === 422) {
-          const { msg } = errors?.password
-          toast.error(msg)
+        if (status === StatusCodes.UNPROCESSABLE_ENTITY) {
+          const { msg } = errors?.password || errors?.username
+          toast.update(id, { render: msg, type: 'error', isLoading: false, autoClose: TIME_CLOSING_MESSAGE })
           return
         }
-        toast.warn(message)
+        toast.update(id, { render: message, type: 'error', isLoading: false, autoClose: TIME_CLOSING_MESSAGE })
       })
   }
   return (

@@ -11,7 +11,7 @@ import { LockIcon, UserIcon } from '@/components/Icons'
 import { regexPasswordPattern } from '@/utils/regex'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { setStore, setCookie } from '@/utils/setting'
+import { setStore, setCookie, ACCESS_TOKEN, REFRESH_TOKEN } from '@/utils/setting'
 import { jwtDecode } from 'jwt-decode'
 import requestApi from '@/utils/interceptors'
 import { handleApiError } from '@/utils/handleApiError'
@@ -47,8 +47,8 @@ const Login = () => {
         dispatch(setAdminStatus(true))
       }
       toast.success(res.data.message, { autoClose: TIME_CLOSING_MESSAGE })
-      setStore('ACCESS_TOKEN', access_token)
-      setCookie('REFRESH_TOKEN', refresh_token, REFRESH_TOKEN_EXPIRED_TIME)
+      setStore(ACCESS_TOKEN, access_token)
+      setCookie(REFRESH_TOKEN, refresh_token, REFRESH_TOKEN_EXPIRED_TIME)
       dispatch(setAuthenticationStatus(true))
       navigate('/')
     } catch (err) {
