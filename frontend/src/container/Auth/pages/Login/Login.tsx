@@ -11,10 +11,10 @@ import { LockIcon, UserIcon } from '@/components/Icons'
 import { regexPasswordPattern } from '@/utils/regex'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { userType } from '@/@types/user.type'
-import { ACCESS_TOKEN, setStore, setCookie, REFRESH_TOKEN } from '@/utils/setting'
+import { setStore, setCookie } from '@/utils/setting'
 import { jwtDecode } from 'jwt-decode'
 import requestApi from '@/utils/interceptors'
+import { handleApiError } from '@/utils/handleApiError'
 
 type UserType = {
   email: string
@@ -27,43 +27,46 @@ type UserType = {
 }
 
 const Login = () => {
+  const TIME_CLOSING_MESSAGE = 2000
+  const REFRESH_TOKEN_EXPIRED_TIME = 7
+  const USER_ROLE = 'Admin'
+
   const navigate = useNavigate()
   const dispatch: DispatchType = useDispatch()
 
+  // Function to handle form submission
   const onFinish = async (values: LoginFieldType) => {
+    // Destructure email and password from form values
     const { email, password } = values
+    try {
+      const res = await requestApi('users/login', 'POST', { email, password })
+      const { access_token, refresh_token } = res.data.data
+      const { role } = jwtDecode<UserType>(access_token)
 
-    requestApi('users/login', 'POST', { email, password })
-      .then((res) => {
-        const { access_token, refresh_token } = res.data.data as userType
-        const decoded = jwtDecode<UserType>(access_token)
-        //check if user is admin
-        if (decoded.role === 'Admin') {
-          dispatch(setAdminStatus(true))
-        }
-        toast.success(res.data.message, { autoClose: 2000 })
-        setStore(ACCESS_TOKEN, access_token)
-        setCookie(REFRESH_TOKEN, refresh_token, 7)
-        dispatch(setAuthenticationStatus(true))
-        navigate('/')
-      })
-      .catch((err) => {
-        const { status } = err.response
-        const { message, errors } = err.response.data
-        toast.error(status === 422 ? errors.password.msg : message)
-      })
+      if (role === USER_ROLE) {
+        dispatch(setAdminStatus(true))
+      }
+      toast.success(res.data.message, { autoClose: TIME_CLOSING_MESSAGE })
+      setStore('ACCESS_TOKEN', access_token)
+      setCookie('REFRESH_TOKEN', refresh_token, REFRESH_TOKEN_EXPIRED_TIME)
+      dispatch(setAuthenticationStatus(true))
+      navigate('/')
+    } catch (err) {
+      handleApiError(err)
+    }
   }
 
-  //render url icon button
-  const renderButtonContent = (button: SocialMediaType) => {
-    if (button.url) {
-      return <img src={button.url} alt={button.alt} className={button.key === 'github' ? 'h-11 w-11' : ''} />
-    }
-    if (typeof button.icon === 'function') {
-      const Icon = button.icon
-      return <Icon />
-    }
-    return null
+  // Function to render social media login buttons
+  const renderSocialMediaButton = (button: SocialMediaType) => {
+    return (
+      <Button className="flex justify-center items-center p-0 border-0 h-full w-full">
+        {button.url ? (
+          <img src={button.url} alt={button.alt} className={button.key === 'github' ? 'h-11 w-11' : ''} />
+        ) : (
+          button.icon && <button.icon />
+        )}
+      </Button>
+    )
   }
 
   return (
@@ -174,7 +177,7 @@ const Login = () => {
             {socialMediaLogin.map((button) => (
               <Col key={button.key} className="gutter-row" span={6}>
                 <Button className="flex justify-center items-center p-0 border-0 h-full w-full">
-                  {renderButtonContent(button)}
+                  {renderSocialMediaButton(button)}
                 </Button>
               </Col>
             ))}

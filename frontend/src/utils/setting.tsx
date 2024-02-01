@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { isExpired } from 'react-jwt'
 import { history } from '../main'
 export const config = {
   setCookie: (name: string, value: string, days: number) => {
