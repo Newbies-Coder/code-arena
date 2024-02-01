@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { socialMediaLogin } from '@/mocks/auth.data'
 import { LoginFieldType, SocialMediaType } from '@/@types/form.type'
 import { useDispatch } from 'react-redux'
-import { authAction, checkAdminAction } from '@/redux/userReducer/userReducer'
+import { setAuthenticationStatus, setAdminStatus } from '@/redux/userReducer/userReducer'
 import { DispatchType } from '@/redux/config'
 import { LockIcon, UserIcon } from '@/components/Icons'
 import { regexPasswordPattern } from '@/utils/regex'
@@ -39,12 +39,12 @@ const Login = () => {
         const decoded = jwtDecode<UserType>(access_token)
         //check if user is admin
         if (decoded.role === 'Admin') {
-          dispatch(checkAdminAction(true))
+          dispatch(setAdminStatus(true))
         }
         toast.success(res.data.message, { autoClose: 2000 })
         setStore(ACCESS_TOKEN, access_token)
         setCookie(REFRESH_TOKEN, refresh_token, 7)
-        dispatch(authAction(true))
+        dispatch(setAuthenticationStatus(true))
         navigate('/')
       })
       .catch((err) => {

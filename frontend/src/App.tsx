@@ -7,7 +7,7 @@ import AdminRoute from './routes/AdminRoute'
 import { ACCESS_TOKEN, REFRESH_TOKEN, clearCookie, clearStore, getCookie, getStore, setStore } from './utils/setting'
 import { jwtDecode } from 'jwt-decode'
 import { useDispatch } from 'react-redux'
-import { authAction } from './redux/userReducer/userReducer'
+import { setAuthenticationStatus } from './redux/userReducer/userReducer'
 import PrivateRoute from './routes/PrivateRoute'
 import { toast } from 'react-toastify'
 
@@ -37,7 +37,7 @@ const App = () => {
       if (+current > +decodedRefreshToken.exp && +current > +decodedAccessToken.exp) {
         clearCookie(REFRESH_TOKEN)
         clearStore(ACCESS_TOKEN)
-        dispatch(authAction(false))
+        dispatch(setAuthenticationStatus(false))
         toast('login session expired')
         navigate('/login')
       }

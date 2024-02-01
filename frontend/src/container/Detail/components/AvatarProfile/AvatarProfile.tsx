@@ -1,6 +1,6 @@
 import { UserIcon } from '@/components/Icons'
 import { DispatchType } from '@/redux/config'
-import { authAction } from '@/redux/userReducer/userReducer'
+import { setAuthenticationStatus } from '@/redux/userReducer/userReducer'
 import { ACCESS_TOKEN, REFRESH_TOKEN, clearCookie, clearStore } from '@/utils/setting'
 import { DownOutlined } from '@ant-design/icons'
 import { Avatar, Button, Col, Dropdown, MenuProps, Row, Space } from 'antd'
@@ -12,7 +12,7 @@ const AvatarProfile = () => {
   const handleLogout = () => {
     clearStore(ACCESS_TOKEN)
     clearCookie(REFRESH_TOKEN)
-    dispatch(authAction(false))
+    dispatch(setAuthenticationStatus(false))
   }
 
   const menuItems: MenuProps['items'] = [

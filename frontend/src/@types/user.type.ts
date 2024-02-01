@@ -12,7 +12,6 @@ export type userState = {
   verify: userType | null
   resendOTP: userType | null
   loading: boolean
-  error: string | null
   isAuthenticated: boolean
   isAdmin: boolean
   email: string | null
