@@ -58,15 +58,17 @@ const Login = () => {
 
   // Function to render social media login buttons
   const renderSocialMediaButton = (button: SocialMediaType) => {
-    return (
-      <Button className="flex justify-center items-center p-0 border-0 h-full w-full">
-        {button.url ? (
-          <img src={button.url} alt={button.alt} className={button.key === 'github' ? 'h-11 w-11' : ''} />
-        ) : (
-          button.icon && <button.icon />
-        )}
-      </Button>
-    )
+    // If button.url is present, render an image inside the button
+    if (button.url) {
+      return <img src={button.url} alt={button.alt} className={button.key === 'github' ? 'h-11 w-11' : ''} />
+    }
+    // If button.icon is a function, call it to render the icon, but not as a button
+    if (typeof button.icon === 'function') {
+      const IconComponent = button.icon
+      return <IconComponent />
+    }
+
+    return null
   }
 
   return (
