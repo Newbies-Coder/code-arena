@@ -6,8 +6,10 @@ import { DateOfBirthIcon, GmailIcon, LockIcon, UserIcon } from '@/components/Ico
 import { useDispatch } from 'react-redux'
 import { DispatchType } from '@/redux/config'
 import requestApi from '@/utils/interceptors'
-import { userEmail } from '@/redux/userReducer/userReducer'
+import { setEmailResendOTP } from '@/redux/userReducer/userReducer'
 import { toast } from 'react-toastify'
+import { RegisterFieldType } from '@/@types/form.type'
+import { StatusCodes } from 'http-status-codes'
 
 let date_of_birth = ''
 const onChange: DatePickerProps['onChange'] = (date, dateString) => {
@@ -15,28 +17,32 @@ const onChange: DatePickerProps['onChange'] = (date, dateString) => {
 }
 
 const Register = () => {
+  const TIME_CLOSING_MESSAGE = 2000
+
   const navigate = useNavigate()
   const dispatch: DispatchType = useDispatch()
-  const onFinish = async (values: any) => {
+
+  // Function to handle form submission
+  const onFinish = async (values: RegisterFieldType) => {
+    const id = toast.loading('LOADING...')
     const { username, email, password, confirm_password } = values
     requestApi('users/register', 'POST', { username, email, password, confirm_password, date_of_birth })
       .then((res) => {
-        console.log(res)
         const { email } = res.data.data
-        dispatch(userEmail(email))
+        dispatch(setEmailResendOTP(email))
         const { message } = res.data
-        toast.success(message)
+        toast.update(id, { render: message, type: 'success', isLoading: false, autoClose: TIME_CLOSING_MESSAGE })
         navigate('/verification')
       })
       .catch((err: any) => {
         const { status } = err.response
         const { errors, message } = err.response.data
-        if (status === 422) {
-          const { msg } = errors?.password
-          toast.error(msg)
+        if (status === StatusCodes.UNPROCESSABLE_ENTITY) {
+          const { msg } = errors?.password || errors?.username
+          toast.update(id, { render: msg, type: 'error', isLoading: false, autoClose: TIME_CLOSING_MESSAGE })
           return
         }
-        toast.warn(message)
+        toast.update(id, { render: message, type: 'error', isLoading: false, autoClose: TIME_CLOSING_MESSAGE })
       })
   }
   return (
@@ -50,10 +56,10 @@ const Register = () => {
             <img src={LOGO.APP_LOGO} alt="logo" />
           </Link>
           <h2 className="text-black clear-both font-smooch text-8xl font-bold not-italic text-center">Sign up</h2>
-          <p className="text-black font-popins text-sm -mt-9 mb-10 text-center font-medium">
+          <p className="text-black font-popins text-sm -mt-7 mb-6 text-center font-medium">
             Welcome to the Code Arena free coding learning page!
           </p>
-          <Form name="basic" className="mt-3 w-full" onFinish={onFinish}>
+          <Form name="basic" className="w-full" onFinish={onFinish}>
             <Form.Item
               name="username"
               rules={[
@@ -191,7 +197,7 @@ const Register = () => {
                   message: (
                     <Alert
                       className="ml-2 bg-transparent text-base text-red-700"
-                      message="please input your email"
+                      message="please input your date of birth"
                       banner
                       type="error"
                     />
@@ -211,7 +217,7 @@ const Register = () => {
             <Form.Item>
               <Button
                 htmlType="submit"
-                className="mt-8 w-full h-14 bg-black text-white text-lg font-bold rounded-xl border-0"
+                className="mt-4 w-full h-14 bg-black text-white text-lg font-bold rounded-xl border-0"
               >
                 SIGN UP
               </Button>

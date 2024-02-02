@@ -44,7 +44,8 @@ const userReducer = createSlice({
     setAdminStatus: (state: userState, action: PayloadAction<boolean>) => {
       state.isAdmin = action.payload
     },
-    userEmail: (state: userState, action: PayloadAction<string>) => {
+    // Save registed email to resend OTP
+    setEmailResendOTP: (state: userState, action: PayloadAction<string>) => {
       state.email = action.payload
     },
   },
@@ -58,7 +59,7 @@ export const {
   setLoadingStatus,
   setAdminStatus,
   setAuthenticationStatus,
-  userEmail,
+  setEmailResendOTP,
 } = userReducer.actions
 
 export default userReducer.reducer

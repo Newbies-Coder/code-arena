@@ -13,6 +13,14 @@ export type LoginFieldType = {
   password: string
 }
 
+export type RegisterFieldType = {
+  username: string
+  email: string
+  password: string
+  confirm_password: string
+  date_of_birth: string
+}
+
 export type TokeType = {
   refresh_token: string
 }

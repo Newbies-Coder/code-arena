@@ -44,12 +44,13 @@ const Verification = () => {
       requestApi('users/verify-otp', 'POST', { otp: otpString })
         .then((res) => {
           const { message } = res.data
-          console.log(message)
-
-          navigate('/')
+          toast.success(message, { autoClose: 2000 })
+          navigate('/login')
         })
-        .catch((err) => {
-          console.log(err)
+        .catch((err: any) => {
+          const { errors } = err.response.data
+          const { msg } = errors.otp
+          toast.error(msg, { autoClose: 3000 })
         })
     } else {
       toast.warn('Please enter all characters of otp string')
@@ -57,12 +58,15 @@ const Verification = () => {
   }
 
   const handleResendClick = async () => {
+    const id = toast.loading('')
     requestApi('users/resend-verify-otp', 'POST', { email })
       .then((res) => {
-        console.log(res)
+        const { message } = res.data
+        toast.update(id, { render: message, type: 'success', isLoading: false, autoClose: 2000 })
       })
-      .catch((err) => {
-        console.log(err)
+      .catch((err: any) => {
+        const { message } = err.response.data
+        toast.update(id, { render: message, type: 'error', isLoading: false, autoClose: 2000 })
       })
   }
 
@@ -126,7 +130,7 @@ const Verification = () => {
                 </Button>
               </div>
               <Button className="w-full h-14 bg-white text-black text-lg font-bold rounded-xl border-1 hover:text-gray-700 hover:border-gray-700 hover:bg-gray-100">
-                Sign in
+                <Link to={'/login'}> Sign in</Link>
               </Button>
             </Form.Item>
           </Form>
