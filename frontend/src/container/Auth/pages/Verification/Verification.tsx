@@ -45,11 +45,9 @@ const Verification = () => {
         .then((res) => {
           const { message } = res.data
           toast.success(message, { autoClose: 2000 })
-          navigate('/')
+          navigate('/login')
         })
         .catch((err: any) => {
-          console.log(err)
-
           const { errors } = err.response.data
           const { msg } = errors.otp
           toast.error(msg, { autoClose: 3000 })
@@ -60,14 +58,15 @@ const Verification = () => {
   }
 
   const handleResendClick = async () => {
+    const id = toast.loading('')
     requestApi('users/resend-verify-otp', 'POST', { email })
       .then((res) => {
         const { message } = res.data
-        toast.success(message, { autoClose: 2000 })
+        toast.update(id, { render: message, type: 'success', isLoading: false, autoClose: 2000 })
       })
       .catch((err: any) => {
         const { message } = err.response.data
-        toast.error(message, { autoClose: 3000 })
+        toast.update(id, { render: message, type: 'error', isLoading: false, autoClose: 2000 })
       })
   }
 

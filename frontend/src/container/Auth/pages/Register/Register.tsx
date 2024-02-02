@@ -56,10 +56,10 @@ const Register = () => {
             <img src={LOGO.APP_LOGO} alt="logo" />
           </Link>
           <h2 className="text-black clear-both font-smooch text-8xl font-bold not-italic text-center">Sign up</h2>
-          <p className="text-black font-popins text-sm -mt-9 mb-10 text-center font-medium">
+          <p className="text-black font-popins text-sm -mt-7 mb-6 text-center font-medium">
             Welcome to the Code Arena free coding learning page!
           </p>
-          <Form name="basic" className="mt-3 w-full" onFinish={onFinish}>
+          <Form name="basic" className="w-full" onFinish={onFinish}>
             <Form.Item
               name="username"
               rules={[
@@ -197,7 +197,7 @@ const Register = () => {
                   message: (
                     <Alert
                       className="ml-2 bg-transparent text-base text-red-700"
-                      message="please input your email"
+                      message="please input your date of birth"
                       banner
                       type="error"
                     />
@@ -217,7 +217,7 @@ const Register = () => {
             <Form.Item>
               <Button
                 htmlType="submit"
-                className="mt-8 w-full h-14 bg-black text-white text-lg font-bold rounded-xl border-0"
+                className="mt-4 w-full h-14 bg-black text-white text-lg font-bold rounded-xl border-0"
               >
                 SIGN UP
               </Button>
