@@ -11,6 +11,7 @@ import { toast } from 'react-toastify'
 import { RegisterFieldType } from '@/@types/form.type'
 import { StatusCodes } from 'http-status-codes'
 import React from 'react'
+import { MESSAGES } from '@/constants/message'
 
 let date_of_birth = ''
 const onChange: DatePickerProps['onChange'] = (_, dateString) => {
@@ -57,7 +58,7 @@ const Register: React.FC = () => {
       // Navigate to verification page
       navigate('/verification')
     } catch (error) {
-      let errorMessage = 'An unexpected error occurred' // Default error message
+      let errorMessage = MESSAGES.REGISTER.ERROR.DEFAULT // Default error message
 
       // Check if error is an instance of Error
       if (error instanceof Error) {
@@ -70,10 +71,10 @@ const Register: React.FC = () => {
             // Handle Unprocessable Entity, assume the structure of your API errors
             const apiError =
               err.response.data.errors?.password || err.response.data.errors?.username || err.response.data.message
-            errorMessage = apiError || 'Unprocessable Entity'
+            errorMessage = apiError || MESSAGES.REGISTER.ERROR.EMPTY_FIELD
           } else {
             // Handle other statuses
-            errorMessage = err.response.data?.message || 'An error occurred'
+            errorMessage = err.response.data?.message || MESSAGES.REGISTER.ERROR.UNKNOWN
           }
         }
       }

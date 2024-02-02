@@ -106,3 +106,5 @@ exitHook(() => {
   // logServices.disConnectLogs()
   // console.log(DATABASE_MESSAGE.DB_LOGS.DISCONNECT)
 })
+
+export default app
