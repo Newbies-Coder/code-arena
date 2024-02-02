@@ -10,41 +10,83 @@ import { setEmailResendOTP } from '@/redux/userReducer/userReducer'
 import { toast } from 'react-toastify'
 import { RegisterFieldType } from '@/@types/form.type'
 import { StatusCodes } from 'http-status-codes'
+import React from 'react'
 
 let date_of_birth = ''
-const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+const onChange: DatePickerProps['onChange'] = (_, dateString) => {
   date_of_birth = dateString
 }
 
-const Register = () => {
-  const TIME_CLOSING_MESSAGE = 2000
+type RegisterResType = { response?: { status?: number; data?: any } }
+
+const Register: React.FC = () => {
+  const TIME_CLOSING_MESSAGE = 2000 // Time in milliseconds for toast messages
 
   const navigate = useNavigate()
   const dispatch: DispatchType = useDispatch()
 
   // Function to handle form submission
   const onFinish = async (values: RegisterFieldType) => {
-    const id = toast.loading('LOADING...')
+    // Show loading toast
+    const loadingToast = toast.loading('Registering...')
+
+    // Destructure form values
     const { username, email, password, confirm_password } = values
-    requestApi('users/register', 'POST', { username, email, password, confirm_password, date_of_birth })
-      .then((res) => {
-        const { email } = res.data.data
-        dispatch(setEmailResendOTP(email))
-        const { message } = res.data
-        toast.update(id, { render: message, type: 'success', isLoading: false, autoClose: TIME_CLOSING_MESSAGE })
-        navigate('/verification')
+
+    // API request simulation
+    try {
+      const response = await requestApi('users/register', 'POST', {
+        username,
+        email,
+        password,
+        confirm_password,
+        date_of_birth,
       })
-      .catch((err: any) => {
-        const { status } = err.response
-        const { errors, message } = err.response.data
-        if (status === StatusCodes.UNPROCESSABLE_ENTITY) {
-          const { msg } = errors?.password || errors?.username
-          toast.update(id, { render: msg, type: 'error', isLoading: false, autoClose: TIME_CLOSING_MESSAGE })
-          return
+
+      // Dispatch action to store email for OTP verification
+      dispatch(setEmailResendOTP(response.data.data.email))
+
+      // Update loading toast to success
+      toast.update(loadingToast, {
+        render: response.data.message,
+        type: 'success',
+        isLoading: false,
+        autoClose: TIME_CLOSING_MESSAGE,
+      })
+
+      // Navigate to verification page
+      navigate('/verification')
+    } catch (error) {
+      let errorMessage = 'An unexpected error occurred' // Default error message
+
+      // Check if error is an instance of Error
+      if (error instanceof Error) {
+        errorMessage = error.message
+      } else if (typeof error === 'object' && error !== null) {
+        // If the error is an object but not an Error instance, attempt to extract common error properties
+        const err = error as RegisterResType
+        if (err.response) {
+          if (err.response.status === StatusCodes.UNPROCESSABLE_ENTITY && err.response.data) {
+            // Handle Unprocessable Entity, assume the structure of your API errors
+            const apiError =
+              err.response.data.errors?.password || err.response.data.errors?.username || err.response.data.message
+            errorMessage = apiError || 'Unprocessable Entity'
+          } else {
+            // Handle other statuses
+            errorMessage = err.response.data?.message || 'An error occurred'
+          }
         }
-        toast.update(id, { render: message, type: 'error', isLoading: false, autoClose: TIME_CLOSING_MESSAGE })
+      }
+      // Use errorMessage for toast
+      toast.update(loadingToast, {
+        render: errorMessage,
+        type: 'error',
+        isLoading: false,
+        autoClose: TIME_CLOSING_MESSAGE,
       })
+    }
   }
+
   return (
     <Row className="min-h-screen register bg-white">
       <Col xs={{ span: 24 }} lg={{ span: 12 }} className="flex items-center justify-center relative">
