@@ -35,6 +35,9 @@ root.render(
               Select: {
                 selectorBg: '#464D56',
               },
+              Radio: {
+                dotSize: 10,
+              },
             },
           }}
         >
