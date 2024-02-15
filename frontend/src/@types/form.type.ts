@@ -21,7 +21,7 @@ export type RegisterFieldType = {
   date_of_birth?: string
 }
 
-export type TokeType = {
+export type TokenType = {
   refresh_token: string
 }
 
@@ -39,4 +39,14 @@ export type SocialMediaType = {
   url?: string
   alt?: string
   icon?: React.ElementType
+}
+
+export type ProfileType = {
+  username: string
+  fullname: string
+  address: string
+  email: string
+  date_of_birth: string
+  bio: string
+  phone: string
 }

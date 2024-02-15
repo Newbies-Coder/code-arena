@@ -1,4 +1,4 @@
-import { LoginFieldType, TokeType } from '@/@types/form.type'
+import { LoginFieldType, TokenType } from '@/@types/form.type'
 import { getStore } from '@/utils/setting'
 import { createApi } from '@reduxjs/toolkit/query/react'
 import type { BaseQueryFn } from '@reduxjs/toolkit/query/react'
@@ -72,7 +72,7 @@ export const api = createApi({
         query: () => ({ url: '/users/test-token', method: 'post' }),
       }),
       getNewToken: build.mutation({
-        query: (data: TokeType) => ({ url: '/users/refresh-token', method: 'post', data: data }),
+        query: (data: TokenType) => ({ url: '/users/refresh-token', method: 'post', data: data }),
       }),
     }
   },
