@@ -8,17 +8,18 @@ import { CameraOutlined } from '@ant-design/icons'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/config'
 import requestApi from '@/utils/interceptors'
+import { toast } from 'react-toastify'
+import { ProfileType } from '@/@types/form.type'
+import { StatusCodes } from 'http-status-codes'
 
 const { Sider, Content } = Layout
 
 const MainProfile = () => {
   const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated)
 
-  const [value, setValue] = useState(1)
   const [userData, setUserData] = useState({
     username: '',
     fullName: '',
-    email: '',
     phone: '',
     date_of_birth: '',
     address: '',
@@ -26,11 +27,45 @@ const MainProfile = () => {
     bio: '',
   })
 
+  const [value, setValue] = useState('Male')
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value)
   }
-  const onFinish = (values: any) => {
-    console.log(values)
+  const onFinish = async (values: ProfileType) => {
+    const { username, fullname, address, date_of_birth, bio, phone } = values
+    const loadingToast = toast.loading('Updating...')
+    try {
+      const res = await requestApi('users/@me/profile', 'PUT', {
+        username,
+        fullname,
+        address,
+
+        date_of_birth,
+        bio,
+        phone,
+        gender: value,
+      })
+      const { message } = res.data
+      toast.update(loadingToast, {
+        render: message,
+        type: 'success',
+        isLoading: false,
+        autoClose: 3000,
+      })
+    } catch (error: any) {
+      const { message } = error.response.data
+      let errMessage = message
+      if (error.response.status === StatusCodes.UNPROCESSABLE_ENTITY && error.response.data) {
+        const { msg } = error.response.data.errors.address
+        errMessage = msg
+      }
+      toast.update(loadingToast, {
+        render: errMessage,
+        type: 'error',
+        isLoading: false,
+        autoClose: 3000,
+      })
+    }
   }
 
   useEffect(() => {
@@ -38,8 +73,8 @@ const MainProfile = () => {
       if (isAuthenticated) {
         try {
           const res = await requestApi('users/@me/profile', 'GET', {})
-          const { username, fullName, email, phone, date_of_birth, address, gender, bio } = res.data.data
-          setUserData({ username, fullName, email, phone, date_of_birth, address, gender, bio })
+          const { username, fullName, phone, date_of_birth, address, gender, bio } = res.data.data
+          setUserData({ username, fullName, phone, date_of_birth, address, gender, bio })
         } catch (error) {
           console.log(error)
         }
@@ -105,10 +140,6 @@ const MainProfile = () => {
                     value: userData.fullName,
                   },
                   {
-                    name: ['email'],
-                    value: userData.email,
-                  },
-                  {
                     name: ['phone'],
                     value: userData.phone,
                   },
@@ -122,10 +153,6 @@ const MainProfile = () => {
                   },
                   {
                     name: ['bio'],
-                    value: userData.bio,
-                  },
-                  {
-                    name: ['gender'],
                     value: userData.bio,
                   },
                 ]}
@@ -162,19 +189,19 @@ const MainProfile = () => {
                     </h3>
                     <Form.Item
                       name="fullname"
-                      rules={[
-                        {
-                          required: true,
-                          message: (
-                            <Alert
-                              className="bg-transparent xs:text-xs lg:text-base text-red-700"
-                              message="Please input your fullname"
-                              banner
-                              type="error"
-                            />
-                          ),
-                        },
-                      ]}
+                      // rules={[
+                      //   {
+                      //     required: true,
+                      //     message: (
+                      //       <Alert
+                      //         className="bg-transparent xs:text-xs lg:text-base text-red-700"
+                      //         message="Please input your fullname"
+                      //         banner
+                      //         type="error"
+                      //       />
+                      //     ),
+                      //   },
+                      // ]}
                       className="border-2 rounded-lg border-white w-full mb-8 flex flex-col"
                     >
                       <Input className="h-12 bg-transparent border-none text-white text-base focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none " />
@@ -183,42 +210,6 @@ const MainProfile = () => {
                 </div>
 
                 <div className="flex flex-col w-full lg:flex-row lg:gap-12 3xl:gap-16">
-                  <div className="w-full relative">
-                    <h3 className="absolute -top-3 left-3 lg:-top-2 lg:left-3 px-2 mb-0 text-white bg-blue-900 z-10 rounded-md">
-                      Email
-                    </h3>
-                    <Form.Item
-                      name="email"
-                      rules={[
-                        {
-                          type: 'email',
-                          message: (
-                            <Alert
-                              className="ml-2 bg-transparent xs:text-xs lg:text-base text-red-700"
-                              message="invalid email"
-                              banner
-                              type="error"
-                            />
-                          ),
-                        },
-                        {
-                          required: true,
-                          message: (
-                            <Alert
-                              className="ml-2 bg-transparent xs:text-xs lg:text-base text-red-700"
-                              message="please input your email"
-                              banner
-                              type="error"
-                            />
-                          ),
-                        },
-                      ]}
-                      className="border-2 rounded-lg border-white w-full mb-8 flex flex-col"
-                    >
-                      <Input className="h-12 bg-transparent border-none text-white text-base focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none" />
-                    </Form.Item>
-                  </div>
-
                   <div className="w-full relative">
                     <h3 className="absolute -top-3 left-3 px-2 mb-0 text-white bg-blue-900 z-10 rounded-md">Phone</h3>
                     <Form.Item
@@ -241,9 +232,6 @@ const MainProfile = () => {
                       <Input className="h-12 bg-transparent border-none text-white text-base focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none " />
                     </Form.Item>
                   </div>
-                </div>
-
-                <div className="flex flex-col w-full lg:flex-row lg:gap-12 3xl:gap-16">
                   <div className="w-full relative">
                     <h3 className="absolute -top-3 left-3 px-2 mb-0 text-white bg-blue-900 z-10 rounded-md">
                       Date of birth
@@ -271,6 +259,9 @@ const MainProfile = () => {
                       />
                     </Form.Item>
                   </div>
+                </div>
+
+                <div className="flex flex-col w-full lg:flex-row lg:gap-12 3xl:gap-16">
                   <div className="w-full relative">
                     <h3 className="absolute -top-3 left-3 px-2 mb-0 text-white bg-blue-900 z-10 rounded-md">Address</h3>
                     <Form.Item
@@ -297,11 +288,11 @@ const MainProfile = () => {
                     <h3 className="text-white xs:text-sm ss:text-base">Gender</h3>
                     <Form.Item className="xs:ml-8 lg:ml-20">
                       <Radio.Group onChange={onChange} value={value}>
-                        <Radio value={userData.gender === 'Male' ? 1 : 2} className="text-white text-xl font-popins">
+                        <Radio value="Male" className="text-white text-xl font-popins">
                           Male
                         </Radio>
                         <Radio
-                          value={userData.gender === 'Male' ? 2 : 1}
+                          value="Female"
                           className="3xl:ml-20 lg:ml-10 xs:mt-2 ss:mt-0 text-white text-base font-popins"
                         >
                           Female
