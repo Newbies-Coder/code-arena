@@ -12,7 +12,7 @@ import { toast } from 'react-toastify'
 import { ProfileType } from '@/@types/form.type'
 import { StatusCodes } from 'http-status-codes'
 
-const { Sider, Content } = Layout
+const { Content } = Layout
 
 const MainProfile = () => {
   const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated)
@@ -23,28 +23,20 @@ const MainProfile = () => {
     phone: '',
     date_of_birth: '',
     address: '',
-    gender: '',
     bio: '',
   })
 
-  const [value, setValue] = useState('Male')
+  const [gender, setGender] = useState()
   const onChange = (e: RadioChangeEvent) => {
-    setValue(e.target.value)
+    setGender(e.target.value)
   }
   const onFinish = async (values: ProfileType) => {
-    const { username, fullname, address, date_of_birth, bio, phone } = values
+    const user = { ...values, gender }
+    console.log(user)
+
     const loadingToast = toast.loading('Updating...')
     try {
-      const res = await requestApi('users/@me/profile', 'PUT', {
-        username,
-        fullname,
-        address,
-
-        date_of_birth,
-        bio,
-        phone,
-        gender: value,
-      })
+      const res = await requestApi('users/@me/profile', 'PUT', user)
       const { message } = res.data
       toast.update(loadingToast, {
         render: message,
@@ -74,7 +66,9 @@ const MainProfile = () => {
         try {
           const res = await requestApi('users/@me/profile', 'GET', {})
           const { username, fullName, phone, date_of_birth, address, gender, bio } = res.data.data
-          setUserData({ username, fullName, phone, date_of_birth, address, gender, bio })
+          setUserData({ username, fullName, phone, date_of_birth, address, bio })
+          setGender(gender)
+          console.log(gender)
         } catch (error) {
           console.log(error)
         }
@@ -83,26 +77,6 @@ const MainProfile = () => {
   }, [isAuthenticated])
   return (
     <Layout className="min-h-screen overflow-hidden">
-      <Sider width="15%" style={{ backgroundColor: '#252E38' }}>
-        <img src={HOME_ICON.LOGO_TEXT} alt="logo" className="xs:hidden xl:block xl:ml-6" />
-        <img
-          src={LOGO.APP_LOGO}
-          alt="logo"
-          className="xl:hidden xs:block xs:ml-[2px] ss:ml-2 smm:ml-5 sm:ml-8 lg:ml-14 xs:mt-4"
-        />
-        <ul className="mt-12 lg:ml-16 lg:flex-none xl:ml-10 xs:ml-2 ss:ml-3 xss:ml-4 smm:ml-7 md:ml-10">
-          {ProfileMenuItems.map((item) => (
-            <li className="py-6" key={item.key}>
-              <Button
-                icon={<item.Icon />}
-                className="menu h-full border-0 p-0 text-xl font-popins text-gray-300 flex justify-center items-center"
-              >
-                <p className="m-0 xl:block xs:hidden">{item.label}</p>
-              </Button>
-            </li>
-          ))}
-        </ul>
-      </Sider>
       <Layout>
         <Content className="bg-blue-900">
           <img
@@ -113,18 +87,18 @@ const MainProfile = () => {
           <div className="relative">
             <Avatar
               size={{ xs: 80, sm: 90, md: 90, lg: 100, xl: 120, xxl: 140 }}
-              className="absolute xs:-top-32 lg:-top-44 xs:left-3 lg:left-8 3xl:-top-60 z-10"
+              className="absolute xs:-top-32 lg:-top-40 xs:left-3 lg:left-32 3xl:-top-60 z-10"
               src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             />
-            <span className="absolute xs:-top-[85px] lg:-top-[130px] 3xl:-top-[180px] xs:left-28 lg:left-36 xl:left-44 3xl:left-48 z-10 text-xl font-popins text-white">
+            <span className="absolute xs:-top-[85px] lg:-top-[115px] 3xl:-top-[180px] xl:-top-[110px] xs:left-28 lg:left-64 xl:left-64 3xl:left-72 z-10 text-xl font-popins text-white">
               Ngoc Uyen
             </span>
             <Button
-              className="absolute xs:-top-20 smm:-top-[70px] lg:-top-[105px] xl:-top-[100px] 3xl:-top-[135px] xs:left-16 smm:left-[70px] lg:left-24 xl:left-32 3xl:left-32 z-10 bg-blue-700 text-white rounded-full p-0 m-0 border-4 border-blue-900"
+              className="absolute xs:-top-20 smm:-top-[70px] lg:-top-[100px] xl:-top-[75px] 3xl:-top-[135px] xs:left-16 smm:left-[70px] lg:left-52 xl:left-52 3xl:left-56 z-10 bg-blue-700 text-white rounded-full p-0 m-0 border-4 border-blue-900"
               icon={<CameraOutlined />}
             ></Button>
 
-            <div className="w-full xs:mt-20 lg:mt-32 3xl:mt-44 3xl:px-20 lg:px-10 xs:px-5">
+            <div className="w-full xs:mt-20 lg:mt-24 3xl:mt-44 3xl:px-40 lg:px-40 xs:px-5">
               <Form
                 name="basic"
                 initialValues={{ remember: true }}
@@ -287,13 +261,14 @@ const MainProfile = () => {
                   <div className="w-full relative flex mt-3">
                     <h3 className="text-white xs:text-sm ss:text-base">Gender</h3>
                     <Form.Item className="xs:ml-8 lg:ml-20">
-                      <Radio.Group onChange={onChange} value={value}>
-                        <Radio value="Male" className="text-white text-xl font-popins">
+                      <Radio.Group onChange={onChange} value={gender}>
+                        <Radio value="Male" className="text-white font-popins" checked={gender === 'Male'}>
                           Male
                         </Radio>
                         <Radio
                           value="Female"
-                          className="3xl:ml-20 lg:ml-10 xs:mt-2 ss:mt-0 text-white text-base font-popins"
+                          className="3xl:ml-20 lg:ml-10 xs:mt-2 ss:mt-0 text-white font-popins"
+                          checked={gender === 'Female'}
                         >
                           Female
                         </Radio>
@@ -320,22 +295,33 @@ const MainProfile = () => {
                           ),
                         },
                       ]}
-                      className="border-2 rounded-lg border-white w-full mb-8 flex flex-col"
+                      className="border-2 rounded-lg border-white w-full mb-8 flex flex-col h-24"
                     >
                       <TextArea className="h-12 bg-transparent border-none text-white text-base focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none " />
                     </Form.Item>
                   </div>
                 </div>
 
-                <Form.Item className="mt-2">
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    className="h-12 w-60 bg-purple-600 border-2 border-white rounded-full font-popins text-base"
-                  >
-                    Update
-                  </Button>
-                </Form.Item>
+                <div className="flex gap-4">
+                  <Form.Item className="mt-2">
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      className="h-12 w-60 bg-purple-600 border-2 border-white rounded-full font-popins text-base btn-hover"
+                    >
+                      Update
+                    </Button>
+                  </Form.Item>
+                  <Form.Item className="mt-2">
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      className="h-12 w-60 bg-purple-600 border-2 border-white rounded-full font-popins text-base btn-hover"
+                    >
+                      Back Home
+                    </Button>
+                  </Form.Item>
+                </div>
               </Form>
             </div>
           </div>
