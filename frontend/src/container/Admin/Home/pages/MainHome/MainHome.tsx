@@ -1,4 +1,4 @@
-import { Col, Row } from 'antd'
+import { Row } from 'antd'
 import Progression from '../../components/Progression'
 import Statistic from '../../components/Statistic'
 import './style.scss'
