@@ -31,3 +31,12 @@ export type LoginInfoDataType = {
   loginTime: string
   logoutTime: string
 }
+
+export type ProfileDataType = {
+  fullName: string
+  username: string
+  phone: string
+  date_of_birth: string
+  address: string
+  gender: string
+}
