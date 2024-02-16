@@ -24,7 +24,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ children, color, percent, siz
 export default function Overview() {
   return (
     <div className="flex flex-col gap-2 mb-4">
-      <h2 className="ml-2 text-3xl font-bold font-popins leading-9 text-orange-500">Overviews</h2>
       <div className="flex flex-col xl:flex-row p-2 border border-white rounded-lg gap-4 justify-evenly">
         <div className="flex justify-evenly xl:justify-between gap-2">
           <div className="w-24 xl:w-fit flex justify-center">
@@ -36,14 +35,14 @@ export default function Overview() {
           </div>
           <div className="text-[#ffe500] w-24 xl:w-fit">
             <span className="text-white text-2xl font-semibold">4.221</span>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mt-2">
               <UsersIcon color="#ffe500" />
               <span>User</span>
             </div>
           </div>
         </div>
         <div className="flex justify-evenly xl:justify-between gap-2">
-          <div className="w-24 xl:w-fit text-white flex flex-col py-2">
+          <div className="w-24 xl:w-fit text-white flex flex-col py-2 gap-2">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-yellow-200 rounded-full"></div>
               <span>Active</span>
@@ -53,7 +52,7 @@ export default function Overview() {
               <span>Not active</span>
             </div>
           </div>
-          <div className="w-24 xl:w-10 flex flex-col py-2 font-bold">
+          <div className="w-24 xl:w-10 flex flex-col py-2 font-bold gap-2">
             <span className="text-[#ffe500]">3.799</span>
             <span className="text-[#FF8900]">422</span>
           </div>
@@ -70,14 +69,14 @@ export default function Overview() {
           </div>
           <div className="text-orange-500 w-24 xl:w-fit">
             <span className="text-white text-2xl font-semibold">276</span>
-            <div className="flex items-center gap-2 text-[#4277ff]">
+            <div className="flex items-center gap-2 text-[#4277ff] mt-2">
               <MessageIcon color="#4277ff" />
               <span>Message</span>
             </div>
           </div>
         </div>
         <div className="flex justify-evenly xl:justify-between gap-2">
-          <div className="w-24 xl:w-fit text-white flex flex-col py-2">
+          <div className="w-24 xl:w-fit text-white flex flex-col py-2 gap-2">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-[#4277ff] rounded-full"></div>
               <span>Sended</span>
@@ -87,7 +86,7 @@ export default function Overview() {
               <span>Sending</span>
             </div>
           </div>
-          <div className="w-24 xl:w-10 flex flex-col py-2 font-bold">
+          <div className="w-24 xl:w-10 flex flex-col py-2 font-bold gap-2">
             <span className="text-[#4277ff]">210</span>
             <span className="text-[#7e7d88]">66</span>
           </div>
@@ -106,14 +105,14 @@ export default function Overview() {
           </div>
           <div className="text-orange-500 w-24 xl:w-fit">
             <span className="text-white text-2xl font-semibold">4.221</span>
-            <div className="flex items-center gap-2 text-[#35C75A]">
+            <div className="flex items-center gap-2 text-[#35C75A] mt-2">
               <CourserIcon color="#35C75A" />
               <span>Course</span>
             </div>
           </div>
         </div>
         <div className="flex justify-evenly xl:justify-between gap-2">
-          <div className="w-24 xl:w-fit text-white flex flex-col py-2">
+          <div className="w-24 xl:w-fit text-white flex flex-col py-2 gap-2">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-[#35C75A] rounded-full"></div>
               <span>Waiting</span>
@@ -127,7 +126,7 @@ export default function Overview() {
               <span>Skip</span>
             </div>
           </div>
-          <div className="w-24 xl:w-10 flex flex-col py-2 font-bold">
+          <div className="w-24 xl:w-10 flex flex-col py-2 font-bold gap-2">
             <span className="text-[#35C75A]">3.799</span>
             <span className="text-[#7e7d88]">422</span>
             <span className="text-pink-400">0</span>

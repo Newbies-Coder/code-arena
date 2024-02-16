@@ -11,16 +11,16 @@ import {
 } from '@/components/Icons'
 import Menu from '@/components/Menu'
 import { HOME_ICON, LOGO } from '@/constants/images'
+import Overview from '@/container/Admin/Home/components/Overview'
 import AvatarProfile from '@/container/Detail/components/AvatarProfile'
-import { DispatchType } from '@/redux/config'
-import { authAction } from '@/redux/userReducer/userReducer'
 import { ACCESS_TOKEN, clearStore } from '@/utils/setting'
-import { Button, Layout } from 'antd'
+import { LeftOutlined, RightOutlined } from '@ant-design/icons'
+import { Button, Calendar, Layout } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import { Content, Header } from 'antd/es/layout/layout'
 import clsx from 'clsx'
+import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
 const items: MenuItemType[] = [
@@ -35,7 +35,6 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
   const [windowSize, setWindowSize] = useState([window.innerWidth, window.innerHeight])
   const href = window.location.href
   const [title, setTitle] = useState('')
-  const dispatch: DispatchType = useDispatch()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -70,7 +69,6 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
   }, [windowSize])
 
   const handleLogout = () => {
-    dispatch(authAction(false))
     clearStore(ACCESS_TOKEN)
     navigate('/admin/login')
   }
@@ -132,13 +130,42 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
         </Header>
         <Content
           className={clsx(
-            'fixed top-16 bottom-0 right-0 overflow-y-auto no-scrollbar',
+            'fixed top-16 bottom-0 right-0 xl:right-[360px] overflow-y-auto no-scrollbar',
             !collapsed ? 'left-[200px]' : 'left-[80px]',
           )}
         >
           {children}
         </Content>
       </Layout>
+      <div className="fixed top-20 bottom-0 right-2 w-[320px] hidden xl:block">
+        <Overview />
+        <Calendar
+          className="border border-white"
+          fullscreen={false}
+          mode="month"
+          headerRender={({ value, onChange }) => {
+            return (
+              <div className="p-4 flex justify-around items-center text-orange-500 font-bold bg-[#001529] rounded-t-lg">
+                <Button
+                  icon={<LeftOutlined color="#f37007" className="text-[#f37007]" />}
+                  onClick={() => {
+                    const now = value.clone().month(value.month() - 1)
+                    onChange(now)
+                  }}
+                />
+                <span>{format(new Date(value.toDate()), 'MMM d yyyy')}</span>
+                <Button
+                  icon={<RightOutlined className="text-[#f37007]" />}
+                  onClick={() => {
+                    const now = value.clone().month(value.month() + 1)
+                    onChange(now)
+                  }}
+                />
+              </div>
+            )
+          }}
+        />
+      </div>
     </Layout>
   )
 }

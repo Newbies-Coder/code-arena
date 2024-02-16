@@ -5,7 +5,7 @@ import { DASHBOARD_ADMIN_ICON } from '@/constants/images'
 
 export default function Progression() {
   return (
-    <Row className="mx-2 flex justify-center">
+    <Row className="mx-2 flex justify-center w-full progression">
       <Col xs={24} md={11} lg={11} xl={6}>
         <Card
           title={

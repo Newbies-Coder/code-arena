@@ -1,10 +1,7 @@
 import { LoginFieldType } from '@/@types/form.type'
-import { userLoginType } from '@/@types/user.type'
-import { useLoginMutation } from '@/apis/api'
+import { LOGO, SYS } from '@/constants/images'
 import { DispatchType } from '@/redux/config'
-import { authAction } from '@/redux/userReducer/userReducer'
 import { ACCESS_TOKEN, setStore } from '@/utils/setting'
-import { LOGO, SYS } from '@constants/images'
 import { Alert, Button, Checkbox, Form, Input } from 'antd'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
@@ -19,33 +16,10 @@ type FieldType = {
 
 const Login = () => {
   const navigate = useNavigate()
-  const [login, { isLoading }] = useLoginMutation()
   const dispatch: DispatchType = useDispatch()
 
   const onFinish = async (values: LoginFieldType) => {
-    try {
-      const { email, password } = values
-      const res = await login({ email: email, password: password })
-
-      if ('data' in res) {
-        const { access_token } = res.data.data as userLoginType
-        setStore(ACCESS_TOKEN, access_token)
-        dispatch(authAction(true))
-        toast.success('Login successfully')
-        navigate('/admin')
-      }
-
-      if ('error' in res) {
-        if (res.error && 'data' in res.error) {
-          console.log(res.error.data)
-          toast.error(res.error.data.message)
-        } else {
-          console.log(res.error)
-        }
-      }
-    } catch (error) {
-      console.log(error)
-    }
+    return
   }
 
   return (
@@ -154,7 +128,7 @@ const Login = () => {
                   htmlType="submit"
                   className="flex items-center justify-center bg-gradient-to-tr --tw-gradient-stops from-[#6A5AF9] to-[#D66EFD] py-4 px-8 text-3xl font-bold h-16 w-full border-none rounded-tl-[30px] rounded-bl-[50px] rounded-tr-[50px] rounded-br-[30px] hover:bg-gradient-to-l hover:bg-white hover:duration-500 hover:ease-linear"
                 >
-                  {isLoading ? 'Wait...' : 'Sign-in'}
+                  Sign-in
                 </Button>
               </Form.Item>
             </Form>

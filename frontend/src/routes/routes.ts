@@ -52,6 +52,10 @@ const globalRoute = [
     path: config.routes.congratulation,
     component: CongratulationPage,
   },
+  {
+    path: config.routes.admin.login,
+    component: LoginAdmin,
+  },
 ]
 
 const publicRoute = [
@@ -75,10 +79,6 @@ const publicRoute = [
   {
     path: config.routes.profile,
     component: ProfilePage,
-  },
-  {
-    path: config.routes.admin.login,
-    component: LoginAdmin,
   },
 ]
 
