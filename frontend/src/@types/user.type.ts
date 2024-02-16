@@ -16,3 +16,13 @@ export type userState = {
   isAdmin: boolean
   email: string | null
 }
+
+export type UserDecodeType = {
+  email: string
+  exp: string
+  iat: string
+  role: string
+  token_type: string
+  username: string
+  _id: string
+}

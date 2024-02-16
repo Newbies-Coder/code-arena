@@ -1,8 +1,13 @@
 import { LoginFieldType } from '@/@types/form.type'
+import { UserDecodeType } from '@/@types/user.type'
 import { LOGO, SYS } from '@/constants/images'
 import { DispatchType } from '@/redux/config'
-import { ACCESS_TOKEN, setStore } from '@/utils/setting'
+import { setAdminStatus, setAuthenticationStatus } from '@/redux/userReducer/userReducer'
+import { handleApiError } from '@/utils/handleApiError'
+import requestApi from '@/utils/interceptors'
+import { ACCESS_TOKEN, REFRESH_TOKEN, setCookie, setStore } from '@/utils/setting'
 import { Alert, Button, Checkbox, Form, Input } from 'antd'
+import { jwtDecode } from 'jwt-decode'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -17,9 +22,29 @@ type FieldType = {
 const Login = () => {
   const navigate = useNavigate()
   const dispatch: DispatchType = useDispatch()
+  const TIME_CLOSING_MESSAGE = 2000
+  const REFRESH_TOKEN_EXPIRED_TIME = 7
 
   const onFinish = async (values: LoginFieldType) => {
-    return
+    const { email, password } = values
+    try {
+      const res = await requestApi('users/login', 'POST', { email, password })
+      const { access_token, refresh_token } = res.data.data
+      setStore(ACCESS_TOKEN, access_token)
+      setCookie(REFRESH_TOKEN, refresh_token, REFRESH_TOKEN_EXPIRED_TIME)
+      dispatch(setAuthenticationStatus(true))
+
+      const { role } = jwtDecode<UserDecodeType>(access_token)
+      if (role === 'Admin') {
+        toast.success(res.data.message, { autoClose: TIME_CLOSING_MESSAGE })
+        dispatch(setAdminStatus(true))
+        navigate('/admin')
+      } else {
+        navigate('/')
+      }
+    } catch (err) {
+      handleApiError(err)
+    }
   }
 
   return (
