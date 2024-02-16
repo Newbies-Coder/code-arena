@@ -22,6 +22,7 @@ import clsx from 'clsx'
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import './style.scss'
 
 const items: MenuItemType[] = [
   { label: 'Dashboard', icon: <DashboardIcon color="#00D1FF" />, link: '/admin', active: false, color: '#00D1FF' },
