@@ -4,21 +4,22 @@ import SearchKeyword from '../../components/SearchKeyword'
 import { useNavigate } from 'react-router-dom'
 import { ColumnsType } from 'antd/es/table'
 import VerifyStatus from '@/components/VerifyStatus'
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import DataTable from '../../components/DataTable'
-import { UserDataType } from '@/@types/admin'
 import { userData } from '@/mocks/user.data'
+import { UserDataType } from '@/@types/admin.type'
+import './style.scss'
 
 export default function MainUser() {
   const navigate = useNavigate()
 
   const columns: ColumnsType<UserDataType> = [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      className: 'text-sm',
-      width: 200,
-    },
+    // {
+    //   title: 'ID',
+    //   dataIndex: 'id',
+    //   className: 'text-sm',
+    //   width: 200,
+    // },
     {
       title: 'Name',
       dataIndex: 'name',
@@ -78,8 +79,13 @@ export default function MainUser() {
         <RoleDropdown />
         <div className="flex items-end gap-8">
           <SearchKeyword />
-          <Button type="primary" className="bg-[#8001FF] h-12 w-36" onClick={() => navigate('/admin/user/add')}>
-            Add account
+          <Button
+            type="primary"
+            className="bg-[#8001FF] h-12 w-36 flex justify-center items-center"
+            onClick={() => navigate('/admin/user/add')}
+          >
+            <PlusOutlined className="text-lg" />
+            <span>Add account</span>
           </Button>
         </div>
       </div>
