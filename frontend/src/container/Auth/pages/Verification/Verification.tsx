@@ -14,6 +14,7 @@ const deadline = Date.now() + 1000 * 60 * 5
 
 const Verification = () => {
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(''))
+  //point the active input
   const [activeIndex, setActiveIndex] = useState<number>(0)
   const email = useSelector((state: RootState) => state.user.email)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -21,9 +22,13 @@ const Verification = () => {
 
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = target
+    //copy the otp array
     const newOTP: string[] = [...otp]
+    //add the last number into the otp copy array
     newOTP[currentIndex] = value.substring(value.length - 1)
+    //if input has no value, set the previous index to be the active index
     if (!value) setActiveIndex(currentIndex - 1)
+    //else set the next index to be the active index
     else setActiveIndex(currentIndex + 1)
     setOtp(newOTP)
   }
@@ -37,6 +42,7 @@ const Verification = () => {
     inputRef.current?.focus()
   }, [activeIndex])
 
+  //confirm verify otp
   const handleConfirmClick = async () => {
     const otpString = otp.join('')
     const OTP_LENGTH = +import.meta.env.VITE_OTP_LENGTH
@@ -57,6 +63,7 @@ const Verification = () => {
     }
   }
 
+  //resend new otp
   const handleResendClick = async () => {
     const id = toast.loading('')
     requestApi('users/resend-verify-otp', 'POST', { email })
