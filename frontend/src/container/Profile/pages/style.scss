@@ -32,3 +32,19 @@
 .btn-hover:hover {
   background-color: #8001ff !important;
 }
+
+.btn-cover:hover {
+  color: white !important;
+  border-color: white !important;
+}
+
+.btn-avatar:hover {
+  border-color: #0e1820 !important;
+}
+
+.ant-btn {
+  border-color: #0e1820;
+  &:hover {
+    border-color: #0e1820 !important;
+  }
+}
