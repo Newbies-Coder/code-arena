@@ -13,7 +13,7 @@ export default function Menu(props: MenuType) {
   return (
     <div className={clsx(['mt-2 fixed top-16', props.collapsed ? 'w-20' : 'w-48'])}>
       {menu.map((item: MenuItemType, index: number) => (
-        <div key={index} className="flex my-2 mr-4 text-white" onClick={() => handleItemActive(index)}>
+        <div key={index} className="flex my-2 mr-2 text-white" onClick={() => handleItemActive(index)}>
           <div style={{ border: `1px solid ${item.color}` }}></div>
           <Link
             to={item.link}
@@ -23,7 +23,7 @@ export default function Menu(props: MenuType) {
             ])}
             style={item.active ? { backgroundColor: item.color } : {}}
           >
-            {!props.collapsed && item.label}
+            <span className="ml-4">{!props.collapsed && item.label}</span>
             <div className={clsx(['p-2', item.active && `bg-black rounded-full`])}>{item.icon}</div>
           </Link>
         </div>

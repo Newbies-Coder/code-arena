@@ -9,11 +9,11 @@ export default function Progression() {
       <Col xs={24} md={11} lg={11} xl={6}>
         <Card
           title={
-            <p className="my-2">
+            <p className="my-2 text-white">
               Numerical order <br /> granted
             </p>
           }
-          className="mb-2 mx-2 bg-gradient-to-b from-[#EC4887] to-[#B954A4]"
+          className="mb-2 mx-2 bg-gradient-to-b from-[#EC4887] to-[#B954A4] "
           bordered={false}
         >
           <div className="flex justify-between">
@@ -33,7 +33,7 @@ export default function Progression() {
       <Col xs={24} md={11} lg={11} xl={6}>
         <Card
           title={
-            <p className="my-2">
+            <p className="my-2 text-white">
               Numerical order <br /> granted
             </p>
           }
@@ -59,7 +59,7 @@ export default function Progression() {
       <Col xs={24} md={11} lg={11} xl={6}>
         <Card
           title={
-            <p className="my-2">
+            <p className="my-2 text-white">
               Numerical order <br /> waiting
             </p>
           }
@@ -81,7 +81,7 @@ export default function Progression() {
       <Col xs={24} md={11} lg={11} xl={6}>
         <Card
           title={
-            <p className="my-2">
+            <p className="my-2 text-white">
               Numerical order <br /> has skipped
             </p>
           }
