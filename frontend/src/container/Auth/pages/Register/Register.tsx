@@ -1,41 +1,43 @@
-import { Form, Button, Row, Col, Input, Alert, DatePicker, DatePickerProps } from 'antd'
 import './style.scss'
+
+// Import necessary hooks, components, and utilities from React, React Router, Redux Toolkit, Ant Design, etc.
+import React from 'react'
+import { Form, Button, Row, Col, Input, Alert, DatePicker, DatePickerProps } from 'antd'
 import { BG, LOGO } from '@/constants/images'
-import { Link, useNavigate } from 'react-router-dom'
-import { DateOfBirthIcon, GmailIcon, LockIcon, UserIcon } from '@/components/Icons'
 import { useDispatch } from 'react-redux'
 import { DispatchType } from '@/redux/config'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { StatusCodes } from 'http-status-codes'
+
+// Import actions and helpers
+import { DateOfBirthIcon, GmailIcon, LockIcon, UserIcon } from '@/components/Icons'
 import requestApi from '@/utils/interceptors'
 import { setEmailResendOTP } from '@/redux/userReducer/userReducer'
-import { toast } from 'react-toastify'
 import { RegisterFieldType } from '@/@types/form.type'
-import { StatusCodes } from 'http-status-codes'
-import React from 'react'
 import { MESSAGES } from '@/constants/message'
 
+// State to store the date of birth selected by the user
 let date_of_birth = ''
+
+// Handler for the date picker's change event
 const onChange: DatePickerProps['onChange'] = (_, dateString) => {
   date_of_birth = dateString
 }
 
 type RegisterResType = { response?: { status?: number; data?: any } }
+const TIME_CLOSING_MESSAGE = 2000 // Time in milliseconds for toast messages
 
 const Register: React.FC = () => {
-  const TIME_CLOSING_MESSAGE = 2000 // Time in milliseconds for toast messages
-
   const navigate = useNavigate()
   const dispatch: DispatchType = useDispatch()
 
   // Function to handle form submission
   const onFinish = async (values: RegisterFieldType) => {
-    // Show loading toast
     const loadingToast = toast.loading('Registering...')
-
-    // Destructure form values
     const { username, email, password, confirm_password } = values
-
-    // API request simulation
     try {
+      // Perform API request to register the user
       const response = await requestApi('users/register', 'POST', {
         username,
         email,
@@ -44,7 +46,7 @@ const Register: React.FC = () => {
         date_of_birth,
       })
 
-      // Dispatch action to store email for OTP verification
+      // Dispatch action with the user's email for OTP verification
       dispatch(setEmailResendOTP(response.data.data.email))
 
       // Update loading toast to success
@@ -60,25 +62,25 @@ const Register: React.FC = () => {
     } catch (error) {
       let errorMessage = MESSAGES.REGISTER.ERROR.DEFAULT // Default error message
 
-      // Check if error is an instance of Error
+      // Check if error is an instance of error
       if (error instanceof Error) {
         errorMessage = error.message
       } else if (typeof error === 'object' && error !== null) {
         // If the error is an object but not an Error instance, attempt to extract common error properties
         const err = error as RegisterResType
         if (err.response) {
-          if (err.response.status === StatusCodes.UNPROCESSABLE_ENTITY && err.response.data) {
-            // Handle Unprocessable Entity, assume the structure of your API errors
-            const apiError =
-              err.response.data.errors?.password || err.response.data.errors?.username || err.response.data.message
-            errorMessage = apiError || MESSAGES.REGISTER.ERROR.EMPTY_FIELD
-          } else {
-            // Handle other statuses
-            errorMessage = err.response.data?.message || MESSAGES.REGISTER.ERROR.UNKNOWN
+          // Handle different error statuses from the API response
+          switch (err.response.status) {
+            case StatusCodes.UNPROCESSABLE_ENTITY:
+              errorMessage = err.response.data.message || MESSAGES.REGISTER.ERROR.EMPTY_FIELD
+              break
+            default:
+              errorMessage = err.response.data.message || MESSAGES.REGISTER.ERROR.UNKNOWN
+              break
           }
         }
       }
-      // Use errorMessage for toast
+      // Update the loading toast to show the error message
       toast.update(loadingToast, {
         render: errorMessage,
         type: 'error',
@@ -102,6 +104,7 @@ const Register: React.FC = () => {
           <p className="text-black font-popins text-sm -mt-7 mb-6 text-center font-medium">
             Welcome to the Code Arena free coding learning page!
           </p>
+          {/* Form fields and input components */}
           <Form name="basic" className="w-full" onFinish={onFinish}>
             <Form.Item
               name="username"
@@ -268,6 +271,7 @@ const Register: React.FC = () => {
           </Form>
         </div>
       </Col>
+      {/* Background image */}
       <Col xs={{ span: 0 }} lg={{ span: 12 }} className="min-h-screen">
         <img src={BG.APP_BG} alt="boys" className="w-full h-screen object-cover" />
       </Col>
