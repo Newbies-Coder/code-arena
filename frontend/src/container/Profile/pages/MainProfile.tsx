@@ -34,6 +34,7 @@ const MainProfile = () => {
   const [avatarURL, setAvatarURL] = useState('')
   const [coverURL, setCoverURL] = useState('')
   const [gender, setGender] = useState()
+
   const onChange = (e: RadioChangeEvent) => {
     setGender(e.target.value)
   }
