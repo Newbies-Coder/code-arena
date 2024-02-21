@@ -11,6 +11,7 @@ export type routeTypes = {
   notFound: string
   admin: routeAdminTypes
   detailCoding: string
+  resetPassword: string
 }
 
 export type routeAdminTypes = {

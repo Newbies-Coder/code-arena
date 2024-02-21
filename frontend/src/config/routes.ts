@@ -12,6 +12,7 @@ const routes: routeTypes = {
   passwordResetSuccess: '/password-reset-success',
   notFound: '*',
   detailCoding: '/detail-coding',
+  resetPassword: '/reset-password',
   admin: {
     home: '/admin',
     login: '/admin/login',

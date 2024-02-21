@@ -12,6 +12,7 @@ const PasswordResetSuccessPage = React.lazy(() => import('@components/PasswordCo
 const NotFoundPage = React.lazy(() => import('@components/NotFound'))
 const DetailCodingPage = React.lazy(() => import('@container/Detail/pages/MainDetail'))
 const ProfilePage = React.lazy(() => import('@container/Profile/pages/MainProfile'))
+const ResetPassword = React.lazy(() => import('@container/Auth/pages/ResetPassword'))
 
 const HomePageAdmin = React.lazy(() => import('@/container/Admin/Home/pages/MainHome'))
 const LoginAdmin = React.lazy(() => import('@container/Admin/Auth/pages/Login'))
@@ -63,7 +64,10 @@ const publicRoute = [
     path: config.routes.forgotPassword,
     component: ForgotPasswordPage,
   },
-
+  {
+    path: config.routes.resetPassword,
+    component: ResetPassword,
+  },
   {
     path: config.routes.passwordResetSuccess,
     component: PasswordResetSuccessPage,
