@@ -1,36 +1,38 @@
-import { BG, LOGO } from '@/constants/images'
+import './style.scss'
 import { Button, Col, Form, Row, Statistic } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import './style.scss'
-import requestApi from '@/utils/interceptors'
+import { RootState } from '@/redux/config'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
-import { RootState } from '@/redux/config'
+
+import { BG, LOGO } from '@/constants/images'
+import requestApi from '@/utils/interceptors'
 const { Countdown } = Statistic
 
 let currentIndex = 0
-const deadline = Date.now() + 1000 * 60 * 5
 
 const Verification = () => {
+  // State to hold OTP input values
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(''))
-  //point the active input
+  // Active input index for focusing
   const [activeIndex, setActiveIndex] = useState<number>(0)
+  // Retrieve email from Redux store
   const email = useSelector((state: RootState) => state.user.email)
   const inputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
+  const deadline = Date.now() + 1000 * 60 * 5 // 5 minutes from now
 
+  // Handle OTP input change
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = target
     //copy the otp array
     const newOTP: string[] = [...otp]
-    //add the last number into the otp copy array
-    newOTP[currentIndex] = value.substring(value.length - 1)
-    //if input has no value, set the previous index to be the active index
-    if (!value) setActiveIndex(currentIndex - 1)
-    //else set the next index to be the active index
-    else setActiveIndex(currentIndex + 1)
+    newOTP[currentIndex] = value.slice(-1) // Take the last character to ensure single digits
     setOtp(newOTP)
+    // Focus next input or stay on the last one
+    const nextIndex = value ? currentIndex + 1 : currentIndex - 1
+    setActiveIndex(Math.min(Math.max(nextIndex, 0), otp.length - 1))
   }
 
   const handleKeyDown = ({ key }: React.KeyboardEvent<HTMLInputElement>, index: number) => {
@@ -38,8 +40,11 @@ const Verification = () => {
     if (key === 'Backspace') setActiveIndex(index - 1)
   }
 
+  // Automatically focus the active input field
   useEffect(() => {
-    inputRef.current?.focus()
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
   }, [activeIndex])
 
   //confirm verify otp
@@ -47,17 +52,14 @@ const Verification = () => {
     const otpString = otp.join('')
     const OTP_LENGTH = +import.meta.env.VITE_OTP_LENGTH
     if (otpString.length === OTP_LENGTH) {
-      requestApi('users/verify-otp', 'POST', { otp: otpString })
-        .then((res) => {
-          const { message } = res.data
-          toast.success(message, { autoClose: 2000 })
-          navigate('/login')
-        })
-        .catch((err: any) => {
-          const { errors } = err.response.data
-          const { msg } = errors.otp
-          toast.error(msg, { autoClose: 3000 })
-        })
+      try {
+        await requestApi('users/verify-otp', 'POST', { otp: otpString })
+        toast.success('Verification successful', { autoClose: 2000 })
+        navigate('/login') // Redirect on success
+      } catch (err: any) {
+        const message = err.response?.data?.errors?.otp?.msg || 'Verification failed'
+        toast.error(message, { autoClose: 3000 })
+      }
     } else {
       toast.warn('Please enter all characters of otp string')
     }
@@ -98,6 +100,7 @@ const Verification = () => {
           <p className="text-black font-popins text-sm mt-2 mb-10 text-center font-medium">
             Please enter your 6 digits code that you received in your email!
           </p>
+          {/* OTP inputs */}
           <Row justify="center">
             {otp.map((_, index) => {
               return (
@@ -114,6 +117,7 @@ const Verification = () => {
               )
             })}
           </Row>
+          {/* Countdown timer, confirm and resend buttons */}
           <div className="flex justify-center items-center mt-6">
             <Countdown className="font-bold" value={deadline} format="mm:ss" />
           </div>
