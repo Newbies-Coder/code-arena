@@ -17,17 +17,17 @@ const MainHome = () => {
     if (isAuthenticated) {
       requestApi('users/@me/profile', 'GET', {})
         .then((res) => {
-          // console.log(res)
+          console.log(res)
         })
         .catch((err) => {
-          // console.log(err)
+          console.log(err)
         })
     }
   }, [isAuthenticated])
 
   return (
-    <div className="wrapper p-0 m-0 bg-gray-900">
-      <Layout style={{ height: '100%', backgroundColor: '#0e1820' }}>
+    <div className="wrapper p-0 m-0">
+      <Layout style={{ height: '100%' }}>
         <div>
           <HeaderItem />
         </div>
@@ -60,7 +60,7 @@ const MainHome = () => {
                 </div>
               </Content>
             </Col>
-            <Col xs={{ span: 0 }} xl={{ span: 4 }}>
+            <Col xs={{ span: 0 }} xl={{ span: 4 }} style={{ backgroundColor: '#0e1820' }}>
               <SidebarRight />
             </Col>
           </Row>

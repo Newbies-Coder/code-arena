@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { courseList } from '@/mocks/home.data'
 import { HeartOutlined, HeartFilled } from '@ant-design/icons'
 import './style.scss'
+import Fancybox from '../Fancybox'
 
 const SlickArrowLeft = ({ currentSlide, slideCount, ...props }: any) => (
   <Button
@@ -92,6 +93,7 @@ const SliderItem = () => {
               className="relative rounded-t-xl"
               style={{ objectFit: 'cover', height: '200px', width: '100%' }}
             />
+
             <Button
               className="absolute z-10 p-0 border-0 flex justify-center items-center bg-gray-300 w-10 h-10 rounded-full top-4 right-4 "
               onClick={handleLike}

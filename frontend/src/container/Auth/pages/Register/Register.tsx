@@ -43,6 +43,7 @@ const Register: React.FC = () => {
         confirm_password,
         date_of_birth,
       })
+      console.log(response)
 
       // Dispatch action to store email for OTP verification
       dispatch(setEmailResendOTP(response.data.data.email))
@@ -58,11 +59,14 @@ const Register: React.FC = () => {
       // Navigate to verification page
       navigate('/verification')
     } catch (error) {
+      console.log(error)
+
       let errorMessage = MESSAGES.REGISTER.ERROR.DEFAULT // Default error message
 
       // Check if error is an instance of Error
       if (error instanceof Error) {
         errorMessage = error.message
+        console.log(errorMessage)
       } else if (typeof error === 'object' && error !== null) {
         // If the error is an object but not an Error instance, attempt to extract common error properties
         const err = error as RegisterResType
@@ -75,6 +79,7 @@ const Register: React.FC = () => {
           } else {
             // Handle other statuses
             errorMessage = err.response.data?.message || MESSAGES.REGISTER.ERROR.UNKNOWN
+            console.log(errorMessage)
           }
         }
       }
