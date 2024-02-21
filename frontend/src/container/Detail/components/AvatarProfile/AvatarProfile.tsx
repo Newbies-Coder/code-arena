@@ -1,18 +1,38 @@
 import { UserIcon } from '@/components/Icons'
 import { DispatchType } from '@/redux/config'
 import { setAuthenticationStatus } from '@/redux/userReducer/userReducer'
-import { ACCESS_TOKEN, REFRESH_TOKEN, clearCookie, clearStore } from '@/utils/setting'
+import { ACCESS_TOKEN, REFRESH_TOKEN, clearCookie, clearStore, getCookie, getStore } from '@/utils/setting'
 import { DownOutlined } from '@ant-design/icons'
 import { Avatar, Button, Col, Dropdown, MenuProps, Row, Space } from 'antd'
+import axios from 'axios'
 import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
 
 const AvatarProfile = () => {
   const dispatch: DispatchType = useDispatch()
 
-  const handleLogout = () => {
-    clearStore(ACCESS_TOKEN)
-    clearCookie(REFRESH_TOKEN)
-    dispatch(setAuthenticationStatus(false))
+  const handleLogout = async () => {
+    const refresh_token = getCookie(REFRESH_TOKEN)
+    const token = getStore(ACCESS_TOKEN)
+    try {
+      const res = await axios.post(
+        'http://localhost:8080/api/v1/users/logout',
+        { refresh_token },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      const { message } = res.data
+      dispatch(setAuthenticationStatus(false))
+      clearStore(ACCESS_TOKEN)
+      clearCookie(REFRESH_TOKEN)
+      toast.success(message, { autoClose: 2000 })
+    } catch (error: any) {
+      const { message } = error.response.data
+      toast.error(message, { autoClose: 2000 })
+    }
   }
 
   const menuItems: MenuProps['items'] = [
