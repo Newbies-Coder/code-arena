@@ -2,12 +2,14 @@ import { SYS } from '@/constants/images'
 import { CameraOutlined, EditFilled } from '@ant-design/icons'
 import { Alert, Button, Form, Input, Radio } from 'antd'
 import './style.scss'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ProfileDataType } from '@/@types/admin.type'
 import requestApi from '@/utils/interceptors'
 import { format } from 'date-fns'
 import { toast } from 'react-toastify'
 import { handleApiError } from '@/utils/handleApiError'
+import axios from 'axios'
+import { ACCESS_TOKEN, getStore } from '@/utils/setting'
 
 export default function MainProfile() {
   const [profileData, setProfileData] = useState<ProfileDataType>({
@@ -17,18 +19,35 @@ export default function MainProfile() {
     date_of_birth: '',
     address: '',
     gender: '',
+    avatar: '',
+    cover_photo: '',
   })
   const [maleCheck, setMaleCheck] = useState<boolean>(true)
   const [formDisable, setFormDisable] = useState<boolean>(true)
+  const token = getStore(ACCESS_TOKEN)
+  const avatarRef = useRef<HTMLInputElement>(null)
+  const coverRef = useRef<HTMLInputElement>(null)
+
+  const handleChangeAvatarClick = () => {
+    if (avatarRef.current) {
+      avatarRef.current.click()
+    }
+  }
+
+  const handleChangeCoverClick = () => {
+    if (coverRef.current) {
+      coverRef.current.click()
+    }
+  }
 
   useEffect(() => {
     ;(async () => {
       try {
         const res = await requestApi('users/@me/profile', 'GET', {})
-        const { username, fullName, phone, date_of_birth, address, gender } = res.data.data
+        const { username, fullName, phone, date_of_birth, address, gender, avatar, cover_photo } = res.data.data
         if (gender === 'Male') setMaleCheck(true)
         else setMaleCheck(false)
-        setProfileData({ username, fullName, phone, date_of_birth, address, gender })
+        setProfileData({ username, fullName, phone, date_of_birth, address, gender, avatar, cover_photo })
       } catch (error) {
         console.log(error)
       }
@@ -60,17 +79,97 @@ export default function MainProfile() {
     }
   }
 
+  //upload avatar
+  const handleFileAvatarChange = async (event: any) => {
+    const fileObj = event.target.files && event.target.files[0]
+    if (!fileObj) {
+      return
+    }
+    //  reset file input
+    event.target.value = null
+
+    const formData = new FormData()
+    formData.append('image', fileObj)
+    const uploadAvatar = toast.loading('Updating...')
+    try {
+      const res = await axios.post('http://localhost:8080/api/v1/users/@me/avatar', formData, {
+        //config header for file data
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      const { message } = res.data
+      const { avatarUrl } = res.data.data
+      setProfileData((pre) => ({ ...pre, avatar: avatarUrl }))
+      toast.update(uploadAvatar, { render: message, isLoading: false, type: 'success', autoClose: 3000 })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  //upload cover photo
+  const handleFileThumbnailChange = async (event: any) => {
+    const fileObj = event.target.files && event.target.files[0]
+    if (!fileObj) {
+      return
+    }
+    //  reset file input
+    event.target.value = null
+
+    const formData = new FormData()
+    formData.append('image', fileObj)
+    const uploadCover = toast.loading('Updating...')
+    try {
+      const res = await axios.post('http://localhost:8080/api/v1/users/@me/thumbnail', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      const { message } = res.data
+      const { thumbnailUrl } = res.data.data
+      setProfileData((prev) => ({ ...prev, cover_photo: thumbnailUrl }))
+      toast.update(uploadCover, { render: message, isLoading: false, type: 'success', autoClose: 3000 })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
-    <div className="main-profile fixed top-0 right-0 left-[200px]">
-      <img src={SYS.IMAGE.BG_PROFILE} alt="" className="w-full h-64 object-fill" />
-      <Button icon={<CameraOutlined />} className="absolute top-8 right-8 text-white">
-        Change Cover
-      </Button>
+    <div className="main-profile">
+      <div className="relative w-full h-64">
+        <img
+          src={profileData.cover_photo ? profileData.cover_photo : SYS.IMAGE.BG_PROFILE}
+          alt=""
+          className="w-full object-fill h-64"
+          key={profileData.avatar}
+        />
+        <input style={{ display: 'none' }} ref={coverRef} type="file" onChange={handleFileThumbnailChange} />
+        <Button
+          icon={<CameraOutlined />}
+          className="absolute top-8 right-8 text-white"
+          onClick={handleChangeCoverClick}
+        >
+          Change Cover
+        </Button>
+      </div>
       <div className="flex flex-col items-center w-full h-full lg:flex-row p-4">
         <div className="w-full lg:justify-center lg:w-2/5 lg:flex lg:flex-col lg:items-center">
           <div className="relative flex justify-center">
-            <img src="https://i.imgur.com/en3BKmy.png" alt="" className="w-64 h-64 rounded-full" />
-            <CameraOutlined className="text-2xl bg-[#7b61ff] p-3 rounded-full text-white absolute bottom-0 ml-24 border border-black" />
+            <img
+              src={profileData.avatar ? profileData.avatar : 'https://i.imgur.com/en3BKmy.png'}
+              alt=""
+              className="w-64 h-64 rounded-full"
+              key={profileData.avatar}
+            />
+            <input style={{ display: 'none' }} ref={avatarRef} type="file" onChange={handleFileAvatarChange} />
+            <CameraOutlined
+              className="text-2xl bg-[#7b61ff] p-3 rounded-full text-white absolute bottom-0 ml-24 border border-black cursor-pointer"
+              onClick={handleChangeAvatarClick}
+            />
           </div>
           <h3 className="mt-4 text-4xl text-center text-white">{profileData.fullName}</h3>
         </div>

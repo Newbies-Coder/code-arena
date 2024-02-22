@@ -39,4 +39,6 @@ export type ProfileDataType = {
   date_of_birth: string
   address: string
   gender: string
+  avatar: string
+  cover_photo: string
 }
