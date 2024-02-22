@@ -8,12 +8,12 @@ import { format } from 'date-fns'
 
 const MainHome = () => {
   return (
-    <Row className="border-t border-[#949a9f]">
-      <Col xs={24} lg={18} xl={18} className="p-2">
+    <Row className="py-2">
+      <Col xs={24} lg={24} xl={18}>
         <Progression />
         <Statistic />
       </Col>
-      <Col xs={24} lg={6} xl={6} className="p-2 mb-20 flex flex-col gap-2 fixed right-0 w-[320px]">
+      <Col xs={24} lg={0} xl={6} className="py-2 mb-20 flex flex-col gap-2 fixed right-0 w-[332px]">
         <Overview />
         <Calendar
           className="border border-white"

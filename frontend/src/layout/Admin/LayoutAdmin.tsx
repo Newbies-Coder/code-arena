@@ -113,7 +113,7 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
       <Layout className="w-full md:w-9/12 h-full">
         <Header
           className={clsx(
-            'flex justify-between fixed top-0 right-0 h-16 border-bottom border-[#6e7479]',
+            'flex justify-between fixed top-0 right-0 h-16 border border-bottom border-[#6e7479]',
             !collapsed ? 'left-[200px]' : 'left-[80px]',
           )}
         >
