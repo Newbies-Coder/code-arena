@@ -9,8 +9,7 @@ import { format } from 'date-fns'
 const MainHome = () => {
   return (
     <Row className="border-t border-[#949a9f]">
-      <Col xs={24} lg={18} xl={18} className="p-2 border-r">
-        <h2 className="ml-2 text-3xl font-bold font-popins leading-9 text-orange-500">Number progression chart</h2>
+      <Col xs={24} lg={18} xl={18} className="p-2">
         <Progression />
         <Statistic />
       </Col>

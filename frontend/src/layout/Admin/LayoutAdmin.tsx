@@ -42,7 +42,6 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
       '/admin/user': 'User',
       '/admin/course': 'Course',
       '/admin/message': 'Message',
-      '/admin/profile': 'Personal information',
     }
 
     setTitle(titles[url] || '')

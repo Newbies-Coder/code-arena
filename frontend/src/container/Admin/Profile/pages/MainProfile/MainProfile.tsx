@@ -61,8 +61,8 @@ export default function MainProfile() {
   }
 
   return (
-    <div className="main-profile relative">
-      <img src={SYS.IMAGE.BG_PROFILE} alt="" className="w-full h-44 object-fill" />
+    <div className="main-profile fixed top-0 right-0 left-[200px]">
+      <img src={SYS.IMAGE.BG_PROFILE} alt="" className="w-full h-64 object-fill" />
       <Button icon={<CameraOutlined />} className="absolute top-8 right-8 text-white">
         Change Cover
       </Button>
@@ -117,7 +117,7 @@ export default function MainProfile() {
               },
             ]}
           >
-            <div className="flex flex-col w-full lg:flex-row lg:gap-2">
+            <div className="flex flex-col w-full lg:flex-row lg:gap-6">
               <div className="w-full relative">
                 <h3 className="absolute -top-2 left-3 px-2 mb-0 text-white bg-[#001529] z-10 rounded-md">Name</h3>
                 <Form.Item
@@ -138,7 +138,7 @@ export default function MainProfile() {
                   className="border-2 rounded-lg border-white w-full mb-10 flex flex-col"
                 >
                   <Input
-                    className="h-12 bg-transparent border-none text-white text-xl focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
+                    className="h-12 bg-transparent border-none text-white text-md focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
                     placeholder={profileData.fullName}
                     style={{ color: 'white' }}
                   />
@@ -164,14 +164,14 @@ export default function MainProfile() {
                   className="border-2 rounded-lg border-white w-full mb-10 flex flex-col"
                 >
                   <Input
-                    className="h-12 bg-transparent border-none text-white text-xl focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
+                    className="h-12 bg-transparent border-none text-white text-md focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
                     placeholder={profileData.username}
                     style={{ color: 'white' }}
                   />
                 </Form.Item>
               </div>
             </div>
-            <div className="flex flex-col w-full lg:flex-row lg:gap-2">
+            <div className="flex flex-col w-full lg:flex-row lg:gap-6">
               <div className="w-full relative">
                 <h3 className="absolute -top-2 left-3 px-2 mb-0 text-white bg-[#001529] z-10 rounded-md">Phone</h3>
                 <Form.Item
@@ -204,7 +204,7 @@ export default function MainProfile() {
                 >
                   <Input
                     type="number"
-                    className="h-12 bg-transparent border-none text-white text-xl focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
+                    className="h-12 bg-transparent border-none text-white text-md focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
                     placeholder={profileData.phone}
                     style={{ color: 'white' }}
                   />
@@ -244,7 +244,7 @@ export default function MainProfile() {
                   style={{ color: 'white' }}
                 >
                   <Input
-                    className="h-12 bg-transparent border-none text-white text-xl focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
+                    className="h-12 bg-transparent border-none text-white text-md focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
                     placeholder={
                       profileData.date_of_birth !== '' ? format(profileData.date_of_birth, 'yyyy-MM-dd') : ''
                     }
@@ -253,7 +253,7 @@ export default function MainProfile() {
                 </Form.Item>
               </div>
             </div>
-            <div className="flex flex-col w-full lg:flex-row lg:gap-2">
+            <div className="flex flex-col w-full lg:flex-row lg:gap-6">
               <div className="w-full relative">
                 <h3 className="absolute -top-2 left-3 px-2 mb-0 text-white bg-[#001529] z-10 rounded-md">Address</h3>
                 <Form.Item
@@ -286,7 +286,7 @@ export default function MainProfile() {
                 >
                   <Input
                     type="text"
-                    className="h-12 bg-transparent border-none text-white text-xl focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
+                    className="h-12 bg-transparent border-none text-white text-md focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
                     placeholder={profileData.address}
                     style={{ color: 'white' }}
                   />
@@ -323,11 +323,11 @@ export default function MainProfile() {
               </div>
             </div>
 
-            <Form.Item className="w-2/3 mt-2">
+            <Form.Item className="w-full flex justify-center mt-2">
               <Button
                 type="primary"
                 htmlType="submit"
-                className="flex items-center justify-center bg-gradient-to-tr --tw-gradient-stops from-[#6A5AF9] to-[#D66EFD] py-4 px-8 text-xl md:text-3xl font-bold h-10 md:h-16 w-full border-none rounded-tl-[30px] rounded-bl-[50px] rounded-tr-[50px] rounded-br-[30px] hover:bg-gradient-to-l hover:bg-white"
+                className="flex items-center justify-center bg-gradient-to-tr --tw-gradient-stops from-[#6A5AF9] to-[#D66EFD] py-4 px-4 text-lg md:text-2xl font-bold h-10 md:h-16 w-[280px] border-none rounded-tl-[30px] rounded-bl-[50px] rounded-tr-[50px] rounded-br-[30px] hover:bg-gradient-to-l hover:bg-white"
               >
                 Update
               </Button>

@@ -26,3 +26,13 @@ export type UserDecodeType = {
   username: string
   _id: string
 }
+
+export type userLoginType = {
+  _id: string
+  username: string
+  email: string
+  role: string
+  token_type: string
+  iat: string
+  exp: string
+}

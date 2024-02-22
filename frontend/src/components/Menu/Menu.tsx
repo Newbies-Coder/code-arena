@@ -11,9 +11,9 @@ export default function Menu(props: MenuType) {
     setMenu(menuUpdate)
   }
   return (
-    <div className={clsx(['mt-2 fixed top-16', props.collapsed ? 'w-20' : 'w-48'])}>
+    <div className={clsx(['mt-2 fixed top-16', props.collapsed ? 'w-20' : 'w-[200px]'])}>
       {menu.map((item: MenuItemType, index: number) => (
-        <div key={index} className="flex my-2 mr-2 text-white" onClick={() => handleItemActive(index)}>
+        <div key={index} className="flex my-4 mr-2 text-white" onClick={() => handleItemActive(index)}>
           <div style={{ border: `1px solid ${item.color}` }}></div>
           <Link
             to={item.link}
