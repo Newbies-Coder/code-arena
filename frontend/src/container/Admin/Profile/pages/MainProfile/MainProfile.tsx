@@ -2,7 +2,7 @@ import { SYS } from '@/constants/images'
 import { CameraOutlined, EditFilled } from '@ant-design/icons'
 import { Alert, Button, Form, Input, Radio } from 'antd'
 import './style.scss'
-import { useEffect, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { ProfileDataType } from '@/@types/admin.type'
 import requestApi from '@/utils/interceptors'
 import { format } from 'date-fns'
@@ -80,13 +80,13 @@ export default function MainProfile() {
   }
 
   //upload avatar
-  const handleFileAvatarChange = async (event: any) => {
+  const handleFileAvatarChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const fileObj = event.target.files && event.target.files[0]
     if (!fileObj) {
       return
     }
     //  reset file input
-    event.target.value = null
+    event.target.files = null
 
     const formData = new FormData()
     formData.append('image', fileObj)
@@ -110,13 +110,13 @@ export default function MainProfile() {
   }
 
   //upload cover photo
-  const handleFileThumbnailChange = async (event: any) => {
+  const handleFileThumbnailChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const fileObj = event.target.files && event.target.files[0]
     if (!fileObj) {
       return
     }
     //  reset file input
-    event.target.value = null
+    event.target.files = null
 
     const formData = new FormData()
     formData.append('image', fileObj)
