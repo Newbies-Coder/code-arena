@@ -1,10 +1,73 @@
+import { UserDataType } from '@/@types/admin.type'
+import { handleApiError } from '@/utils/handleApiError'
+import requestApi from '@/utils/interceptors'
 import { Alert, Button, Form, Input } from 'antd'
+import { format } from 'date-fns'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 const UpdateAccount = () => {
+  const { userID } = useParams()
+  const [data, setData] = useState({
+    fullName: '',
+    username: '',
+    phone: '',
+    email: '',
+    date_of_birth: '',
+    role: '',
+    status: '',
+  })
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const res = await requestApi(`users/profile/${userID}`, 'GET', {})
+        const { username, fullName, phone, date_of_birth, email } = res.data.data
+        setData((pre) => ({ ...pre, username, fullName, date_of_birth, phone, email }))
+      } catch (error) {
+        handleApiError(error)
+      }
+    })()
+  }, [])
+
   return (
     <div className="px-10 py-5">
       <h2 className="text-orange-400 text-3xl font-medium font-['Poppins'] leading-9 mb-12">Account information</h2>
-      <Form name="basic" initialValues={{ remember: true }} className="w-full flex flex-col items-center relative mt-4">
+      <Form
+        name="basic"
+        initialValues={{ remember: true }}
+        className="w-full flex flex-col items-center relative mt-4"
+        fields={[
+          {
+            name: ['name'],
+            value: data.fullName,
+          },
+          {
+            name: ['username'],
+            value: data.username,
+          },
+          {
+            name: ['phone'],
+            value: data.phone,
+          },
+          {
+            name: ['email'],
+            value: data.email,
+          },
+          {
+            name: ['date_of_birth'],
+            value: data.date_of_birth ? format(data.date_of_birth, 'yyyy-MM-dd') : '',
+          },
+          {
+            name: ['role'],
+            value: data.role,
+          },
+          {
+            name: ['gender'],
+            value: data.status,
+          },
+        ]}
+      >
         <div className="flex flex-col w-full lg:flex-row lg:gap-2">
           <div className="w-full relative">
             <h3 className="absolute -top-2 left-3 px-2 mb-0 text-white bg-[#001529] z-10 rounded-md">Name</h3>

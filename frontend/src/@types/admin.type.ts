@@ -12,7 +12,7 @@ export type MenuItemType = {
 }
 
 export type UserDataType = {
-  key: React.Key
+  key?: React.Key
   _id: string
   fullName: string
   username: string

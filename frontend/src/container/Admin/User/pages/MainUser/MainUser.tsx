@@ -73,7 +73,7 @@ export default function MainUser() {
       className: 'text-sm',
     },
     {
-      dataIndex: 'id',
+      dataIndex: '_id',
       render: (id: string) => (
         <div className="flex">
           <Button
