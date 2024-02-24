@@ -7,7 +7,7 @@ const AddAccount = () => {
       <Form name="basic" initialValues={{ remember: true }} className="w-full flex flex-col items-center relative mt-4">
         <div className="flex flex-col w-full lg:flex-row lg:gap-2">
           <div className="w-full relative">
-            <h3 className="absolute -top-2 left-3 px-2 mb-0 text-white bg-[#001529] z-10 rounded-md">Name</h3>
+            <h3 className="absolute -top-2 left-3 px-2 mb-0 text-white bg-[#001529] z-10 rounded-md">Full name</h3>
             <Form.Item
               name="name"
               rules={[
@@ -226,7 +226,7 @@ const AddAccount = () => {
           </div>
           <div className="w-full relative">
             <h3 className="absolute -top-2 left-3 lg:-top-2 lg:left-3 px-2 mb-0 text-white bg-[#001529] z-10 rounded-md">
-              Active status
+              Verify
             </h3>
             <Form.Item
               name="status"

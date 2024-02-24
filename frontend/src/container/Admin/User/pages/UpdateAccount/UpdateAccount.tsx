@@ -1,4 +1,3 @@
-import { UserDataType } from '@/@types/admin.type'
 import { handleApiError } from '@/utils/handleApiError'
 import requestApi from '@/utils/interceptors'
 import { Alert, Button, Form, Input } from 'antd'
@@ -28,7 +27,7 @@ const UpdateAccount = () => {
         handleApiError(error)
       }
     })()
-  }, [])
+  }, [userID])
 
   return (
     <div className="px-10 py-5">

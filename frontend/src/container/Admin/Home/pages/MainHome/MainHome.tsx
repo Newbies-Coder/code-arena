@@ -12,7 +12,7 @@ import AvatarProfile from '@/container/Detail/components/AvatarProfile'
 const MainHome = () => {
   return (
     <>
-      <Header className="flex justify-between">
+      <Header className="flex justify-between sticky top-0 z-50">
         <h3 className="text-white text-xl">Dashboard</h3>
         <div className="flex items-center">
           <Button className="h-10 w-10 px-2 mx-1 rounded-full border-yellow-400 flex justify-center items-center">
