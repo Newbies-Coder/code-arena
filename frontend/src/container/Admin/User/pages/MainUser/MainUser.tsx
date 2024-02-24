@@ -1,13 +1,12 @@
-import { Button, Menu } from 'antd'
-import SearchKeyword from '../../components/SearchKeyword'
+import { Button, Input, Menu } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { ColumnsType } from 'antd/es/table'
 import VerifyStatus from '@/components/VerifyStatus'
-import { DeleteOutlined, DownOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
+import { DeleteOutlined, DownOutlined, EditOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
 import DataTable from '../../components/DataTable'
 import { UserDataType } from '@/@types/admin.type'
 import './style.scss'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import requestApi from '@/utils/interceptors'
 import { handleApiError } from '@/utils/handleApiError'
 
@@ -18,6 +17,7 @@ export default function MainUser() {
   const [roleSelected, setRoleSelected] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const [query, setQuery] = useState(roles[0])
+  const inputRef = useRef(null)
 
   useEffect(() => {
     ;(async () => {
@@ -96,7 +96,11 @@ export default function MainUser() {
       return data
     }
     return data.filter((item) => {
-      return item.role === query
+      return (
+        item.role === query ||
+        item.username.toLowerCase().includes(query.toLowerCase()) ||
+        item._id.toLowerCase().includes(query.toLowerCase())
+      )
     })
   }, [data, query])
 
@@ -130,7 +134,19 @@ export default function MainUser() {
           </div>
         </div>
         <div className="flex items-end gap-8">
-          <SearchKeyword />
+          <div>
+            <p className="text-white">Keyword</p>
+            <Input
+              className="bg-transparent text-white h-11 max-w-[400px] lg:w-[400px]"
+              suffix={
+                <Button type="text" className="text-white flex justify-center items-end" icon={<SearchOutlined />} />
+              }
+              classNames={{ input: 'bg-transparent text-white placeholder:text-gray-400' }}
+              placeholder="Enter keyword"
+              ref={inputRef}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          </div>
           <Button
             type="primary"
             className="bg-[#8001FF] h-12 w-36 flex justify-center items-center"

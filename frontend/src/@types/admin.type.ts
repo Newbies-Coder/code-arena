@@ -15,6 +15,7 @@ export type UserDataType = {
   key: React.Key
   _id: string
   fullName: string
+  username: string
   phone: string
   email: string
   date_of_birth: string
