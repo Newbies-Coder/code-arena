@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { courseList } from '@/mocks/home.data'
 import { HeartOutlined, HeartFilled } from '@ant-design/icons'
 import './style.scss'
-import Fancybox from '../Fancybox'
 
 const SlickArrowLeft = ({ currentSlide, slideCount, ...props }: any) => (
   <Button
@@ -36,17 +35,7 @@ const settings: CarouselProps = {
   slidesToShow: 3,
   slidesToScroll: 3,
   prevArrow: <SlickArrowLeft />,
-  // (
-  //   <Button className="flex justify-center items-center border-0 h-10 w-10 p-0 rounded-full">
-  //     <LeftArrowIcon />
-  //   </Button>
-  // )
   nextArrow: <SlickArrowRight />,
-  // (
-  //   <Button className="flex justify-center items-center border-0 h-10 w-10 p-0 rounded-full">
-  //     <RightArrowIcon />
-  //   </Button>
-  // )
   responsive: [
     {
       breakpoint: 1024,

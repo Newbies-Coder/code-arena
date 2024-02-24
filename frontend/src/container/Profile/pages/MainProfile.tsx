@@ -10,8 +10,6 @@ import { toast } from 'react-toastify'
 import { ProfileType } from '@/@types/form.type'
 import { StatusCodes } from 'http-status-codes'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { ACCESS_TOKEN, getStore } from '@/utils/setting'
 import Fancybox from '@/components/Fancybox'
 
 const { Content } = Layout
@@ -102,8 +100,6 @@ const MainProfile = () => {
     }
   }
 
-  const token = getStore(ACCESS_TOKEN)
-
   //upload avatar
   const handleFileChange = async (event: any) => {
     const fileObj = event.target.files && event.target.files[0]
@@ -117,14 +113,9 @@ const MainProfile = () => {
     formData.append('image', fileObj)
     const uploadAvatar = toast.loading('Updating...')
     try {
-      const res = await axios.post('http://localhost:8080/api/v1/users/@me/avatar', formData, {
-        //config header for file data
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
-        },
+      const res = await requestApi('users/@me/avatar', 'POST', formData, {
+        'Content-Type': 'multipart/form-data',
       })
-
       const { message } = res.data
       const { avatarUrl } = res.data.data
       setAvatarURL(avatarUrl)
@@ -148,13 +139,9 @@ const MainProfile = () => {
     formData.append('image', fileObj)
     const uploadCover = toast.loading('Updating...')
     try {
-      const res = await axios.post('http://localhost:8080/api/v1/users/@me/thumbnail', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
-        },
+      const res = await requestApi('users/@me/thumbnail', 'POST', formData, {
+        'Content-Type': 'multipart/form-data',
       })
-
       const { message } = res.data
       const { thumbnailUrl } = res.data.data
       setCoverURL(thumbnailUrl)
@@ -170,13 +157,7 @@ const MainProfile = () => {
       <Layout>
         <Content className="bg-blue-900">
           <div className="relative">
-            <Fancybox
-              options={{
-                Carousel: {
-                  infinite: false,
-                },
-              }}
-            >
+            <Fancybox>
               <a href={coverURL} data-fancybox="gallery">
                 <img src={coverURL} alt="cover" className="xs:h-36 lg:h-44 3xl:h-80 w-full object-cover" />
               </a>
@@ -192,35 +173,32 @@ const MainProfile = () => {
             </Button>
           </div>
           <div className="relative">
-            <Fancybox
-              options={{
-                Carousel: {
-                  infinite: false,
-                },
-              }}
-            >
+            <Fancybox>
               <a href={avatarURL} data-fancybox="gallery">
                 <Avatar
                   size={{ xs: 80, sm: 90, md: 90, lg: 100, xl: 120, xxl: 140 }}
-                  className="absolute xs:-top-32 lg:-top-40 xs:left-3 lg:left-32 3xl:-top-60 z-10"
+                  className="absolute xs:-top-32 lg:-top-[140px] xl:-top-[150px] xs:left-3 lg:left-32 3xl:-top-60 z-10"
                   src={avatarURL}
                 />
               </a>
             </Fancybox>
-
-            <span className="absolute xs:-top-[85px] lg:-top-[115px] 3xl:-top-[180px] xl:-top-[110px] xs:left-28 lg:left-64 xl:left-64 3xl:left-72 z-10 text-xl font-popins text-white">
-              Ngoc Uyen
-            </span>
+            <div className="absolute xs:-top-[85px] lg:-top-[95px] 3xl:-top-[180px] xl:-top-[95px] xs:left-28 lg:left-64 xl:left-64 3xl:left-72 z-10 font-popins text-white">
+              <h2 className="text-xl">Ngoc Uyen</h2>
+              <p>
+                <span>0 following</span>
+                <span className="ml-6">0 follower</span>
+              </p>
+            </div>
             <input name="image" style={{ display: 'none' }} ref={inputRef} type="file" onChange={handleFileChange} />
             <Button
-              className="absolute btn-avatar xs:-top-20 smm:-top-[70px] lg:-top-[100px] xl:-top-[75px] 3xl:-top-[135px] xs:left-16 smm:left-[70px] lg:left-52 xl:left-52 3xl:left-56 z-10 bg-blue-700 text-white rounded-full p-0 m-0 border-4 border-blue-900"
+              className="absolute btn-avatar xs:-top-20 smm:-top-[70px] lg:-top-[80px] xl:-top-[60px] 3xl:-top-[135px] xs:left-16 smm:left-[70px] lg:left-52 xl:left-52 3xl:left-56 z-10 bg-blue-700 text-white rounded-full p-0 m-0 border-4 border-blue-900"
               icon={<CameraOutlined />}
               onClick={handleChangeAvatarClick}
             ></Button>
 
             <div className="w-full xs:mt-20 lg:mt-24 3xl:mt-44 3xl:px-40 lg:px-40 xs:px-5">
               <Form
-                name="basic"
+                name="information"
                 initialValues={{ remember: true }}
                 className="w-full flex flex-col items-center relative mt-4"
                 onFinish={onFinish}

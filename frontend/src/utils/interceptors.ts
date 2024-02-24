@@ -10,11 +10,19 @@ import {
   setStore,
 } from './setting'
 
-export default function requestApi(endpoint: string, method: string, body: any) {
-  const headers = {
+const token = getStore(ACCESS_TOKEN)
+const refresh = getCookie(REFRESH_TOKEN)
+
+export default function requestApi(endpoint: string, method: string, body: any, header?: any) {
+  const defaultHeaders = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
+  }
+
+  const headers = {
+    ...defaultHeaders,
+    ...header,
   }
 
   const instance = axios.create({ headers })
@@ -22,7 +30,6 @@ export default function requestApi(endpoint: string, method: string, body: any) 
   // set up send request
   instance.interceptors.request.use(
     (config: any) => {
-      const token = getStore(ACCESS_TOKEN)
       if (token) {
         config.headers = {
           ...config.headers,
@@ -43,7 +50,6 @@ export default function requestApi(endpoint: string, method: string, body: any) 
     },
     async (err) => {
       const originalResponse = err.config
-      const refresh = getCookie(REFRESH_TOKEN)
 
       //access token expires => status code 401
       if (err.response && err.response.status === 401 && refresh) {
