@@ -16,7 +16,8 @@ export default function MainUser() {
   const [data, setData] = useState<UserDataType[]>([])
   const [roleSelected, setRoleSelected] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
-  const [query, setQuery] = useState(roles[0])
+  const [queryRole, setQueryRole] = useState(roles[0])
+  const [queryIdOrUsername, setQueryIdOrUsername] = useState('')
   const inputRef = useRef(null)
 
   useEffect(() => {
@@ -92,23 +93,28 @@ export default function MainUser() {
   ]
 
   const filteredItems = useMemo(() => {
-    if (query === roles[0]) {
-      return data
+    if (queryRole === roles[0]) {
+      return data.filter((item) => {
+        return (
+          item.username.toLowerCase().includes(queryIdOrUsername.toLowerCase()) ||
+          item._id.toLowerCase().includes(queryIdOrUsername.toLowerCase())
+        )
+      })
     }
     return data.filter((item) => {
       return (
-        item.role === query ||
-        item.username.toLowerCase().includes(query.toLowerCase()) ||
-        item._id.toLowerCase().includes(query.toLowerCase())
+        item.role === queryRole &&
+        (item.username.toLowerCase().includes(queryIdOrUsername.toLowerCase()) ||
+          item._id.toLowerCase().includes(queryIdOrUsername.toLowerCase()))
       )
     })
-  }, [data, query])
+  }, [data, queryRole, queryIdOrUsername])
 
   const handleMenuClick = (e: { key: React.Key }) => {
     const index = Number(e.key)
     setRoleSelected(Number(e.key))
     setIsOpen(false)
-    setQuery(roles[index])
+    setQueryRole(roles[index])
   }
 
   return (
@@ -144,7 +150,7 @@ export default function MainUser() {
               classNames={{ input: 'bg-transparent text-white placeholder:text-gray-400' }}
               placeholder="Enter keyword"
               ref={inputRef}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => setQueryIdOrUsername(e.target.value)}
             />
           </div>
           <Button
