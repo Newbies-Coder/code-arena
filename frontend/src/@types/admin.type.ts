@@ -13,11 +13,11 @@ export type MenuItemType = {
 
 export type UserDataType = {
   key: React.Key
-  id: string
-  name: string
+  _id: string
+  fullName: string
   phone: string
   email: string
-  dateOfBirth: string
+  date_of_birth: string
   role: string
   status: React.ReactElement | string
 }

@@ -1,35 +1,52 @@
-import { Button } from 'antd'
-import RoleDropdown from '../../components/RoleDropdown'
+import { Button, Menu } from 'antd'
 import SearchKeyword from '../../components/SearchKeyword'
 import { useNavigate } from 'react-router-dom'
 import { ColumnsType } from 'antd/es/table'
 import VerifyStatus from '@/components/VerifyStatus'
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
+import { DeleteOutlined, DownOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import DataTable from '../../components/DataTable'
-import { userData } from '@/mocks/user.data'
 import { UserDataType } from '@/@types/admin.type'
 import './style.scss'
+import { useEffect, useMemo, useState } from 'react'
+import requestApi from '@/utils/interceptors'
+import { handleApiError } from '@/utils/handleApiError'
 
+const roles = ['All', 'Admin', 'User', 'Moderator']
 export default function MainUser() {
   const navigate = useNavigate()
+  const [data, setData] = useState<UserDataType[]>([])
+  const [roleSelected, setRoleSelected] = useState(0)
+  const [isOpen, setIsOpen] = useState(false)
+  const [query, setQuery] = useState(roles[0])
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const res = await requestApi('auth', 'get', null)
+        setData(res.data.data.items)
+      } catch (error) {
+        handleApiError(error)
+      }
+    })()
+  }, [])
 
   const columns: ColumnsType<UserDataType> = [
-    // {
-    //   title: 'ID',
-    //   dataIndex: 'id',
-    //   className: 'text-sm',
-    //   width: 200,
-    // },
     {
-      title: 'Name',
-      dataIndex: 'name',
+      title: 'ID',
+      dataIndex: '_id',
       className: 'text-sm',
+      width: 200,
     },
     {
-      title: 'Phone',
-      dataIndex: 'phone',
+      title: 'Username',
+      dataIndex: 'username',
       className: 'text-sm',
       width: 120,
+    },
+    {
+      title: 'Name',
+      dataIndex: 'fullName',
+      className: 'text-sm',
     },
     {
       title: 'Email',
@@ -38,7 +55,7 @@ export default function MainUser() {
     },
     {
       title: 'Date of birth',
-      dataIndex: 'dateOfBirth',
+      dataIndex: 'date_of_birth',
       className: 'text-sm',
     },
     {
@@ -73,10 +90,45 @@ export default function MainUser() {
       width: 136,
     },
   ]
+
+  const filteredItems = useMemo(() => {
+    if (query === roles[0]) {
+      return data
+    }
+    return data.filter((item) => {
+      return item.role === query
+    })
+  }, [data, query])
+
+  const handleMenuClick = (e: { key: React.Key }) => {
+    const index = Number(e.key)
+    setRoleSelected(Number(e.key))
+    setIsOpen(false)
+    setQuery(roles[index])
+  }
+
   return (
     <div className="px-10 py-5">
       <div className="flex flex-col gap-2 lg:flex-row justify-between mb-4 h-full">
-        <RoleDropdown />
+        <div className="min-w-[300px]">
+          <p className="text-white">Role name</p>
+          <div className="relative">
+            <Button
+              className="w-full h-11 flex flex-row-reverse items-center justify-between text-white"
+              icon={<DownOutlined />}
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {roles[roleSelected]}
+            </Button>
+            {isOpen && (
+              <Menu onClick={handleMenuClick} className="absolute mt-2 left-0 right-0 rounded-lg z-10 shadow-gray-400">
+                {roles.map((item, key) => (
+                  <Menu.Item key={key}>{item}</Menu.Item>
+                ))}
+              </Menu>
+            )}
+          </div>
+        </div>
         <div className="flex items-end gap-8">
           <SearchKeyword />
           <Button
@@ -89,7 +141,7 @@ export default function MainUser() {
           </Button>
         </div>
       </div>
-      <DataTable columns={columns} data={userData} />
+      <DataTable columns={columns} data={filteredItems} />
     </div>
   )
 }
