@@ -10,6 +10,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@fancyapps/ui": "^5.0.33",
     "@monaco-editor/react": "^4.6.0",
     "@reduxjs/toolkit": "^1.9.7",
     "@swc/helpers": "~0.5.2",
