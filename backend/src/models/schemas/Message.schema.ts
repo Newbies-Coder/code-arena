@@ -1,29 +1,47 @@
 import { ObjectId } from 'mongodb'
 
-export type MessageType = 'message' | 'attachment'
+export type MessageType = 'text' | 'image'
 
-interface MessageT {
+type MessageT = {
   _id?: ObjectId
-  user_id: ObjectId
-  channel_id: ObjectId
-  content: string
+  sender: ObjectId
+  room: ObjectId
+  emotes: Record<string, number>
   updated_at?: Date
   created_at?: Date
-}
+} & (
+  | {
+      messageType: 'text'
+      content: string
+    }
+  | {
+      messageType: 'image'
+      images: string[]
+    }
+)
 
 export default class Message {
   _id?: ObjectId
-  content: string
-  user_id: ObjectId
-  channel_id: ObjectId
+  sender: ObjectId
+  room: ObjectId
   updated_at: Date
   created_at: Date
+  messageType: MessageType
+  content?: string
+  images?: string[]
 
   constructor(item: MessageT) {
     this._id = item._id
-    this.content = item.content
-    this.user_id = item.user_id
-    this.channel_id = item.channel_id
+    this.sender = item.sender
+    this.room = item.room
+    this.messageType = item.messageType
+
+    if (item.messageType == 'text') {
+      this.content = item.content
+    } else {
+      this.images = item.images
+    }
+
     this.created_at = item.created_at || new Date()
     this.updated_at = item.updated_at || new Date()
   }
