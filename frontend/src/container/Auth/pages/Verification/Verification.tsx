@@ -96,7 +96,7 @@ const Verification = () => {
             Verification
           </h2>
           <p className="text-black font-popins text-sm mt-2 mb-10 text-center font-medium">
-            Please enter your 6 digits code that you received in your email!
+            Please enter your all digits code that you received in your email!
           </p>
           <Row justify="center">
             {otp.map((_, index) => {

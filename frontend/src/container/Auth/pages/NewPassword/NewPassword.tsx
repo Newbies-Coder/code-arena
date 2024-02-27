@@ -16,6 +16,9 @@ const NewPassword = () => {
       const res = await requestApi('users/change-password', 'POST', { old_password, password, confirm_password })
       const { message } = res.data
       toast.update(changePwd, { render: message, type: 'success', isLoading: false, autoClose: 2000 })
+      setTimeout(() => {
+        navigate('/')
+      }, 3000)
     } catch (error: any) {
       const { message } = error.response.data
       let messageInfo = message
@@ -71,12 +74,11 @@ const NewPassword = () => {
                 },
               ]}
             >
-              <Input.Password
+              <Input
                 className="bg-gray-300 w-full py-2 px-4 text-base font-normal border-0 h-14"
                 classNames={{ input: 'ml-2 bg-gray-300 text-md font-normal font-popins' }}
                 placeholder="Old password"
                 prefix={<LockIcon />}
-                styles={{ suffix: { fontSize: '22px' } }}
               />
             </Form.Item>
             <Form.Item
@@ -167,9 +169,9 @@ const NewPassword = () => {
             <Form.Item>
               <Button
                 className="w-full h-14 bg-white text-black text-lg font-bold rounded-xl border-1 hover:text-gray-700 hover:border-gray-700 hover:bg-gray-100"
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/')}
               >
-                Sign in
+                Back Home
               </Button>
             </Form.Item>
           </Form>

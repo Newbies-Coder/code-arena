@@ -52,7 +52,7 @@ export default function requestApi(endpoint: string, method: string, body: any, 
       const originalResponse = err.config
 
       //access token expires => status code 401
-      if (err.response && err.response.status === 401 && refresh) {
+      if (err.response && err.response.status === 401 && refresh && token) {
         try {
           const result = await instance.post('http://localhost:8080/api/v1/users/refresh-token', {
             refresh_token: refresh,

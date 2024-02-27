@@ -20,7 +20,7 @@ const MainProfile = () => {
 
   const [userData, setUserData] = useState({
     username: '',
-    fullName: '',
+    fullname: '',
     phone: '',
     date_of_birth: '',
     address: '',
@@ -29,8 +29,6 @@ const MainProfile = () => {
     cover_photo: '',
   })
 
-  const [avatarURL, setAvatarURL] = useState('')
-  const [coverURL, setCoverURL] = useState('')
   const [gender, setGender] = useState()
 
   const onChange = (e: RadioChangeEvent) => {
@@ -67,11 +65,9 @@ const MainProfile = () => {
   const fetchUser = async () => {
     try {
       const res = await requestApi('users/@me/profile', 'GET', {})
-      const { username, fullName, phone, date_of_birth, address, gender, bio, avatar, cover_photo } = res.data.data
-      setUserData({ username, fullName, phone, date_of_birth, address, bio, avatar, cover_photo })
+      const { username, fullname, phone, date_of_birth, address, gender, bio, avatar, cover_photo } = res.data.data
+      setUserData({ username, fullname, phone, date_of_birth, address, bio, avatar, cover_photo })
       setGender(gender)
-      setAvatarURL(avatar)
-      setCoverURL(cover_photo)
     } catch (error) {
       console.log(error)
     }
@@ -83,7 +79,7 @@ const MainProfile = () => {
         fetchUser()
       }
     })()
-  }, [isAuthenticated, avatarURL, coverURL])
+  }, [isAuthenticated, userData.avatar, userData.cover_photo])
 
   const inputRef = useRef<HTMLInputElement>(null)
   const coverRef = useRef<HTMLInputElement>(null)
@@ -118,7 +114,8 @@ const MainProfile = () => {
       })
       const { message } = res.data
       const { avatarUrl } = res.data.data
-      setAvatarURL(avatarUrl)
+      const updateUser = { ...userData, avatar: avatarUrl }
+      setUserData(updateUser)
 
       toast.update(uploadAvatar, { render: message, isLoading: false, type: 'success', autoClose: 3000 })
     } catch (error) {
@@ -144,7 +141,8 @@ const MainProfile = () => {
       })
       const { message } = res.data
       const { thumbnailUrl } = res.data.data
-      setCoverURL(thumbnailUrl)
+      const updateUser = { ...userData, cover_photo: thumbnailUrl }
+      setUserData(updateUser)
 
       toast.update(uploadCover, { render: message, isLoading: false, type: 'success', autoClose: 3000 })
     } catch (error) {
@@ -158,14 +156,14 @@ const MainProfile = () => {
         <Content className="bg-blue-900">
           <div className="relative">
             <Fancybox>
-              <a href={coverURL} data-fancybox="gallery">
-                <img src={coverURL} alt="cover" className="xs:h-36 lg:h-44 3xl:h-80 w-full object-cover" />
+              <a href={userData.cover_photo} data-fancybox="gallery">
+                <img src={userData.cover_photo} alt="cover" className="xs:h-36 lg:h-44 3xl:h-80 w-full object-cover" />
               </a>
             </Fancybox>
 
             <input style={{ display: 'none' }} ref={coverRef} type="file" onChange={handleFileThumbnailChange} />
             <Button
-              className="absolute btn-cover right-10 top-5 border-white border-2 bg-gray-opacity font-popins text-white"
+              className="absolute btn-cover right-10 top-5 h-8 w-40 bg-purple-600 border-2 border-white rounded-full font-popins text-sm text-white btn-hover"
               icon={<CameraOutlined />}
               onClick={handleChangeCoverClick}
             >
@@ -174,11 +172,11 @@ const MainProfile = () => {
           </div>
           <div className="relative">
             <Fancybox>
-              <a href={avatarURL} data-fancybox="gallery">
+              <a href={userData.avatar} data-fancybox="gallery">
                 <Avatar
                   size={{ xs: 80, sm: 90, md: 90, lg: 100, xl: 120, xxl: 140 }}
-                  className="absolute xs:-top-32 lg:-top-[140px] xl:-top-[150px] xs:left-3 lg:left-32 3xl:-top-60 z-10"
-                  src={avatarURL}
+                  className="absolute xs:-top-32 lg:-top-[140px] xl:-top-[150px] xs:left-3 lg:left-32 3xl:-top-60 z-10 border-2 border-white"
+                  src={userData.avatar}
                 />
               </a>
             </Fancybox>
@@ -191,7 +189,7 @@ const MainProfile = () => {
             </div>
             <input name="image" style={{ display: 'none' }} ref={inputRef} type="file" onChange={handleFileChange} />
             <Button
-              className="absolute btn-avatar xs:-top-20 smm:-top-[70px] lg:-top-[80px] xl:-top-[60px] 3xl:-top-[135px] xs:left-16 smm:left-[70px] lg:left-52 xl:left-52 3xl:left-56 z-10 bg-blue-700 text-white rounded-full p-0 m-0 border-4 border-blue-900"
+              className="absolute btn-avatar xs:-top-20 smm:-top-[70px] lg:-top-[80px] xl:-top-[60px] 3xl:-top-[135px] xs:left-16 smm:left-[70px] lg:left-52 xl:left-52 3xl:left-56 z-10 bg-purple-600 text-white rounded-full p-0 m-0 border-4 border-blue-900"
               icon={<CameraOutlined />}
               onClick={handleChangeAvatarClick}
             ></Button>
@@ -209,7 +207,7 @@ const MainProfile = () => {
                   },
                   {
                     name: ['fullname'],
-                    value: userData.fullName,
+                    value: userData.fullname,
                   },
                   {
                     name: ['phone'],

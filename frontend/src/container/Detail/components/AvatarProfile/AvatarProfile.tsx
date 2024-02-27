@@ -1,12 +1,14 @@
-import { UserIcon } from '@/components/Icons'
 import { DispatchType } from '@/redux/config'
 import { setAuthenticationStatus } from '@/redux/userReducer/userReducer'
 import { ACCESS_TOKEN, REFRESH_TOKEN, clearCookie, clearStore, getCookie, getStore } from '@/utils/setting'
 import { DownOutlined } from '@ant-design/icons'
 import { Avatar, Button, Col, Dropdown, MenuProps, Row, Space } from 'antd'
 import axios from 'axios'
-import { useDispatch } from 'react-redux'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
+import { RootState } from '@/redux/config'
+import requestApi from '@/utils/interceptors'
 
 const AvatarProfile = () => {
   const dispatch: DispatchType = useDispatch()
@@ -57,29 +59,42 @@ const AvatarProfile = () => {
     },
   ]
 
+  const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated)
+  const access_token = getStore(ACCESS_TOKEN)
+  const [userData, setUserData] = useState({ username: '', avatar: '' })
+
+  useEffect(() => {
+    if (isAuthenticated && access_token) {
+      requestApi('users/@me/profile', 'GET', {})
+        .then((res) => {
+          const { username, avatar } = res.data.data
+          setUserData({ username, avatar })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }, [isAuthenticated])
+
   return (
     <Row>
       <Col xs={24} sm={24} md={0} lg={0} xl={0}>
         <div className="flex justify-between items-center w-10 h-10 bg-blue-900 rounded-full border border-gray-500">
           <Dropdown menu={{ items: menuItems }} placement="bottomRight" trigger={['click']} className="text-white">
             <Button className="h-10 w-10 p-0 rounded-full">
-              <Avatar size={37} className="flex justify-between items-center bg-gray-300">
-                <UserIcon />
-              </Avatar>
+              <Avatar size={37} className="flex justify-between items-center bg-gray-300" src={userData.avatar} />
             </Button>
           </Dropdown>
         </div>
       </Col>
       <Col xs={0} md={24} lg={24} xl={24}>
         <div className="flex justify-between items-center w-40 h-10 bg-blue-900 rounded-full border border-gray-500">
-          <Avatar size={36} className="flex justify-between items-center bg-gray-300">
-            <UserIcon />
-          </Avatar>
+          <Avatar size={37} className="flex justify-between items-center bg-gray-300" src={userData.avatar} />
           <div className="flex justify-between items-center pr-2">
             <Dropdown menu={{ items: menuItems }} placement="bottomRight" trigger={['click']} className="text-white">
               <a onClick={(e) => e.preventDefault()}>
                 <Space>
-                  NGOC UYEN
+                  <span className="text-xl">{userData.username}</span>
                   <DownOutlined />
                 </Space>
               </a>

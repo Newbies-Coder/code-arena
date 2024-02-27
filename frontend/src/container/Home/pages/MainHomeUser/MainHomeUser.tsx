@@ -5,26 +5,9 @@ import SliderItem from '@/components/SliderItem'
 import SidebarLeft from '@/components/SidebarLeft'
 import SidebarRight from '@/components/SidebarRight'
 import HeaderItem from '@/components/HeaderItem'
-import { useEffect } from 'react'
-import requestApi from '@/utils/interceptors'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/redux/config'
 const { Content } = Layout
 
 const MainHome = () => {
-  const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated)
-  useEffect(() => {
-    if (isAuthenticated) {
-      requestApi('users/@me/profile', 'GET', {})
-        .then((res) => {
-          console.log(res)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    }
-  }, [isAuthenticated])
-
   return (
     <div className="wrapper p-0 m-0">
       <Layout style={{ height: '100%' }}>
