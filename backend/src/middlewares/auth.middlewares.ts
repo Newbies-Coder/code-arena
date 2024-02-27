@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { checkSchema } from 'express-validator'
 import { StatusCodes } from 'http-status-codes'
+import { ObjectId } from 'mongodb'
 import { env } from '~/config/environment.config'
 import { UserRole } from '~/constants/enums'
 import { VALIDATION_MESSAGES } from '~/constants/message'
@@ -397,26 +398,6 @@ export const updateUserByAdminValidator = validate(
         },
         optional: true
       },
-      email: {
-        trim: true,
-        custom: {
-          options: async (value) => {
-            const { valid, message } = validateEmail(value)
-            if (!valid) {
-              throw new Error(message)
-            }
-            const user = await userServices.findUserByEmail(value)
-            if (user) {
-              throw new ErrorWithStatus({
-                statusCode: StatusCodes.CONFLICT,
-                message: VALIDATION_MESSAGES.ADMIN.CREATE_USER.EMAIL_ACCESSIBILITY
-              })
-            }
-            return true
-          }
-        },
-        optional: true
-      },
       role: {
         trim: true,
         optional: true,
@@ -555,5 +536,40 @@ export const updateUserByAdminValidator = validate(
     },
 
     ['body']
+  )
+)
+
+export const updateUserIdParamValidator = validate(
+  checkSchema(
+    {
+      id: {
+        trim: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
+        },
+        custom: {
+          options: async (value) => {
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID
+              })
+            }
+            const user = await userServices.isUserExist(value)
+            if (!user) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['params']
   )
 )

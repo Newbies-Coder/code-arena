@@ -20,6 +20,7 @@ import _ from 'lodash'
 import { UserRole, UserVerifyStatus } from '~/constants/enums'
 import { hashPassword } from '~/utils/crypto'
 import { RegisterBody, UpdateProfileBody } from '~/models/requests/User.requests'
+import { CreateUserBody, UpdateUserBody } from '~/models/requests/Auth.request'
 
 class AuthService {
   init() {
@@ -193,6 +194,11 @@ class AuthService {
     return Math.abs(ageDate.getUTCFullYear() - 1970)
   }
 
+  async isUserExist(id: string): Promise<boolean> {
+    const result = await databaseService.users.findOne({ _id: new ObjectId(id) })
+    return Boolean(result)
+  }
+
   async getAllUserPagination(payload: ParsedGetAllUserUrlQuery): Promise<PaginationType<Partial<User>>> {
     try {
       const page = Number(payload.page) || 1
@@ -242,7 +248,7 @@ class AuthService {
     }
   }
 
-  async create(payload: RegisterBody): Promise<void> {
+  async create(payload: CreateUserBody): Promise<void> {
     try {
       let { password, date_of_birth } = payload
       const hashedPassword = hashPassword(password)
@@ -269,16 +275,16 @@ class AuthService {
     }
   }
 
-  async update(user: AuthUser, payload: UpdateProfileBody): Promise<void> {
+  async update(id: ObjectId, payload: UpdateUserBody): Promise<void> {
     try {
       if (Object.keys(payload).length === 0) {
         throw new ErrorWithStatus({ statusCode: StatusCodes.BAD_REQUEST, message: VALIDATION_MESSAGES.USER.USER_PROFILE.FIELD_UPDATE_IS_REQUIRED })
       }
-      await databaseService.users.updateOne({ _id: new ObjectId(user._id) }, { $set: { ...payload, updated_at: new Date() } }, { upsert: false })
+      await databaseService.users.updateOne({ _id: id }, { $set: { ...payload, updated_at: new Date() } }, { upsert: false })
     } catch (error) {
       throw new ErrorWithStatus({
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: error.message || DEV_ERRORS_MESSAGES.UPDATE_PROFILE
+        message: error.message || DEV_ERRORS_MESSAGES.UPDATE_USER_BY_ADMIN
       })
     }
   }

@@ -1,3 +1,5 @@
+import { UserGenderType, UserRole, UserVerifyStatus } from '~/constants/enums'
+
 export interface CreateUserBody {
   fullName: string
   username: string
@@ -6,21 +8,20 @@ export interface CreateUserBody {
   password: string
   confirm_password: string
   date_of_birth: string
-  role: string
+  role: UserRole
   address: string
-  gender: string
+  gender: UserGenderType
 }
 
 export interface UpdateUserBody {
   fullName?: string
   username?: string
-  email?: string
   phone?: string
-  date_of_birth?: string
-  role?: string
-  verify?: string
+  date_of_birth?: Date
+  role?: UserRole
+  verify?: UserVerifyStatus
   address?: string
-  gender?: string
+  gender?: UserGenderType
   bio?: string
   website?: string
 }

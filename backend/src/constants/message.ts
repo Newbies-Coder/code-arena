@@ -90,7 +90,8 @@ export const DEV_ERRORS_MESSAGES = {
   REMOVED_USER_FAVORITES: 'Error fetching remove users into favorite list',
   GET_ALL_USER_FAVORITE: 'Error fetching favorites',
   VERIFY_FORGOT_PASSWORD_TOKEN: 'Error verifying forgot-password token',
-  CREATE_USER_BY_ADMIN: 'Error create user by adim'
+  CREATE_USER_BY_ADMIN: 'Error create user by admin',
+  UPDATE_USER_BY_ADMIN: 'Error udpate user by admin'
 }
 
 export const RESULT_RESPONSE_MESSAGES = {

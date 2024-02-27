@@ -395,6 +395,85 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+  /auth/update-user/{id}:
+    put:
+      tags:
+        - auth
+      summary: Update profile user by admin
+      description: Update profile user by admin successfully!
+      operationId: updateUserByAdmin
+      parameters:
+        - name: id
+          in: path
+          description: Please enter the user_id you want to update by admin
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
+      requestBody:
+        description: Information profile user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserByAdminSchema'
+        required: true
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Update profile user by admin successfully!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Update profile user by admin successfully!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: Header authorization is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You are not currently logged in to the system!
+                  data:
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /auth/delete-user:
     delete:
       tags:
@@ -3493,4 +3572,55 @@ components:
         address:
           type: string
       xml:
-        name: user
+        name: auth
+    UpdateUserByAdminSchema:
+      type: object
+      properties:
+        fullName:
+          type: string
+          example: 'string'
+        username:
+          type: string
+          example: 'string'
+        role:
+          type: string
+          description: Role Type
+          example: User
+          enum:
+            - Admin
+            - Moderator
+            - User
+        phone:
+          type: string
+          example: 'string'
+        verify:
+          type: string
+          description: Verify Status
+          example: Unverified
+          enum:
+            - Verified
+            - Celerity
+            - Banned
+        date_of_birth:
+          type: string
+          format: date-time
+          example: 'yyyy-mm-ddTHH:mm:ssss'
+        gender:
+          type: string
+          description: Gender Type
+          example: Male
+          enum:
+            - Male
+            - Female
+            - Other
+        address:
+          type: string
+          example: 'string'
+        bio:
+          type: string
+          example: 'string'
+        website:
+          type: string
+          example: 'string'
+      xml:
+        name: auth

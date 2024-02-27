@@ -2,7 +2,7 @@ import { Router } from 'express'
 import passport from 'passport'
 import { UserRole } from '~/constants/enums'
 import authController from '~/controllers/auth.controllers'
-import { createUserByAdminValidator, requireRoleMiddleware, updateUserByAdminValidator } from '~/middlewares/auth.middlewares'
+import { createUserByAdminValidator, requireRoleMiddleware, updateUserByAdminValidator, updateUserIdParamValidator } from '~/middlewares/auth.middlewares'
 import { paginationGetUsersByRoleValidator, paginationUserValidators } from '~/middlewares/commons.middleware'
 import { deleteManyUserValidator } from '~/middlewares/users.middlewares'
 import authService from '~/services/oauth.service'
@@ -62,13 +62,13 @@ authRouter.post('/create-user', wrapRequestHandler(requireRoleMiddleware(UserRol
 
 /**
  * Description: Update user by admin
- * Path: /update-user/2
+ * Path: /update-user/:id
  * Method: PUT
  * Body:
  * Header: { Authorization: Bearer <access_token> }
  */
 
-authRouter.put('/update-user/:id', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), updateUserByAdminValidator, wrapRequestHandler(authController.updateUser))
+authRouter.put('/update-user/:id', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), updateUserIdParamValidator, updateUserByAdminValidator, wrapRequestHandler(authController.updateUser))
 
 /**
  * Description: Delete user by admin
