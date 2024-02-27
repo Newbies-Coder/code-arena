@@ -146,17 +146,9 @@ class AuthService {
       )
     )
   }
-  private extractIds(id: unknown): ObjectId[] {
-    if (Array.isArray(id)) {
-      return id.map((item) => new ObjectId(item))
-    } else if (typeof id === 'string') {
-      return [new ObjectId(id)]
-    } else {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.NOT_FOUND,
-        message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
-      })
-    }
+  private extractIds(idField: unknown): ObjectId[] {
+    let ids = Array.isArray(idField) ? idField : [idField]
+    return ids.map((id) => new ObjectId(id))
   }
 
   private getRoleFromPayload(roleString: string): UserRole {
@@ -320,6 +312,8 @@ class AuthService {
       })
     }
   }
+
+  // Assuming extractIds is implemented to convert id(s) from payload into ObjectId array
 
   async deleteManyUsers(payload: ParsedQs): Promise<void> {
     try {

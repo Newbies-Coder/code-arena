@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import _ from 'lodash'
-import { ObjectId } from 'mongodb'
 import { AuthProvider } from '~/@types/auth.type'
 import { ParsedGetAllUserUrlQuery, ParsedGetUserByRoleUrlQuery } from '~/@types/reponse.type'
 import { sendResponse } from '~/config/response.config'
@@ -26,7 +25,7 @@ const authController = {
     return sendResponse.created(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.CREATE_ACCOUNT_ADMIN)
   },
   updateUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    await authService.update(new ObjectId(req.params.id), req.body)
+    await authService.update(req.user, req.body)
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UPDATE_USER)
   },
   getUsersByRole: async (req: Request<ParamsDictionary, any, any, ParsedGetUserByRoleUrlQuery>, res: Response, next: NextFunction) => {
