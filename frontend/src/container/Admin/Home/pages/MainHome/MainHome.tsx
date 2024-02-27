@@ -26,7 +26,7 @@ const MainHome = () => {
           <Progression />
           <Statistic />
         </Col>
-        <Col xs={24} lg={0} xl={6} className="py-2 mb-20 hidden xl:flex flex-col gap-2 w-[332px]">
+        <Col xs={24} lg={0} xl={6} className="py-2 mb-20 hidden xl:flex flex-col gap-2 w-[332px] fixed top-16 right-0">
           <Overview />
           <Calendar
             className="border border-white"
