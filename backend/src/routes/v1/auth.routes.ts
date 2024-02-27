@@ -34,14 +34,23 @@ authRouter.get('/callback/google', passport.authenticate('google', { session: fa
 authRouter.get('/callback/linkedin', passport.authenticate('linkedin', { session: false }), wrapRequestHandler(authController.callback('linkedin')))
 
 /**
- * Description: Get all user by admin
- * Path: '/'
+ * Description: Get all user pagination by admin
+ * Path: '/pagination-user'
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
  * Params: { page: number, limit: number, userId: string, sort_by: string, created_at: asc | desc }
  */
 
-authRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), paginationUserValidators, wrapRequestHandler(authController.getAllUser))
+authRouter.get('/pagination-user', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), paginationUserValidators, wrapRequestHandler(authController.getAllUserPagination))
+
+/**
+ * Description: Get all user by admin
+ * Path: '/'
+ * Method: GET
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
+authRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), wrapRequestHandler(authController.getAllUser))
 
 /**
  * Description: Create user by admin
