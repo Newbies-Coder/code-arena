@@ -1,55 +1,57 @@
-import { Form, Button, Row, Col, Divider, Input, Alert } from 'antd'
 import './style.scss'
-import { LOGO, BG } from '@/constants/images'
-import { Link, useNavigate } from 'react-router-dom'
-import { socialMediaLogin } from '@/mocks/auth.data'
-import { LoginFieldType, SocialMediaType } from '@/@types/form.type'
+// Import necessary hooks, components, and utilities
+import { Form, Button, Row, Col, Divider, Input, Alert } from 'antd'
 import { useDispatch } from 'react-redux'
-import { setAuthenticationStatus, setAdminStatus, setLoginDetails } from '@/redux/userReducer/userReducer'
-import { DispatchType } from '@/redux/config'
-import { LockIcon, UserIcon } from '@/components/Icons'
-import { regexPasswordPattern } from '@/utils/regex'
+import { LOGO, BG } from '@/constants/images'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { setStore, setCookie, ACCESS_TOKEN, REFRESH_TOKEN } from '@/utils/setting'
+import { Link, useNavigate } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
+import { DispatchType } from '@/redux/config'
+import { LockIcon, UserIcon } from '@/components/Icons'
+
+// Import actions and helpers
+import { socialMediaLogin } from '@/mocks/auth.data'
+import { LoginFieldType, SocialMediaType } from '@/@types/form.type'
+import { setAuthenticationStatus, setAdminStatus } from '@/redux/userReducer/userReducer'
+import { regexPasswordPattern } from '@/utils/regex'
+import { setStore, setCookie, ACCESS_TOKEN, REFRESH_TOKEN } from '@/utils/setting'
 import requestApi from '@/utils/interceptors'
 import { handleApiError } from '@/utils/handleApiError'
+import { userLoginType } from '@/@types/user.type'
 
-type UserType = {
-  email: string
-  exp: string
-  iat: string
-  role: string
-  token_type: string
-  username: string
-  _id: string
-}
+// Components constants
+const TIME_CLOSING_MESSAGE = 2000
+const REFRESH_TOKEN_EXPIRED_TIME = 7 // Days
+const USER_ROLE = 'Admin'
 
 const Login = () => {
-  const TIME_CLOSING_MESSAGE = 2000
-  const REFRESH_TOKEN_EXPIRED_TIME = 7
-  const USER_ROLE = 'Admin'
-
   const navigate = useNavigate()
   const dispatch: DispatchType = useDispatch()
 
   // Function to handle form submission
   const onFinish = async (values: LoginFieldType) => {
-    // Destructure email and password from form values
     const { email, password } = values
     try {
+      // Call api login
       const res = await requestApi('users/login', 'POST', { email, password })
       const { access_token, refresh_token } = res.data.data
-      const { role } = jwtDecode<UserType>(access_token)
+      const { role } = jwtDecode<userLoginType>(access_token)
 
+      // Dispatch actions based on the role
       if (role === USER_ROLE) {
         dispatch(setAdminStatus(true))
       }
       toast.success(res.data.message, { autoClose: TIME_CLOSING_MESSAGE })
+
+      // Store tokens
       setStore(ACCESS_TOKEN, access_token)
       setCookie(REFRESH_TOKEN, refresh_token, REFRESH_TOKEN_EXPIRED_TIME)
+
+      // Update authentication status
       dispatch(setAuthenticationStatus(true))
+
+      // Navigation to homepage
       navigate('/')
     } catch (err) {
       handleApiError(err)
@@ -67,7 +69,6 @@ const Login = () => {
       const IconComponent = button.icon
       return <IconComponent />
     }
-
     return null
   }
 
@@ -86,6 +87,7 @@ const Login = () => {
             Welcome to the Code Arena free coding learning page!
           </p>
           <Form name="basic" className="mt-3 w-full" onFinish={onFinish}>
+            {/* Email field */}
             <Form.Item
               name="email"
               rules={[
@@ -120,6 +122,7 @@ const Login = () => {
                 prefix={<UserIcon />}
               />
             </Form.Item>
+            {/* Password field */}
             <Form.Item
               name="password"
               rules={[
@@ -162,6 +165,7 @@ const Login = () => {
                 <Link to={'/register'}> Sign up now</Link>
               </Button>
             </p>
+            {/* Submit button */}
             <Form.Item>
               <Button
                 htmlType="submit"
@@ -187,7 +191,8 @@ const Login = () => {
         </div>
       </Col>
       <Col xs={{ span: 0 }} lg={{ span: 12 }}>
-        <img src={BG.APP_BG} alt="boys" className="w-full h-screen object-cover" />
+        {/* Background image */}
+        <img src={BG.APP_BG} alt="login-background" className="w-full h-screen object-cover" />
       </Col>
     </Row>
   )

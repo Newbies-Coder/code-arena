@@ -12,9 +12,21 @@ const authController = {
   callback: (provider: AuthProvider) => async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     await oauthService.callback(provider, req, res)
   },
-  getAllUser: async (req: Request<ParamsDictionary, any, any, ParsedGetAllUserUrlQuery>, res: Response, next: NextFunction) => {
-    const result = await authService.getAllUser(req.query)
+  getAllUserPagination: async (req: Request<ParamsDictionary, any, ParsedGetAllUserUrlQuery>, res: Response, next: NextFunction) => {
+    const result = await authService.getAllUserPagination(req.query)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ALL_USER)
+  },
+  getAllUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    const result = await authService.getAllUser()
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ALL_USER)
+  },
+  createUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    await authService.create(req.body)
+    return sendResponse.created(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.CREATE_ACCOUNT_ADMIN)
+  },
+  updateUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    await authService.update(req.user, req.body)
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UPDATE_USER)
   },
   getUsersByRole: async (req: Request<ParamsDictionary, any, any, ParsedGetUserByRoleUrlQuery>, res: Response, next: NextFunction) => {
     const result = await authService.getUsersByRole(req.query)
