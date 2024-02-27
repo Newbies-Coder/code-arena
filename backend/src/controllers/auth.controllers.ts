@@ -16,6 +16,14 @@ const authController = {
     const result = await authService.getAllUser(req.query)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ALL_USER)
   },
+  createUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    const result = await authService.create(req.body)
+    return sendResponse.created(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.REGISTER)
+  },
+  updateUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    await authService.update(req.user, req.body)
+    return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.UPDATE_USER)
+  },
   getUsersByRole: async (req: Request<ParamsDictionary, any, any, ParsedGetUserByRoleUrlQuery>, res: Response, next: NextFunction) => {
     const result = await authService.getUsersByRole(req.query)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ROLE_USER)
