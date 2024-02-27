@@ -79,7 +79,9 @@ export const createUserByAdminValidator = validate(
   checkSchema(
     {
       fullName: {
-        optional: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.ADMIN.CREATE_USER.FULL_NAME_IS_REQUIRED
+        },
         isString: {
           errorMessage: VALIDATION_MESSAGES.ADMIN.CREATE_USER.FULL_NAME_MUST_BE_A_STRING
         },
@@ -110,9 +112,7 @@ export const createUserByAdminValidator = validate(
         }
       },
       username: {
-        notEmpty: {
-          errorMessage: VALIDATION_MESSAGES.ADMIN.CREATE_USER.USERNAME_IS_REQUIRED
-        },
+        optional: true,
         isString: {
           errorMessage: VALIDATION_MESSAGES.ADMIN.CREATE_USER.USERNAME_MUST_BE_A_STRING
         },

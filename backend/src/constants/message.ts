@@ -89,7 +89,8 @@ export const DEV_ERRORS_MESSAGES = {
   INSERT_USER_FAVORITES: 'Error fetching insert users into favorite list',
   REMOVED_USER_FAVORITES: 'Error fetching remove users into favorite list',
   GET_ALL_USER_FAVORITE: 'Error fetching favorites',
-  VERIFY_FORGOT_PASSWORD_TOKEN: 'Error verifying forgot-password token'
+  VERIFY_FORGOT_PASSWORD_TOKEN: 'Error verifying forgot-password token',
+  CREATE_USER_BY_ADMIN: 'Error create user by adim'
 }
 
 export const RESULT_RESPONSE_MESSAGES = {
@@ -143,7 +144,9 @@ export const RESULT_RESPONSE_MESSAGES = {
     INSERT_BLOCKED_USER: 'Blocked users successfully',
     DELETE_BLOCKED_USER: 'Unblocked users successfully',
     UPLOAD_IMAGE: 'Upload image sucessfully!',
-    UPLOAD_MUL_IMAGE: 'Upload multiple image sucessfully!'
+    UPLOAD_MUL_IMAGE: 'Upload multiple image sucessfully!',
+    CREATE_ACCOUNT_ADMIN: 'Created account successfully!',
+    UPDATE_ACCOUNT_ADMIN: 'Updated account successfully!'
   },
   OTP_SUCCESS: {
     VERIFY_OTP: 'Verify OTP successfully!',
@@ -188,8 +191,9 @@ export const VALIDATION_MESSAGES = {
       ROLE_IS_REQUIRED: 'User role is required',
       ROLE_MUST_BE_A_STRING: 'Role must be a string',
       ROLE_IS_INVALID: 'Access denied. User does not have the required role.',
-      FULL_NAME_MUST_BE_A_STRING: 'Full name must be a string',
-      FULL_NAME_MAX_LENGTH_IS_50: 'Full name length must be from 4 to 50',
+      FULL_NAME_IS_REQUIRED: 'Fullname is required',
+      FULL_NAME_MUST_BE_A_STRING: 'Fullname must be a string',
+      FULL_NAME_MAX_LENGTH_IS_50: 'Fullname length must be from 4 to 50',
       INVALID_FULLNAME: 'Must be a valid fullname',
       USERNAME_IS_REQUIRED: 'Username is required',
       INVALID_USERNAME: 'Must be a valid username',

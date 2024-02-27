@@ -21,8 +21,8 @@ const authController = {
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ALL_USER)
   },
   createUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    const result = await authService.create(req.body)
-    return sendResponse.created(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.REGISTER)
+    await authService.create(req.body)
+    return sendResponse.created(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.CREATE_ACCOUNT_ADMIN)
   },
   updateUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     await authService.update(req.user, req.body)

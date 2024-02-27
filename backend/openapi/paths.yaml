@@ -304,6 +304,97 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+  /auth/create-user:
+    post:
+      tags:
+        - auth
+      summary: Create user by admin into the system
+      description: Create user by admin into the system
+      operationId: createUserByAdmin
+      requestBody:
+        description: User information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserAdminSchema'
+        required: true
+      responses:
+        '201':
+          description: Create account user successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 201
+                  message:
+                    example: Create account successfully.
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '404':
+          description: Compare user data to the database.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    example: This email address is already in use. Please register with a different email address!
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '422':
+          description: Please provide complete input info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    example: Validation error
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Please fill all required details.
+                      path:
+                        type: string
+                        example: register
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /auth/delete-user:
     delete:
       tags:
@@ -3364,3 +3455,42 @@ components:
           type: string
       xml:
         name: banner
+    CreateUserAdminSchema:
+      type: object
+      properties:
+        fullName:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+          example: string
+        confirm_password:
+          type: string
+          example: string
+        role:
+          type: string
+          description: Role Type
+          example: User
+          enum:
+            - Admin
+            - Moderator
+            - User
+        phone:
+          type: string
+        date_of_birth:
+          type: string
+        gender:
+          type: string
+          description: Gender Type
+          example: Male
+          enum:
+            - Male
+            - Female
+            - Other
+        address:
+          type: string
+      xml:
+        name: user

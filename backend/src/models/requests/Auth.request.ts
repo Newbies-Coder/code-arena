@@ -5,7 +5,7 @@ export interface CreateUserBody {
   phone: string
   password: string
   confirm_password: string
-  date_of_birth: Date
+  date_of_birth: string
   role: string
   address: string
   gender: string
@@ -16,7 +16,7 @@ export interface UpdateUserBody {
   username?: string
   email?: string
   phone?: string
-  date_of_birth?: Date
+  date_of_birth?: string
   role?: string
   verify?: string
   address?: string
