@@ -12,8 +12,8 @@ const authController = {
   callback: (provider: AuthProvider) => async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     await oauthService.callback(provider, req, res)
   },
-  getAllUser: async (req: Request<ParamsDictionary, any, any, ParsedGetAllUserUrlQuery>, res: Response, next: NextFunction) => {
-    const result = await authService.getAllUser(req.query)
+  getAllUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    const result = await authService.getAllUser()
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_ALL_USER)
   },
   createUser: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {

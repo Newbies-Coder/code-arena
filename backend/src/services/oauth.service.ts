@@ -244,7 +244,7 @@ class AuthService {
     }
   }
 
-  async getAllUser(payload: ParsedGetAllUserUrlQuery): Promise<PaginationType<Partial<User>>> {
+  async getAllUserPagination(payload: ParsedGetAllUserUrlQuery): Promise<PaginationType<Partial<User>>> {
     try {
       const page = Number(payload.page) || 1
       const limit = Number(payload.limit) || 10
@@ -272,6 +272,19 @@ class AuthService {
         total_items
       }
       return content
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.GET_ALL_USER
+      })
+    }
+  }
+
+  async getAllUser(): Promise<any> {
+    try {
+      const users = await databaseService.users.find().toArray()
+      const filteredUsers = _.map(users, (v) => _.omit(v, ['password']))
+      return filteredUsers
     } catch (error) {
       throw new ErrorWithStatus({
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
