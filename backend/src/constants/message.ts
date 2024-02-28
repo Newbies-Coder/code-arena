@@ -22,7 +22,8 @@ export const DATABASE_MESSAGE = {
     COURSE_CATEGORY_COLLECTION: 'The table holds course category in the database.',
     COURSE_COLLECTION: 'The table holds course in the database.',
     MESSAGE_COLLECTION: 'The table holds message in the database.',
-    ROOM_COLLECTION: 'The table holds room in the database.'
+    ROOM_COLLECTION: 'The table holds room in the database.',
+    INVITE_COLLECTION: 'The table holds room invite in the database.'
   }
 } as const
 
@@ -52,6 +53,7 @@ export const CLIENT_MESSAGE = {
   REQ_POINT: 'Maximum number of points can be consumed over duration',
   REQ_DURATION: 'Number of seconds before consumed points are reset.',
   PASSWORD_SECRET: 'String of numeric or character values used in security systems',
+  ROOM_PASSWORD_SECRET: 'String of numeric or character values used in security systems',
   OTP_SECRET: 'String of numeric or character values used in security systems',
   COOKIES_EXPIRES_IN: 'Cookie expires in the system',
   SECRET_COOKIE_NAME: 'Cookies_name when user login and register success and save local'
@@ -157,6 +159,21 @@ export const RESULT_RESPONSE_MESSAGES = {
   },
   VERIFY_FORGOT_PASSWORD_TOKEN: {
     CHECK_EMAIL_TO_RESET_PASSWORD: 'User already exist in database'
+  },
+  ROOM: {
+    GET_ALL: 'Get all rooms successfully!',
+    CREATE: 'Create room successfully!',
+    UPDATE: 'Update room successfully!',
+    DELETE: 'Delete room successfully!',
+    MAKE_PRIVATE: 'Make private successfully!',
+    CREATE_INVITE: 'Create invite successfully!',
+    GET_MESSAGE: 'Get message successfully',
+    CREATE_MESSAGE: 'Create message successfully',
+    DELETE_MESSAGE: 'Delete message successfully',
+    PIN_MESSAGE: 'Pin message successfully',
+    BAN_MEMBER: 'Ban member successfully',
+    KICK_MEMBER: 'Kick member successfully',
+    DISMISS_MESSAGE: 'Dismiss message successfully'
   }
 } as const
 
@@ -168,8 +185,8 @@ export const VALIDATION_MESSAGES = {
   TITLE: 'Validation Error',
   ERROR_MANY_REQ: 'Too many request from this IP, please try again in an hour',
   PAGINATION: {
-    PAGE_CAN_NOT_LESS_THAN_ZERO: 'Page number cannot less than zero',
-    ITEMS_IS_NOT_IN_RANGE: 'Item per page can not less than zero and greater than 100'
+    PAGE_CAN_NOT_LESS_THAN_ZERO: 'Page number cannot less than 1',
+    ITEMS_IS_NOT_IN_RANGE: 'Item per page can not less than 1 and greater than 100'
   },
   UPLOAD: {
     IMAGE: {
@@ -410,6 +427,51 @@ export const VALIDATION_MESSAGES = {
     COURSE_CONTENT_LENGTH_IS_INVALID: 'Course content must be longer than 10 characters and less than 100000 characters',
     COURSE_CATEGORY_MUST_BE_A_STRING: 'Course content must be a string',
     COURSE_CATEGORY_IS_REQUIRED: 'Course name is required'
+  },
+  ROOM: {
+    ROOM_NAME_IS_REQUIRED: 'Room name is required',
+    ROOM_NAME_MUST_BE_A_STRING: 'Room name must be a string',
+    ROOM_NAME_LENGTH_MUST_BE_FROM_2_TO_100: 'Room name must be longer than 2 characters and less than 30 characters',
+    ROOM_TYPE_IS_REQUIRED: 'Room type is required',
+    ROOM_TYPE_MUST_BE_A_STRING: 'Room type must be a string',
+    ROOM_TYPE_IS_INVALID: 'Room type is invalid',
+    ROOM_MEMBERS_IS_REQUIRED: 'Room members is required',
+    ROOM_MEMBERS_MUST_BE_A_ARRAY: 'Room members must be an array',
+    ROOM_ID_IS_REQUIRED: 'Room id is required',
+    ROOM_ID_IS_INVALID: 'Room id is invalid',
+    INVITE_RECIPIENT_IS_REQUIRED: 'Invite recipient is required',
+    ROOM_WITH_ID_IS_NOT_EXIST: 'Room with id is not exist',
+    SINGLE_ROOM_MUST_HAVE_2_MEMBER: 'Single room must have exactly two member',
+    NOT_OWNER: "You don't own this room",
+    MEMBER_NOT_FOUND: 'Member not found',
+    ROOM_ALREADY_PRIVATE: 'Room already private',
+    USER_ALREADY_IN_ROOM: 'User already in room',
+    DUE_TO_IS_REQUIRED: 'Due to date is required',
+    DUE_TO_DATE_IS_INVALID: 'Due to date is invalid',
+    DUE_TO_DATE_CANNOT_BEFORE_NOW: 'Due to date can not be before now',
+    ROOM_AVATAR_IS_NOT_VALID_URL: 'Room avatar is not valid URL',
+    ROOM_BACKGROUND_IS_NOT_VALID_URL: 'Room background is not valid URL',
+    ROOM_EMOTE_IS_NOT_VALID_URL: 'Room emote is not valid URL',
+    USER_NOT_IN_ROOM: 'You not in this room',
+    OWNER_CAN_NOT_BE_MEMBER: 'Owner can not be member of this room',
+    CAN_NOT_CREATE_INVITATION_ON_SINGLE_ROOM: 'Can not create invite in direct chat room',
+    CAN_NOT_DELETE_SINGLE_ROOM: 'Can not delete direct chat room',
+    CAN_NOT_BAN_MEMBER_ON_SINGLE_ROOM: 'Can not ban member in direct chat room',
+    CAN_NOT_KICK_MEMBER_ON_SINGLE_ROOM: 'Can not kick member in direct chat room',
+    CAN_NOT_MAKE_ROOM_PRIVATE_ON_SINGLE_ROOM: 'Can not make room private to yourself'
+  },
+  MESSAGE: {
+    MESSAGE_ID_IS_REQUIRED: 'Message id is required',
+    MESSAGE_ID_IS_INVALID: 'Message id is invalid',
+    MESSAGE_WITH_ID_IS_NOT_EXIST: 'Message with id is not exist',
+    CONTENT_MUST_BE_A_STRING: 'Content must be a string',
+    CONTENT_LENGTH_MUST_BE_FROM_1_TO_1024: 'Content length must be greater than 0 or less than 1025 characters',
+    ATTACHMENTS_MUST_BE_ARRAY: 'Attachments must be arrays',
+    ATTACHMENT_TYPE_IS_REQUIRED: 'Attachment type is required',
+    INVALID_ATTACHMENT_TYPE: 'Invalid attachment type',
+    ATTACHMENT_CONTENT_IS_REQUIRED: 'Attachment content is required',
+    ATTACHMENT_CONTENT_IS_NOT_VALID_URL: 'Attachment content is not valid URL',
+    MESSAGE_NOT_OWN: 'This is not your message'
   }
 } as const
 

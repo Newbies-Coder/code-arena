@@ -1,17 +1,21 @@
 import { ObjectId } from 'mongodb'
 import Member from '~/models/schemas/Member.schema'
 
-export type RoomType = 'single' | 'multiple'
+export const roomTypes = ['single', 'multiple'] as const
+
+export type RoomType = (typeof roomTypes)[number]
 
 interface RoomT {
   _id?: ObjectId
   name?: string
   type?: RoomType
   isPrivate: boolean
+  pinnedMessage?: ObjectId
   owner?: ObjectId
-  member: Member[]
+  members: Member[]
   avatar?: string
   background?: string
+  emote?: string
   password?: string
   isDeleted: boolean
   updated_at?: Date
@@ -24,10 +28,12 @@ export default class Room {
   owner: ObjectId
   type: RoomType
   isPrivate: boolean
+  pinnedMessage?: ObjectId
   password?: string
   avatar?: string
   background?: string
-  member: Member[]
+  emote?: string
+  members: Member[]
   isDeleted: boolean
   updated_at: Date
   created_at: Date
@@ -38,9 +44,11 @@ export default class Room {
     this.name = item.name
     this.owner = item.owner
     this.isPrivate = item.isPrivate || false
-    this.member = item.member
+    this.members = item.members
     this.password = item.password
     this.avatar = item.avatar
+    this.emote = item.emote
+    this.pinnedMessage = item.pinnedMessage
     this.background = item.background
     this.isDeleted = item.isDeleted || false
     this.created_at = item.created_at || new Date()

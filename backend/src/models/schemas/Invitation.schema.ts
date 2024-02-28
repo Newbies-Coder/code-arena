@@ -12,7 +12,7 @@ type InvitationType = Partial<{
   created_at: Date
 }>
 
-export default class Message {
+export default class Invitation {
   _id: ObjectId
   room: ObjectId
   sender: ObjectId

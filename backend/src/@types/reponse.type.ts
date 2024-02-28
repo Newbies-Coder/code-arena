@@ -108,6 +108,16 @@ export type ParsedGetAllUserBlockedUrlQuery = {
   created_at?: 'asc' | 'desc'
 }
 
+export type ParsedGetAllRoomUrlQuery = {
+  page?: string
+  limit?: string
+}
+
+export type ParsedGetAllMessageUrlQuery = {
+  page?: string
+  limit?: string
+}
+
 export type InsertBanner = {
   slug: string
   description?: string

@@ -1,24 +1,24 @@
 import { ObjectId } from 'mongodb'
 
-export type MessageType = 'text' | 'image'
+export const attachmentTypes = ['image' , 'video'] as const
 
-type MessageT = {
+export type AttachmentType = (typeof attachmentTypes)[number]
+
+export type Attachment = {
+  type: AttachmentType
+  content: string
+}
+
+type MessageType = {
   _id?: ObjectId
   sender: ObjectId
   room: ObjectId
-  emotes: Record<string, number>
+  emotes?: Record<string, number>
+  content?: string
+  attachments?: Attachment[]
   updated_at?: Date
   created_at?: Date
-} & (
-  | {
-      messageType: 'text'
-      content: string
-    }
-  | {
-      messageType: 'image'
-      images: string[]
-    }
-)
+}
 
 export default class Message {
   _id?: ObjectId
@@ -26,22 +26,14 @@ export default class Message {
   room: ObjectId
   updated_at: Date
   created_at: Date
-  messageType: MessageType
   content?: string
-  images?: string[]
+  attachments?: Attachment[]
 
-  constructor(item: MessageT) {
+  constructor(item: MessageType) {
     this._id = item._id
     this.sender = item.sender
     this.room = item.room
-    this.messageType = item.messageType
-
-    if (item.messageType == 'text') {
-      this.content = item.content
-    } else {
-      this.images = item.images
-    }
-
+    this.attachments = item.attachments
     this.created_at = item.created_at || new Date()
     this.updated_at = item.updated_at || new Date()
   }

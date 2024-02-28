@@ -1,12 +1,14 @@
 import { Db, MongoClient, ServerApiVersion, Collection } from 'mongodb'
 import { env } from '~/config/environment.config'
 import { DATABASE_MESSAGE } from '~/constants/message'
+import BannedMember from '~/models/schemas/BannedMember.schema'
 import Banner from '~/models/schemas/Banner.schema'
 import BlockedUser from '~/models/schemas/BlockedUser.schema'
 import CloseFriends from '~/models/schemas/CloseFriends'
 import Course from '~/models/schemas/Course.schema'
 import CourseCategory from '~/models/schemas/CourseCategory.schema'
 import Follow from '~/models/schemas/Follow.schema'
+import Invitation from '~/models/schemas/Invitation.schema'
 import Message from '~/models/schemas/Message.schema'
 import OTP from '~/models/schemas/Otps.schema'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
@@ -86,6 +88,14 @@ class DatabaseServices {
 
   get rooms(): Collection<Room> {
     return this.db.collection(env.database.main.collection.rooms)
+  }
+
+  get invites(): Collection<Invitation> {
+    return this.db.collection(env.database.main.collection.invites)
+  }
+
+  get bannedMembers(): Collection<BannedMember> {
+    return this.db.collection(env.database.main.collection.banned_members);
   }
 }
 
