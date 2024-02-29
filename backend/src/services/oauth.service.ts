@@ -7,7 +7,7 @@ import User from '~/models/schemas/Users.schema'
 import userServices from '~/services/users.service'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { Request, Response } from 'express'
-import { AuthProvider } from '~/@types/auth.type'
+import { AuthProvider, AuthUser } from '~/@types/auth.type'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import { Strategy as LinkedinStrategy } from 'passport-linkedin-oauth2'
 import { ParsedQs } from 'qs'
@@ -17,7 +17,10 @@ import { DEV_ERRORS_MESSAGES, VALIDATION_MESSAGES } from '~/constants/message'
 import { ObjectId } from 'mongodb'
 import { PaginationType, ParsedGetAllUserUrlQuery, ParsedGetUserByRoleUrlQuery } from '~/@types/reponse.type'
 import _ from 'lodash'
-import { UserRole } from '~/constants/enums'
+import { UserRole, UserVerifyStatus } from '~/constants/enums'
+import { hashPassword } from '~/utils/crypto'
+import { RegisterBody, UpdateProfileBody } from '~/models/requests/User.requests'
+import { CreateUserBody, UpdateUserBody } from '~/models/requests/Auth.request'
 
 class AuthService {
   init() {
@@ -143,17 +146,9 @@ class AuthService {
       )
     )
   }
-  private extractIds(id: unknown): ObjectId[] {
-    if (Array.isArray(id)) {
-      return id.map((item) => new ObjectId(item))
-    } else if (typeof id === 'string') {
-      return [new ObjectId(id)]
-    } else {
-      throw new ErrorWithStatus({
-        statusCode: StatusCodes.NOT_FOUND,
-        message: VALIDATION_MESSAGES.USER.USER_PROFILE.USER_ID_NOT_FOUND
-      })
-    }
+  private extractIds(idField: unknown): ObjectId[] {
+    let ids = Array.isArray(idField) ? idField : [idField]
+    return ids.map((id) => new ObjectId(id))
   }
 
   private getRoleFromPayload(roleString: string): UserRole {
@@ -184,7 +179,19 @@ class AuthService {
     res.redirect(`${env.url.auth_success}?provider=${provider}&refresh_token=${refresh_token}`)
   }
 
-  async getAllUser(payload: ParsedGetAllUserUrlQuery): Promise<PaginationType<Partial<User>>> {
+  private calculateAge(dob: string): number {
+    const birthDate = new Date(dob)
+    const difference = Date.now() - birthDate.getTime()
+    const ageDate = new Date(difference)
+    return Math.abs(ageDate.getUTCFullYear() - 1970)
+  }
+
+  async isUserExist(id: string): Promise<boolean> {
+    const result = await databaseService.users.findOne({ _id: new ObjectId(id) })
+    return Boolean(result)
+  }
+
+  async getAllUserPagination(payload: ParsedGetAllUserUrlQuery): Promise<PaginationType<Partial<User>>> {
     try {
       const page = Number(payload.page) || 1
       const limit = Number(payload.limit) || 10
@@ -220,6 +227,60 @@ class AuthService {
     }
   }
 
+  async getAllUser(): Promise<any> {
+    try {
+      const users = await databaseService.users.find().toArray()
+      const filteredUsers = _.map(users, (v) => _.omit(v, ['password']))
+      return filteredUsers
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.GET_ALL_USER
+      })
+    }
+  }
+
+  async create(payload: CreateUserBody): Promise<void> {
+    try {
+      let { password, date_of_birth } = payload
+      const hashedPassword = hashPassword(password)
+      const age = this.calculateAge(date_of_birth)
+      if (age < 12) {
+        throw new ErrorWithStatus({
+          statusCode: StatusCodes.FORBIDDEN,
+          message: VALIDATION_MESSAGES.USER.REGISTER.AGE_IS_NOT_ENOUGH
+        })
+      }
+      const newUser = new User({
+        ...payload,
+        password: hashedPassword,
+        date_of_birth: new Date(date_of_birth),
+        verify: UserVerifyStatus.Verified,
+        age
+      })
+      await databaseService.users.insertOne(newUser)
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.CREATE_USER_BY_ADMIN
+      })
+    }
+  }
+
+  async update(id: ObjectId, payload: UpdateUserBody): Promise<void> {
+    try {
+      if (Object.keys(payload).length === 0) {
+        throw new ErrorWithStatus({ statusCode: StatusCodes.BAD_REQUEST, message: VALIDATION_MESSAGES.USER.USER_PROFILE.FIELD_UPDATE_IS_REQUIRED })
+      }
+      await databaseService.users.updateOne({ _id: id }, { $set: { ...payload, updated_at: new Date() } }, { upsert: false })
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.UPDATE_USER_BY_ADMIN
+      })
+    }
+  }
+
   async getUsersByRole(payload: ParsedGetUserByRoleUrlQuery): Promise<PaginationType<Partial<User>>> {
     try {
       const page = Number(payload.page) || 1
@@ -251,6 +312,8 @@ class AuthService {
       })
     }
   }
+
+  // Assuming extractIds is implemented to convert id(s) from payload into ObjectId array
 
   async deleteManyUsers(payload: ParsedQs): Promise<void> {
     try {

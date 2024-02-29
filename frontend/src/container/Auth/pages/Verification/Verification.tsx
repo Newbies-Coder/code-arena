@@ -1,4 +1,5 @@
 import './style.scss'
+
 import { Button, Col, Form, Row, Statistic } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -55,7 +56,8 @@ const Verification = () => {
       try {
         await requestApi('users/verify-otp', 'POST', { otp: otpString })
         toast.success('Verification successful', { autoClose: 2000 })
-        navigate('/login') // Redirect on success
+        // Redirect on success
+        navigate('/login')
       } catch (err: any) {
         const message = err.response?.data?.errors?.otp?.msg || 'Verification failed'
         toast.error(message, { autoClose: 3000 })

@@ -2,7 +2,7 @@ import { Router } from 'express'
 import passport from 'passport'
 import { UserRole } from '~/constants/enums'
 import authController from '~/controllers/auth.controllers'
-import { requireRoleMiddleware } from '~/middlewares/auth.middlewares'
+import { createUserByAdminValidator, requireRoleMiddleware, updateUserByAdminValidator, updateUserIdParamValidator } from '~/middlewares/auth.middlewares'
 import { paginationGetUsersByRoleValidator, paginationUserValidators } from '~/middlewares/commons.middleware'
 import { deleteManyUserValidator } from '~/middlewares/users.middlewares'
 import authService from '~/services/oauth.service'
@@ -34,14 +34,41 @@ authRouter.get('/callback/google', passport.authenticate('google', { session: fa
 authRouter.get('/callback/linkedin', passport.authenticate('linkedin', { session: false }), wrapRequestHandler(authController.callback('linkedin')))
 
 /**
- * Description: Get all user by admin
- * Path: '/'
+ * Description: Get all user pagination by admin
+ * Path: '/pagination-user'
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
  * Params: { page: number, limit: number, userId: string, sort_by: string, created_at: asc | desc }
  */
 
-authRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), paginationUserValidators, wrapRequestHandler(authController.getAllUser))
+authRouter.get('/pagination-user', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), paginationUserValidators, wrapRequestHandler(authController.getAllUserPagination))
+
+/**
+ * Description: Get all user by admin
+ * Path: '/'
+ * Method: GET
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
+authRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), wrapRequestHandler(authController.getAllUser))
+
+/**
+ * Description: Create user by admin
+ * Path: /create-user
+ * Method: POST
+ * Body: { name: string, email: string, password: string, confirm_password: string, date_of_birth: string }
+ */
+authRouter.post('/create-user', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), createUserByAdminValidator, wrapRequestHandler(authController.createUser))
+
+/**
+ * Description: Update user by admin
+ * Path: /update-user/:id
+ * Method: PUT
+ * Body:
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
+authRouter.put('/update-user/:id', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), updateUserIdParamValidator, updateUserByAdminValidator, wrapRequestHandler(authController.updateUser))
 
 /**
  * Description: Delete user by admin
@@ -50,7 +77,7 @@ authRouter.get('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), p
  * Header: { Authorization: Bearer <access_token> }
  */
 
-authRouter.delete('/', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), deleteManyUserValidator, wrapRequestHandler(authController.deleteManyUser))
+authRouter.delete('/delete-user', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), deleteManyUserValidator, wrapRequestHandler(authController.deleteManyUser))
 
 /**
  * Description: Get user by role

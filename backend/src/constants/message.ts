@@ -89,7 +89,9 @@ export const DEV_ERRORS_MESSAGES = {
   INSERT_USER_FAVORITES: 'Error fetching insert users into favorite list',
   REMOVED_USER_FAVORITES: 'Error fetching remove users into favorite list',
   GET_ALL_USER_FAVORITE: 'Error fetching favorites',
-  VERIFY_FORGOT_PASSWORD_TOKEN: 'Error verifying forgot-password token'
+  VERIFY_FORGOT_PASSWORD_TOKEN: 'Error verifying forgot-password token',
+  CREATE_USER_BY_ADMIN: 'Error create user by admin',
+  UPDATE_USER_BY_ADMIN: 'Error udpate user by admin'
 }
 
 export const RESULT_RESPONSE_MESSAGES = {
@@ -143,7 +145,9 @@ export const RESULT_RESPONSE_MESSAGES = {
     INSERT_BLOCKED_USER: 'Blocked users successfully',
     DELETE_BLOCKED_USER: 'Unblocked users successfully',
     UPLOAD_IMAGE: 'Upload image sucessfully!',
-    UPLOAD_MUL_IMAGE: 'Upload multiple image sucessfully!'
+    UPLOAD_MUL_IMAGE: 'Upload multiple image sucessfully!',
+    CREATE_ACCOUNT_ADMIN: 'Created account successfully!',
+    UPDATE_ACCOUNT_ADMIN: 'Updated account successfully!'
   },
   OTP_SUCCESS: {
     VERIFY_OTP: 'Verify OTP successfully!',
@@ -178,6 +182,65 @@ export const VALIDATION_MESSAGES = {
       MAX_IMAGE_UPLOAD: 'Upload maximum 4 images',
       ERROR_INSERT_BANNERS: 'Failed to insert banners',
       ID_BANNER_IS_INVALID: 'Banner id is invalid'
+    }
+  },
+  ADMIN: {
+    CREATE_USER: {
+      ID_IS_REQUIRED: 'User id is required',
+      ID_NOT_FOUND: 'User id not found',
+      ID_IS_INVALID: 'User id is invalid',
+      ROLE_IS_REQUIRED: 'User role is required',
+      ROLE_MUST_BE_A_STRING: 'Role must be a string',
+      ROLE_IS_INVALID: 'Access denied. User does not have the required role.',
+      FULL_NAME_IS_REQUIRED: 'Fullname is required',
+      FULL_NAME_MUST_BE_A_STRING: 'Fullname must be a string',
+      FULL_NAME_MAX_LENGTH_IS_50: 'Fullname length must be from 4 to 50',
+      INVALID_FULLNAME: 'Must be a valid fullname',
+      USERNAME_IS_REQUIRED: 'Username is required',
+      INVALID_USERNAME: 'Must be a valid username',
+      USERNAME_MUST_BE_A_STRING: 'Username must be a string',
+      USERNAME_LENGTH_MUST_BE_FROM_2_TO_30: 'Username must be between 2 and 30 characters long',
+      USERNAME_INCLUDES_MUL_WHITESPACE: 'Username can not contains multiple consecutive whitespace',
+      PHONE_MUST_BE_A_STRING: 'Phone must be a string',
+      PHONE_LENGTH_MUST_BE_10_CHARACTER: 'Phone length must be 10 character',
+      PHONE_INVALID: 'Phone number invalid',
+      DATE_OF_BIRTH_IS_ISO8601: 'Date of birth must be a YYYY-MM-DDTHH:mm:ss.ssssZ',
+      ADDRESS_MUST_BE_STRING: 'Address must be a string',
+      ADDRESS_LENGTH_IS_VALID: 'Address length must be from 10 to 255 characters',
+      FIELD_UPDATE_IS_REQUIRED: 'Must be at least 1 field that to updating',
+      EMAIL_MUST_BE_A_STRING: 'Must be a valid email address',
+      VALID_USERNAME_PART_OF_EMAIL: 'Username part of the email must not contain special characters',
+      DATE_OF_BIRTH_IS_REQUIRED: 'Date of birth is required',
+      DATE_OF_BIRTH_ERROR_FORMAT: 'Date_of_birth must be yyyy-mm-dd',
+      DATE_OF_BIRTH_MUST_BE_A_STRING: 'Date_of_birth must be string',
+      PHONE_IS_REQUIRED: 'Phone is required',
+      PHONE_MUST_BE_STRING: 'Phone is must be string',
+      PHONE_IS_INVALID: 'Valid the input phone is a Vietnamese phone number',
+      GENDER_MUST_BE_STRING: 'Gender is must be string',
+      GENDER_IS_INVALID: 'Gender is invalid. Please enter like: Male, Female, Other,..',
+      AVATAR_MUST_BE_STRING: 'Avatar image is must be string',
+      THUMBNAIL_MUST_BE_STRING: 'Cover_photo is must be string',
+      VALID_URL_AVATAR: 'Valid URL avatar and image extension',
+      VALID_URL_COVER_PHOTO: 'Valid URL cover_photo and image extension',
+      EMAIL_IS_REQUIRED: 'Email is required',
+      EMAIL_ACCESSIBILITY: 'The email address is already subscribed. Please use a different email.',
+      PASSWORD_IS_REQUIRED: 'Password is required',
+      PASSWORD_MUST_BE_A_STRING: 'Password must be a string',
+      PASSWORD_MUST_BE_STRONG: 'Password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
+      PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Password must be between 8 and 16 characters long',
+      PASSWORD_CONTAINS_EMOJI: 'Password cannot contains emoji symbol and white space',
+      CONFIRM_PASSWORD_IS_REQUIRED: 'Confirm-password is required',
+      CONFIRM_PASSWORD_MUST_BE_A_STRING: 'Confirm-password must be a string',
+      CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD: 'Confirm-password must be the same as password',
+      CONFIRM_PASSWORD_MUST_BE_STRONG: 'Confirm-password must be 8-16 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
+      CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16: 'Confirm-password must be between 8 and 16 characters long',
+      CONFIRM_PASSWORD_CONTAINS_EMOJI: 'Confirm-password cannot contains emoji symbol and white space',
+      URL_MUST_BE_A_STRING: 'Website-url must be a string',
+      INVALID_URL: 'Invalid Website-url format',
+      BIO_MUST_BE_A_STRING: 'Bio must be a string',
+      BIO_LENGTH_MUST_BE_FROM_5_TO_500: 'Bio must be between 5 and 500 characters long',
+      VERIFY_STATUS_MUST_BE_A_STRING: 'Verify status must be a string',
+      INVALID_VERIFY_STATUS: 'Status must be one of the following: Verified, Unverified, Celerity,Banned'
     }
   },
   USER: {
