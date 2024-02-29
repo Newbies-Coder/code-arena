@@ -79,7 +79,9 @@ export default function MainUser() {
           <Button
             type="text"
             className="flex justify-center items-center text-white text-lg"
-            onClick={() => navigate(`/admin/user/update/${id}`)}
+            onClick={() =>
+              navigate(`/admin/user/update/${id}`, { state: filteredItems.find((item) => item._id === id) })
+            }
           >
             <EditOutlined />
           </Button>
