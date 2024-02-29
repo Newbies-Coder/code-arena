@@ -33,6 +33,8 @@ export default class Message {
     this._id = item._id
     this.sender = item.sender
     this.room = item.room
+    this.content = item.content
+    this.attachments = item.attachments
     this.attachments = item.attachments
     this.created_at = item.created_at || new Date()
     this.updated_at = item.updated_at || new Date()

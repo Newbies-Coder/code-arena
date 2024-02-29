@@ -33,6 +33,7 @@ const envSchema = Joi.object({
   DB_MESSAGE_COLLECTION: Joi.string().required().description(DB_MAIN.MESSAGE_COLLECTION),
   DB_ROOM_COLLECTION: Joi.string().required().description(DB_MAIN.ROOM_COLLECTION),
   DB_INVITES_COLLECTION: Joi.string().required().description(DB_MAIN.INVITE_COLLECTION),
+  DB_MEMBERS_COLLECTION: Joi.string().required().description(DB_MAIN.MEMBER_COLLECTION),
   DATABASE_USER_LOGS: Joi.string().required().description(DB_LOGS.USERNAME),
   PASSWORD_USER_LOGS: Joi.string().required().description(DB_LOGS.PASSWORD),
   DATABASE_CODE_ARENA: Joi.string().required().description(DB_MAIN.USERNAME),
@@ -119,7 +120,8 @@ export const env = {
         messages: envVars.DB_MESSAGE_COLLECTION,
         rooms: envVars.DB_ROOM_COLLECTION,
         invites: envVars.DB_INVITES_COLLECTION,
-        banned_members: envVars.DB_BANNED_MEMBERS_COLLECTION
+        banned_members: envVars.DB_BANNED_MEMBERS_COLLECTION,
+        members: envVars.DB_MEMBERS_COLLECTION
       }
     },
     logs: {
@@ -154,7 +156,7 @@ export const env = {
     thumbnail_folder: envVars.THUMBNAIL_AVATAR_FOLDER,
     banner_folder: envVars.CLOUDINARY_BANNER_FOLDER,
     room_avatar_folder: envVars.CLOUDINARY_ROOM_AVATAR_FOLDER,
-    room_background_folder: envVars.CLOUDINARY_ROOM_BACKGROUND_FOLDER,
+    room_background_folder: envVars.CLOUDINARY_ROOM_BACKGROUND_FOLDER
   },
   auth: {
     facebook: {

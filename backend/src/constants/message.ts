@@ -23,7 +23,8 @@ export const DATABASE_MESSAGE = {
     COURSE_COLLECTION: 'The table holds course in the database.',
     MESSAGE_COLLECTION: 'The table holds message in the database.',
     ROOM_COLLECTION: 'The table holds room in the database.',
-    INVITE_COLLECTION: 'The table holds room invite in the database.'
+    INVITE_COLLECTION: 'The table holds room invite in the database.',
+    MEMBER_COLLECTION: 'The table holds room members in the database.'
   }
 } as const
 
@@ -457,7 +458,9 @@ export const VALIDATION_MESSAGES = {
     CAN_NOT_KICK_MEMBER_ON_SINGLE_ROOM: 'Can not kick member in direct chat room',
     CAN_NOT_MAKE_ROOM_PRIVATE_ON_SINGLE_ROOM: 'Can not make room private to yourself',
     ROOM_EMOTE_MUST_BE_A_STRING: 'Room emote must be a string',
-    EMOTE_MUST_BE_AN_EMOJI: 'Room emote must be a emoji'
+    EMOTE_MUST_BE_AN_EMOJI: 'Room emote must be a emoji',
+    CAN_NOT_KICK_OWNER: 'Can not kick owner',
+    CAN_NOT_BAN_OWNER: 'Can not ban owner'
   },
   MESSAGE: {
     MESSAGE_ID_IS_REQUIRED: 'Message id is required',
@@ -470,7 +473,8 @@ export const VALIDATION_MESSAGES = {
     INVALID_ATTACHMENT_TYPE: 'Invalid attachment type',
     ATTACHMENT_CONTENT_IS_REQUIRED: 'Attachment content is required',
     ATTACHMENT_CONTENT_IS_NOT_VALID_URL: 'Attachment content is not valid URL',
-    MESSAGE_NOT_OWN: 'This is not your message'
+    MESSAGE_NOT_OWN: 'This is not your message',
+    MESSAGE_IS_EMPTY: 'Message is empty'
   }
 } as const
 
@@ -487,7 +491,7 @@ export const CLOUDINARY_MESSAGES = {
   CLOUDINARY_BANNER_FOLDER: 'Folder that contain banner images on cloudinary',
   CLOUDINARY_IMAGE_FOLDER: 'Folder that contain image images on cloudinary',
   CLOUDINARY_ROOM_AVATAR_FOLDER: 'Folder that contain room avatar images on cloudinary',
-  CLOUDINARY_ROOM_BACKGROUND_FOLDER: 'Folder that contain room background images on cloudinary',
+  CLOUDINARY_ROOM_BACKGROUND_FOLDER: 'Folder that contain room background images on cloudinary'
 }
 
 export const AUTH_MESSAGES = {

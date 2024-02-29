@@ -9,6 +9,7 @@ import Course from '~/models/schemas/Course.schema'
 import CourseCategory from '~/models/schemas/CourseCategory.schema'
 import Follow from '~/models/schemas/Follow.schema'
 import Invitation from '~/models/schemas/Invitation.schema'
+import Member from '~/models/schemas/Member.schema'
 import Message from '~/models/schemas/Message.schema'
 import OTP from '~/models/schemas/Otps.schema'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
@@ -96,6 +97,10 @@ class DatabaseServices {
 
   get bannedMembers(): Collection<BannedMember> {
     return this.db.collection(env.database.main.collection.banned_members);
+  }
+
+  get members(): Collection<Member> {
+    return this.db.collection(env.database.main.collection.members);
   }
 }
 

@@ -43,7 +43,7 @@ const roomController = {
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.CREATE_INVITE)
   },
   getMessage: async (req: Request<ParamsDictionary, any, any, ParsedUrlQuery>, res: Response, next: NextFunction) => {
-    const result = await roomService.getMessages(req.user._id, req.query)
+    const result = await roomService.getMessages(new ObjectId(req.params.id), req.query)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.GET_MESSAGE)
   },
   createMessage: async (req: Request<ParamsDictionary, any, CreateMessageBody, ParsedUrlQuery>, res: Response, next: NextFunction) => {
@@ -55,7 +55,7 @@ const roomController = {
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.DELETE_MESSAGE)
   },
   pinMessage: async (req: Request<ParamsDictionary, any, PinMessageBody, ParsedUrlQuery>, res: Response, next: NextFunction) => {
-    const result = await roomService.pinMessage(req.user._id, req.body)
+    const result = await roomService.pinMessage(new ObjectId(req.params.id), new ObjectId(req.params.messageId))
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.PIN_MESSAGE)
   },
   kickMember: async (req: Request<ParamsDictionary, any, KickMemberBody, ParsedUrlQuery>, res: Response, next: NextFunction) => {

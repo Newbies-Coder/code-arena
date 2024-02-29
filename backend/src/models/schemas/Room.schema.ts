@@ -12,7 +12,6 @@ interface RoomT {
   isPrivate: boolean
   pinnedMessage?: ObjectId
   owner?: ObjectId
-  members: Member[]
   avatar?: string
   background?: string
   emote?: string
@@ -33,7 +32,6 @@ export default class Room {
   avatar?: string
   background?: string
   emote?: string
-  members: Member[]
   isDeleted: boolean
   updated_at: Date
   created_at: Date
@@ -44,7 +42,6 @@ export default class Room {
     this.name = item.name
     this.owner = item.owner
     this.isPrivate = item.isPrivate || false
-    this.members = item.members
     this.password = item.password
     this.avatar = item.avatar
     this.emote = item.emote

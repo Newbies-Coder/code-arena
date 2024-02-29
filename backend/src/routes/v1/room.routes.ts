@@ -122,7 +122,7 @@ roomRouter.post('/:id/invites', wrapRequestHandler(requireLoginMiddleware), crea
  * Header: { Authorization: Bearer <access_token> }
  * Param: { id: string }
  */
-roomRouter.get('/:id/message', wrapRequestHandler(requireLoginMiddleware), getMessageValidator, wrapRequestHandler(roomController.getMessage))
+roomRouter.get('/:id/messages', wrapRequestHandler(requireLoginMiddleware), getMessageValidator, wrapRequestHandler(roomController.getMessage))
 
 /**
  * Description: Create message
@@ -131,7 +131,7 @@ roomRouter.get('/:id/message', wrapRequestHandler(requireLoginMiddleware), getMe
  * Header: { Authorization: Bearer <access_token> }
  * Param: { id: string }
  */
-roomRouter.post('/:id/message', wrapRequestHandler(requireLoginMiddleware), createMessageValidator, wrapRequestHandler(roomController.createMessage))
+roomRouter.post('/:id/messages', wrapRequestHandler(requireLoginMiddleware), createMessageValidator, wrapRequestHandler(roomController.createMessage))
 
 /**
  * Description: Delete message
@@ -140,7 +140,7 @@ roomRouter.post('/:id/message', wrapRequestHandler(requireLoginMiddleware), crea
  * Header: { Authorization: Bearer <access_token> }
  * Param: { id: string, messageId: string }
  */
-roomRouter.delete('/:id/message/:messageId', wrapRequestHandler(requireLoginMiddleware), deleteMessageValidator, wrapRequestHandler(roomController.deleteMessage))
+roomRouter.delete('/:id/messages/:messageId', wrapRequestHandler(requireLoginMiddleware), deleteMessageValidator, wrapRequestHandler(roomController.deleteMessage))
 
 /**
  * Description: Pin message
@@ -149,7 +149,7 @@ roomRouter.delete('/:id/message/:messageId', wrapRequestHandler(requireLoginMidd
  * Header: { Authorization: Bearer <access_token> }
  * Param: { id: string, messageId: string }
  */
-roomRouter.post('/:id/message/:messageId/pin', wrapRequestHandler(requireLoginMiddleware), pinMessageValidator, wrapRequestHandler(roomController.pinMessage))
+roomRouter.post('/:id/messages/:messageId/pin', wrapRequestHandler(requireLoginMiddleware), pinMessageValidator, wrapRequestHandler(roomController.pinMessage))
 
 /**
  * Description: Kick members

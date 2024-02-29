@@ -1,6 +1,9 @@
+import { StatusCodes } from 'http-status-codes'
 import { ObjectId } from 'mongodb'
 import { PaginationType, ParsedGetAllMessageUrlQuery, ParsedGetAllRoomUrlQuery } from '~/@types/reponse.type'
 import { env } from '~/config/environment.config'
+import { VALIDATION_MESSAGES } from '~/constants/message'
+import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import {
   BanMemberBody,
   CreateInviteBody,
@@ -22,24 +25,25 @@ import { databaseService } from '~/services/connectDB.service'
 import { hashRoomPassword } from '~/utils/crypto'
 
 class RoomService {
-  private async removeMember(roomId: ObjectId, userId: ObjectId) {
-    await databaseService.rooms.updateOne(
-      {
-        _id: roomId
-      },
-      { $pull: { members: { memberId: userId } } },
-      {
-        upsert: false
-      }
-    )
+  private async removeMember(roomId: ObjectId, memberId: ObjectId) {
+    console.log({ roomId, memberId })
+    await databaseService.members.deleteOne({ roomId, memberId })
   }
 
-  async getRooms(id: ObjectId, payload: ParsedGetAllRoomUrlQuery): Promise<PaginationType<Room>> {
+  async getRooms(memberId: ObjectId, payload: ParsedGetAllRoomUrlQuery): Promise<PaginationType<Room>> {
     const page = Number(payload.page) || 1
     const limit = Number(payload.limit) || 10
     const skipCount = (page - 1) * limit
 
-    const result = await databaseService.rooms.find().skip(skipCount).limit(limit).toArray()
+    const rooms = await databaseService.members.find({ memberId: new ObjectId(memberId) }).toArray()
+
+    const result = await databaseService.rooms
+      .find({
+        _id: { $in: rooms.map(({ roomId }) => new ObjectId(roomId)) }
+      })
+      .skip(skipCount)
+      .limit(limit)
+      .toArray()
 
     const total_items = result.length ? result.length : 0
     const total_pages = Math.floor((total_items + limit - 1) / limit)
@@ -56,26 +60,28 @@ class RoomService {
   }
 
   async createRoom(userId: ObjectId, { type, name, members }: CreateRoomBody) {
-    const roomMembers = [...members, userId].map(
-      (memberId) =>
-        new Member({
-          memberId: new ObjectId(memberId)
-        })
-    )
-
     const room = new Room({
       name,
       type,
       // Single (direct chat) room can not have an owner
       owner: type === 'multiple' ? userId : undefined,
-      members: roomMembers,
       isPrivate: false,
       isDeleted: false,
       updated_at: new Date(),
       created_at: new Date()
     })
 
-    await databaseService.rooms.insertOne(room)
+    const result = await databaseService.rooms.insertOne(room)
+
+    const roomMembers = [...members, userId].map(
+      (memberId) =>
+        new Member({
+          memberId: new ObjectId(memberId),
+          roomId: result.insertedId
+        })
+    )
+
+    databaseService.members.insertMany(roomMembers)
   }
 
   async updateRoom(userId: ObjectId, id: ObjectId, { name }: UpdateRoomBody) {
@@ -134,12 +140,12 @@ class RoomService {
     await this.removeMember(roomId, new ObjectId(payload.memberId))
   }
 
-  async getMessages(id: ObjectId, payload: ParsedGetAllMessageUrlQuery): Promise<PaginationType<Message>> {
+  async getMessages(roomId: ObjectId, payload: ParsedGetAllMessageUrlQuery): Promise<PaginationType<Message>> {
     const page = Number(payload.page) || 1
     const limit = Number(payload.limit) || 10
     const skipCount = (page - 1) * limit
 
-    const result = await databaseService.messages.find().skip(skipCount).limit(limit).toArray()
+    const result = await databaseService.messages.find({ room: roomId }).skip(skipCount).limit(limit).toArray()
 
     const total_items = result.length ? result.length : 0
     const total_pages = Math.floor((total_items + limit - 1) / limit)
@@ -155,12 +161,12 @@ class RoomService {
     return content
   }
 
-  async pinMessage(roomId: ObjectId, payload: PinMessageBody) {
+  async pinMessage(roomId: ObjectId, messageId: ObjectId) {
     await databaseService.rooms.updateOne(
       { _id: roomId },
       {
         $set: {
-          pinnedMessage: new ObjectId(payload.messageId),
+          pinnedMessage: new ObjectId(messageId),
           updated_at: new Date()
         }
       }
@@ -168,9 +174,16 @@ class RoomService {
   }
 
   async createMessage(userId: ObjectId, roomId: ObjectId, { content, attachments }: CreateMessageBody) {
+    if (!content && !attachments) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: VALIDATION_MESSAGES.MESSAGE.MESSAGE_IS_EMPTY
+      })
+    }
+
     await databaseService.messages.insertOne(
       new Message({
-        sender: userId,
+        sender: new ObjectId(userId),
         room: roomId,
         content,
         attachments
@@ -183,11 +196,11 @@ class RoomService {
   }
 
   async dismissMessage(userId: ObjectId, roomId: ObjectId, payload: DismissMessageBody) {
-    await databaseService.rooms.updateOne(
-      { _id: roomId, 'members.memberId': userId },
+    await databaseService.members.updateOne(
+      { _id: roomId, memberId: userId },
       {
         $set: {
-          'members.$.suppressNotificationTime': new Date(payload.due_to),
+          suppressNotificationTime: new Date(payload.due_to),
           updated_at: new Date()
         }
       },
