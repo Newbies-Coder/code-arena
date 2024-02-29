@@ -153,22 +153,84 @@ export const updateRoomValidator = validate(
       },
       trim: true
     },
-    avatar: {
-      optional: true,
-      isURL: {
-        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_AVATAR_IS_NOT_VALID_URL
-      }
-    },
-    background: {
-      optional: true,
-      isURL: {
-        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_BACKGROUND_IS_NOT_VALID_URL
-      }
-    },
     emote: {
       optional: true,
-      isURL: {
-        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_EMOTE_IS_NOT_VALID_URL
+      isString: {
+        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_EMOTE_MUST_BE_A_STRING
+      },
+      matches: {
+        options: /\p{Emoji}/gu,
+        errorMessage: VALIDATION_MESSAGES.ROOM.EMOTE_MUST_BE_AN_EMOJI
+      }
+    }
+  })
+)
+
+export const changeRoomAvatarValidator = validate(
+  checkSchema({
+    id: {
+      notEmpty: {
+        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_REQUIRED
+      },
+      custom: {
+        options: async (value, { req }) => {
+          validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
+
+          const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
+
+          if (!room) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.NOT_FOUND,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          if (room.type === 'multiple') {
+            if (room.owner !== req.user._id) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.FORBIDDEN,
+                message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
+              })
+            }
+          }
+
+          return true
+        }
+      }
+    }
+  })
+)
+
+export const changeRoomBackgroundValidator = validate(
+  checkSchema({
+    id: {
+      notEmpty: {
+        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_REQUIRED
+      },
+      custom: {
+        options: async (value, { req }) => {
+          validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
+
+          const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
+
+          if (!room) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.NOT_FOUND,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          if (room.type === 'multiple') {
+            if (room.owner !== req.user._id) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.FORBIDDEN,
+                message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
+              })
+            }
+          }
+
+          return true
+        }
       }
     }
   })

@@ -3,6 +3,8 @@ import roomController from '~/controllers/room.controller'
 import { requireLoginMiddleware } from '~/middlewares/auth.middlewares'
 import {
   banMemberValidator,
+  changeRoomAvatarValidator,
+  changeRoomBackgroundValidator,
   createInviteValidator,
   createMessageValidator,
   createRoomValidator,
@@ -16,6 +18,7 @@ import {
   pinMessageValidator,
   updateRoomValidator
 } from '~/middlewares/room.middlewares'
+import { singleImageUpload } from '~/middlewares/uploadFile.middleware'
 import { wrapRequestHandler } from '~/utils/handler'
 
 const roomRouter = Router()
@@ -66,6 +69,33 @@ roomRouter.put('/:id/password', wrapRequestHandler(requireLoginMiddleware), make
  */
 
 roomRouter.put('/:id/dismiss', wrapRequestHandler(requireLoginMiddleware), dismissMessageValidator, wrapRequestHandler(roomController.dismissMessage))
+/**
+ * Description: Dismiss message from room,
+ * Path: /:id
+ * Method: PUT
+ * Header: { Authorization: Bearer <access_token> }
+ * Body: { due_to: Date }
+ */
+
+roomRouter.put('/:id/dismiss', wrapRequestHandler(requireLoginMiddleware), dismissMessageValidator, wrapRequestHandler(roomController.dismissMessage))
+
+/**
+ * Description: Change room avatar,
+ * Path: /:id
+ * Method: PUT
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
+roomRouter.put('/:id/avatar', wrapRequestHandler(requireLoginMiddleware), changeRoomAvatarValidator, singleImageUpload, wrapRequestHandler(roomController.changeAvatar))
+
+/**
+ * Description: Change room background,
+ * Path: /:id
+ * Method: PUT
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
+roomRouter.put('/:id/background', wrapRequestHandler(requireLoginMiddleware), changeRoomBackgroundValidator, singleImageUpload, wrapRequestHandler(roomController.changeBackground))
 
 /**
  * Description: Delete room

@@ -449,16 +449,15 @@ export const VALIDATION_MESSAGES = {
     DUE_TO_IS_REQUIRED: 'Due to date is required',
     DUE_TO_DATE_IS_INVALID: 'Due to date is invalid',
     DUE_TO_DATE_CANNOT_BEFORE_NOW: 'Due to date can not be before now',
-    ROOM_AVATAR_IS_NOT_VALID_URL: 'Room avatar is not valid URL',
-    ROOM_BACKGROUND_IS_NOT_VALID_URL: 'Room background is not valid URL',
-    ROOM_EMOTE_IS_NOT_VALID_URL: 'Room emote is not valid URL',
     USER_NOT_IN_ROOM: 'You not in this room',
     OWNER_CAN_NOT_BE_MEMBER: 'Owner can not be member of this room',
     CAN_NOT_CREATE_INVITATION_ON_SINGLE_ROOM: 'Can not create invite in direct chat room',
     CAN_NOT_DELETE_SINGLE_ROOM: 'Can not delete direct chat room',
     CAN_NOT_BAN_MEMBER_ON_SINGLE_ROOM: 'Can not ban member in direct chat room',
     CAN_NOT_KICK_MEMBER_ON_SINGLE_ROOM: 'Can not kick member in direct chat room',
-    CAN_NOT_MAKE_ROOM_PRIVATE_ON_SINGLE_ROOM: 'Can not make room private to yourself'
+    CAN_NOT_MAKE_ROOM_PRIVATE_ON_SINGLE_ROOM: 'Can not make room private to yourself',
+    ROOM_EMOTE_MUST_BE_A_STRING: 'Room emote must be a string',
+    EMOTE_MUST_BE_AN_EMOJI: 'Room emote must be a emoji'
   },
   MESSAGE: {
     MESSAGE_ID_IS_REQUIRED: 'Message id is required',
@@ -486,7 +485,9 @@ export const CLOUDINARY_MESSAGES = {
   CLOUDINARY_AVATAR_FOLDER: 'Folder that contain avatar images on cloudinary',
   CLOUDINARY_THUMBNAIL_FOLDER: 'Folder that contain thumbnail images on cloudinary',
   CLOUDINARY_BANNER_FOLDER: 'Folder that contain banner images on cloudinary',
-  CLOUDINARY_IMAGE_FOLDER: 'Folder that contain image images on cloudinary'
+  CLOUDINARY_IMAGE_FOLDER: 'Folder that contain image images on cloudinary',
+  CLOUDINARY_ROOM_AVATAR_FOLDER: 'Folder that contain room avatar images on cloudinary',
+  CLOUDINARY_ROOM_BACKGROUND_FOLDER: 'Folder that contain room background images on cloudinary',
 }
 
 export const AUTH_MESSAGES = {

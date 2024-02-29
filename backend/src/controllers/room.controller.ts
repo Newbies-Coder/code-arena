@@ -69,6 +69,14 @@ const roomController = {
   dismissMessage: async (req: Request<ParamsDictionary, any, DismissMessageBody, ParsedUrlQuery>, res: Response, next: NextFunction) => {
     const result = await roomService.dismissMessage(req.user._id, new ObjectId(req.params.id), req.body)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.DISMISS_MESSAGE)
+  },
+  changeAvatar: async (req: Request<ParamsDictionary, any, DismissMessageBody, ParsedUrlQuery>, res: Response, next: NextFunction) => {
+    const result = await roomService.changeAvatar(new ObjectId(req.params.id), req.file)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.DISMISS_MESSAGE)
+  },
+  changeBackground: async (req: Request<ParamsDictionary, any, DismissMessageBody, ParsedUrlQuery>, res: Response, next: NextFunction) => {
+    const result = await roomService.changeBackground(new ObjectId(req.params.id), req.file)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.DISMISS_MESSAGE)
   }
 }
 

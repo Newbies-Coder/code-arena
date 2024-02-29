@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb'
 import { PaginationType, ParsedGetAllMessageUrlQuery, ParsedGetAllRoomUrlQuery } from '~/@types/reponse.type'
+import { env } from '~/config/environment.config'
 import {
   BanMemberBody,
   CreateInviteBody,
@@ -16,6 +17,7 @@ import Invitation from '~/models/schemas/Invitation.schema'
 import Member from '~/models/schemas/Member.schema'
 import Message from '~/models/schemas/Message.schema'
 import Room from '~/models/schemas/Room.schema'
+import cloudinaryService from '~/services/cloudinary.service'
 import { databaseService } from '~/services/connectDB.service'
 import { hashRoomPassword } from '~/utils/crypto'
 
@@ -191,6 +193,24 @@ class RoomService {
       },
       { upsert: false }
     )
+  }
+  async changeAvatar(roomId: ObjectId, file: Express.Multer.File) {
+    const room = await databaseService.rooms.findOne({ _id: roomId })
+    if (room.avatar) {
+      await cloudinaryService.deleteImage(room.avatar)
+    }
+
+    const { url } = await cloudinaryService.uploadImage(env.cloudinary.room_avatar_folder, file.buffer)
+    await databaseService.rooms.updateOne({ _id: room }, { $set: { avatar: url } })
+  }
+  async changeBackground(roomId: ObjectId, file: Express.Multer.File) {
+    const room = await databaseService.rooms.findOne({ _id: roomId })
+    if (room.background) {
+      await cloudinaryService.deleteImage(room.background)
+    }
+
+    const { url } = await cloudinaryService.uploadImage(env.cloudinary.room_background_folder, file.buffer)
+    await databaseService.rooms.updateOne({ _id: room }, { $set: { background: url } })
   }
 }
 
