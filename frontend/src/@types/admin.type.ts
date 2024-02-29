@@ -38,10 +38,13 @@ export type UserDataType = {
   phone: string
   email: string
   role: UserRole
-  status: UserVerifyStatus
+  verify: UserVerifyStatus
   date_of_birth: string
   address: string
   gender: UserGenderType
+  bio: string
+  website: string
+  _destroy: boolean
 }
 
 export type AccountType = UserDataType & {

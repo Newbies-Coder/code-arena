@@ -1,4 +1,4 @@
-import { Button, Input, Menu } from 'antd'
+import { Button, Input, Menu, Modal } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { ColumnsType } from 'antd/es/table'
 import VerifyStatus from '@/components/VerifyStatus'
@@ -95,15 +95,16 @@ export default function MainUser() {
   ]
 
   const filteredItems = useMemo(() => {
+    const users = data.filter((user) => user._destroy === false)
     if (queryRole === roles[0]) {
-      return data.filter((item) => {
+      return users.filter((item) => {
         return (
-          item.username.toLowerCase().includes(queryIdOrUsername.toLowerCase()) ||
+          (item._destroy === false && item.username.toLowerCase().includes(queryIdOrUsername.toLowerCase())) ||
           item._id.toLowerCase().includes(queryIdOrUsername.toLowerCase())
         )
       })
     }
-    return data.filter((item) => {
+    return users.filter((item) => {
       return (
         item.role === queryRole &&
         (item.username.toLowerCase().includes(queryIdOrUsername.toLowerCase()) ||
@@ -120,52 +121,58 @@ export default function MainUser() {
   }
 
   return (
-    <div className="px-10 py-5">
-      <div className="flex flex-col gap-2 lg:flex-row justify-between mb-4 h-full">
-        <div className="min-w-[300px]">
-          <p className="text-white">Role name</p>
-          <div className="relative">
+    <>
+      <div className="px-10 py-5">
+        <div className="flex flex-col gap-2 lg:flex-row justify-between mb-4 h-full">
+          <div className="min-w-[300px]">
+            <p className="text-white">Role name</p>
+            <div className="relative">
+              <Button
+                className="w-full h-11 flex flex-row-reverse items-center justify-between text-white"
+                icon={<DownOutlined />}
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                {roles[roleSelected]}
+              </Button>
+              {isOpen && (
+                <Menu
+                  onClick={handleMenuClick}
+                  className="absolute mt-2 left-0 right-0 rounded-lg z-10 shadow-gray-400"
+                >
+                  {roles.map((item, key) => (
+                    <Menu.Item key={key}>{item}</Menu.Item>
+                  ))}
+                </Menu>
+              )}
+            </div>
+          </div>
+          <div className="flex items-end gap-8">
+            <div>
+              <p className="text-white">Keyword</p>
+              <Input
+                className="bg-transparent text-white h-11 max-w-[400px] lg:w-[400px]"
+                suffix={
+                  <Button type="text" className="text-white flex justify-center items-end" icon={<SearchOutlined />} />
+                }
+                classNames={{ input: 'bg-transparent text-white placeholder:text-gray-400' }}
+                placeholder="Enter keyword"
+                ref={inputRef}
+                onChange={(e) => setQueryIdOrUsername(e.target.value)}
+              />
+            </div>
             <Button
-              className="w-full h-11 flex flex-row-reverse items-center justify-between text-white"
-              icon={<DownOutlined />}
-              onClick={() => setIsOpen(!isOpen)}
+              type="primary"
+              className="bg-[#8001FF] h-12 w-36 flex justify-center items-center"
+              onClick={() => navigate('/admin/user/add')}
             >
-              {roles[roleSelected]}
+              <PlusOutlined className="text-lg" />
+              <span>Add account</span>
             </Button>
-            {isOpen && (
-              <Menu onClick={handleMenuClick} className="absolute mt-2 left-0 right-0 rounded-lg z-10 shadow-gray-400">
-                {roles.map((item, key) => (
-                  <Menu.Item key={key}>{item}</Menu.Item>
-                ))}
-              </Menu>
-            )}
           </div>
         </div>
-        <div className="flex items-end gap-8">
-          <div>
-            <p className="text-white">Keyword</p>
-            <Input
-              className="bg-transparent text-white h-11 max-w-[400px] lg:w-[400px]"
-              suffix={
-                <Button type="text" className="text-white flex justify-center items-end" icon={<SearchOutlined />} />
-              }
-              classNames={{ input: 'bg-transparent text-white placeholder:text-gray-400' }}
-              placeholder="Enter keyword"
-              ref={inputRef}
-              onChange={(e) => setQueryIdOrUsername(e.target.value)}
-            />
-          </div>
-          <Button
-            type="primary"
-            className="bg-[#8001FF] h-12 w-36 flex justify-center items-center"
-            onClick={() => navigate('/admin/user/add')}
-          >
-            <PlusOutlined className="text-lg" />
-            <span>Add account</span>
-          </Button>
-        </div>
+        <DataTable columns={columns} data={filteredItems} />
       </div>
-      <DataTable columns={columns} data={filteredItems} />
-    </div>
+      <Modal></Modal>
+    </>
   )
 }

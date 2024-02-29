@@ -1,9 +1,9 @@
-import { AccountType, UserGenderType, UserRole } from '@/@types/admin.type'
+import { AccountType, UserGenderType, UserRole, UserVerifyStatus } from '@/@types/admin.type'
 import { EditFilled } from '@ant-design/icons'
 import { Alert, Button, Form, Radio, Select } from 'antd'
 import { format } from 'date-fns'
 import { useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import FormItem from '../../components/FormItem'
 import { InputProps } from '../../components/FormItem/FormItem'
@@ -21,16 +21,12 @@ const UpdateAccount = () => {
 
   const onFinish = async (values: AccountType) => {
     const loadingToast = toast.loading('Updating Account')
-    const { username, fullName, phone, email, password, confirm_password, role, date_of_birth, address, gender } =
-      values
+    const { username, fullName, phone, role, date_of_birth, address, gender } = values
     try {
       const res = await requestApi(`auth/update-user/${data._id}`, 'PUT', {
         username,
         fullName,
         phone,
-        email,
-        password,
-        confirm_password,
         role,
         date_of_birth,
         address,
@@ -106,65 +102,6 @@ const UpdateAccount = () => {
       ],
     },
     {
-      name: 'email',
-      label: 'Email',
-      rules: [
-        {
-          type: 'email',
-          message: (
-            <Alert className="bg-transparent text-base text-red-700" message="Email not valid!" banner type="error" />
-          ),
-        },
-      ],
-    },
-    {
-      name: 'password',
-      label: 'Password',
-      required: false,
-      rules: [
-        {
-          pattern: regexPasswordPattern,
-          message: (
-            <Alert
-              className="bg-transparent text-base text-red-700"
-              message="Password not valid!"
-              banner
-              type="error"
-            />
-          ),
-        },
-      ],
-    },
-    {
-      name: 'confirm_password',
-      label: 'Confirm Password',
-      required: false,
-      rules: [
-        {
-          pattern: regexPasswordPattern,
-          message: (
-            <Alert
-              className="bg-transparent text-base text-red-700"
-              message="Confirm password not valid!"
-              banner
-              type="error"
-            />
-          ),
-        },
-      ],
-    },
-    {
-      name: 'role',
-      label: 'Role',
-      children: (
-        <Select className="h-12 text-white text-md border-[2px] rounded-lg">
-          <Select.Option value={UserRole.User}>{UserRole.User}</Select.Option>
-          <Select.Option value={UserRole.Moderator}>{UserRole.Moderator}</Select.Option>
-          <Select.Option value={UserRole.Admin}>{UserRole.Admin}</Select.Option>
-        </Select>
-      ),
-    },
-    {
       name: 'date_of_birth',
       label: 'Date of Birth',
       placeholder: data.date_of_birth,
@@ -213,6 +150,52 @@ const UpdateAccount = () => {
             Female
           </Radio>
         </Radio.Group>
+      ),
+    },
+    {
+      name: 'bio',
+      label: 'Bio',
+      placeholder: data.bio,
+      rules: [
+        {
+          pattern: /^.{10,255}$/g,
+          message: (
+            <Alert
+              className="bg-transparent text-base text-red-700"
+              message="Address is not valid"
+              banner
+              type="error"
+            />
+          ),
+        },
+      ],
+    },
+    {
+      name: 'website',
+      label: 'Website',
+      placeholder: data.website,
+    },
+    {
+      name: 'role',
+      label: 'Role',
+      children: (
+        <Select className="h-12 text-white text-md border-[2px] rounded-lg">
+          <Select.Option value={UserRole.User}>{UserRole.User}</Select.Option>
+          <Select.Option value={UserRole.Moderator}>{UserRole.Moderator}</Select.Option>
+          <Select.Option value={UserRole.Admin}>{UserRole.Admin}</Select.Option>
+        </Select>
+      ),
+    },
+    {
+      name: 'verify',
+      label: 'Status',
+      children: (
+        <Select className="h-12 text-white text-md border-[2px] rounded-lg">
+          <Select.Option value={UserVerifyStatus.Unverified}>{UserVerifyStatus.Unverified}</Select.Option>
+          <Select.Option value={UserVerifyStatus.Verified}>{UserVerifyStatus.Verified}</Select.Option>
+          <Select.Option value={UserVerifyStatus.Celerity}>{UserVerifyStatus.Celerity}</Select.Option>
+          <Select.Option value={UserVerifyStatus.Banned}>{UserVerifyStatus.Banned}</Select.Option>
+        </Select>
       ),
     },
   ]
@@ -264,6 +247,10 @@ const UpdateAccount = () => {
           {
             name: ['role'],
             value: data.role,
+          },
+          {
+            name: ['verify'],
+            value: data.verify,
           },
           {
             name: ['date_of_birth'],
