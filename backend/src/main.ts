@@ -9,13 +9,13 @@ import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import rootRouter from './routes'
 import { rateLimiterMiddleware } from './middlewares/rateLimiter.middleware'
-import { logServices } from './services/connectLogs.service'
 import { databaseService } from './services/connectDB.service'
 import { defaultErrorHandler } from './middlewares/errors.middleware'
 import exitHook from 'async-exit-hook'
 import { DATABASE_MESSAGE } from './constants/message'
 import swaggerJSDoc from 'swagger-jsdoc'
 import swaggerUi from 'swagger-ui-express'
+import { Server } from 'socket.io'
 
 const options: swaggerJSDoc.Options = {
   definition: {
@@ -51,6 +51,13 @@ const options: swaggerJSDoc.Options = {
 const app = express()
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(options)))
 const httpServer = createServer(app)
+
+const io = new Server(httpServer)
+
+io.on('connection', (socket) => {
+  console.log('socket connected')
+})
+
 // logServices.connect()
 // app.use((req, res, next) => logServices.logRequest(req, res, next))
 app.use(
@@ -107,4 +114,5 @@ exitHook(() => {
   // console.log(DATABASE_MESSAGE.DB_LOGS.DISCONNECT)
 })
 
+export { io }
 export default app

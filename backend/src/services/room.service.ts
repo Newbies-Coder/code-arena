@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb'
 import { PaginationType, ParsedGetAllMessageUrlQuery, ParsedGetAllRoomUrlQuery } from '~/@types/reponse.type'
 import { env } from '~/config/environment.config'
 import { VALIDATION_MESSAGES } from '~/constants/message'
+import { io } from '~/main'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import {
   BanMemberBody,
@@ -181,14 +182,16 @@ class RoomService {
       })
     }
 
-    await databaseService.messages.insertOne(
-      new Message({
-        sender: new ObjectId(userId),
-        room: roomId,
-        content,
-        attachments
-      })
-    )
+    const message = new Message({
+      sender: new ObjectId(userId),
+      room: roomId,
+      content,
+      attachments
+    })
+
+    await databaseService.messages.insertOne(message)
+
+    io.to(roomId.toString()).emit('message', message)
   }
 
   async deleteMessage(messageId: ObjectId) {
