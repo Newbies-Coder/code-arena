@@ -24,7 +24,7 @@ export default function MainUser() {
     ;(async () => {
       try {
         const res = await requestApi('auth', 'get', null)
-        setData(res.data.data.items)
+        setData(res.data.data)
       } catch (error) {
         handleApiError(error)
       }
@@ -67,7 +67,7 @@ export default function MainUser() {
     },
     {
       title: 'Status',
-      dataIndex: 'status',
+      dataIndex: 'verify',
       render: (text: string) => <VerifyStatus name={text} />,
       width: 120,
       className: 'text-sm',
