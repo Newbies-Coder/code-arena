@@ -240,7 +240,8 @@ export const VALIDATION_MESSAGES = {
       BIO_MUST_BE_A_STRING: 'Bio must be a string',
       BIO_LENGTH_MUST_BE_FROM_5_TO_500: 'Bio must be between 5 and 500 characters long',
       VERIFY_STATUS_MUST_BE_A_STRING: 'Verify status must be a string',
-      INVALID_VERIFY_STATUS: 'Status must be one of the following: Verified, Unverified, Celerity,Banned'
+      INVALID_VERIFY_STATUS: 'Status must be one of the following: Verified, Unverified, Celerity,Banned',
+      ACCOUNT_NOT_EXISTS: "The user's account has been removed."
     }
   },
   USER: {

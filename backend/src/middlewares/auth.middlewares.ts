@@ -509,28 +509,12 @@ export const updateUserByAdminValidator = validate(
         optional: true,
         isString: {
           errorMessage: VALIDATION_MESSAGES.ADMIN.CREATE_USER.BIO_MUST_BE_A_STRING
-        },
-        isLength: {
-          options: {
-            min: 5,
-            max: 500
-          },
-          errorMessage: VALIDATION_MESSAGES.ADMIN.CREATE_USER.BIO_LENGTH_MUST_BE_FROM_5_TO_500
         }
       },
       website: {
         optional: true,
         isString: {
           errorMessage: VALIDATION_MESSAGES.ADMIN.CREATE_USER.URL_MUST_BE_A_STRING
-        },
-        isURL: {
-          options: {
-            protocols: ['http', 'https'],
-            require_tld: true,
-            require_protocol: true,
-            allow_underscores: false
-          },
-          errorMessage: VALIDATION_MESSAGES.ADMIN.CREATE_USER.INVALID_URL
         }
       }
     },
