@@ -2,35 +2,50 @@ import { Button, Input, Menu, Modal } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { ColumnsType } from 'antd/es/table'
 import VerifyStatus from '@/components/VerifyStatus'
-import { DeleteOutlined, DownOutlined, EditOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
+import {
+  DeleteOutlined,
+  DownOutlined,
+  EditOutlined,
+  ExclamationCircleFilled,
+  PlusOutlined,
+  SearchOutlined,
+} from '@ant-design/icons'
 import DataTable from '../../components/DataTable'
 import { UserDataType } from '@/@types/admin.type'
-import './style.scss'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import requestApi from '@/utils/interceptors'
 import { handleApiError } from '@/utils/handleApiError'
+import './style.scss'
+import { toast } from 'react-toastify'
+const { confirm } = Modal
 
-const roles = ['All', 'Admin', 'User', 'Moderator']
+// Define the list of user roles
+const userRoles = ['All', 'Admin', 'User', 'Moderator']
+
 export default function MainUser() {
   const navigate = useNavigate()
-  const [data, setData] = useState<UserDataType[]>([])
-  const [roleSelected, setRoleSelected] = useState(0)
-  const [isOpen, setIsOpen] = useState(false)
-  const [queryRole, setQueryRole] = useState(roles[0])
-  const [queryIdOrUsername, setQueryIdOrUsername] = useState('')
-  const inputRef = useRef(null)
 
+  // Set up state variables for user data, selected user role, whether the role menu is open, the role filter value, and the search query
+  const [userData, setUserData] = useState<UserDataType[]>([])
+  const [selectedUserRole, setSelectedUserRole] = useState(0)
+  const [isRoleMenuOpen, setIsRoleMenuOpen] = useState(false)
+  const [roleFilterValue, setRoleFilterValue] = useState(userRoles[0])
+  const [searchQuery, setSearchQuery] = useState('')
+  const searchInputRef = useRef(null)
+
+  // Fetch user data when the component mounts
   useEffect(() => {
     ;(async () => {
       try {
         const res = await requestApi('auth', 'get', null)
-        setData(res.data.data)
+        setUserData(res.data.data)
       } catch (error) {
         handleApiError(error)
       }
     })()
   }, [])
 
+  // Define the columns for the data table
   const columns: ColumnsType<UserDataType> = [
     {
       title: 'ID',
@@ -85,7 +100,11 @@ export default function MainUser() {
           >
             <EditOutlined />
           </Button>
-          <Button className="flex justify-center items-center text-white text-lg" type="text">
+          <Button
+            className="flex justify-center items-center text-white text-lg"
+            type="text"
+            onClick={() => deleteUser(id)}
+          >
             <DeleteOutlined />
           </Button>
         </div>
@@ -94,34 +113,66 @@ export default function MainUser() {
     },
   ]
 
+  // Define the deleteUser function to delete a user by ID
+  const deleteUser = (id: string) => {
+    confirm({
+      title: 'Confirm Delete',
+      icon: <ExclamationCircleFilled />,
+      content: 'Do you want to delete this user?',
+      onOk() {
+        ;(async () => {
+          const loadingDelete = toast.loading('Deleting user...')
+          try {
+            await requestApi(`auth/delete-user?id=${id}`, 'delete', {})
+            setUserData(userData.filter((item) => item._id !== id))
+            toast.update(loadingDelete, {
+              render: 'Delete user is successful!',
+              type: 'success',
+              isLoading: false,
+              autoClose: 3000,
+            })
+          } catch (error) {
+            handleApiError(error)
+          }
+        })()
+      },
+      onCancel() {
+        return
+      },
+      okButtonProps: { style: { backgroundColor: '#8001ff' } },
+    })
+  }
+
+  // Use the useMemo hook to filter the user data based on the role filter value and search query
   const filteredItems = useMemo(() => {
-    const users = data.filter((user) => user._destroy === false)
-    if (queryRole === roles[0]) {
+    const users = userData.filter((user) => user._destroy === false)
+    if (roleFilterValue === userRoles[0]) {
       return users.filter((item) => {
         return (
-          (item._destroy === false && item.username.toLowerCase().includes(queryIdOrUsername.toLowerCase())) ||
-          item._id.toLowerCase().includes(queryIdOrUsername.toLowerCase())
+          (item._destroy === false && item.username.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          item._id.toLowerCase().includes(searchQuery.toLowerCase())
         )
       })
     }
     return users.filter((item) => {
       return (
-        item.role === queryRole &&
-        (item.username.toLowerCase().includes(queryIdOrUsername.toLowerCase()) ||
-          item._id.toLowerCase().includes(queryIdOrUsername.toLowerCase()))
+        item.role === roleFilterValue &&
+        (item.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item._id.toLowerCase().includes(searchQuery.toLowerCase()))
       )
     })
-  }, [data, queryRole, queryIdOrUsername])
+  }, [userData, roleFilterValue, searchQuery])
 
-  const handleMenuClick = (e: { key: React.Key }) => {
+  // Define the handleRoleMenuClick function to handle clicks on the role menu items
+  const handleRoleMenuClick = (e: { key: React.Key }) => {
     const index = Number(e.key)
-    setRoleSelected(Number(e.key))
-    setIsOpen(false)
-    setQueryRole(roles[index])
+    setSelectedUserRole(Number(e.key))
+    setIsRoleMenuOpen(false)
+    setRoleFilterValue(userRoles[index])
   }
 
   return (
-    <>
+    <div className="main-user">
       <div className="px-10 py-5">
         <div className="flex flex-col gap-2 lg:flex-row justify-between mb-4 h-full">
           <div className="min-w-[300px]">
@@ -130,16 +181,16 @@ export default function MainUser() {
               <Button
                 className="w-full h-11 flex flex-row-reverse items-center justify-between text-white"
                 icon={<DownOutlined />}
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() => setIsRoleMenuOpen(!isRoleMenuOpen)}
               >
-                {roles[roleSelected]}
+                {userRoles[selectedUserRole]}
               </Button>
-              {isOpen && (
+              {isRoleMenuOpen && (
                 <Menu
-                  onClick={handleMenuClick}
+                  onClick={handleRoleMenuClick}
                   className="absolute mt-2 left-0 right-0 rounded-lg z-10 shadow-gray-400"
                 >
-                  {roles.map((item, key) => (
+                  {userRoles.map((item, key) => (
                     <Menu.Item key={key}>{item}</Menu.Item>
                   ))}
                 </Menu>
@@ -156,8 +207,8 @@ export default function MainUser() {
                 }
                 classNames={{ input: 'bg-transparent text-white placeholder:text-gray-400' }}
                 placeholder="Enter keyword"
-                ref={inputRef}
-                onChange={(e) => setQueryIdOrUsername(e.target.value)}
+                ref={searchInputRef}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <Button
@@ -172,7 +223,6 @@ export default function MainUser() {
         </div>
         <DataTable columns={columns} data={filteredItems} />
       </div>
-      <Modal></Modal>
-    </>
+    </div>
   )
 }

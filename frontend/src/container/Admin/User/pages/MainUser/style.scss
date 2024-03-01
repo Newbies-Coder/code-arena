@@ -1,14 +1,18 @@
-:where(.css-dev-only-do-not-override-yx0vrs) {
-  button:hover {
-    background-color: #8001ff !important;
-    opacity: 80 !important;
+.main-user {
+  :where(.css-dev-only-do-not-override-yx0vrs) {
+    button:hover {
+      background-color: #8001ff !important;
+      opacity: 80 !important;
+    }
   }
-}
 
-.ant-pagination-item {
-  background-color: white !important;
-}
+  .ant-pagination-item {
+    background-color: white !important;
+  }
 
-.ant-pagination-item-link {
-  color: #ccc !important;
+  .ant-pagination-item-link {
+    color: #ccc !important;
+  }
+
+
 }
