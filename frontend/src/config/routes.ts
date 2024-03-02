@@ -13,7 +13,7 @@ const routes: routeTypes = {
   notFound: '*',
   detailCoding: '/detail-coding',
   admin: {
-    home: '/admin',
+    home: '/admin/dashboard',
     login: '/admin/login',
     resetPassword: '/admin/reset-password',
     createNewPassword: '/admin/create-new-password',
@@ -24,6 +24,9 @@ const routes: routeTypes = {
     addUser: '/admin/user/add',
     updateUser: '/admin/user/update/:userID',
     loginInfo: '/admin/user/login-info',
+    banner: '/admin/banner',
+    addBanner: '/admin/add-banner',
+    updateBanner: '/admin/update-banner',
   },
 } as const
 

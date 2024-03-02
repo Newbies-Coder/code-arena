@@ -1,9 +1,10 @@
 import { MenuItemType, MenuType } from '@/@types/admin.type'
 import clsx from 'clsx'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 export default function Menu(props: MenuType) {
+  const location = useLocation()
   const [menu, setMenu] = useState(props.items)
   const handleItemActive = (index: number) => {
     const menuUpdate = [...props.items]
@@ -19,9 +20,9 @@ export default function Menu(props: MenuType) {
             to={item.link}
             className={clsx([
               'flex justify-between items-center w-full p-1 text-sm font-semibold',
-              item.active && 'rounded-r-3xl',
+              location.pathname.includes(item.link) && 'rounded-r-3xl',
             ])}
-            style={item.active ? { backgroundColor: item.color } : {}}
+            style={location.pathname.includes(item.link) ? { backgroundColor: item.color } : {}}
           >
             <span className="ml-4">{!props.collapsed && item.label}</span>
             <div className={clsx(['p-2', item.active && `bg-black rounded-full`])}>{item.icon}</div>

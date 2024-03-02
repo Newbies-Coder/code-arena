@@ -21,6 +21,9 @@ const ProfileAdmin = React.lazy(() => import('@/container/Admin/Profile/pages/Ma
 const UserAdmin = React.lazy(() => import('@/container/Admin/User/pages/MainUser'))
 const AddUserAdmin = React.lazy(() => import('@/container/Admin/User/pages/AddAccount'))
 const UpdateUserAdmin = React.lazy(() => import('@/container/Admin/User/pages/UpdateAccount'))
+const Banner = React.lazy(() => import('@/container/Admin/Banner/pages/MainBanner'))
+const AddBanner = React.lazy(() => import('@/container/Admin/Banner/pages/AddBanner'))
+const UpdateBanner = React.lazy(() => import('@/container/Admin/Banner/pages/UpdateBanner'))
 const LoginInfoAdmin = React.lazy(() => import('@/container/Admin/User/pages/LoginInfo'))
 const CourseAdmin = React.lazy(() => import('@/container/Admin/Course/pages/MainCourse'))
 const MessageAdmin = React.lazy(() => import('@/container/Admin/Message/pages/MainMessage'))
@@ -129,6 +132,21 @@ const privateRoute = [
   {
     path: config.routes.admin.loginInfo,
     component: LoginInfoAdmin,
+    layout: LayoutAdmin,
+  },
+  {
+    path: config.routes.admin.banner,
+    component: Banner,
+    layout: LayoutAdmin,
+  },
+  {
+    path: config.routes.admin.addBanner,
+    component: AddBanner,
+    layout: LayoutAdmin,
+  },
+  {
+    path: config.routes.admin.updateBanner,
+    component: UpdateBanner,
     layout: LayoutAdmin,
   },
 ]

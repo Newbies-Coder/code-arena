@@ -14,7 +14,13 @@ import './style.scss'
 import { ArrowRightOutlined } from '@ant-design/icons'
 
 const items: MenuItemType[] = [
-  { label: 'Dashboard', icon: <DashboardIcon color="#00D1FF" />, link: '/admin', active: false, color: '#00D1FF' },
+  {
+    label: 'Dashboard',
+    icon: <DashboardIcon color="#00D1FF" />,
+    link: '/admin/dashboard',
+    active: false,
+    color: '#00D1FF',
+  },
   { label: 'User', icon: <UsersIcon color="#F449F4" />, link: '/admin/user', active: false, color: '#F449F4' },
   { label: 'Course', icon: <CourserIcon color="#FFE500" />, link: '/admin/course', active: false, color: '#FFE500' },
   { label: 'Message', icon: <MessageIcon color="#5F3EBC" />, link: '/admin/message', active: false, color: '#5F3EBC' },
