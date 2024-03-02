@@ -7,30 +7,33 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import FormItem from '../../components/FormItem'
 import { InputProps } from '../../components/FormItem/FormItem'
-import { regexDateOfBirth, regexPasswordPattern } from '@/utils/regex'
+import { regexDateOfBirth } from '@/utils/regex'
 import './style.scss'
 import requestApi from '@/utils/interceptors'
 import { handleApiError } from '@/utils/handleApiError'
 
 const UpdateAccount = () => {
   const location = useLocation()
-  const [data, setData] = useState(location.state as AccountType)
-
-  const [formDisable, setFormDisable] = useState<boolean>(true)
+  const userData = location.state as AccountType
+  const [isFormDisabled, setFormDisabled] = useState<boolean>(true)
   const navigate = useNavigate()
 
-  const onFinish = async (values: AccountType) => {
+  // Defining an asynchronous function to handle form submission
+  const handleFormSubmit = async (values: AccountType) => {
     const loadingToast = toast.loading('Updating Account')
-    const { username, fullName, phone, role, date_of_birth, address, gender } = values
+    const { fullName, username, phone, date_of_birth, address, gender, bio, website, role, verify } = values
     try {
-      const res = await requestApi(`auth/update-user/${data._id}`, 'PUT', {
-        username,
+      const res = await requestApi(`auth/update-user/${userData._id}`, 'PUT', {
         fullName,
+        username,
         phone,
-        role,
         date_of_birth,
         address,
         gender,
+        bio,
+        website,
+        role,
+        verify,
       })
       const { message } = res.data
       toast.update(loadingToast, {
@@ -39,6 +42,7 @@ const UpdateAccount = () => {
         isLoading: false,
         autoClose: 3000,
       })
+      navigate('/admin/user')
     } catch (error) {
       toast.dismiss(loadingToast)
       handleApiError(error)
@@ -47,11 +51,12 @@ const UpdateAccount = () => {
     toast.clearWaitingQueue()
   }
 
-  const inputs: InputProps[] = [
+  // Define an array of input properties for the form
+  const formInputProperties: InputProps[] = [
     {
       name: 'fullName',
       label: 'Full Name',
-      placeholder: data.fullName,
+      placeholder: userData.fullName,
       rules: [
         {
           max: 50,
@@ -69,7 +74,7 @@ const UpdateAccount = () => {
     {
       name: 'username',
       label: 'Username',
-      placeholder: data.username,
+      placeholder: userData.username,
       rules: [
         {
           max: 20,
@@ -104,7 +109,7 @@ const UpdateAccount = () => {
     {
       name: 'date_of_birth',
       label: 'Date of Birth',
-      placeholder: data.date_of_birth,
+      placeholder: userData.date_of_birth,
       rules: [
         {
           pattern: regexDateOfBirth,
@@ -122,7 +127,7 @@ const UpdateAccount = () => {
     {
       name: 'address',
       label: 'Address',
-      placeholder: data.address,
+      placeholder: userData.address,
       rules: [
         {
           pattern: /^.{10,255}$/g,
@@ -140,13 +145,13 @@ const UpdateAccount = () => {
     {
       name: 'gender',
       label: 'Gender',
-      placeholder: data.gender,
+      placeholder: userData.gender,
       children: (
         <Radio.Group className="mt-5 text-white ml-5">
-          <Radio value="Male" className="text-white text-xl" checked={data.gender === UserGenderType.Male}>
+          <Radio value="Male" className="text-white text-xl" checked={userData.gender === UserGenderType.Male}>
             Male
           </Radio>
-          <Radio value="Female" className="text-white text-xl" checked={data.gender === UserGenderType.Female}>
+          <Radio value="Female" className="text-white text-xl" checked={userData.gender === UserGenderType.Female}>
             Female
           </Radio>
         </Radio.Group>
@@ -155,7 +160,8 @@ const UpdateAccount = () => {
     {
       name: 'bio',
       label: 'Bio',
-      placeholder: data.bio,
+      placeholder: userData.bio,
+      required: false,
       rules: [
         {
           pattern: /^.{10,255}$/g,
@@ -173,7 +179,8 @@ const UpdateAccount = () => {
     {
       name: 'website',
       label: 'Website',
-      placeholder: data.website,
+      required: false,
+      placeholder: userData.website,
     },
     {
       name: 'role',
@@ -207,66 +214,62 @@ const UpdateAccount = () => {
         <span>
           <Button
             className="text-white  flex items-center justify-center border border-white"
-            onClick={() => setFormDisable((pre) => !pre)}
+            onClick={() => setFormDisabled((pre) => !pre)}
           >
             <EditFilled />
-            <span className="text-lg">{formDisable ? 'Edit' : 'Not Edit'}</span>
+            <span className="text-lg">{isFormDisabled ? 'Edit' : 'Not Edit'}</span>
           </Button>
         </span>
       </h2>
       <Form
         name="basic"
         className="w-full mt-4 text-white grid gap-4 grid-cols-1 lg:grid-cols-2"
-        disabled={formDisable}
-        onFinish={onFinish}
+        disabled={isFormDisabled}
+        onFinish={handleFormSubmit}
         fields={[
           {
             name: ['fullName'],
-            value: data.fullName,
+            value: userData.fullName,
           },
           {
             name: ['username'],
-            value: data.username,
+            value: userData.username,
           },
           {
             name: ['phone'],
-            value: data.phone,
-          },
-          {
-            name: ['email'],
-            value: data.email,
-          },
-          {
-            name: ['password'],
-            value: data.password,
-          },
-          {
-            name: ['confirm_password'],
-            value: data.confirm_password,
-          },
-          {
-            name: ['role'],
-            value: data.role,
-          },
-          {
-            name: ['verify'],
-            value: data.verify,
+            value: userData.phone,
           },
           {
             name: ['date_of_birth'],
-            value: data.date_of_birth ? format(data.date_of_birth, 'dd-MM-yyyy') : '',
+            value: userData.date_of_birth ? format(userData.date_of_birth, 'yyyy-MM-dd') : '',
           },
           {
             name: ['address'],
-            value: data.address,
+            value: userData.address,
           },
           {
             name: ['gender'],
-            value: data.gender,
+            value: userData.gender,
+          },
+          {
+            name: ['bio'],
+            value: userData.bio,
+          },
+          {
+            name: ['website'],
+            value: userData.website,
+          },
+          {
+            name: ['role'],
+            value: userData.role,
+          },
+          {
+            name: ['verify'],
+            value: userData.verify,
           },
         ]}
       >
-        {inputs.map((item, index) => (
+        {formInputProperties.map((item, index) => (
           <FormItem
             key={index}
             name={item.name}
