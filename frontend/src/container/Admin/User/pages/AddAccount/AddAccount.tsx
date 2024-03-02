@@ -1,6 +1,6 @@
 import { AccountType, UserRole } from '@/@types/admin.type'
 import { Alert, Button, Form, Radio, Select } from 'antd'
-import FormItem, { InputProps } from '../../components/FormItem/FormItem'
+import FormItem, { InputProps } from '@components/FormItem/FormItem'
 import { regexDateOfBirth, regexPasswordPattern } from '@/utils/regex'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
