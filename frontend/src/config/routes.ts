@@ -25,8 +25,8 @@ const routes: routeTypes = {
     updateUser: '/admin/user/update/:userID',
     loginInfo: '/admin/user/login-info',
     banner: '/admin/banner',
-    addBanner: '/admin/add-banner',
-    updateBanner: '/admin/update-banner',
+    addBanner: '/admin/banner/add',
+    updateBanner: '/admin/banner/update/:bannerID',
   },
 } as const
 

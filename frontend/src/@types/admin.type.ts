@@ -72,3 +72,11 @@ export type ProfileDataType = {
   avatar: string
   cover_photo: string
 }
+
+export type BannerDataType = {
+  _id: string
+  user_id: string
+  url: string
+  slug: string
+  description: string
+}
