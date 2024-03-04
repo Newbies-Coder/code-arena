@@ -74,6 +74,13 @@ export const friendList: FriendType[] = [
   { key: 6, name: 'Anne Couture', status: 'online' },
   { key: 7, name: 'Anne Couture', status: 'online' },
   { key: 8, name: 'Anne Couture', status: 'online' },
+  { key: 9, name: 'Anne Couture', status: 'online' },
+  { key: 10, name: 'Anne Couture', status: 'online' },
+  { key: 11, name: 'Anne Couture', status: 'online' },
+  { key: 12, name: 'Anne Couture', status: 'online' },
+  { key: 13, name: 'Anne Couture', status: 'online' },
+  { key: 14, name: 'Anne Couture', status: 'online' },
+  { key: 15, name: 'Anne Couture', status: 'online' },
 ]
 
 export const menuItems: MenuType[] = [
