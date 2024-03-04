@@ -24,7 +24,7 @@ interface RoomT {
 export default class Room {
   _id?: ObjectId
   name: string
-  owner: ObjectId
+  owner?: ObjectId
   type: RoomType
   isPrivate: boolean
   pinnedMessage?: ObjectId

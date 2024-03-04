@@ -27,11 +27,11 @@ const roomController = {
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.CREATE)
   },
   updateRoom: async (req: Request<ParamsDictionary, any, UpdateRoomBody, ParsedUrlQuery>, res: Response, next: NextFunction) => {
-    const result = await roomService.updateRoom(req.user._id, new ObjectId(req.params.id), req.body)
+    const result = await roomService.updateRoom(new ObjectId(req.params.id), req.body)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.UPDATE)
   },
   deleteRoom: async (req: Request<ParamsDictionary, any, any, ParsedUrlQuery>, res: Response, next: NextFunction) => {
-    const result = await roomService.deleteRoom(req.user._id, new ObjectId(req.params.id))
+    const result = await roomService.deleteRoom(new ObjectId(req.params.id))
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.DELETE)
   },
   makeRoomPrivate: async (req: Request<ParamsDictionary, any, MakeRoomPrivateBody, ParsedUrlQuery>, res: Response, next: NextFunction) => {
@@ -72,11 +72,11 @@ const roomController = {
   },
   changeAvatar: async (req: Request<ParamsDictionary, any, DismissMessageBody, ParsedUrlQuery>, res: Response, next: NextFunction) => {
     const result = await roomService.changeAvatar(new ObjectId(req.params.id), req.file)
-    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.DISMISS_MESSAGE)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.CHANGE_AVATAR)
   },
   changeBackground: async (req: Request<ParamsDictionary, any, DismissMessageBody, ParsedUrlQuery>, res: Response, next: NextFunction) => {
     const result = await roomService.changeBackground(new ObjectId(req.params.id), req.file)
-    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.DISMISS_MESSAGE)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.CHANGE_BACKGROUND)
   }
 }
 

@@ -9,6 +9,7 @@ export interface CreateRoomBody {
 
 export interface UpdateRoomBody {
   name: string
+  emote: string
 }
 
 export interface MakeRoomPrivateBody {
@@ -29,14 +30,14 @@ export interface KickMemberBody {
   memberId: string
 }
 export interface PinMessageBody {
-    messageId: string
+  messageId: string
 }
 
 export interface CreateMessageBody {
-    content: string
-    attachments: Attachment[]
+  content: string
+  attachments: Attachment[]
 }
 
 export interface DismissMessageBody {
-    due_to: string
+  due_to: string
 }

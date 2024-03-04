@@ -5,17 +5,7 @@ import { env } from '~/config/environment.config'
 import { VALIDATION_MESSAGES } from '~/constants/message'
 import { io } from '~/main'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
-import {
-  BanMemberBody,
-  CreateInviteBody,
-  CreateMessageBody,
-  CreateRoomBody,
-  DismissMessageBody,
-  KickMemberBody,
-  MakeRoomPrivateBody,
-  PinMessageBody,
-  UpdateRoomBody
-} from '~/models/requests/Room.request'
+import { BanMemberBody, CreateInviteBody, CreateMessageBody, CreateRoomBody, DismissMessageBody, KickMemberBody, MakeRoomPrivateBody, UpdateRoomBody } from '~/models/requests/Room.request'
 import BannedMember from '~/models/schemas/BannedMember.schema'
 import Invitation from '~/models/schemas/Invitation.schema'
 import Member from '~/models/schemas/Member.schema'
@@ -27,7 +17,6 @@ import { hashRoomPassword } from '~/utils/crypto'
 
 class RoomService {
   private async removeMember(roomId: ObjectId, memberId: ObjectId) {
-    console.log({ roomId, memberId })
     await databaseService.members.deleteOne({ roomId, memberId })
   }
 
@@ -65,7 +54,7 @@ class RoomService {
       name,
       type,
       // Single (direct chat) room can not have an owner
-      owner: type === 'multiple' ? userId : undefined,
+      owner: type === 'multiple' ? new ObjectId(userId) : null,
       isPrivate: false,
       isDeleted: false,
       updated_at: new Date(),
@@ -85,21 +74,29 @@ class RoomService {
     databaseService.members.insertMany(roomMembers)
   }
 
-  async updateRoom(userId: ObjectId, id: ObjectId, { name }: UpdateRoomBody) {
+  async updateRoom(id: ObjectId, { name, emote }: UpdateRoomBody) {
     await databaseService.rooms.updateOne(
-      { _id: new ObjectId(id), owner: userId },
+      { _id: new ObjectId(id) },
       {
         $set: {
           name,
+          emote,
           updated_at: new Date()
         }
       }
     )
   }
 
-  async deleteRoom(userId: ObjectId, id: ObjectId) {
-    await databaseService.rooms.deleteOne({ _id: id, owner: userId })
-    await databaseService.messages.deleteMany({ _id: id })
+  async deleteRoom(id: ObjectId) {
+    await databaseService.rooms.updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $set: {
+          isDeleted: true,
+          updated_at: new Date()
+        }
+      }
+    )
   }
 
   async makeRoomPrivate(id: ObjectId, { password }: MakeRoomPrivateBody) {
@@ -200,7 +197,7 @@ class RoomService {
 
   async dismissMessage(userId: ObjectId, roomId: ObjectId, payload: DismissMessageBody) {
     await databaseService.members.updateOne(
-      { _id: roomId, memberId: userId },
+      { roomId: roomId, memberId: new ObjectId(userId) },
       {
         $set: {
           suppressNotificationTime: new Date(payload.due_to),
@@ -217,7 +214,7 @@ class RoomService {
     }
 
     const { url } = await cloudinaryService.uploadImage(env.cloudinary.room_avatar_folder, file.buffer)
-    await databaseService.rooms.updateOne({ _id: room }, { $set: { avatar: url } })
+    await databaseService.rooms.updateOne({ _id: room._id }, { $set: { avatar: url } })
   }
   async changeBackground(roomId: ObjectId, file: Express.Multer.File) {
     const room = await databaseService.rooms.findOne({ _id: roomId })
@@ -226,7 +223,7 @@ class RoomService {
     }
 
     const { url } = await cloudinaryService.uploadImage(env.cloudinary.room_background_folder, file.buffer)
-    await databaseService.rooms.updateOne({ _id: room }, { $set: { background: url } })
+    await databaseService.rooms.updateOne({ _id: room._id }, { $set: { background: url } })
   }
 }
 

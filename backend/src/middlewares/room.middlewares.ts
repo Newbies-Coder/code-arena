@@ -65,6 +65,13 @@ export const createRoomValidator = validate(
             })
           }
 
+          if (value.length !== new Set(value).size) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_MEMBERS_IS_NOT_UNIQUE
+            })
+          }
+
           for (const id of value) {
             validateObjectId(id, VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID)
 
@@ -121,7 +128,7 @@ export const updateRoomValidator = validate(
           }
 
           if (room.type === 'multiple') {
-            if (room.owner !== req.user._id) {
+            if (room.owner.toString() !== req.user._id) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.FORBIDDEN,
                 message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
@@ -188,7 +195,7 @@ export const changeRoomAvatarValidator = validate(
           }
 
           if (room.type === 'multiple') {
-            if (room.owner !== req.user._id) {
+            if (room.owner.toString() !== req.user._id) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.FORBIDDEN,
                 message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
@@ -223,7 +230,7 @@ export const changeRoomBackgroundValidator = validate(
           }
 
           if (room.type === 'multiple') {
-            if (room.owner !== req.user._id) {
+            if (room.owner.toString() !== req.user._id) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.FORBIDDEN,
                 message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
@@ -258,7 +265,7 @@ export const deleteRoomValidator = validate(
           }
 
           if (room.type === 'multiple') {
-            if (room.owner !== req.user._id) {
+            if (room.owner.toString() !== req.user._id) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.FORBIDDEN,
                 message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
@@ -288,12 +295,19 @@ export const createInviteValidator = validate(
         options: async (value) => {
           validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
 
-          const user = await databaseService.users.findOne({ _id: value })
+          const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
 
-          if (!user) {
+          if (!room) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.NOT_FOUND,
-              message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
+              message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          if (room.type === 'single') {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.CAN_NOT_CREATE_INVITATION_ON_SINGLE_ROOM
             })
           }
 
@@ -309,28 +323,21 @@ export const createInviteValidator = validate(
         options: async (value, { req }) => {
           validateObjectId(value, VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID)
 
-          const room = await databaseService.rooms.findOne({ _id: new ObjectId(req.params.id) })
+          const user = await databaseService.users.findOne({ _id: new ObjectId(value) })
 
-          if (!room) {
+          if (!user) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.NOT_FOUND,
-              message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+              message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
             })
           }
 
-          const member = await databaseService.members.findOne({ roomId: new ObjectId(req.params.id), memberId: new ObjectId(req.user._id) })
+          const member = await databaseService.members.findOne({ roomId: new ObjectId(req.params.id), memberId: new ObjectId(value) })
 
           if (member) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.BAD_REQUEST,
               message: VALIDATION_MESSAGES.ROOM.USER_ALREADY_IN_ROOM
-            })
-          }
-
-          if (room.type === 'single') {
-            throw new ErrorWithStatus({
-              statusCode: StatusCodes.BAD_REQUEST,
-              message: VALIDATION_MESSAGES.ROOM.CAN_NOT_CREATE_INVITATION_ON_SINGLE_ROOM
             })
           }
 
@@ -367,10 +374,17 @@ export const banMemberValidator = validate(
             })
           }
 
-          if (room.owner !== req.user._id) {
+          if (room.owner.toString() !== req.user._id) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.FORBIDDEN,
               message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
+            })
+          }
+
+          if (room.owner.toString() === req.body.memberId) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.CAN_NOT_BAN_OWNER
             })
           }
 
@@ -401,13 +415,6 @@ export const banMemberValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.NOT_FOUND,
               message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
-            })
-          }
-
-          if (room.owner === req.user._id) {
-            throw new ErrorWithStatus({
-              statusCode: StatusCodes.BAD_REQUEST,
-              message: VALIDATION_MESSAGES.ROOM.CAN_NOT_BAN_OWNER
             })
           }
 
@@ -474,10 +481,17 @@ export const kickMemberValidator = validate(
             })
           }
 
-          if (room.owner !== req.user._id) {
+          if (room.owner.toString() !== req.user._id) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.FORBIDDEN,
               message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
+            })
+          }
+
+          if (room.owner.toString() === req.body.memberId) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.CAN_NOT_KICK_OWNER
             })
           }
 
@@ -508,13 +522,6 @@ export const kickMemberValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.NOT_FOUND,
               message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
-            })
-          }
-
-          if (room.owner === req.user._id) {
-            throw new ErrorWithStatus({
-              statusCode: StatusCodes.BAD_REQUEST,
-              message: VALIDATION_MESSAGES.ROOM.CAN_NOT_KICK_OWNER
             })
           }
 
@@ -578,22 +585,12 @@ export const makeRoomPrivateValidator = validate(
       isString: {
         errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_A_STRING
       },
-      isStrongPassword: {
-        options: {
-          minLength: 8,
-          minLowercase: 1,
-          minUppercase: 1,
-          minNumbers: 1,
-          minSymbols: 1
-        },
-        errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_MUST_BE_A_STRING
-      },
       trim: true,
       escape: true,
       isLength: {
         errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16,
         options: {
-          min: 8,
+          min: 4,
           max: 16
         }
       },
@@ -633,13 +630,6 @@ export const makeRoomPrivateValidator = validate(
           }
           return true
         }
-      },
-      isLength: {
-        options: {
-          min: 8,
-          max: 16
-        },
-        errorMessage: VALIDATION_MESSAGES.USER.PASSWORD.CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_16
       }
     }
   })

@@ -174,7 +174,9 @@ export const RESULT_RESPONSE_MESSAGES = {
     PIN_MESSAGE: 'Pin message successfully',
     BAN_MEMBER: 'Ban member successfully',
     KICK_MEMBER: 'Kick member successfully',
-    DISMISS_MESSAGE: 'Dismiss message successfully'
+    DISMISS_MESSAGE: 'Dismiss message successfully',
+    CHANGE_AVATAR: 'Change avatar successfully',
+    CHANGE_BACKGROUND: 'Change background successfully'
   }
 } as const
 
@@ -460,7 +462,8 @@ export const VALIDATION_MESSAGES = {
     ROOM_EMOTE_MUST_BE_A_STRING: 'Room emote must be a string',
     EMOTE_MUST_BE_AN_EMOJI: 'Room emote must be a emoji',
     CAN_NOT_KICK_OWNER: 'Can not kick owner',
-    CAN_NOT_BAN_OWNER: 'Can not ban owner'
+    CAN_NOT_BAN_OWNER: 'Can not ban owner',
+    ROOM_MEMBERS_IS_NOT_UNIQUE: 'Room members must be unique'
   },
   MESSAGE: {
     MESSAGE_ID_IS_REQUIRED: 'Message id is required',
