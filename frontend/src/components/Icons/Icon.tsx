@@ -1422,3 +1422,166 @@ export const CircleHexIcon: React.FC<IconPropsType> = ({ width = '30px', height 
     <path d="M20.7766 15L13.6016 27.425" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
+
+export const MessagePurpleIcon: React.FC<IconPropsType> = ({ width = '25px', height = '25px', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 25 25"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M0 16.6667C0 17.4034 0.29266 18.1099 0.813593 18.6309C1.33453 19.1518 2.04107 19.4444 2.77778 19.4444L19.4444 19.4444L25 25L25 2.77778C25 2.04107 24.7073 1.33453 24.1864 0.813592C23.6655 0.292658 22.9589 0 22.2222 0L2.77778 0C2.04107 0 1.33453 0.292658 0.813593 0.813592C0.29266 1.33453 0 2.04107 0 2.77778L0 16.6667Z"
+      fill="url(#paint0_linear_1629_11522)"
+    />
+    <defs>
+      <linearGradient id="paint0_linear_1629_11522" x1="0" y1="0" x2="25" y2="25" gradientUnits="userSpaceOnUse">
+        <stop offset="0.401304" stopColor="#7753EB" />
+        <stop offset="0.816932" stopColor="#AF4AFC" />
+      </linearGradient>
+    </defs>
+  </svg>
+)
+
+export const PhoneIcon: React.FC<IconPropsType> = ({ width = '25px', height = '25px', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 25 25"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M24.8601 18.6501V22.4001C24.8616 22.7482 24.7902 23.0928 24.6508 23.4118C24.5113 23.7308 24.3068 24.0171 24.0502 24.2525C23.7937 24.4878 23.4909 24.667 23.1611 24.7785C22.8313 24.89 22.4819 24.9315 22.1351 24.9001C18.2887 24.4822 14.5939 23.1678 11.3476 21.0626C8.32743 19.1435 5.76682 16.5828 3.84765 13.5626C1.73512 10.3016 0.42045 6.58886 0.0101459 2.72512C-0.021091 2.37945 0.0199895 2.03107 0.130771 1.70215C0.241553 1.37323 0.419609 1.07098 0.653603 0.814648C0.887597 0.558313 1.1724 0.353508 1.48988 0.213274C1.80737 0.0730394 2.15057 0.00044804 2.49765 0.00012119H6.24765C6.85428 -0.00584937 7.44239 0.208969 7.90235 0.604537C8.36231 1.0001 8.66274 1.54943 8.74765 2.15012C8.90592 3.3502 9.19946 4.52853 9.62265 5.66262C9.79082 6.11003 9.82722 6.59626 9.72753 7.06372C9.62784 7.53118 9.39622 7.96026 9.06015 8.30012L7.47265 9.88762C9.25209 13.0171 11.8432 15.6082 14.9726 17.3876L16.5601 15.8001C16.9 15.464 17.3291 15.2324 17.7965 15.1327C18.264 15.033 18.7502 15.0694 19.1976 15.2376C20.3317 15.6608 21.5101 15.9543 22.7101 16.1126C23.3174 16.1983 23.8719 16.5041 24.2683 16.972C24.6647 17.4399 24.8754 18.0371 24.8601 18.6501Z"
+      fill="#A9ADB3"
+    />
+  </svg>
+)
+
+export const MessIcon: React.FC<IconPropsType> = ({ width = '25px', height = '25px', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 25 25"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M4.85938 4.83398H20.8594C21.9594 4.83398 22.8594 5.92148 22.8594 7.25065V21.7507C22.8594 23.0798 21.9594 24.1673 20.8594 24.1673H4.85938C3.75937 24.1673 2.85938 23.0798 2.85938 21.7507V7.25065C2.85938 5.92148 3.75937 4.83398 4.85938 4.83398Z"
+      stroke="#A9ADB3"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M22.8594 7.25L12.8594 15.7083L2.85938 7.25"
+      stroke="#A9ADB3"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+)
+
+export const FriendIcon: React.FC<IconPropsType> = ({ width = '31px', height = '25px', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 31 25"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M21.8594 23.5V21C21.8594 19.6739 21.3326 18.4021 20.3949 17.4645C19.4572 16.5268 18.1855 16 16.8594 16H6.85938C5.53329 16 4.26152 16.5268 3.32384 17.4645C2.38616 18.4021 1.85938 19.6739 1.85938 21V23.5"
+      stroke="#A9ADB3"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M11.8594 11C14.6208 11 16.8594 8.76142 16.8594 6C16.8594 3.23858 14.6208 1 11.8594 1C9.09795 1 6.85938 3.23858 6.85938 6C6.85938 8.76142 9.09795 11 11.8594 11Z"
+      stroke="#A9ADB3"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M29.3594 23.4996V20.9996C29.3585 19.8918 28.9898 18.8156 28.3111 17.94C27.6323 17.0644 26.682 16.4391 25.6094 16.1621"
+      stroke="#A9ADB3"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M20.6094 1.16211C21.6849 1.43749 22.6382 2.06299 23.3189 2.94C23.9997 3.81701 24.3692 4.89565 24.3692 6.00586C24.3692 7.11607 23.9997 8.19471 23.3189 9.07172C22.6382 9.94873 21.6849 10.5742 20.6094 10.8496"
+      stroke="#A9ADB3"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+)
+
+export const VideoIcon: React.FC<IconPropsType> = ({ width = '25px', height = '25px', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M23 7L16 12L23 17V7Z" stroke="#A9ADB3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M14 5H3C1.89543 5 1 5.89543 1 7V17C1 18.1046 1.89543 19 3 19H14C15.1046 19 16 18.1046 16 17V7C16 5.89543 15.1046 5 14 5Z"
+      stroke="#A9ADB3"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+)
+
+export const MoreIcon: React.FC<IconPropsType> = ({ width = '28px', height = '6px', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 28 6"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle cx="3" cy="3" r="3" transform="rotate(-90 3 3)" fill="#A9ADB3" />
+    <circle cx="14" cy="3" r="3" transform="rotate(-90 14 3)" fill="#A9ADB3" />
+    <circle opacity="0.6" cx="25" cy="3" r="3" transform="rotate(-90 25 3)" fill="#A9ADB3" />
+  </svg>
+)
+
+export const AddIcon: React.FC<IconPropsType> = ({ width = '30px', height = '30px', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 31 30"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M15.5 30C23.7843 30 30.5 23.2843 30.5 15C30.5 6.71573 23.7843 0 15.5 0C7.21573 0 0.5 6.71573 0.5 15C0.5 23.2843 7.21573 30 15.5 30Z"
+      fill="url(#paint0_linear_1629_11563)"
+    />
+    <path d="M15.5 9V21" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M9.5 15H21.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <defs>
+      <linearGradient id="paint0_linear_1629_11563" x1="25.5" y1="25.5" x2="7" y2="5" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#A231FA" />
+        <stop offset="1" stopColor="#7753EB" />
+      </linearGradient>
+    </defs>
+  </svg>
+)

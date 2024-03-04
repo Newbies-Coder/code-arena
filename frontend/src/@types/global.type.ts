@@ -12,6 +12,7 @@ export type routeTypes = {
   admin: routeAdminTypes
   detailCoding: string
   resetPassword: string
+  chat: string
 }
 
 export type routeAdminTypes = {

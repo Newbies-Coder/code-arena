@@ -1,5 +1,7 @@
 import { Carousel } from 'antd'
 import './style.scss'
+import { useEffect, useState } from 'react'
+import requestApi from '@/utils/interceptors'
 const contentStyle: React.CSSProperties = {
   color: '#fff',
   borderRadius: '20px',
@@ -8,33 +10,39 @@ const contentStyle: React.CSSProperties = {
   width: '100%',
 }
 
+type bannerType = {
+  created_at: string
+  description: string
+  slug: string
+  update_at: string
+  url: string
+  user_id: string
+  _destroy: boolean
+  _id: string
+}
+
 const CarouselItem = () => {
+  const [imgArray, setImgArray] = useState<bannerType[]>([])
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const res = await requestApi('banners', 'GET', {})
+        const { items } = res.data.data
+        setImgArray(items)
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+  }, [])
   return (
     <Carousel autoplay>
-      <div>
-        <img
-          style={contentStyle}
-          src="https://images.unsplash.com/photo-1682685797507-d44d838b0ac7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        />
-      </div>
-      <div>
-        <img
-          style={contentStyle}
-          src="https://images.unsplash.com/photo-1701893852514-e079530f6bb8?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        />
-      </div>
-      <div>
-        <img
-          style={contentStyle}
-          src="https://images.unsplash.com/photo-1682695797221-8164ff1fafc9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        />
-      </div>
-      <div>
-        <img
-          style={contentStyle}
-          src="https://images.unsplash.com/photo-1701941258075-ae093a5f0185?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        />
-      </div>
+      {imgArray.map((item) => {
+        return (
+          <div key={item._id}>
+            <img style={contentStyle} src={item.url} />
+          </div>
+        )
+      })}
     </Carousel>
   )
 }

@@ -13,6 +13,7 @@ const NotFoundPage = React.lazy(() => import('@components/NotFound'))
 const DetailCodingPage = React.lazy(() => import('@container/Detail/pages/MainDetail'))
 const ProfilePage = React.lazy(() => import('@container/Profile/pages/MainProfile'))
 const ResetPassword = React.lazy(() => import('@container/Auth/pages/ResetPassword'))
+const Chat = React.lazy(() => import('@container/Chat/pages/ChatPage/ChatPage'))
 
 const HomePageAdmin = React.lazy(() => import('@/container/Admin/Home/pages/MainHome'))
 const LoginAdmin = React.lazy(() => import('@container/Admin/Auth/pages/Login'))
@@ -83,6 +84,10 @@ const publicRoute = [
   {
     path: config.routes.admin.login,
     component: LoginAdmin,
+  },
+  {
+    path: config.routes.chat,
+    component: Chat,
   },
 ]
 

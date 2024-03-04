@@ -10,9 +10,6 @@ import {
   setStore,
 } from './setting'
 
-const token = getStore(ACCESS_TOKEN)
-const refresh = getCookie(REFRESH_TOKEN)
-
 export default function requestApi(endpoint: string, method: string, body: any, header?: any) {
   const defaultHeaders = {
     Accept: 'application/json',
@@ -30,6 +27,7 @@ export default function requestApi(endpoint: string, method: string, body: any, 
   // set up send request
   instance.interceptors.request.use(
     (config: any) => {
+      const token = getStore(ACCESS_TOKEN)
       if (token) {
         config.headers = {
           ...config.headers,
@@ -50,9 +48,10 @@ export default function requestApi(endpoint: string, method: string, body: any, 
     },
     async (err) => {
       const originalResponse = err.config
-
+      const access = getStore(ACCESS_TOKEN)
+      const refresh = getCookie(REFRESH_TOKEN)
       //access token expires => status code 401
-      if (err.response && err.response.status === 401 && refresh && token) {
+      if (err.response && err.response.status === 401 && refresh && access) {
         try {
           const result = await instance.post('http://localhost:8080/api/v1/users/refresh-token', {
             refresh_token: refresh,

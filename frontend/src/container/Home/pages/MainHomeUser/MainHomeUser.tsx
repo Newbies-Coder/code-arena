@@ -9,7 +9,7 @@ const { Content } = Layout
 
 const MainHome = () => {
   return (
-    <div className="wrapper p-0 m-0">
+    <div>
       <Layout style={{ height: '100%' }}>
         <div>
           <HeaderItem />

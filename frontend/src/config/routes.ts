@@ -13,6 +13,7 @@ const routes: routeTypes = {
   notFound: '*',
   detailCoding: '/detail-coding',
   resetPassword: '/reset-password',
+  chat: '/chat',
   admin: {
     home: '/admin',
     login: '/admin/login',

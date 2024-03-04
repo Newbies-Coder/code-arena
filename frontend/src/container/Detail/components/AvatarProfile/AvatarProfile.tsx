@@ -47,13 +47,8 @@ const AvatarProfile = () => {
       type: 'divider',
     },
     {
-      label: <a href="/login">Login</a>,
-      key: '2',
-      style: { width: '150px' },
-    },
-    {
       label: 'Log out',
-      key: '3',
+      key: '2',
       style: { width: '150px' },
       onClick: handleLogout,
     },

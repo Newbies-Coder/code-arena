@@ -38,6 +38,9 @@ root.render(
               Radio: {
                 dotSize: 10,
               },
+              Badge: {
+                indicatorHeight: 15,
+              },
             },
           }}
         >

@@ -1,7 +1,7 @@
 import { Header } from 'antd/es/layout/layout'
 import { HomeIcon, LiPurpleLineIcon, NoNotiIcon, SearchIcon, SettingIcon } from '../Icons'
 import { DownOutlined, MailOutlined } from '@ant-design/icons'
-import { Button, Drawer, Dropdown, Input, MenuProps, Popover, Space, message } from 'antd'
+import { Avatar, Badge, Button, Drawer, Dropdown, Input, MenuProps, Popover, Space, message } from 'antd'
 import { HOME_ICON, LOGO } from '@/constants/images'
 import { useState } from 'react'
 import AvatarProfile from '@/container/Detail/components/AvatarProfile'
@@ -31,7 +31,7 @@ const items: MenuProps['items'] = [
 
 const content = (
   <div>
-    <p>Content</p>
+    <p>long long Content</p>
     <p>Content</p>
   </div>
 )
@@ -135,8 +135,10 @@ const HeaderItem: React.FC<HeaderType> = ({ classNameInput }) => {
                   onOpenChange={handleOpenChange}
                   className="xs:hidden xss:block"
                 >
-                  <Button className="h-10 w-10 px-2 mx-1 rounded-full border-purple-700">
-                    <MailOutlined className="text-white pb-2" />
+                  <Button className="h-10 w-10 px-2 mx-3 rounded-full border-purple-700">
+                    <Badge count={99}>
+                      <Avatar shape="circle" size="small" icon={<MailOutlined />} />
+                    </Badge>
                   </Button>
                 </Popover>
                 <AvatarProfile />
