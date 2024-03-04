@@ -43,7 +43,12 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
       secretOrPublicKey: env.jwt.secret_key
     })
 
-    req.user = user
+    req.user = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role
+    }
     return next()
   } catch (error) {
     throw new ErrorWithStatus({ statusCode: StatusCodes.UNAUTHORIZED, message: error.message })

@@ -6,11 +6,11 @@ dotenv.config()
 
 let { PORT, HOST } = ENV_MESSAGE
 let { DB_LOGS, DB_MAIN } = DATABASE_MESSAGE
-let { REQ_DURATION, REQ_POINT, COOKIES_EXPIRES_IN, SECRET_COOKIE_NAME, PASSWORD_SECRET, OTP_SECRET } = CLIENT_MESSAGE
+let { REQ_DURATION, REQ_POINT, COOKIES_EXPIRES_IN, SECRET_COOKIE_NAME, PASSWORD_SECRET, ROOM_PASSWORD_SECRET, OTP_SECRET } = CLIENT_MESSAGE
 let { JWT_SECRET_KEY, JWT_ALGORITHM, JWT_REFRESH_TOKEN_KEY, ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } = JWT_MESSAGES
 let { OTP_EMAIL_ACCOUNT, OTP_EMAIL_PASSWORD, OTP_EMAIL_NAME } = OTP_EMAIL_MESSAGES
 let { MAX_ITEM_PER_PAGE } = REQUEST_QUERY_MESSAGES
-let { CLOUDINARY_KEY, CLOUDINARY_SECRET, CLOUDINARY_NAME, CLOUDINARY_AVATAR_FOLDER, CLOUDINARY_THUMBNAIL_FOLDER, CLOUDINARY_BANNER_FOLDER, CLOUDINARY_IMAGE_FOLDER } = CLOUDINARY_MESSAGES
+let { CLOUDINARY_KEY, CLOUDINARY_SECRET, CLOUDINARY_NAME, CLOUDINARY_AVATAR_FOLDER, CLOUDINARY_THUMBNAIL_FOLDER, CLOUDINARY_BANNER_FOLDER, CLOUDINARY_IMAGE_FOLDER, CLOUDINARY_ROOM_AVATAR_FOLDER, CLOUDINARY_ROOM_BACKGROUND_FOLDER } = CLOUDINARY_MESSAGES
 let { FACEBOOK, GITHUB, LINKEDIN, GOOGLE } = AUTH_MESSAGES
 let { AUTH_SUCCESS_URL, AUTH_FAIL_URL } = URL_MESSAGES
 
@@ -32,6 +32,8 @@ const envSchema = Joi.object({
   DB_COURSE_COLLECTION: Joi.string().required().description(DB_MAIN.COURSE_COLLECTION),
   DB_MESSAGE_COLLECTION: Joi.string().required().description(DB_MAIN.MESSAGE_COLLECTION),
   DB_ROOM_COLLECTION: Joi.string().required().description(DB_MAIN.ROOM_COLLECTION),
+  DB_INVITES_COLLECTION: Joi.string().required().description(DB_MAIN.INVITE_COLLECTION),
+  DB_MEMBERS_COLLECTION: Joi.string().required().description(DB_MAIN.MEMBER_COLLECTION),
   DATABASE_USER_LOGS: Joi.string().required().description(DB_LOGS.USERNAME),
   PASSWORD_USER_LOGS: Joi.string().required().description(DB_LOGS.PASSWORD),
   DATABASE_CODE_ARENA: Joi.string().required().description(DB_MAIN.USERNAME),
@@ -39,6 +41,7 @@ const envSchema = Joi.object({
   RATE_POINT: Joi.number().required().description(REQ_POINT),
   RATE_DURATION: Joi.number().required().description(REQ_DURATION),
   PASSWORD_SECRET: Joi.string().required().description(PASSWORD_SECRET),
+  ROOM_PASSWORD_SECRET: Joi.string().required().description(ROOM_PASSWORD_SECRET),
   JWT_ACCESS_TOKEN_SECRET: Joi.string().required().description(JWT_SECRET_KEY),
   JWT_REFRESH_TOKEN_SECRET: Joi.string().required().description(JWT_REFRESH_TOKEN_KEY),
   ACCESS_TOKEN_EXPIRESIN: Joi.string().required().description(ACCESS_TOKEN_EXPIRES_IN),
@@ -58,6 +61,8 @@ const envSchema = Joi.object({
   CLOUDINARY_IMAGE_FOLDER: Joi.string().required().description(CLOUDINARY_IMAGE_FOLDER),
   CLOUDINARY_THUMBNAIL_FOLDER: Joi.string().required().description(CLOUDINARY_THUMBNAIL_FOLDER),
   CLOUDINARY_BANNER_FOLDER: Joi.string().required().description(CLOUDINARY_BANNER_FOLDER),
+  CLOUDINARY_ROOM_AVATAR_FOLDER: Joi.string().required().description(CLOUDINARY_ROOM_AVATAR_FOLDER),
+  CLOUDINARY_ROOM_BACKGROUND_FOLDER: Joi.string().required().description(CLOUDINARY_ROOM_BACKGROUND_FOLDER),
   FACEBOOK_AUTH_CLIENT_ID: Joi.string().required().description(FACEBOOK.CLIENT_ID),
   FACEBOOK_AUTH_CLIENT_SECRET: Joi.string().required().description(FACEBOOK.CLIENT_SECRET),
   FACEBOOK_AUTH_CALLBACK_URL: Joi.string().required().description(FACEBOOK.CALLBACK_URL),
@@ -94,6 +99,7 @@ export const env = {
     rate_point: envVars.RATE_POINT,
     rate_duration: envVars.RATE_POINT,
     password_secret: envVars.PASSWORD_SECRET,
+    room_password_secret: envVars.ROOM_PASSWORD_SECRET,
     otp_secret: envVars.OTP_SECRET
   },
   database: {
@@ -112,7 +118,10 @@ export const env = {
         course_category: envVars.DB_COURSE_CATEGORY_COLLECTION,
         courses: envVars.DB_COURSE_COLLECTION,
         messages: envVars.DB_MESSAGE_COLLECTION,
-        rooms: envVars.DB_ROOM_COLLECTION
+        rooms: envVars.DB_ROOM_COLLECTION,
+        invites: envVars.DB_INVITES_COLLECTION,
+        banned_members: envVars.DB_BANNED_MEMBERS_COLLECTION,
+        members: envVars.DB_MEMBERS_COLLECTION
       }
     },
     logs: {
@@ -145,7 +154,9 @@ export const env = {
     image_folder: envVars.CLOUDINARY_IMAGE_FOLDER,
     avatar_folder: envVars.CLOUDINARY_AVATAR_FOLDER,
     thumbnail_folder: envVars.THUMBNAIL_AVATAR_FOLDER,
-    banner_folder: envVars.CLOUDINARY_BANNER_FOLDER
+    banner_folder: envVars.CLOUDINARY_BANNER_FOLDER,
+    room_avatar_folder: envVars.CLOUDINARY_ROOM_AVATAR_FOLDER,
+    room_background_folder: envVars.CLOUDINARY_ROOM_BACKGROUND_FOLDER
   },
   auth: {
     facebook: {

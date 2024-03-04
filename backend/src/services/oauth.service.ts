@@ -43,8 +43,12 @@ class AuthService {
                 provider: 'facebook',
                 providerId: profile.id
               })
-              await databaseService.users.insertOne(newUser)
-              req.user = newUser
+              const result = await databaseService.users.insertOne(newUser)
+
+              req.user = {
+                _id: result.insertedId,
+                ...newUser
+              }
               return done(null, newUser)
             }
             req.user = user
@@ -103,8 +107,12 @@ class AuthService {
                 provider: 'google',
                 providerId: profile.id
               })
-              await databaseService.users.insertOne(newUser)
-              req.user = newUser
+              const result = await databaseService.users.insertOne(newUser)
+
+              req.user = {
+                _id: result.insertedId,
+                ...newUser
+              }
               return done(null, newUser)
             }
             req.user = user
@@ -133,8 +141,13 @@ class AuthService {
                 provider: 'linkedin',
                 providerId: profile.id
               })
-              await databaseService.users.insertOne(newUser)
-              req.user = newUser
+              const result = await databaseService.users.insertOne(newUser)
+
+              req.user = {
+                _id: result.insertedId,
+                ...newUser
+              }
+
               return done(null, newUser)
             }
             req.user = user

@@ -1,7 +1,11 @@
 declare namespace Express {
-  import { AuthUser } from '~/@types/auth.type'
-
+  import { ObjectId } from 'mongodb'
   export interface Request {
-    user?: AuthUser
+    user?: {
+      _id: ObjectId
+      role: UserRole
+      email: string
+      username: string
+    }
   }
 }
