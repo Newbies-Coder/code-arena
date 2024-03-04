@@ -25,6 +25,8 @@ tags:
     description: Operations about user
   - name: banner
     description: Operations about banner
+  - name: room
+    description: Operations about room
 paths:
   /auth/facebook:
     get:
@@ -3349,6 +3351,144 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+  /rooms:
+    get:
+      tags:
+        - room
+      summary: Get chat room list
+      description: Returns a list of chat rooms available in the system.
+      operationId: getChatRoomList
+      parameters:
+        - in: query
+          name: pageIndex
+          schema:
+            type: integer
+            default: 1
+          description: Page index for pagination
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            default: 10
+          description: Number of items per page
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Get all room successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Get all banner successfully
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: The unique identifier of the chat room.
+                            name:
+                              type: string
+                              description: The name of the chat room.
+                            owner:
+                              type: string
+                              description: Unique identifier of the chat room manager.
+                            type:
+                              type: string
+                              default: single
+                              description: Type of chat room (single chat - group chat)
+                            isPrivate:
+                              type: boolean
+                              default: false
+                              description: Chat room status
+                            pinMessage:
+                              type: string
+                              description: Pin important conversations
+                            passowrd:
+                              type: string
+                              description: Chat room password
+                            avatar:
+                              type: string
+                              description: Image representing the chat room
+                            background:
+                              type: string
+                              description: Chat wallpaper
+                            emote:
+                              type: string
+                              description: The icon represents the conversation
+                            isDelete:
+                              type: boolean
+                              default: false
+                              description: Chat room existence status
+                            created_at:
+                              type: string
+                              format: date-time
+                              description: The date and time when the chat room was created.
+                            updated_at:
+                              type: string
+                              format: date-time
+                              description: The date and time when the chat room was updated.
+                      page:
+                        type: integer
+                        example: 1
+                      limit:
+                        type: integer
+                        example: 3
+                      total_pages:
+                        type: integer
+                        example: 2
+                      total_items:
+                        type: integer
+                        example: 4
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: Unauthorized - API key is missing or invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal Server Error - Could not fetch the chat rooms
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
 components:
   schemas:
     LoginSchema:
@@ -3624,3 +3764,52 @@ components:
           example: 'string'
       xml:
         name: auth
+    ChatRoomSchema:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the chat room.
+        name:
+          type: string
+          description: The name of the chat room.
+        owner:
+          type: string
+          description: Unique identifier of the chat room manager.
+        type:
+          type: string
+          default: single
+          description: Type of chat room (single chat - group chat)
+        isPrivate:
+          type: boolean
+          default: false
+          description: Chat room status
+        pinMessage:
+          type: string
+          description: Pin important conversations
+        passowrd:
+          type: string
+          description: Chat room password
+        avatar:
+          type: string
+          description: Image representing the chat room
+        background:
+          type: string
+          description: Chat wallpaper
+        emote:
+          type: string
+          description: The icon represents the conversation
+        isDelete:
+          type: boolean
+          default: false
+          description: Chat room existence status
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the chat room was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the chat room was updated.
+      xml:
+        name: room
