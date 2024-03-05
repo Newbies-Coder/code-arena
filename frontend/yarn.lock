@@ -1154,6 +1154,16 @@
   resolved "https://registry.npmjs.org/@ctrl/tinycolor/-/tinycolor-3.6.1.tgz"
   integrity sha512-SITSV6aIXsuVNV3f3O0f2n/cgyEDWoSqtZMYiAmcsYHydcKrOz3gUxB/iXd/Qf08+IZX4KpgNbvUdMBmWz+kcA==
 
+"@emoji-mart/data@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@emoji-mart/data/-/data-1.1.2.tgz#777c976f8f143df47cbb23a7077c9ca9fe5fc513"
+  integrity sha512-1HP8BxD2azjqWJvxIaWAMyTySeZY0Osr83ukYjltPVkNXeJvTz7yDrPLBtnrD5uqJ3tg4CcLuuBW09wahqL/fg==
+
+"@emoji-mart/react@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@emoji-mart/react/-/react-1.1.1.tgz#ddad52f93a25baf31c5383c3e7e4c6e05554312a"
+  integrity sha512-NMlFNeWgv1//uPsvLxvGQoIerPuVdXwK/EUek8OOkJ6wVOWPUizRBJU0hDqWZCOROVpfBgCemaC3m6jDOXi03g==
+
 "@emotion/hash@^0.8.0":
   version "0.8.0"
   resolved "https://registry.npmjs.org/@emotion/hash/-/hash-0.8.0.tgz"
@@ -2260,6 +2270,13 @@
   resolved "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.8.tgz"
   integrity sha512-kMpQpfZKSCBqltAJwskgePRaYRFukDkm1oItcAbC3gNELR20XIBcN9VRgg4+m8DKsTfkWeA4m4Imp4DDuWy7FQ==
 
+"@types/react-dom@17.0.2", "@types/react-dom@^18.0.0":
+  version "17.0.2"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.2.tgz#35654cf6c49ae162d5bc90843d5437dc38008d43"
+  integrity sha512-Icd9KEgdnFfJs39KyRyr0jQ7EKhq8U6CcHRMGAS45fp5qgUvxL3ujUCfWFttUK2UErqZNj97t9gsVPNAqcwoCg==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-dom@18.2.9":
   version "18.2.9"
   resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-18.2.9.tgz"
@@ -2267,20 +2284,12 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-dom@^18.0.0":
-  version "18.2.13"
-  resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-18.2.13.tgz"
-  integrity sha512-eJIUv7rPP+EC45uNYp/ThhSpE16k22VJUknt5OLoH9tbXoi8bMhwLf5xRuWMywamNbWzhrSmU7IBJfPup1+3fw==
-  dependencies:
-    "@types/react" "*"
-
-"@types/react@*":
-  version "18.2.28"
-  resolved "https://registry.npmjs.org/@types/react/-/react-18.2.28.tgz"
-  integrity sha512-ad4aa/RaaJS3hyGz0BGegdnSRXQBkd1CCYDCdNjBPg90UUpLgo+WlJqb9fMYUxtehmzF3PJaTWqRZjko6BRzBg==
+"@types/react@*", "@types/react@17.0.2":
+  version "17.0.2"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.2.tgz#3de24c4efef902dd9795a49c75f760cbe4f7a5a8"
+  integrity sha512-Xt40xQsrkdvjn1EyWe1Bc0dJLcil/9x2vAuW7ya+PuQip4UYUaXyhzWmAbwRsdMgwOFHpfp7/FFZebDU6Y8VHA==
   dependencies:
     "@types/prop-types" "*"
-    "@types/scheduler" "*"
     csstype "^3.0.2"
 
 "@types/react@18.2.24":
@@ -3647,6 +3656,11 @@ electron-to-chromium@^1.4.535:
   version "1.4.557"
   resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.557.tgz"
   integrity sha512-6x0zsxyMXpnMJnHrondrD3SuAeKcwij9S+83j2qHAQPXbGTDDfgImzzwgGlzrIcXbHQ42tkG4qA6U860cImNhw==
+
+emoji-mart@^5.5.2:
+  version "5.5.2"
+  resolved "https://registry.yarnpkg.com/emoji-mart/-/emoji-mart-5.5.2.tgz#3ddbaf053139cf4aa217650078bc1c50ca8381af"
+  integrity sha512-Sqc/nso4cjxhOwWJsp9xkVm8OF5c+mJLZJFoFfzRuKO+yWiN7K8c96xmtughYb0d/fZ8UC6cLIQ/p4BR6Pv3/A==
 
 emoji-regex@^8.0.0:
   version "8.0.0"

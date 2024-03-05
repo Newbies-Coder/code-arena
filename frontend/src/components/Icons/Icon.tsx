@@ -1585,3 +1585,85 @@ export const AddIcon: React.FC<IconPropsType> = ({ width = '30px', height = '30p
     </defs>
   </svg>
 )
+
+export const ImageIcon: React.FC<IconPropsType> = ({ width = '25px', height = '25px', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 25 26"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M19.7917 3.625H5.20833C4.05774 3.625 3.125 4.55774 3.125 5.70833V20.2917C3.125 21.4423 4.05774 22.375 5.20833 22.375H19.7917C20.9423 22.375 21.875 21.4423 21.875 20.2917V5.70833C21.875 4.55774 20.9423 3.625 19.7917 3.625Z"
+      stroke="white"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M8.85352 10.916C9.71646 10.916 10.416 10.2165 10.416 9.35352C10.416 8.49057 9.71646 7.79102 8.85352 7.79102C7.99057 7.79102 7.29102 8.49057 7.29102 9.35352C7.29102 10.2165 7.99057 10.916 8.85352 10.916Z"
+      stroke="white"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M21.8757 16.1243L16.6673 10.916L5.20898 22.3743"
+      stroke="white"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+)
+
+export const EmojiIcon: React.FC<IconPropsType> = ({ width = '25px', height = '25px', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 25 26"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M12.5007 23.4173C18.2536 23.4173 22.9173 18.7536 22.9173 13.0007C22.9173 7.24768 18.2536 2.58398 12.5007 2.58398C6.74768 2.58398 2.08398 7.24768 2.08398 13.0007C2.08398 18.7536 6.74768 23.4173 12.5007 23.4173Z"
+      stroke="white"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path d="M8.33398 16.125H16.6673" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M9.375 9.875H9.38542" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M15.625 9.875H15.6354" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
+export const SendMessageIcon: React.FC<IconPropsType> = ({ width = '25px', height = '25px', className }) => (
+  <svg
+    width={width}
+    height={height}
+    className={className}
+    viewBox="0 0 32 32"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle cx="16" cy="16" r="16" fill="url(#paint0_linear_1629_11499)" />
+    <path d="M22.9992 9L14.1992 17.8" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M23 9L17.4 25L14.2 17.8L7 14.6L23 9Z"
+      stroke="white"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <defs>
+      <linearGradient id="paint0_linear_1629_11499" x1="32" y1="18.5" x2="5.5" y2="8" gradientUnits="userSpaceOnUse">
+        <stop offset="0.0296277" stopColor="#B14AFD" />
+        <stop offset="0.638261" stopColor="#7753EB" />
+      </linearGradient>
+    </defs>
+  </svg>
+)
