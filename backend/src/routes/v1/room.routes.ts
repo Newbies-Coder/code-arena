@@ -80,7 +80,7 @@ roomRouter.put('/:id/dismiss', wrapRequestHandler(requireLoginMiddleware), dismi
  * Method: PUT
  * Header: { Authorization: Bearer <access_token> }
  * Param: { id: string }
- * Body: { file: File }
+ * Body: { image: File }
  */
 
 roomRouter.put('/:id/avatar', wrapRequestHandler(requireLoginMiddleware), changeRoomAvatarValidator, singleImageUpload, wrapRequestHandler(roomController.changeAvatar))
@@ -91,7 +91,7 @@ roomRouter.put('/:id/avatar', wrapRequestHandler(requireLoginMiddleware), change
  * Method: PUT
  * Header: { Authorization: Bearer <access_token> }
  * Param: { id: string }
- * Body: { file: File }
+ * Body: { image: File }
  */
 
 roomRouter.put('/:id/background', wrapRequestHandler(requireLoginMiddleware), changeRoomBackgroundValidator, singleImageUpload, wrapRequestHandler(roomController.changeBackground))
@@ -155,21 +155,22 @@ roomRouter.post('/:id/messages/:messageId/pin', wrapRequestHandler(requireLoginM
 
 /**
  * Description: Kick members
- * Path: /:id/members/:memberId/kick
+ * Path: /:id/kick
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
- * Param: { id: string, memberId: string }
+ * Param: { id: string }
+ * Body: { memberId: string }
  */
-roomRouter.post('/:id/members/:memberId/kick', wrapRequestHandler(requireLoginMiddleware), kickMemberValidator, wrapRequestHandler(roomController.kickMember))
+roomRouter.post('/:id/kick', wrapRequestHandler(requireLoginMiddleware), kickMemberValidator, wrapRequestHandler(roomController.kickMember))
 
 /**
  * Description: Ban members
- * Path: /:id/members/:memberId/kick
+ * Path: /:id/ban
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
- * Param: { id: string, memberId: string }
- * Body: { due_to: Date }
+ * Param: { id: string }
+ * Body: { memberId: string , due_to: Date }
  */
-roomRouter.post('/:id/message/:memberId/ban', wrapRequestHandler(requireLoginMiddleware), banMemberValidator, wrapRequestHandler(roomController.banMember))
+roomRouter.post('/:id/ban', wrapRequestHandler(requireLoginMiddleware), banMemberValidator, wrapRequestHandler(roomController.banMember))
 
 export default roomRouter
