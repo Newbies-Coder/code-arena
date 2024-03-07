@@ -3375,7 +3375,7 @@ paths:
         - BearerAuth: []
       responses:
         '200':
-          description: Get all room successfully
+          description: Get all message successfully
           content:
             application/json:
               schema:
@@ -3385,7 +3385,7 @@ paths:
                     type: integer
                     example: 200
                   message:
-                    example: Get all banner successfully
+                    example: Get all message successfully
                   data:
                     type: object
                     properties:
@@ -4504,7 +4504,465 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-
+  /rooms/{id}/messages:
+    get:
+      tags:
+        - room
+      summary: Retrieves a list of messages
+      description: Returns a list of messages for the user, optionally filtered by query parameters.
+      operationId: getListOfMessage
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page index for pagination
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items per page
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Get all messages of room successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Get all messages of room successfully
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: The unique identifier of the chat room.
+                            name:
+                              type: string
+                              description: The name of the chat room.
+                            owner:
+                              type: string
+                              description: Unique identifier of the chat room manager.
+                            type:
+                              type: string
+                              default: single
+                              description: Type of chat room (single chat - group chat)
+                            isPrivate:
+                              type: boolean
+                              default: false
+                              description: Chat room status
+                            pinMessage:
+                              type: string
+                              description: Pin important conversations
+                            passowrd:
+                              type: string
+                              description: Chat room password
+                            avatar:
+                              type: string
+                              description: Image representing the chat room
+                            background:
+                              type: string
+                              description: Chat wallpaper
+                            emote:
+                              type: string
+                              description: The icon represents the conversation
+                            isDelete:
+                              type: boolean
+                              default: false
+                              description: Chat room existence status
+                            created_at:
+                              type: string
+                              format: date-time
+                              description: The date and time when the chat room was created.
+                            updated_at:
+                              type: string
+                              format: date-time
+                              description: The date and time when the chat room was updated.
+                      page:
+                        type: integer
+                        example: 1
+                      limit:
+                        type: integer
+                        example: 3
+                      total_pages:
+                        type: integer
+                        example: 2
+                      total_items:
+                        type: integer
+                        example: 4
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: Unauthorized - API key is missing or invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '404':
+          description: The chat room or user does not exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    example: The chat room or user does not exist.
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal Server Error - Could not fetch the chat rooms
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+    post:
+      tags:
+        - room
+      summary: Create a new chat message
+      description: This endpoint allows users to create a new message in a chat session.
+      operationId: createMessage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - content
+              properties:
+                content:
+                  type: string
+                  description: The content of the message.
+                attachemnts:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        example: 'video'
+                      content:
+                        type: string
+      security:
+        - BearerAuth: []
+      responses:
+        '201':
+          description: Mesage ceateed successfully!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 201
+                  message:
+                    example: Insert room successfully!
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  messages:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /rooms/{id}/messages/{messageId}:
+    delete:
+      tags:
+        - room
+      summary: Delete a specific message in a chat room
+      description: This endpoint allows users to delete a specific message from a chat room.
+      operationId: deleteMessageInRoom
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the chat room.
+          schema:
+            type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
+        - name: messageId
+          in: path
+          required: true
+          description: The unique identifier of the message to be deleted.
+          schema:
+            type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
+      security:
+        - BearerAuth: []
+      responses:
+        '204':
+          description: Message delete successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 204
+                  message:
+                    example: Message delete successfully
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '403':
+          description: User is authenticated but does not have permission to delete the message.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 403
+                  message:
+                    example: User is authenticated but does not have permission to delete the message.
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '404':
+          description: The chat room with the given ID was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    example: The chat room with the given ID was not found
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+  /rooms/{id}/messages/{messageId}/pin:
+    post:
+      tags:
+        - room
+      summary: Pin a message in a chat room
+      description: This endpoint allows users to pin a specific message within a chat room, making it more visible or accessible to all room members.
+      operationId: pinMessageInRoom
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the chat room.
+          schema:
+            type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
+        - name: messageId
+          in: path
+          required: true
+          description: The unique identifier of the message to be deleted.
+          schema:
+            type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
+      security:
+        - BearerAuth: []
+      responses:
+        '204':
+          description: Message pinned successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 204
+                  message:
+                    example: Message pinned successfully.
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '403':
+          description: User is authenticated but does not have permission to delete the message.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 403
+                  message:
+                    example: User is authenticated but does not have permission to delete the message.
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '404':
+          description: The specified room or message does not exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    example: The specified room or message does not exist.
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
 components:
   schemas:
     LoginSchema:

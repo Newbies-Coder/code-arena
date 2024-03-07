@@ -121,7 +121,7 @@ roomRouter.post('/:id/invites', wrapRequestHandler(requireLoginMiddleware), crea
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
  * Param: { id: string }
- * Query: { pageIndex: number, pageSize: number }
+ * Query: { page: number, limit: number }
  */
 roomRouter.get('/:id/messages', wrapRequestHandler(requireLoginMiddleware), getMessageValidator, wrapRequestHandler(roomController.getMessage))
 
