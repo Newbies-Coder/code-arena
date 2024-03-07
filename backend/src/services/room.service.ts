@@ -298,7 +298,7 @@ class RoomService {
     const query = payload.query
     const index = parseInt(payload.index)
 
-    const matchedMessages = await databaseService.messages.find({ $text: { $search: query } }).toArray()
+    const matchedMessages = await databaseService.messages.find({ content: { $regex: query } }).toArray()
 
     if (matchedMessages.length === 0) {
       return {
@@ -310,7 +310,7 @@ class RoomService {
     if (index > matchedMessages.length - 1) {
       throw new ErrorWithStatus({
         statusCode: StatusCodes.BAD_REQUEST,
-        message: VALIDATION_MESSAGES.MESSAGE.INDEX_IS_TOO_BIG
+        message: VALIDATION_MESSAGES.MESSAGE.INDEX_IS_OUT_OF_BOUND
       })
     }
 

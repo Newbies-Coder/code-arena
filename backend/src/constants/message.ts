@@ -473,7 +473,7 @@ export const VALIDATION_MESSAGES = {
     CAN_NOT_LEAVE_SINGLE_ROOM: 'Can not leave direct chat room'
   },
   MESSAGE: {
-    INDEX_IS_TOO_BIG: 'Index is too big',
+    INDEX_IS_OUT_OF_BOUND: 'Index is out of bound',
     MESSAGE_LENGTH_MUST_GREATER_THAN_2_AND_LESS_THAN_100: 'Message length must be greater than 2 and less than 100',
     MESSAGE_IS_REQUIRED: 'Message is required',
     MESSAGE_MUST_BE_STRING: 'Message must be a string',
