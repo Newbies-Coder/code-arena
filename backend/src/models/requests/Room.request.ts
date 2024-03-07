@@ -41,3 +41,11 @@ export interface CreateMessageBody {
 export interface DismissMessageBody {
   due_to: string
 }
+
+export interface ReactMessageBody {
+  emote: string
+}
+
+export interface ChangeNicknameBody {
+  nickname: string
+}

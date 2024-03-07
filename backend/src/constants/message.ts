@@ -168,6 +168,7 @@ export const RESULT_RESPONSE_MESSAGES = {
     DELETE: 'Delete room successfully!',
     MAKE_PRIVATE: 'Make private successfully!',
     CREATE_INVITE: 'Create invite successfully!',
+    GET_INVITE: 'Get invite successfully!',
     GET_MESSAGE: 'Get message successfully',
     CREATE_MESSAGE: 'Create message successfully',
     DELETE_MESSAGE: 'Delete message successfully',
@@ -176,7 +177,12 @@ export const RESULT_RESPONSE_MESSAGES = {
     KICK_MEMBER: 'Kick member successfully',
     DISMISS_MESSAGE: 'Dismiss message successfully',
     CHANGE_AVATAR: 'Change avatar successfully',
-    CHANGE_BACKGROUND: 'Change background successfully'
+    CHANGE_BACKGROUND: 'Change background successfully',
+    LEAVE_ROOM: 'Leave room successfully',
+    ACCEPT_INVITE: 'Accept invite successfully',
+    REJECT_INVITE: 'Reject invite successfully',
+    REACT_MESSAGE: 'React message successfully',
+    CHANGE_NICKNAME: 'Change nickname successfully'
   }
 } as const
 
@@ -463,9 +469,14 @@ export const VALIDATION_MESSAGES = {
     EMOTE_MUST_BE_AN_EMOJI: 'Room emote must be a emoji',
     CAN_NOT_KICK_OWNER: 'Can not kick owner',
     CAN_NOT_BAN_OWNER: 'Can not ban owner',
-    ROOM_MEMBERS_IS_NOT_UNIQUE: 'Room members must be unique'
+    ROOM_MEMBERS_IS_NOT_UNIQUE: 'Room members must be unique',
+    CAN_NOT_LEAVE_SINGLE_ROOM: 'Can not leave direct chat room'
   },
   MESSAGE: {
+    INDEX_IS_TOO_BIG: 'Index is too big',
+    MESSAGE_LENGTH_MUST_GREATER_THAN_2_AND_LESS_THAN_100: 'Message length must be greater than 2 and less than 100',
+    MESSAGE_IS_REQUIRED: 'Message is required',
+    MESSAGE_MUST_BE_STRING: 'Message must be a string',
     MESSAGE_ID_IS_REQUIRED: 'Message id is required',
     MESSAGE_ID_IS_INVALID: 'Message id is invalid',
     MESSAGE_WITH_ID_IS_NOT_EXIST: 'Message with id is not exist',
@@ -477,7 +488,23 @@ export const VALIDATION_MESSAGES = {
     ATTACHMENT_CONTENT_IS_REQUIRED: 'Attachment content is required',
     ATTACHMENT_CONTENT_IS_NOT_VALID_URL: 'Attachment content is not valid URL',
     MESSAGE_NOT_OWN: 'This is not your message',
-    MESSAGE_IS_EMPTY: 'Message is empty'
+    MESSAGE_IS_EMPTY: 'Message is empty',
+    EMOTE_IS_REQUIRED: 'Emote is required',
+    EMOTE_IS_INVALID: 'Emote is invalid',
+    EMOTE_MUST_BE_STRING: 'Emote must be a string',
+    MESSAGE_INDEX_IS_REQUIRED: 'Message index is required',
+    MESSAGE_INDEX_MUST_BE_INTEGER: 'Message index must be an integer greater than or equal to 0'
+  },
+  INVITATION: {
+    INVITE_ID_IS_REQUIRED: 'Invite id is required',
+    INVITATION_NOT_FOUND: 'Invitation not found',
+    INVITATION_IS_ACCEPTED: 'Invitation already accepted',
+    INVITATION_IS_REJECTED: 'Invitation already rejected'
+  },
+  MEMBER: {
+    NICKNAME_IS_REQUIRED: 'Nickname is required',
+    NICKNAME_MUST_BE_STRING: 'Nickname must be a string',
+    NICKNAME_LENGTH_MUST_GREATER_THAN_2_AND_LESS_THAN_31: 'Nickname length must greater than 2 and less than 31'
   }
 } as const
 

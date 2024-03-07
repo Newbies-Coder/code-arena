@@ -1,5 +1,6 @@
-import { ObjectId } from 'mongodb'
+import { ObjectId, WithId } from 'mongodb'
 import { TokenType, UserGenderType, UserRole, UserVerifyStatus } from '~/constants/enums'
+import Message from '~/models/schemas/Message.schema'
 
 export type ResultRegisterType = {
   _id: string
@@ -118,6 +119,11 @@ export type ParsedGetAllMessageUrlQuery = {
   limit?: string
 }
 
+export type ParsedSearchMessageUrlQuery = {
+  query: string
+  index: string
+}
+
 export type InsertBanner = {
   slug: string
   description?: string
@@ -125,4 +131,9 @@ export type InsertBanner = {
 }
 export type UploadSingleType = {
   imageUrl: string
+}
+
+export type SearchMessageResult = {
+  message: WithId<Message>[]
+  total: number
 }

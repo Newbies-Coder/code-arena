@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb'
 import { VALIDATION_MESSAGES } from '~/constants/message'
 import { paginationValidator } from '~/middlewares/commons.middleware'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
-import { attachmentTypes } from '~/models/schemas/Message.schema'
+import { attachmentTypes, emotes } from '~/models/schemas/Message.schema'
 import { roomTypes } from '~/models/schemas/Room.schema'
 import { databaseService } from '~/services/connectDB.service'
 import { isValidPassword } from '~/utils/helper'
@@ -292,7 +292,7 @@ export const createInviteValidator = validate(
         errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_REQUIRED
       },
       custom: {
-        options: async (value) => {
+        options: async (value, { req }) => {
           validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
 
           const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
@@ -308,6 +308,15 @@ export const createInviteValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.BAD_REQUEST,
               message: VALIDATION_MESSAGES.ROOM.CAN_NOT_CREATE_INVITATION_ON_SINGLE_ROOM
+            })
+          }
+
+          const member = await databaseService.members.find({ roomId: room._id, memberId: new ObjectId(req.user._id) })
+
+          if (!member) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.FORBIDDEN,
+              message: VALIDATION_MESSAGES.ROOM.USER_NOT_IN_ROOM
             })
           }
 
@@ -872,6 +881,316 @@ export const dismissMessageValidator = validate(
           }
 
           return true
+        }
+      }
+    }
+  })
+)
+
+export const leaveRoomValidator = validate(
+  checkSchema({
+    id: {
+      notEmpty: {
+        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_REQUIRED
+      },
+      custom: {
+        options: async (value, { req }) => {
+          validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
+
+          const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
+          if (!room) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.NOT_FOUND,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          if (room.type === 'single') {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.CAN_NOT_LEAVE_SINGLE_ROOM
+            })
+          }
+
+          const member = await databaseService.members.findOne({ memberId: new ObjectId(req.user._id), roomId: new ObjectId(value) })
+
+          if (!member) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.USER_NOT_IN_ROOM
+            })
+          }
+
+          return true
+        }
+      }
+    }
+  })
+)
+
+export const acceptInvitationValidator = validate(
+  checkSchema({
+    inviteId: {
+      notEmpty: {
+        errorMessage: VALIDATION_MESSAGES.INVITATION.INVITE_ID_IS_REQUIRED
+      },
+      custom: {
+        options: async (value, { req }) => {
+          validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
+
+          const invitation = await databaseService.invites.findOne({
+            _id: new ObjectId(value)
+          })
+
+          if (!invitation) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.INVITATION.INVITATION_NOT_FOUND
+            })
+          }
+
+          if (invitation.status === 'accepted') {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.INVITATION.INVITATION_IS_ACCEPTED
+            })
+          }
+
+          if (invitation.status === 'rejected') {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.INVITATION.INVITATION_IS_REJECTED
+            })
+          }
+
+          return true
+        }
+      }
+    }
+  })
+)
+export const rejectInvitationValidator = validate(
+  checkSchema({
+    inviteId: {
+      notEmpty: {
+        errorMessage: VALIDATION_MESSAGES.INVITATION.INVITE_ID_IS_REQUIRED
+      },
+      custom: {
+        options: async (value, { req }) => {
+          validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
+
+          const invitation = await databaseService.invites.findOne({
+            _id: new ObjectId(value)
+          })
+
+          if (!invitation) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.INVITATION.INVITATION_NOT_FOUND
+            })
+          }
+
+          if (invitation.status === 'accepted') {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.INVITATION.INVITATION_IS_ACCEPTED
+            })
+          }
+
+          if (invitation.status === 'rejected') {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.INVITATION.INVITATION_IS_REJECTED
+            })
+          }
+
+          return true
+        }
+      }
+    }
+  })
+)
+
+export const reactMessageValidator = validate(
+  checkSchema({
+    id: {
+      notEmpty: {
+        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_REQUIRED
+      },
+      custom: {
+        options: async (value, { req }) => {
+          validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
+
+          const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
+
+          if (!room) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.NOT_FOUND,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          const member = await databaseService.members.findOne({ memberId: new ObjectId(req.user._id), roomId: new ObjectId(value) })
+
+          if (!member) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.USER_NOT_IN_ROOM
+            })
+          }
+
+          return true
+        }
+      }
+    },
+    messageId: {
+      notEmpty: {
+        errorMessage: VALIDATION_MESSAGES.MESSAGE.MESSAGE_ID_IS_REQUIRED
+      },
+      custom: {
+        options: async (value) => {
+          validateObjectId(value, VALIDATION_MESSAGES.MESSAGE.MESSAGE_ID_IS_INVALID)
+
+          const message = await databaseService.messages.findOne({ _id: new ObjectId(value) })
+
+          if (!message) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.NOT_FOUND,
+              message: VALIDATION_MESSAGES.MESSAGE.MESSAGE_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          return true
+        }
+      }
+    },
+    emote: {
+      notEmpty: {
+        errorMessage: VALIDATION_MESSAGES.MESSAGE.EMOTE_IS_REQUIRED
+      },
+      isString: {
+        errorMessage: VALIDATION_MESSAGES.MESSAGE.EMOTE_MUST_BE_STRING
+      },
+      custom: {
+        options: async (value) => {
+          if (!emotes.includes(value)) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.MESSAGE.EMOTE_IS_INVALID
+            })
+          }
+          return true
+        }
+      }
+    }
+  })
+)
+
+export const changeNicknameValidator = validate(
+  checkSchema({
+    id: {
+      notEmpty: {
+        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_REQUIRED
+      },
+      custom: {
+        options: async (value, { req }) => {
+          validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
+
+          const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
+
+          if (!room) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.NOT_FOUND,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          const member = await databaseService.members.findOne({ memberId: new ObjectId(req.user._id), roomId: new ObjectId(value) })
+
+          if (!member) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.USER_NOT_IN_ROOM
+            })
+          }
+
+          return true
+        }
+      }
+    },
+    nickname: {
+      notEmpty: {
+        errorMessage: VALIDATION_MESSAGES.MEMBER.NICKNAME_IS_REQUIRED
+      },
+      isString: {
+        errorMessage: VALIDATION_MESSAGES.MEMBER.NICKNAME_MUST_BE_STRING
+      },
+      isLength: {
+        errorMessage: VALIDATION_MESSAGES.MEMBER.NICKNAME_LENGTH_MUST_GREATER_THAN_2_AND_LESS_THAN_31,
+        options: {
+          min: 3,
+          max: 30
+        }
+      }
+    }
+  })
+)
+
+export const searchMessageValidator = validate(
+  checkSchema({
+    id: {
+      notEmpty: {
+        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_REQUIRED
+      },
+      custom: {
+        options: async (value, { req }) => {
+          validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
+
+          const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
+
+          if (!room) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.NOT_FOUND,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          const member = await databaseService.members.findOne({ memberId: new ObjectId(req.user._id), roomId: new ObjectId(value) })
+
+          if (!member) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.USER_NOT_IN_ROOM
+            })
+          }
+
+          return true
+        }
+      }
+    },
+    query: {
+      notEmpty: {
+        errorMessage: VALIDATION_MESSAGES.MESSAGE.MESSAGE_IS_REQUIRED
+      },
+      isString: {
+        errorMessage: VALIDATION_MESSAGES.MESSAGE.MESSAGE_MUST_BE_STRING
+      },
+      isLength: {
+        errorMessage: VALIDATION_MESSAGES.MESSAGE.MESSAGE_LENGTH_MUST_GREATER_THAN_2_AND_LESS_THAN_100,
+        options: {
+          min: 2,
+          max: 100
+        }
+      }
+    },
+    index: {
+      notEmpty: {
+        errorMessage: VALIDATION_MESSAGES.MESSAGE.MESSAGE_INDEX_IS_REQUIRED
+      },
+      isInt: {
+        errorMessage: VALIDATION_MESSAGES.MESSAGE.MESSAGE_INDEX_MUST_BE_INTEGER,
+        options: {
+          min: 0
         }
       }
     }

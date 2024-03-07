@@ -1,15 +1,26 @@
 import { StatusCodes } from 'http-status-codes'
 import { ObjectId } from 'mongodb'
-import { PaginationType, ParsedGetAllMessageUrlQuery, ParsedGetAllRoomUrlQuery } from '~/@types/reponse.type'
+import { PaginationType, ParsedGetAllMessageUrlQuery, ParsedGetAllRoomUrlQuery, ParsedSearchMessageUrlQuery, SearchMessageResult } from '~/@types/reponse.type'
 import { env } from '~/config/environment.config'
 import { VALIDATION_MESSAGES } from '~/constants/message'
 import { io } from '~/main'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
-import { BanMemberBody, CreateInviteBody, CreateMessageBody, CreateRoomBody, DismissMessageBody, KickMemberBody, MakeRoomPrivateBody, UpdateRoomBody } from '~/models/requests/Room.request'
+import {
+  BanMemberBody,
+  ChangeNicknameBody,
+  CreateInviteBody,
+  CreateMessageBody,
+  CreateRoomBody,
+  DismissMessageBody,
+  KickMemberBody,
+  MakeRoomPrivateBody,
+  ReactMessageBody,
+  UpdateRoomBody
+} from '~/models/requests/Room.request'
 import BannedMember from '~/models/schemas/BannedMember.schema'
 import Invitation from '~/models/schemas/Invitation.schema'
 import Member from '~/models/schemas/Member.schema'
-import Message from '~/models/schemas/Message.schema'
+import Message, { EmoteType } from '~/models/schemas/Message.schema'
 import Room from '~/models/schemas/Room.schema'
 import cloudinaryService from '~/services/cloudinary.service'
 import { databaseService } from '~/services/connectDB.service'
@@ -123,6 +134,11 @@ class RoomService {
     )
   }
 
+  async getInvite(userId: ObjectId) {
+    const invites = await databaseService.invites.find({ recipient: new ObjectId(userId), status: 'pending' }).toArray()
+    return invites
+  }
+
   async banMember(roomId: ObjectId, payload: BanMemberBody) {
     await databaseService.bannedMembers.insertOne(
       new BannedMember({
@@ -224,6 +240,86 @@ class RoomService {
 
     const { url } = await cloudinaryService.uploadImage(env.cloudinary.room_background_folder, file.buffer)
     await databaseService.rooms.updateOne({ _id: room._id }, { $set: { background: url } })
+  }
+
+  async leaveRoom(roomId: ObjectId) {
+    await databaseService.members.deleteOne({ roomId })
+  }
+
+  async acceptInvite(inviteId: ObjectId, userId: ObjectId) {
+    const updatedInvite = await databaseService.invites.findOneAndUpdate(
+      { _id: inviteId },
+      {
+        $set: {
+          status: 'accepted',
+          updated_at: new Date()
+        }
+      }
+    )
+
+    await databaseService.members.insertOne(
+      new Member({
+        roomId: updatedInvite.room,
+        memberId: userId
+      })
+    )
+  }
+
+  async rejectInvite(inviteId: ObjectId) {
+    await databaseService.invites.updateOne(
+      { _id: inviteId },
+      {
+        $set: {
+          status: 'rejected',
+          updated_at: new Date()
+        }
+      }
+    )
+  }
+
+  async reactMessage(messageId: ObjectId, payload: ReactMessageBody) {
+    await databaseService.messages.updateOne(
+      { _id: messageId },
+      {
+        $inc: {
+          [`emotes.${payload.emote}`]: 1
+        },
+        $set: {
+          updated_at: new Date()
+        }
+      }
+    )
+  }
+
+  async changeNickname(roomId: ObjectId, userId: ObjectId, { nickname }: ChangeNicknameBody) {
+    await databaseService.members.updateOne({ memberId: userId, roomId }, { $set: { nickname } })
+  }
+  async searchMessage(payload: ParsedSearchMessageUrlQuery): Promise<SearchMessageResult> {
+    const query = payload.query
+    const index = parseInt(payload.index)
+
+    const matchedMessages = await databaseService.messages.find({ $text: { $search: query } }).toArray()
+
+    if (matchedMessages.length === 0) {
+      return {
+        message: [],
+        total: 0
+      }
+    }
+
+    if (index > matchedMessages.length - 1) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: VALIDATION_MESSAGES.MESSAGE.INDEX_IS_TOO_BIG
+      })
+    }
+
+    const message = await databaseService.messages.find({ _id: { $gte: matchedMessages[index]._id } }).toArray()
+
+    return {
+      message: message,
+      total: matchedMessages.length
+    }
   }
 }
 
