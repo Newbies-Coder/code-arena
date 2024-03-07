@@ -205,7 +205,6 @@ roomRouter.delete('/:id/messages/:messageId', wrapRequestHandler(requireLoginMid
  */
 roomRouter.post('/:id/messages/:messageId/pin', wrapRequestHandler(requireLoginMiddleware), pinMessageValidator, wrapRequestHandler(roomController.pinMessage))
 
-//TODO
 /**
  * Description: React message
  * Path: /:id/messages/:messageId/react
