@@ -1,3 +1,4 @@
+import { includes } from 'lodash'
 import slugify from 'slugify'
 import { VALIDATION_MESSAGES } from '~/constants/message'
 
@@ -86,4 +87,20 @@ export const validateEmail = (email: string): { valid: boolean; message: string 
 export const isValidPassword = (password: string): boolean => {
   const noEmojiRegex = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/
   return noEmojiRegex.test(password)
+}
+
+export const checkUserRole = (role: string): boolean => {
+  let userRoles: string[] = ['User', 'Moderator', 'Admin']
+  if (userRoles.includes(role)) {
+    return true
+  }
+  return false
+}
+
+export const checkVerifyStatus = (verify_status: string): boolean => {
+  let verifyStatusLst: string[] = ['Unverified', 'Verified', 'Celerity', 'Banned']
+  if (verifyStatusLst.includes(verify_status)) {
+    return true
+  }
+  return false
 }

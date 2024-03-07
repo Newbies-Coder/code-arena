@@ -96,7 +96,7 @@ roomRouter.put('/:id/dismiss', wrapRequestHandler(requireLoginMiddleware), dismi
  * Method: PUT
  * Header: { Authorization: Bearer <access_token> }
  * Param: { id: string }
- * Body: { file: File }
+ * Body: { image: File }
  */
 
 roomRouter.put('/:id/avatar', wrapRequestHandler(requireLoginMiddleware), changeRoomAvatarValidator, singleImageUpload, wrapRequestHandler(roomController.changeAvatar))
@@ -107,7 +107,7 @@ roomRouter.put('/:id/avatar', wrapRequestHandler(requireLoginMiddleware), change
  * Method: PUT
  * Header: { Authorization: Bearer <access_token> }
  * Param: { id: string }
- * Body: { file: File }
+ * Body: { image: File }
  */
 
 roomRouter.put('/:id/background', wrapRequestHandler(requireLoginMiddleware), changeRoomBackgroundValidator, singleImageUpload, wrapRequestHandler(roomController.changeBackground))
@@ -163,7 +163,7 @@ roomRouter.post('/invites/:inviteId/reject', wrapRequestHandler(requireLoginMidd
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
  * Param: { id: string }
- * Query: { pageIndex: number, pageSize: number }
+ * Query: { page: number, limit: number }
  */
 roomRouter.get('/:id/messages', wrapRequestHandler(requireLoginMiddleware), getMessageValidator, wrapRequestHandler(roomController.getMessage))
 
@@ -216,26 +216,6 @@ roomRouter.post('/:id/messages/:messageId/pin', wrapRequestHandler(requireLoginM
 roomRouter.post('/:id/messages/:messageId/react', wrapRequestHandler(requireLoginMiddleware), reactMessageValidator, wrapRequestHandler(roomController.reactMessage))
 
 /**
- * Description: Kick members
- * Path: /:id/members/kick
- * Method: POST
- * Header: { Authorization: Bearer <access_token> }
- * Param: { id: string }
- * Body: { memberId: string }
- */
-roomRouter.post('/:id/members/kick', wrapRequestHandler(requireLoginMiddleware), kickMemberValidator, wrapRequestHandler(roomController.kickMember))
-
-/**
- * Description: Ban members
- * Path: /:id/members/kick
- * Method: POST
- * Header: { Authorization: Bearer <access_token> }
- * Param: { id: string }
- * Body: { memberId: string, due_to: Date }
- */
-roomRouter.post('/:id/members/ban', wrapRequestHandler(requireLoginMiddleware), banMemberValidator, wrapRequestHandler(roomController.banMember))
-
-/**
  * Description: Change nickname
  * Path: /:id/members/@me
  * Method: PUT
@@ -243,5 +223,24 @@ roomRouter.post('/:id/members/ban', wrapRequestHandler(requireLoginMiddleware), 
  */
 
 roomRouter.put('/:id/members/@me', wrapRequestHandler(requireLoginMiddleware), changeNicknameValidator, wrapRequestHandler(roomController.changeNickname))
+
+/* Description: Kick members
+ * Path: /:id/kick
+ * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ * Param: { id: string }
+ * Body: { memberId: string }
+ */
+roomRouter.post('/:id/kick', wrapRequestHandler(requireLoginMiddleware), kickMemberValidator, wrapRequestHandler(roomController.kickMember))
+
+/**
+ * Description: Ban members
+ * Path: /:id/ban
+ * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ * Param: { id: string }
+ * Body: { memberId: string , due_to: Date }
+ */
+roomRouter.post('/:id/ban', wrapRequestHandler(requireLoginMiddleware), banMemberValidator, wrapRequestHandler(roomController.banMember))
 
 export default roomRouter
