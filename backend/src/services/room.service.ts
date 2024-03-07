@@ -314,7 +314,10 @@ class RoomService {
       })
     }
 
-    const message = await databaseService.messages.find({ _id: { $gte: matchedMessages[index]._id } }).toArray()
+    const message = await databaseService.messages
+      .find({ _id: { $gte: matchedMessages[index]._id } })
+      .limit(10)
+      .toArray()
 
     return {
       message: message,
