@@ -15,6 +15,7 @@ export const getRoomsValidator = paginationValidator
 export const createRoomValidator = validate(
   checkSchema({
     name: {
+      trim: true,
       notEmpty: {
         errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_NAME_IS_REQUIRED
       },
@@ -23,12 +24,11 @@ export const createRoomValidator = validate(
       },
       isLength: {
         options: {
-          min: 2,
-          max: 100
+          min: 1,
+          max: 20
         },
-        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_NAME_LENGTH_MUST_BE_FROM_2_TO_100
+        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_NAME_LENGTH_MUST_BE_FROM_1_TO_20
       },
-      trim: true
     },
     type: {
       notEmpty: {
@@ -162,10 +162,10 @@ export const updateRoomValidator = validate(
       },
       isLength: {
         options: {
-          min: 2,
-          max: 100
+          min: 1,
+          max: 20
         },
-        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_NAME_LENGTH_MUST_BE_FROM_2_TO_100
+        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_NAME_LENGTH_MUST_BE_FROM_1_TO_20
       },
       trim: true
     },

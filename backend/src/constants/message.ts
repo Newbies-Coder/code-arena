@@ -505,7 +505,7 @@ export const VALIDATION_MESSAGES = {
     ROOM_IS_DELETED: 'Room is deleted',
     ROOM_NAME_IS_REQUIRED: 'Room name is required',
     ROOM_NAME_MUST_BE_A_STRING: 'Room name must be a string',
-    ROOM_NAME_LENGTH_MUST_BE_FROM_2_TO_100: 'Room name must be longer than 2 characters and less than 30 characters',
+    ROOM_NAME_LENGTH_MUST_BE_FROM_1_TO_20: 'Room name must be longer than 1 characters and less than 20 characters',
     ROOM_TYPE_IS_REQUIRED: 'Room type is required',
     ROOM_TYPE_MUST_BE_A_STRING: 'Room type must be a string',
     ROOM_TYPE_IS_INVALID: 'Room type is invalid',
