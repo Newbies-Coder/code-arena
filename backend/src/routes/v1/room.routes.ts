@@ -146,7 +146,7 @@ roomRouter.post('/:id/invites', wrapRequestHandler(requireLoginMiddleware), crea
  * Header: { Authorization: Bearer <access_token> }
  * Param: { id: string }
  */
-roomRouter.post('/invites/:inviteId/accept', wrapRequestHandler(requireLoginMiddleware), acceptInvitationValidator, wrapRequestHandler(roomController.acceptInvite))
+roomRouter.post('/:inviteId/accept', wrapRequestHandler(requireLoginMiddleware), acceptInvitationValidator, wrapRequestHandler(roomController.acceptInvite))
 
 /**
  * Description: Decline an invitation
@@ -155,7 +155,7 @@ roomRouter.post('/invites/:inviteId/accept', wrapRequestHandler(requireLoginMidd
  * Header: { Authorization: Bearer <access_token> }
  * Param: { id: string }
  */
-roomRouter.post('/invites/:inviteId/reject', wrapRequestHandler(requireLoginMiddleware), rejectInvitationValidator, wrapRequestHandler(roomController.rejectInvite))
+roomRouter.post('/:inviteId/reject', wrapRequestHandler(requireLoginMiddleware), rejectInvitationValidator, wrapRequestHandler(roomController.rejectInvite))
 
 /**
  * Description: Get a list of messages
