@@ -957,6 +957,13 @@ export const acceptInvitationValidator = validate(
             })
           }
 
+          if (invitation.recipient.toString() !== req.user._id) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.INVITATION.INVITATION_NOT_OWN
+            })
+          }
+
           if (invitation.status === 'accepted') {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.BAD_REQUEST,
@@ -995,6 +1002,13 @@ export const rejectInvitationValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.BAD_REQUEST,
               message: VALIDATION_MESSAGES.INVITATION.INVITATION_NOT_FOUND
+            })
+          }
+
+          if (invitation.recipient.toString() !== req.user._id) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.INVITATION.INVITATION_NOT_OWN
             })
           }
 

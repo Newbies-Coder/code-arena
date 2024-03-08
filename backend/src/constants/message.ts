@@ -564,7 +564,8 @@ export const VALIDATION_MESSAGES = {
     INVITE_ID_IS_REQUIRED: 'Invite id is required',
     INVITATION_NOT_FOUND: 'Invitation not found',
     INVITATION_IS_ACCEPTED: 'Invitation already accepted',
-    INVITATION_IS_REJECTED: 'Invitation already rejected'
+    INVITATION_IS_REJECTED: 'Invitation already rejected',
+    INVITATION_NOT_OWN: 'Invitation is not your'
   },
   MEMBER: {
     NICKNAME_IS_REQUIRED: 'Nickname is required',
