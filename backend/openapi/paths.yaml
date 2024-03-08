@@ -4969,7 +4969,7 @@ paths:
         - room
       summary: Accept a room invitation
       description: Allows a user to accept an invitation to enter a specific chat room.
-      operationId: acceptInvitation
+      operationId: messageReact
       parameters:
         - name: id
           in: path
