@@ -34,6 +34,7 @@ const envSchema = Joi.object({
   DB_ROOM_COLLECTION: Joi.string().required().description(DB_MAIN.ROOM_COLLECTION),
   DB_INVITES_COLLECTION: Joi.string().required().description(DB_MAIN.INVITE_COLLECTION),
   DB_MEMBERS_COLLECTION: Joi.string().required().description(DB_MAIN.MEMBER_COLLECTION),
+  DB_BANNED_MEMBERS_COLLECTION: Joi.string().required().description(DB_MAIN.MEMBER_COLLECTION),
   DATABASE_USER_LOGS: Joi.string().required().description(DB_LOGS.USERNAME),
   PASSWORD_USER_LOGS: Joi.string().required().description(DB_LOGS.PASSWORD),
   DATABASE_CODE_ARENA: Joi.string().required().description(DB_MAIN.USERNAME),

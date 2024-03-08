@@ -1,8 +1,10 @@
 import { ObjectId } from 'mongodb'
 
-export const attachmentTypes = ['image' , 'video'] as const
+export const attachmentTypes = ['image', 'video'] as const
+export const emotes = ['like', 'heart'] as const
 
 export type AttachmentType = (typeof attachmentTypes)[number]
+export type EmoteType = (typeof emotes)[number]
 
 export type Attachment = {
   type: AttachmentType
@@ -13,7 +15,7 @@ type MessageType = {
   _id?: ObjectId
   sender: ObjectId
   room: ObjectId
-  emotes?: Record<string, number>
+  emotes?: Record<EmoteType, number>
   content?: string
   attachments?: Attachment[]
   updated_at?: Date

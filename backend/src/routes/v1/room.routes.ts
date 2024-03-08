@@ -2,7 +2,9 @@ import { Router } from 'express'
 import roomController from '~/controllers/room.controller'
 import { requireLoginMiddleware } from '~/middlewares/auth.middlewares'
 import {
+  acceptInvitationValidator,
   banMemberValidator,
+  changeNicknameValidator,
   changeRoomAvatarValidator,
   changeRoomBackgroundValidator,
   createInviteValidator,
@@ -14,8 +16,12 @@ import {
   getMessageValidator,
   getRoomsValidator,
   kickMemberValidator,
+  leaveRoomValidator,
   makeRoomPrivateValidator,
   pinMessageValidator,
+  reactMessageValidator,
+  rejectInvitationValidator,
+  searchMessageValidator,
   updateRoomValidator
 } from '~/middlewares/room.middlewares'
 import { singleImageUpload } from '~/middlewares/uploadFile.middleware'
@@ -64,6 +70,16 @@ roomRouter.put('/:id', wrapRequestHandler(requireLoginMiddleware), updateRoomVal
 roomRouter.put('/:id/password', wrapRequestHandler(requireLoginMiddleware), makeRoomPrivateValidator, wrapRequestHandler(roomController.makeRoomPrivate))
 
 /**
+ * Description: Leave room,
+ * Path: /:id/leave
+ * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ * Param: { id: string }
+ */
+
+roomRouter.post('/:id/leave', wrapRequestHandler(requireLoginMiddleware), leaveRoomValidator, wrapRequestHandler(roomController.leaveRoom))
+
+/**
  * Description: Dismiss message from room,
  * Path: /:id
  * Method: PUT
@@ -106,14 +122,40 @@ roomRouter.put('/:id/background', wrapRequestHandler(requireLoginMiddleware), ch
 roomRouter.delete('/:id', wrapRequestHandler(requireLoginMiddleware), deleteRoomValidator, wrapRequestHandler(roomController.deleteRoom))
 
 /**
+ * Description: Get invitation
+ * Path: /:id/invites
+ * Method: GET
+ * Header: { Authorization: Bearer <access_token> }
+ */
+roomRouter.get('/invites', wrapRequestHandler(requireLoginMiddleware), wrapRequestHandler(roomController.getInvite))
+
+/**
  * Description: Create an invitation
- * Path: /:id
+ * Path: /:id/invites
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }
  * Param: { id: string }
  * Body: { recipient: string }
  */
 roomRouter.post('/:id/invites', wrapRequestHandler(requireLoginMiddleware), createInviteValidator, wrapRequestHandler(roomController.createInvite))
+
+/**
+ * Description: Accept an invitation
+ * Path: /:id/:inviteId/accept
+ * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ * Param: { id: string }
+ */
+roomRouter.post('/invites/:inviteId/accept', wrapRequestHandler(requireLoginMiddleware), acceptInvitationValidator, wrapRequestHandler(roomController.acceptInvite))
+
+/**
+ * Description: Decline an invitation
+ * Path: /:id/:inviteId/decline
+ * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ * Param: { id: string }
+ */
+roomRouter.post('/invites/:inviteId/reject', wrapRequestHandler(requireLoginMiddleware), rejectInvitationValidator, wrapRequestHandler(roomController.rejectInvite))
 
 /**
  * Description: Get a list of messages
@@ -124,6 +166,16 @@ roomRouter.post('/:id/invites', wrapRequestHandler(requireLoginMiddleware), crea
  * Query: { page: number, limit: number }
  */
 roomRouter.get('/:id/messages', wrapRequestHandler(requireLoginMiddleware), getMessageValidator, wrapRequestHandler(roomController.getMessage))
+
+/**
+ * Description: Search messages
+ * Path: /:id/messages/search
+ * Method: GET
+ * Header: { Authorization: Bearer <access_token> }
+ * Param: { id: string }
+ * Query: { pageIndex: number, pageSize: number, search: string }
+ */
+roomRouter.get('/:id/messages/search', wrapRequestHandler(requireLoginMiddleware), searchMessageValidator, wrapRequestHandler(roomController.searchMessage))
 
 /**
  * Description: Create message
@@ -154,7 +206,24 @@ roomRouter.delete('/:id/messages/:messageId', wrapRequestHandler(requireLoginMid
 roomRouter.post('/:id/messages/:messageId/pin', wrapRequestHandler(requireLoginMiddleware), pinMessageValidator, wrapRequestHandler(roomController.pinMessage))
 
 /**
- * Description: Kick members
+ * Description: React message
+ * Path: /:id/messages/:messageId/react
+ * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ * Param: { id: string, messageId: string }
+ */
+roomRouter.post('/:id/messages/:messageId/react', wrapRequestHandler(requireLoginMiddleware), reactMessageValidator, wrapRequestHandler(roomController.reactMessage))
+
+/**
+ * Description: Change nickname
+ * Path: /:id/members/@me
+ * Method: PUT
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
+roomRouter.put('/:id/members/@me', wrapRequestHandler(requireLoginMiddleware), changeNicknameValidator, wrapRequestHandler(roomController.changeNickname))
+
+/* Description: Kick members
  * Path: /:id/kick
  * Method: POST
  * Header: { Authorization: Bearer <access_token> }

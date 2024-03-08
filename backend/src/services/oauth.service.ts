@@ -46,12 +46,12 @@ class AuthService {
               const result = await databaseService.users.insertOne(newUser)
 
               req.user = {
-                _id: result.insertedId,
-                ...newUser
+                ...newUser,
+                _id: result.insertedId.toString()
               }
               return done(null, newUser)
             }
-            req.user = user
+            req.user = { ...user, _id: user._id.toString() }
             return done(null, user)
           } catch (error) {
             return done(error, null)
@@ -110,12 +110,12 @@ class AuthService {
               const result = await databaseService.users.insertOne(newUser)
 
               req.user = {
-                _id: result.insertedId,
-                ...newUser
+                ...newUser,
+                _id: result.insertedId.toString()
               }
               return done(null, newUser)
             }
-            req.user = user
+            req.user = { ...user, _id: user._id.toString() }
             return done(null, user)
           } catch (error) {
             return done(error, null)
@@ -144,13 +144,13 @@ class AuthService {
               const result = await databaseService.users.insertOne(newUser)
 
               req.user = {
-                _id: result.insertedId,
-                ...newUser
+                ...newUser,
+                _id: result.insertedId.toString()
               }
 
               return done(null, newUser)
             }
-            req.user = user
+            req.user = { ...user, _id: user._id.toString() }
             return done(null, user)
           } catch (error) {
             return done(error, null)
@@ -181,11 +181,11 @@ class AuthService {
     const { _id, role, email, username } = req.user
     const refresh_token = await userServices.signRefreshToken(_id.toString(), email, username, role)
     // if user is logged in but still login again
-    await databaseService.refreshTokens.deleteOne({ user_id: _id })
+    await databaseService.refreshTokens.deleteOne({ user_id: new ObjectId(_id) })
     await databaseService.refreshTokens.insertOne(
       new RefreshToken({
         token: refresh_token,
-        user_id: _id
+        user_id: new ObjectId(_id)
       })
     )
 

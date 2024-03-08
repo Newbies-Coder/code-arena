@@ -1,25 +1,26 @@
 import { StatusCodes } from 'http-status-codes'
 import { ObjectId } from 'mongodb'
-import { PaginationType, ParsedGetAllMessageUrlQuery, ParsedGetAllRoomUrlQuery } from '~/@types/reponse.type'
+import { PaginationType, ParsedGetAllMessageUrlQuery, ParsedGetAllRoomUrlQuery, ParsedSearchMessageUrlQuery, SearchMessageResult } from '~/@types/reponse.type'
 import { env } from '~/config/environment.config'
 import { VALIDATION_MESSAGES } from '~/constants/message'
 import { io } from '~/main'
 import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import {
   BanMemberBody,
+  ChangeNicknameBody,
   CreateInviteBody,
   CreateMessageBody,
   CreateRoomBody,
   DismissMessageBody,
   KickMemberBody,
   MakeRoomPrivateBody,
-  PinMessageBody,
+  ReactMessageBody,
   UpdateRoomBody
 } from '~/models/requests/Room.request'
 import BannedMember from '~/models/schemas/BannedMember.schema'
 import Invitation from '~/models/schemas/Invitation.schema'
 import Member from '~/models/schemas/Member.schema'
-import Message from '~/models/schemas/Message.schema'
+import Message, { EmoteType } from '~/models/schemas/Message.schema'
 import Room from '~/models/schemas/Room.schema'
 import cloudinaryService from '~/services/cloudinary.service'
 import { databaseService } from '~/services/connectDB.service'
@@ -27,7 +28,6 @@ import { hashRoomPassword } from '~/utils/crypto'
 
 class RoomService {
   private async removeMember(roomId: ObjectId, memberId: ObjectId) {
-    console.log({ roomId, memberId })
     await databaseService.members.deleteOne({ roomId, memberId })
   }
 
@@ -65,7 +65,7 @@ class RoomService {
       name,
       type,
       // Single (direct chat) room can not have an owner
-      owner: type === 'multiple' ? userId : undefined,
+      owner: type === 'multiple' ? new ObjectId(userId) : null,
       isPrivate: false,
       isDeleted: false,
       updated_at: new Date(),
@@ -85,21 +85,29 @@ class RoomService {
     databaseService.members.insertMany(roomMembers)
   }
 
-  async updateRoom(userId: ObjectId, id: ObjectId, { name }: UpdateRoomBody) {
+  async updateRoom(id: ObjectId, { name, emote }: UpdateRoomBody) {
     await databaseService.rooms.updateOne(
-      { _id: new ObjectId(id), owner: userId },
+      { _id: new ObjectId(id) },
       {
         $set: {
           name,
+          emote,
           updated_at: new Date()
         }
       }
     )
   }
 
-  async deleteRoom(userId: ObjectId, id: ObjectId) {
-    await databaseService.rooms.deleteOne({ _id: id, owner: userId })
-    await databaseService.messages.deleteMany({ _id: id })
+  async deleteRoom(id: ObjectId) {
+    await databaseService.rooms.updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $set: {
+          isDeleted: true,
+          updated_at: new Date()
+        }
+      }
+    )
   }
 
   async makeRoomPrivate(id: ObjectId, { password }: MakeRoomPrivateBody) {
@@ -124,6 +132,11 @@ class RoomService {
         status: 'pending'
       })
     )
+  }
+
+  async getInvite(userId: ObjectId) {
+    const invites = await databaseService.invites.find({ recipient: new ObjectId(userId), status: 'pending' }).toArray()
+    return invites
   }
 
   async banMember(roomId: ObjectId, payload: BanMemberBody) {
@@ -200,7 +213,7 @@ class RoomService {
 
   async dismissMessage(userId: ObjectId, roomId: ObjectId, payload: DismissMessageBody) {
     await databaseService.members.updateOne(
-      { _id: roomId, memberId: userId },
+      { roomId: roomId, memberId: new ObjectId(userId) },
       {
         $set: {
           suppressNotificationTime: new Date(payload.due_to),
@@ -217,7 +230,7 @@ class RoomService {
     }
 
     const { url } = await cloudinaryService.uploadImage(env.cloudinary.room_avatar_folder, file.buffer)
-    await databaseService.rooms.updateOne({ _id: room }, { $set: { avatar: url } })
+    await databaseService.rooms.updateOne({ _id: room._id }, { $set: { avatar: url } })
   }
   async changeBackground(roomId: ObjectId, file: Express.Multer.File) {
     const room = await databaseService.rooms.findOne({ _id: roomId })
@@ -226,7 +239,90 @@ class RoomService {
     }
 
     const { url } = await cloudinaryService.uploadImage(env.cloudinary.room_background_folder, file.buffer)
-    await databaseService.rooms.updateOne({ _id: room }, { $set: { background: url } })
+    await databaseService.rooms.updateOne({ _id: room._id }, { $set: { background: url } })
+  }
+
+  async leaveRoom(roomId: ObjectId) {
+    await databaseService.members.deleteOne({ roomId })
+  }
+
+  async acceptInvite(inviteId: ObjectId, userId: ObjectId) {
+    const updatedInvite = await databaseService.invites.findOneAndUpdate(
+      { _id: inviteId },
+      {
+        $set: {
+          status: 'accepted',
+          updated_at: new Date()
+        }
+      }
+    )
+
+    await databaseService.members.insertOne(
+      new Member({
+        roomId: updatedInvite.room,
+        memberId: userId
+      })
+    )
+  }
+
+  async rejectInvite(inviteId: ObjectId) {
+    await databaseService.invites.updateOne(
+      { _id: inviteId },
+      {
+        $set: {
+          status: 'rejected',
+          updated_at: new Date()
+        }
+      }
+    )
+  }
+
+  async reactMessage(messageId: ObjectId, payload: ReactMessageBody) {
+    await databaseService.messages.updateOne(
+      { _id: messageId },
+      {
+        $inc: {
+          [`emotes.${payload.emote}`]: 1
+        },
+        $set: {
+          updated_at: new Date()
+        }
+      }
+    )
+  }
+
+  async changeNickname(roomId: ObjectId, userId: ObjectId, { nickname }: ChangeNicknameBody) {
+    await databaseService.members.updateOne({ memberId: userId, roomId }, { $set: { nickname } })
+  }
+  async searchMessage(payload: ParsedSearchMessageUrlQuery): Promise<SearchMessageResult> {
+    const query = payload.query
+    const index = parseInt(payload.index)
+
+    const matchedMessages = await databaseService.messages.find({ content: { $regex: query } }).toArray()
+
+    if (matchedMessages.length === 0) {
+      return {
+        message: [],
+        total: 0
+      }
+    }
+
+    if (index > matchedMessages.length - 1) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: VALIDATION_MESSAGES.MESSAGE.INDEX_IS_OUT_OF_BOUND
+      })
+    }
+
+    const message = await databaseService.messages
+      .find({ _id: { $gte: matchedMessages[index]._id } })
+      .limit(10)
+      .toArray()
+
+    return {
+      message: message,
+      total: matchedMessages.length
+    }
   }
 }
 

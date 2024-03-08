@@ -2,7 +2,7 @@ declare namespace Express {
   import { ObjectId } from 'mongodb'
   export interface Request {
     user?: {
-      _id: ObjectId
+      _id: string
       role: UserRole
       email: string
       username: string
