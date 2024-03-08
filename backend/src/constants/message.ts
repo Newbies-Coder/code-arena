@@ -502,6 +502,7 @@ export const VALIDATION_MESSAGES = {
     COURSE_CATEGORY_IS_REQUIRED: 'Course name is required'
   },
   ROOM: {
+    ROOM_IS_DELETED: 'Room is deleted',
     ROOM_NAME_IS_REQUIRED: 'Room name is required',
     ROOM_NAME_MUST_BE_A_STRING: 'Room name must be a string',
     ROOM_NAME_LENGTH_MUST_BE_FROM_2_TO_100: 'Room name must be longer than 2 characters and less than 30 characters',
