@@ -349,6 +349,14 @@ export const createInviteValidator = validate(
               message: VALIDATION_MESSAGES.ROOM.USER_ALREADY_IN_ROOM
             })
           }
+          const bannedMember = await databaseService.bannedMembers.find({ roomId: new ObjectId(req.params.id), memberId: new ObjectId(value) })
+
+          if (bannedMember) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.USER_IS_BANNED_FROM_ROOM
+            })
+          }
 
           return true
         }

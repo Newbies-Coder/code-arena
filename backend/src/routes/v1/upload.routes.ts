@@ -10,13 +10,13 @@ const uploadRouter = Router()
 
 /**
  * Description: Upload image
- * Path: /meida
+ * Path: /media
  * Method: POST
  */
 uploadRouter.post('/media', wrapRequestHandler(requireRoleMiddleware(UserRole.Admin)), singleImageUpload, wrapRequestHandler(uploadController.uploadSingle))
 
 /**
- * Description: Upload nultiple image
+ * Description: Upload multiple image
  * Path: /media_multiple
  * Method: POST
  */
