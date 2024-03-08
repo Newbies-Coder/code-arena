@@ -3507,7 +3507,7 @@ paths:
                 type:
                   type: string
                   description: Description image for the banner
-                member:
+                members:
                   type: array
                   description: Description list of members in the room
                   items:
