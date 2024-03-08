@@ -4512,6 +4512,14 @@ paths:
       description: Returns a list of messages for the user, optionally filtered by query parameters.
       operationId: getListOfMessage
       parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the chat room.
+          schema:
+            type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
         - in: query
           name: page
           schema:
@@ -4664,6 +4672,15 @@ paths:
       summary: Create a new chat message
       description: This endpoint allows users to create a new message in a chat session.
       operationId: createMessage
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the chat room.
+          schema:
+            type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
       requestBody:
         required: true
         content:
