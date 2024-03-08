@@ -1,4 +1,4 @@
-import { CustomValidator, checkSchema } from 'express-validator'
+import { checkSchema } from 'express-validator'
 import { StatusCodes } from 'http-status-codes'
 import { ObjectId } from 'mongodb'
 import { VALIDATION_MESSAGES } from '~/constants/message'
@@ -15,6 +15,7 @@ export const getRoomsValidator = paginationValidator
 export const createRoomValidator = validate(
   checkSchema({
     name: {
+      trim: true,
       notEmpty: {
         errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_NAME_IS_REQUIRED
       },
@@ -23,12 +24,11 @@ export const createRoomValidator = validate(
       },
       isLength: {
         options: {
-          min: 2,
-          max: 100
+          min: 1,
+          max: 20
         },
-        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_NAME_LENGTH_MUST_BE_FROM_2_TO_100
+        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_NAME_LENGTH_MUST_BE_FROM_1_TO_20
       },
-      trim: true
     },
     type: {
       notEmpty: {
@@ -127,6 +127,13 @@ export const updateRoomValidator = validate(
             })
           }
 
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
+            })
+          }
+
           if (room.type === 'multiple') {
             if (room.owner.toString() !== req.user._id) {
               throw new ErrorWithStatus({
@@ -155,10 +162,10 @@ export const updateRoomValidator = validate(
       },
       isLength: {
         options: {
-          min: 2,
-          max: 100
+          min: 1,
+          max: 20
         },
-        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_NAME_LENGTH_MUST_BE_FROM_2_TO_100
+        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_NAME_LENGTH_MUST_BE_FROM_1_TO_20
       },
       trim: true
     },
@@ -191,6 +198,13 @@ export const changeRoomAvatarValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.NOT_FOUND,
               message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
             })
           }
 
@@ -229,6 +243,13 @@ export const changeRoomBackgroundValidator = validate(
             })
           }
 
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
+            })
+          }
+
           if (room.type === 'multiple') {
             if (room.owner.toString() !== req.user._id) {
               throw new ErrorWithStatus({
@@ -261,6 +282,13 @@ export const deleteRoomValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.NOT_FOUND,
               message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
             })
           }
 
@@ -301,6 +329,13 @@ export const createInviteValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.NOT_FOUND,
               message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
             })
           }
 
@@ -349,6 +384,14 @@ export const createInviteValidator = validate(
               message: VALIDATION_MESSAGES.ROOM.USER_ALREADY_IN_ROOM
             })
           }
+          const bannedMember = await databaseService.bannedMembers.find({ roomId: new ObjectId(req.params.id), memberId: new ObjectId(value) })
+
+          if (bannedMember) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.USER_IS_BANNED_FROM_ROOM
+            })
+          }
 
           return true
         }
@@ -373,6 +416,13 @@ export const banMemberValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.NOT_FOUND,
               message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
             })
           }
 
@@ -424,6 +474,13 @@ export const banMemberValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.NOT_FOUND,
               message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
             })
           }
 
@@ -483,6 +540,13 @@ export const kickMemberValidator = validate(
             })
           }
 
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
+            })
+          }
+
           if (room.type === 'single') {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.BAD_REQUEST,
@@ -534,6 +598,13 @@ export const kickMemberValidator = validate(
             })
           }
 
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
+            })
+          }
+
           const member = await databaseService.members.findOne({ roomId: new ObjectId(req.params.id), memberId: new ObjectId(value) })
 
           if (!member) {
@@ -566,6 +637,13 @@ export const makeRoomPrivateValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.NOT_FOUND,
               message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
             })
           }
 
@@ -662,6 +740,13 @@ export const pinMessageValidator = validate(
             })
           }
 
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
+            })
+          }
+
           return true
         }
       }
@@ -728,6 +813,13 @@ export const getMessageValidator = validate(
             })
           }
 
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
+            })
+          }
+
           const member = await databaseService.members.find({ roomId: new ObjectId(value), memberId: new ObjectId(req.user._id) })
 
           if (!member) {
@@ -751,7 +843,7 @@ export const createMessageValidator = validate(
         errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_REQUIRED
       },
       custom: {
-        options: async (value) => {
+        options: async (value, { req }) => {
           validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
 
           const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
@@ -759,6 +851,22 @@ export const createMessageValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.NOT_FOUND,
               message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
+            })
+          }
+
+          const member = await databaseService.members.find({ roomId: new ObjectId(value), memberId: new ObjectId(req.user._id) })
+
+          if (!member) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.FORBIDDEN,
+              message: VALIDATION_MESSAGES.ROOM.USER_NOT_IN_ROOM
             })
           }
 
@@ -850,6 +958,13 @@ export const dismissMessageValidator = validate(
             })
           }
 
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
+            })
+          }
+
           const member = await databaseService.members.findOne({ memberId: new ObjectId(req.user._id), roomId: new ObjectId(value) })
 
           if (!member) {
@@ -898,10 +1013,18 @@ export const leaveRoomValidator = validate(
           validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
 
           const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
+
           if (!room) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.NOT_FOUND,
               message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
             })
           }
 
@@ -949,6 +1072,13 @@ export const acceptInvitationValidator = validate(
             })
           }
 
+          if (invitation.recipient.toString() !== req.user._id) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.INVITATION.INVITATION_NOT_OWN
+            })
+          }
+
           if (invitation.status === 'accepted') {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.BAD_REQUEST,
@@ -990,6 +1120,13 @@ export const rejectInvitationValidator = validate(
             })
           }
 
+          if (invitation.recipient.toString() !== req.user._id) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.INVITATION.INVITATION_NOT_OWN
+            })
+          }
+
           if (invitation.status === 'accepted') {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.BAD_REQUEST,
@@ -1027,6 +1164,13 @@ export const reactMessageValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.NOT_FOUND,
               message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
             })
           }
 
@@ -1105,6 +1249,13 @@ export const changeNicknameValidator = validate(
             })
           }
 
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
+            })
+          }
+
           const member = await databaseService.members.findOne({ memberId: new ObjectId(req.user._id), roomId: new ObjectId(value) })
 
           if (!member) {
@@ -1152,6 +1303,13 @@ export const searchMessageValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.NOT_FOUND,
               message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
             })
           }
 

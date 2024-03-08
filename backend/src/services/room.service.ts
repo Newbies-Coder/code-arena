@@ -20,11 +20,12 @@ import {
 import BannedMember from '~/models/schemas/BannedMember.schema'
 import Invitation from '~/models/schemas/Invitation.schema'
 import Member from '~/models/schemas/Member.schema'
-import Message, { EmoteType } from '~/models/schemas/Message.schema'
+import Message from '~/models/schemas/Message.schema'
 import Room from '~/models/schemas/Room.schema'
 import cloudinaryService from '~/services/cloudinary.service'
 import { databaseService } from '~/services/connectDB.service'
 import { hashRoomPassword } from '~/utils/crypto'
+import { parseRoomName } from '~/utils/helper'
 
 class RoomService {
   private async removeMember(roomId: ObjectId, memberId: ObjectId) {
@@ -62,7 +63,7 @@ class RoomService {
 
   async createRoom(userId: ObjectId, { type, name, members }: CreateRoomBody) {
     const room = new Room({
-      name,
+      name: parseRoomName(name),
       type,
       // Single (direct chat) room can not have an owner
       owner: type === 'multiple' ? new ObjectId(userId) : null,

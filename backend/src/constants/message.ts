@@ -502,9 +502,10 @@ export const VALIDATION_MESSAGES = {
     COURSE_CATEGORY_IS_REQUIRED: 'Course name is required'
   },
   ROOM: {
+    ROOM_IS_DELETED: 'Room is deleted',
     ROOM_NAME_IS_REQUIRED: 'Room name is required',
     ROOM_NAME_MUST_BE_A_STRING: 'Room name must be a string',
-    ROOM_NAME_LENGTH_MUST_BE_FROM_2_TO_100: 'Room name must be longer than 2 characters and less than 30 characters',
+    ROOM_NAME_LENGTH_MUST_BE_FROM_1_TO_20: 'Room name must be longer than 1 characters and less than 20 characters',
     ROOM_TYPE_IS_REQUIRED: 'Room type is required',
     ROOM_TYPE_MUST_BE_A_STRING: 'Room type must be a string',
     ROOM_TYPE_IS_INVALID: 'Room type is invalid',
@@ -534,7 +535,8 @@ export const VALIDATION_MESSAGES = {
     CAN_NOT_KICK_OWNER: 'Can not kick owner',
     CAN_NOT_BAN_OWNER: 'Can not ban owner',
     ROOM_MEMBERS_IS_NOT_UNIQUE: 'Room members must be unique',
-    CAN_NOT_LEAVE_SINGLE_ROOM: 'Can not leave direct chat room'
+    CAN_NOT_LEAVE_SINGLE_ROOM: 'Can not leave direct chat room',
+    USER_IS_BANNED_FROM_ROOM: 'Can not user that is banned from room'
   },
   MESSAGE: {
     INDEX_IS_OUT_OF_BOUND: 'Index is out of bound',
@@ -563,7 +565,8 @@ export const VALIDATION_MESSAGES = {
     INVITE_ID_IS_REQUIRED: 'Invite id is required',
     INVITATION_NOT_FOUND: 'Invitation not found',
     INVITATION_IS_ACCEPTED: 'Invitation already accepted',
-    INVITATION_IS_REJECTED: 'Invitation already rejected'
+    INVITATION_IS_REJECTED: 'Invitation already rejected',
+    INVITATION_NOT_OWN: 'Invitation is not your'
   },
   MEMBER: {
     NICKNAME_IS_REQUIRED: 'Nickname is required',
