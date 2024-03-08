@@ -5086,6 +5086,104 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
+  /rooms/{id}/messages/search:
+    get:
+      tags:
+        - room
+      summary: Search messages in a room
+      description: Allows users to search for messages within a specific chat room by keywords.
+      operationId: searchMessages
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the room where messages are being searched.
+          schema:
+            type: string
+        - name: query
+          in: query
+          required: true
+          description: The keywords to search for within the messages.
+          schema:
+            type: string
+        - name: index
+          in: query
+          required: false
+          description: The index from where to start the search results, used for pagination.
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Search results returned successfully, starting from the provided index.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Search results returned successfully, starting from the provided index.
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '404':
+          description: Room not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    example: Room not found.
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
   /rooms/{id}/leave:
     post:
       tags:
@@ -5344,7 +5442,104 @@ paths:
                     type: string
                     format: date-time
                     example: '2024-02-22T00:00:00.000Z'
-
+  /rooms/{id}/members/@me:
+    put:
+      tags:
+        - room
+      summary: Change user nickname in a room
+      description: Allows a user to change their nickname in a specific chat room.
+      operationId: changeUserNickname
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the room where the nickname will be changed.
+          schema:
+            type: string
+            format: MongoId
+            example: 64be0ad2e43d2464394feedb
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                  description: The new nickname for the user.
+              required:
+                - nickname
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Nickname changed successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    example: Nickname changed successfully.
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '401':
+          description: You are not authorized to carry out this task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    example: You do not have permission to perform this task. Please login again!
+                  data:
+                    type: string
+                    example: ''
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '404':
+          description: The room or user does not exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    example: The room or user does not exist.
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    example: Internal server error
+                  dateTime:
+                    type: string
+                    format: date-time
+                    example: '2024-02-22T00:00:00.000Z'
 components:
   schemas:
     LoginSchema:
