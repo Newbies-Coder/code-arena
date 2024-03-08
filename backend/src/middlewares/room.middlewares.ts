@@ -843,7 +843,7 @@ export const createMessageValidator = validate(
         errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_REQUIRED
       },
       custom: {
-        options: async (value) => {
+        options: async (value, { req }) => {
           validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
 
           const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
@@ -858,6 +858,15 @@ export const createMessageValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.BAD_REQUEST,
               message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
+            })
+          }
+
+          const member = await databaseService.members.find({ roomId: new ObjectId(value), memberId: new ObjectId(req.user._id) })
+
+          if (!member) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.FORBIDDEN,
+              message: VALIDATION_MESSAGES.ROOM.USER_NOT_IN_ROOM
             })
           }
 
@@ -1004,6 +1013,7 @@ export const leaveRoomValidator = validate(
           validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
 
           const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
+
           if (!room) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.NOT_FOUND,
