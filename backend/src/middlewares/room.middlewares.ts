@@ -28,7 +28,7 @@ export const createRoomValidator = validate(
           max: 20
         },
         errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_NAME_LENGTH_MUST_BE_FROM_1_TO_20
-      },
+      }
     },
     type: {
       notEmpty: {
@@ -925,6 +925,13 @@ export const deleteMessageValidator = validate(
           validateObjectId(value, VALIDATION_MESSAGES.MESSAGE.MESSAGE_ID_IS_INVALID)
 
           const message = await databaseService.messages.findOne({ _id: value })
+
+          if (!message) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.NOT_FOUND,
+              message: VALIDATION_MESSAGES.MESSAGE.MESSAGE_NOT_FOUND
+            })
+          }
 
           if (message.sender !== req.user._id) {
             throw new ErrorWithStatus({

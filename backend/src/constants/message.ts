@@ -540,6 +540,7 @@ export const VALIDATION_MESSAGES = {
   },
   MESSAGE: {
     INDEX_IS_OUT_OF_BOUND: 'Index is out of bound',
+    MESSAGE_NOT_FOUND: 'Message not found',
     MESSAGE_LENGTH_MUST_GREATER_THAN_2_AND_LESS_THAN_100: 'Message length must be greater than 2 and less than 100',
     MESSAGE_IS_REQUIRED: 'Message is required',
     MESSAGE_MUST_BE_STRING: 'Message must be a string',
