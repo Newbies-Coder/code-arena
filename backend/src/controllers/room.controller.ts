@@ -106,8 +106,8 @@ const roomController = {
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.CHANGE_NICKNAME)
   },
   searchMessage: async (req: Request<ParamsDictionary, any, ChangeNicknameBody, ParsedSearchMessageUrlQuery>, res: Response, next: NextFunction) => {
-    const result = await roomService.searchMessage(req.query)
-    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.CHANGE_NICKNAME)
+    const result = await roomService.searchMessage(new ObjectId(req.params.id), req.query)
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.FIND_MESSAGE)
   }
 }
 

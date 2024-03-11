@@ -295,7 +295,7 @@ class RoomService {
   async changeNickname(roomId: ObjectId, userId: ObjectId, { nickname }: ChangeNicknameBody) {
     await databaseService.members.updateOne({ memberId: userId, roomId }, { $set: { nickname } })
   }
-  async searchMessage(payload: ParsedSearchMessageUrlQuery): Promise<SearchMessageResult> {
+  async searchMessage(roomId: ObjectId, payload: ParsedSearchMessageUrlQuery): Promise<SearchMessageResult> {
     const query = payload.query
     const index = parseInt(payload.index)
 
@@ -316,7 +316,7 @@ class RoomService {
     }
 
     const message = await databaseService.messages
-      .find({ _id: { $gte: matchedMessages[index]._id } })
+      .find({ _id: { $gte: matchedMessages[index]._id }, room: roomId })
       .limit(10)
       .toArray()
 

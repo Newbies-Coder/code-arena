@@ -186,7 +186,8 @@ export const RESULT_RESPONSE_MESSAGES = {
     ACCEPT_INVITE: 'Accept invite successfully',
     REJECT_INVITE: 'Reject invite successfully',
     REACT_MESSAGE: 'React message successfully',
-    CHANGE_NICKNAME: 'Change nickname successfully'
+    CHANGE_NICKNAME: 'Change nickname successfully',
+    FIND_MESSAGE: 'Find message successfully'
   }
 } as const
 
