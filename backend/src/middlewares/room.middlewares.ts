@@ -28,7 +28,7 @@ export const createRoomValidator = validate(
           max: 20
         },
         errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_NAME_LENGTH_MUST_BE_FROM_1_TO_20
-      },
+      }
     },
     type: {
       notEmpty: {
@@ -777,7 +777,7 @@ export const pinMessageValidator = validate(
 
 export const getMessageValidator = validate(
   checkSchema({
-    pageIndex: {
+    page: {
       trim: true,
       isInt: {
         options: {
@@ -786,7 +786,7 @@ export const getMessageValidator = validate(
         errorMessage: VALIDATION_MESSAGES.PAGINATION.PAGE_CAN_NOT_LESS_THAN_ZERO
       }
     },
-    pageSize: {
+    limit: {
       trim: true,
       isInt: {
         options: {

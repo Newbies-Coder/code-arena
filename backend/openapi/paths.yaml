@@ -4016,7 +4016,7 @@ paths:
             schema:
               type: object
               properties:
-                dute_to:
+                due_to:
                   type: string
                   description: Expiry time to block notifications from chat group
                   format: date-time
