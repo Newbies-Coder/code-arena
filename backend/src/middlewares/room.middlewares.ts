@@ -91,6 +91,13 @@ export const createRoomValidator = validate(
                 statusCode: StatusCodes.BAD_REQUEST,
                 message: VALIDATION_MESSAGES.ROOM.SINGLE_ROOM_MUST_HAVE_2_MEMBER
               })
+            } else {
+              if (value.length < 2) {
+                throw new ErrorWithStatus({
+                  statusCode: StatusCodes.BAD_REQUEST,
+                  message: VALIDATION_MESSAGES.ROOM.ROOM_NEED_AT_LEAST_3_MEMBERS
+                })
+              }
             }
           }
 
