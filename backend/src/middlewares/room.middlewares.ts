@@ -7,7 +7,7 @@ import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import { attachmentTypes, emotes } from '~/models/schemas/Message.schema'
 import { roomTypes } from '~/models/schemas/Room.schema'
 import { databaseService } from '~/services/connectDB.service'
-import { isValidPassword } from '~/utils/helper'
+import { containsNewline, isValidPassword } from '~/utils/helper'
 import validate, { validateObjectId } from '~/utils/validate'
 
 export const getRoomsValidator = paginationValidator
@@ -21,6 +21,17 @@ export const createRoomValidator = validate(
       },
       isString: {
         errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_NAME_MUST_BE_A_STRING
+      },
+      custom: {
+        options: (value) => {
+          if (containsNewline(value)) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_NAME_CAN_NOT_CONTAIN_NEWLINE
+            })
+          }
+          return true
+        }
       },
       isLength: {
         options: {
