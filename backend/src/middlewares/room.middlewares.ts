@@ -217,6 +217,13 @@ export const changeRoomAvatarValidator = validate(
             }
           }
 
+          if (room.owner !== req.user._id) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.UNAUTHORIZED,
+              message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
+            })
+          }
+
           return true
         }
       }
@@ -257,6 +264,13 @@ export const changeRoomBackgroundValidator = validate(
                 message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
               })
             }
+          }
+
+          if (room.owner !== req.user._id) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.UNAUTHORIZED,
+              message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
+            })
           }
 
           return true
@@ -628,7 +642,7 @@ export const makeRoomPrivateValidator = validate(
         errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_REQUIRED
       },
       custom: {
-        options: async (value) => {
+        options: async (value, { req }) => {
           validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
 
           const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
@@ -658,6 +672,13 @@ export const makeRoomPrivateValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.BAD_REQUEST,
               message: VALIDATION_MESSAGES.ROOM.ROOM_ALREADY_PRIVATE
+            })
+          }
+
+          if (room.owner !== req.user._id) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.UNAUTHORIZED,
+              message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
             })
           }
 
@@ -729,7 +750,7 @@ export const pinMessageValidator = validate(
         errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_REQUIRED
       },
       custom: {
-        options: async (value) => {
+        options: async (value, { req }) => {
           validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
 
           const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
@@ -747,6 +768,13 @@ export const pinMessageValidator = validate(
             })
           }
 
+          if (room.owner !== req.user._id) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.UNAUTHORIZED,
+              message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
+            })
+          }
+
           return true
         }
       }
@@ -756,10 +784,10 @@ export const pinMessageValidator = validate(
         errorMessage: VALIDATION_MESSAGES.MESSAGE.MESSAGE_ID_IS_REQUIRED
       },
       custom: {
-        options: async (value) => {
+        options: async (value, { req }) => {
           validateObjectId(value, VALIDATION_MESSAGES.MESSAGE.MESSAGE_ID_IS_INVALID)
 
-          const message = await databaseService.messages.findOne({ _id: new ObjectId(value) })
+          const message = await databaseService.messages.findOne({ _id: new ObjectId(value), room: new ObjectId(req.params.id) })
 
           if (!message) {
             throw new ErrorWithStatus({
@@ -925,6 +953,13 @@ export const deleteMessageValidator = validate(
           validateObjectId(value, VALIDATION_MESSAGES.MESSAGE.MESSAGE_ID_IS_INVALID)
 
           const message = await databaseService.messages.findOne({ _id: value })
+
+          if (!message) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.NOT_FOUND,
+              message: VALIDATION_MESSAGES.MESSAGE.MESSAGE_NOT_FOUND
+            })
+          }
 
           if (message.sender !== req.user._id) {
             throw new ErrorWithStatus({
@@ -1192,10 +1227,10 @@ export const reactMessageValidator = validate(
         errorMessage: VALIDATION_MESSAGES.MESSAGE.MESSAGE_ID_IS_REQUIRED
       },
       custom: {
-        options: async (value) => {
+        options: async (value, { req }) => {
           validateObjectId(value, VALIDATION_MESSAGES.MESSAGE.MESSAGE_ID_IS_INVALID)
 
-          const message = await databaseService.messages.findOne({ _id: new ObjectId(value) })
+          const message = await databaseService.messages.findOne({ _id: new ObjectId(value), room: new ObjectId(req.params.id) })
 
           if (!message) {
             throw new ErrorWithStatus({

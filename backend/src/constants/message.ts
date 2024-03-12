@@ -186,7 +186,8 @@ export const RESULT_RESPONSE_MESSAGES = {
     ACCEPT_INVITE: 'Accept invite successfully',
     REJECT_INVITE: 'Reject invite successfully',
     REACT_MESSAGE: 'React message successfully',
-    CHANGE_NICKNAME: 'Change nickname successfully'
+    CHANGE_NICKNAME: 'Change nickname successfully',
+    FIND_MESSAGE: 'Find message successfully'
   }
 } as const
 
@@ -536,10 +537,11 @@ export const VALIDATION_MESSAGES = {
     CAN_NOT_BAN_OWNER: 'Can not ban owner',
     ROOM_MEMBERS_IS_NOT_UNIQUE: 'Room members must be unique',
     CAN_NOT_LEAVE_SINGLE_ROOM: 'Can not leave direct chat room',
-    USER_IS_BANNED_FROM_ROOM: 'Can not user that is banned from room'
+    USER_IS_BANNED_FROM_ROOM: 'Can not invite user that is banned from room'
   },
   MESSAGE: {
     INDEX_IS_OUT_OF_BOUND: 'Index is out of bound',
+    MESSAGE_NOT_FOUND: 'Message not found',
     MESSAGE_LENGTH_MUST_GREATER_THAN_2_AND_LESS_THAN_100: 'Message length must be greater than 2 and less than 100',
     MESSAGE_IS_REQUIRED: 'Message is required',
     MESSAGE_MUST_BE_STRING: 'Message must be a string',
