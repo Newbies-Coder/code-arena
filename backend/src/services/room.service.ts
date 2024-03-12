@@ -243,8 +243,8 @@ class RoomService {
     await databaseService.rooms.updateOne({ _id: room._id }, { $set: { background: url } })
   }
 
-  async leaveRoom(roomId: ObjectId) {
-    await databaseService.members.deleteOne({ roomId })
+  async leaveRoom(roomId: ObjectId, memberId: ObjectId) {
+    await databaseService.members.deleteOne({ roomId, memberId: memberId })
   }
 
   async acceptInvite(inviteId: ObjectId, userId: ObjectId) {

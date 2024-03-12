@@ -86,7 +86,7 @@ const roomController = {
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.CHANGE_BACKGROUND)
   },
   leaveRoom: async (req: Request<ParamsDictionary, any, any, ParsedUrlQuery>, res: Response, next: NextFunction) => {
-    const result = await roomService.leaveRoom(new ObjectId(req.params.id))
+    const result = await roomService.leaveRoom(new ObjectId(req.params.id), new ObjectId(req.user._id))
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.LEAVE_ROOM)
   },
   acceptInvite: async (req: Request<ParamsDictionary, any, any, ParsedUrlQuery>, res: Response, next: NextFunction) => {
