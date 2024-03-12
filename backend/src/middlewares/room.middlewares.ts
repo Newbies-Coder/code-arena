@@ -416,7 +416,7 @@ export const createInviteValidator = validate(
               message: VALIDATION_MESSAGES.ROOM.USER_ALREADY_IN_ROOM
             })
           }
-          const bannedMember = await databaseService.bannedMembers.find({ roomId: new ObjectId(req.params.id), memberId: new ObjectId(value) })
+          const bannedMember = await databaseService.bannedMembers.findOne({ roomId: new ObjectId(req.params.id), memberId: new ObjectId(value) })
 
           if (bannedMember) {
             throw new ErrorWithStatus({
