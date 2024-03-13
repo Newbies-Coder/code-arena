@@ -503,6 +503,8 @@ export const VALIDATION_MESSAGES = {
     COURSE_CATEGORY_IS_REQUIRED: 'Course name is required'
   },
   ROOM: {
+    ROOM_NAME_CAN_NOT_CONTAIN_NEWLINE: 'Room name can not contains new line',
+    ROOM_NEED_AT_LEAST_3_MEMBERS: 'Room  need at least 3 members',
     ROOM_IS_DELETED: 'Room is deleted',
     ROOM_NAME_IS_REQUIRED: 'Room name is required',
     ROOM_NAME_MUST_BE_A_STRING: 'Room name must be a string',

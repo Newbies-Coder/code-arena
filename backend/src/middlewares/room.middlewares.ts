@@ -7,7 +7,7 @@ import { ErrorWithStatus } from '~/models/errors/Errors.schema'
 import { attachmentTypes, emotes } from '~/models/schemas/Message.schema'
 import { roomTypes } from '~/models/schemas/Room.schema'
 import { databaseService } from '~/services/connectDB.service'
-import { isValidPassword } from '~/utils/helper'
+import { containsNewline, isValidPassword } from '~/utils/helper'
 import validate, { validateObjectId } from '~/utils/validate'
 
 export const getRoomsValidator = paginationValidator
@@ -21,6 +21,17 @@ export const createRoomValidator = validate(
       },
       isString: {
         errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_NAME_MUST_BE_A_STRING
+      },
+      custom: {
+        options: (value) => {
+          if (containsNewline(value)) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_NAME_CAN_NOT_CONTAIN_NEWLINE
+            })
+          }
+          return true
+        }
       },
       isLength: {
         options: {
@@ -91,6 +102,13 @@ export const createRoomValidator = validate(
                 statusCode: StatusCodes.BAD_REQUEST,
                 message: VALIDATION_MESSAGES.ROOM.SINGLE_ROOM_MUST_HAVE_2_MEMBER
               })
+            } else {
+              if (value.length < 2) {
+                throw new ErrorWithStatus({
+                  statusCode: StatusCodes.BAD_REQUEST,
+                  message: VALIDATION_MESSAGES.ROOM.ROOM_NEED_AT_LEAST_3_MEMBERS
+                })
+              }
             }
           }
 
@@ -398,7 +416,7 @@ export const createInviteValidator = validate(
               message: VALIDATION_MESSAGES.ROOM.USER_ALREADY_IN_ROOM
             })
           }
-          const bannedMember = await databaseService.bannedMembers.find({ roomId: new ObjectId(req.params.id), memberId: new ObjectId(value) })
+          const bannedMember = await databaseService.bannedMembers.findOne({ roomId: new ObjectId(req.params.id), memberId: new ObjectId(value) })
 
           if (bannedMember) {
             throw new ErrorWithStatus({
