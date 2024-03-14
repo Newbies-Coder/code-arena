@@ -243,4 +243,20 @@ userRouter.delete('/favorite/:id', wrapRequestHandler(requireLoginMiddleware), r
 
 userRouter.post('/test-token', checkTokenValidator, wrapRequestHandler(userController.testToken))
 
+/**
+ * Description: List of Users a users Follows
+ * Path: /follows
+ * Method: GET
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
+userRouter.get('/follows', wrapRequestHandler(requireLoginMiddleware), wrapRequestHandler(userController.getAllUserFollow))
+
+/**
+ * Description: List of Users a users Follows
+ * Path: /follows
+ * Method: GET
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
 export default userRouter
