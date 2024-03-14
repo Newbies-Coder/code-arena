@@ -621,7 +621,7 @@ class UserService {
     }
   }
 
-  async getUsersfollow({ _id }: AuthUser) {
+  async getUsersFollow({ _id }: AuthUser) {
     try {
       const follows = await databaseService.follow.find({ followerId: new ObjectId(_id) }).toArray()
       const followedUsers = follows.map((follow) => follow.followedId)
@@ -635,6 +635,24 @@ class UserService {
       throw new ErrorWithStatus({
         statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
         message: error.message || DEV_ERRORS_MESSAGES.GET_ALL_USER_FOLLOW
+      })
+    }
+  }
+
+  async getUsersNotFollow({ _id }: AuthUser) {
+    try {
+      const follows = await databaseService.follow.find({ followerId: new ObjectId(_id) }).toArray()
+      const followedUsers = follows.map((follow) => follow.followedId)
+      const users = await databaseService.users
+        .find({
+          _id: { $nin: followedUsers }
+        })
+        .toArray()
+      return _.map(users, (v) => _.omit(v, ['password', 'created_at', 'updated_at', 'forgot_password_token', 'verify', '_destroy', 'password_change_at', 'role']))
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.GET_ALL_USER_NOT_FOLLOW
       })
     }
   }

@@ -140,8 +140,12 @@ const userController = {
     return sendResponse.success(res, '', RESULT_RESPONSE_MESSAGES.USER_SUCCESS.DELETE_USER_TO_FAVORITES)
   },
   getAllUserFollow: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
-    let users = await userServices.getUsersfollow(req.user)
+    let users = await userServices.getUsersFollow(req.user)
     return sendResponse.success(res, users, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_USERS_FOLLOW)
+  },
+  getAllUserNotFollow: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    let users = await userServices.getUsersNotFollow(req.user)
+    return sendResponse.success(res, users, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_USERS_NOT_FOLLOW)
   }
 }
 

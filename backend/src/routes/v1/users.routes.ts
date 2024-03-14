@@ -253,10 +253,11 @@ userRouter.post('/test-token', checkTokenValidator, wrapRequestHandler(userContr
 userRouter.get('/follows', wrapRequestHandler(requireLoginMiddleware), wrapRequestHandler(userController.getAllUserFollow))
 
 /**
- * Description: List of Users a users Follows
- * Path: /follows
+ * Description: List of Users a users not Follows
+ * Path: /unfollows
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
  */
+userRouter.get('/not-follows', wrapRequestHandler(requireLoginMiddleware), wrapRequestHandler(userController.getAllUserNotFollow))
 
 export default userRouter
