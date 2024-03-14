@@ -22,7 +22,9 @@ export const DATABASE_MESSAGE = {
     COURSE_CATEGORY_COLLECTION: 'The table holds course category in the database.',
     COURSE_COLLECTION: 'The table holds course in the database.',
     MESSAGE_COLLECTION: 'The table holds message in the database.',
-    ROOM_COLLECTION: 'The table holds room in the database.'
+    ROOM_COLLECTION: 'The table holds room in the database.',
+    INVITE_COLLECTION: 'The table holds room invite in the database.',
+    MEMBER_COLLECTION: 'The table holds room members in the database.'
   }
 } as const
 
@@ -52,6 +54,7 @@ export const CLIENT_MESSAGE = {
   REQ_POINT: 'Maximum number of points can be consumed over duration',
   REQ_DURATION: 'Number of seconds before consumed points are reset.',
   PASSWORD_SECRET: 'String of numeric or character values used in security systems',
+  ROOM_PASSWORD_SECRET: 'String of numeric or character values used in security systems',
   OTP_SECRET: 'String of numeric or character values used in security systems',
   COOKIES_EXPIRES_IN: 'Cookie expires in the system',
   SECRET_COOKIE_NAME: 'Cookies_name when user login and register success and save local'
@@ -78,6 +81,8 @@ export const DEV_ERRORS_MESSAGES = {
   CHECK_TOKEN: 'Error checking token',
   GET_USER_BY_ID: 'Error fetching user',
   FOLLOW_USER: 'Error in follow operation',
+  GET_ALL_USER_FOLLOW: 'Error in follow operation',
+  GET_ALL_USER_NOT_FOLLOW: 'Error in unfollow operation',
   UNFOLLOW_USER: 'Error in unfollow operation',
   UPLOAD_AVATAR: 'Error updating avatar',
   UPLOAD_THUMBNAIL: 'Error updating thumbnail',
@@ -140,6 +145,8 @@ export const RESULT_RESPONSE_MESSAGES = {
     TEST_TOKEN: 'Test token successfully!',
     USER_NOT_FOUND: 'User not found',
     FOLLOW: 'Follow user successfully!',
+    GET_USERS_FOLLOW: 'Get all follower list successfully!',
+    GET_USERS_NOT_FOLLOW: "Get the list of users that you don't follow successfully!",
     UNFOLLOW: 'Unfollow user successfully!',
     GET_BLOCKED_USER: 'Get blocked users successfully',
     INSERT_BLOCKED_USER: 'Blocked users successfully',
@@ -161,6 +168,30 @@ export const RESULT_RESPONSE_MESSAGES = {
   },
   VERIFY_FORGOT_PASSWORD_TOKEN: {
     CHECK_EMAIL_TO_RESET_PASSWORD: 'User already exist in database'
+  },
+  ROOM: {
+    GET_ALL: 'Get all rooms successfully!',
+    CREATE: 'Create room successfully!',
+    UPDATE: 'Update room successfully!',
+    DELETE: 'Delete room successfully!',
+    MAKE_PRIVATE: 'Make private successfully!',
+    CREATE_INVITE: 'Create invite successfully!',
+    GET_INVITE: 'Get invite successfully!',
+    GET_MESSAGE: 'Get message successfully',
+    CREATE_MESSAGE: 'Create message successfully',
+    DELETE_MESSAGE: 'Delete message successfully',
+    PIN_MESSAGE: 'Pin message successfully',
+    BAN_MEMBER: 'Ban member successfully',
+    KICK_MEMBER: 'Kick member successfully',
+    DISMISS_MESSAGE: 'Dismiss message successfully',
+    CHANGE_AVATAR: 'Change avatar successfully',
+    CHANGE_BACKGROUND: 'Change background successfully',
+    LEAVE_ROOM: 'Leave room successfully',
+    ACCEPT_INVITE: 'Accept invite successfully',
+    REJECT_INVITE: 'Reject invite successfully',
+    REACT_MESSAGE: 'React message successfully',
+    CHANGE_NICKNAME: 'Change nickname successfully',
+    FIND_MESSAGE: 'Find message successfully'
   }
 } as const
 
@@ -172,8 +203,8 @@ export const VALIDATION_MESSAGES = {
   TITLE: 'Validation Error',
   ERROR_MANY_REQ: 'Too many request from this IP, please try again in an hour',
   PAGINATION: {
-    PAGE_CAN_NOT_LESS_THAN_ZERO: 'Page number cannot less than zero',
-    ITEMS_IS_NOT_IN_RANGE: 'Item per page can not less than zero and greater than 100'
+    PAGE_CAN_NOT_LESS_THAN_ZERO: 'Page number cannot less than 1',
+    ITEMS_IS_NOT_IN_RANGE: 'Item per page can not less than 1 and greater than 100'
   },
   UPLOAD: {
     IMAGE: {
@@ -240,7 +271,8 @@ export const VALIDATION_MESSAGES = {
       BIO_MUST_BE_A_STRING: 'Bio must be a string',
       BIO_LENGTH_MUST_BE_FROM_5_TO_500: 'Bio must be between 5 and 500 characters long',
       VERIFY_STATUS_MUST_BE_A_STRING: 'Verify status must be a string',
-      INVALID_VERIFY_STATUS: 'Status must be one of the following: Verified, Unverified, Celerity,Banned'
+      INVALID_VERIFY_STATUS: 'Status must be one of the following: Verified, Unverified, Celerity,Banned',
+      ACCOUNT_NOT_EXISTS: "The user's account has been removed."
     }
   },
   USER: {
@@ -473,6 +505,81 @@ export const VALIDATION_MESSAGES = {
     COURSE_CONTENT_LENGTH_IS_INVALID: 'Course content must be longer than 10 characters and less than 100000 characters',
     COURSE_CATEGORY_MUST_BE_A_STRING: 'Course content must be a string',
     COURSE_CATEGORY_IS_REQUIRED: 'Course name is required'
+  },
+  ROOM: {
+    ROOM_NAME_CAN_NOT_CONTAIN_NEWLINE: 'Room name can not contains new line',
+    ROOM_NEED_AT_LEAST_3_MEMBERS: 'Room  need at least 3 members',
+    ROOM_IS_DELETED: 'Room is deleted',
+    ROOM_NAME_IS_REQUIRED: 'Room name is required',
+    ROOM_NAME_MUST_BE_A_STRING: 'Room name must be a string',
+    ROOM_NAME_LENGTH_MUST_BE_FROM_1_TO_20: 'Room name must be longer than 1 characters and less than 20 characters',
+    ROOM_TYPE_IS_REQUIRED: 'Room type is required',
+    ROOM_TYPE_MUST_BE_A_STRING: 'Room type must be a string',
+    ROOM_TYPE_IS_INVALID: 'Room type is invalid',
+    ROOM_MEMBERS_IS_REQUIRED: 'Room members is required',
+    ROOM_MEMBERS_MUST_BE_A_ARRAY: 'Room members must be an array',
+    ROOM_ID_IS_REQUIRED: 'Room id is required',
+    ROOM_ID_IS_INVALID: 'Room id is invalid',
+    INVITE_RECIPIENT_IS_REQUIRED: 'Invite recipient is required',
+    ROOM_WITH_ID_IS_NOT_EXIST: 'Room with id is not exist',
+    SINGLE_ROOM_MUST_HAVE_2_MEMBER: 'Single room must have exactly two member',
+    NOT_OWNER: "You don't own this room",
+    MEMBER_NOT_FOUND: 'Member not found',
+    ROOM_ALREADY_PRIVATE: 'Room already private',
+    USER_ALREADY_IN_ROOM: 'User already in room',
+    DUE_TO_IS_REQUIRED: 'Due to date is required',
+    DUE_TO_DATE_IS_INVALID: 'Due to date is invalid',
+    DUE_TO_DATE_CANNOT_BEFORE_NOW: 'Due to date can not be before now',
+    USER_NOT_IN_ROOM: 'You not in this room',
+    OWNER_CAN_NOT_BE_MEMBER: 'Owner can not be member of this room',
+    CAN_NOT_CREATE_INVITATION_ON_SINGLE_ROOM: 'Can not create invite in direct chat room',
+    CAN_NOT_DELETE_SINGLE_ROOM: 'Can not delete direct chat room',
+    CAN_NOT_BAN_MEMBER_ON_SINGLE_ROOM: 'Can not ban member in direct chat room',
+    CAN_NOT_KICK_MEMBER_ON_SINGLE_ROOM: 'Can not kick member in direct chat room',
+    CAN_NOT_MAKE_ROOM_PRIVATE_ON_SINGLE_ROOM: 'Can not make room private to yourself',
+    ROOM_EMOTE_MUST_BE_A_STRING: 'Room emote must be a string',
+    EMOTE_MUST_BE_AN_EMOJI: 'Room emote must be a emoji',
+    CAN_NOT_KICK_OWNER: 'Can not kick owner',
+    CAN_NOT_BAN_OWNER: 'Can not ban owner',
+    ROOM_MEMBERS_IS_NOT_UNIQUE: 'Room members must be unique',
+    CAN_NOT_LEAVE_SINGLE_ROOM: 'Can not leave direct chat room',
+    USER_IS_BANNED_FROM_ROOM: 'Can not invite user that is banned from room'
+  },
+  MESSAGE: {
+    INDEX_IS_OUT_OF_BOUND: 'Index is out of bound',
+    MESSAGE_NOT_FOUND: 'Message not found',
+    MESSAGE_LENGTH_MUST_GREATER_THAN_2_AND_LESS_THAN_100: 'Message length must be greater than 2 and less than 100',
+    MESSAGE_IS_REQUIRED: 'Message is required',
+    MESSAGE_MUST_BE_STRING: 'Message must be a string',
+    MESSAGE_ID_IS_REQUIRED: 'Message id is required',
+    MESSAGE_ID_IS_INVALID: 'Message id is invalid',
+    MESSAGE_WITH_ID_IS_NOT_EXIST: 'Message with id is not exist',
+    CONTENT_MUST_BE_A_STRING: 'Content must be a string',
+    CONTENT_LENGTH_MUST_BE_FROM_1_TO_1024: 'Content length must be greater than 0 or less than 1025 characters',
+    ATTACHMENTS_MUST_BE_ARRAY: 'Attachments must be arrays',
+    ATTACHMENT_TYPE_IS_REQUIRED: 'Attachment type is required',
+    INVALID_ATTACHMENT_TYPE: 'Invalid attachment type',
+    ATTACHMENT_CONTENT_IS_REQUIRED: 'Attachment content is required',
+    ATTACHMENT_CONTENT_IS_NOT_VALID_URL: 'Attachment content is not valid URL',
+    MESSAGE_NOT_OWN: 'This is not your message',
+    MESSAGE_IS_EMPTY: 'Message is empty',
+    EMOTE_IS_REQUIRED: 'Emote is required',
+    EMOTE_IS_INVALID: 'Emote is invalid',
+    EMOTE_MUST_BE_STRING: 'Emote must be a string',
+    MESSAGE_INDEX_IS_REQUIRED: 'Message index is required',
+    MESSAGE_INDEX_MUST_BE_INTEGER: 'Message index must be an integer greater than or equal to 0'
+  },
+  INVITATION: {
+    INVITE_ID_IS_REQUIRED: 'Invite id is required',
+    INVITATION_NOT_FOUND: 'Invitation not found',
+    INVITATION_IS_ACCEPTED: 'Invitation already accepted',
+    INVITATION_IS_REJECTED: 'Invitation already rejected',
+    INVITATION_NOT_OWN: 'Invitation is not your'
+  },
+  MEMBER: {
+    NICKNAME_IS_REQUIRED: 'Nickname is required',
+    NICKNAME_MUST_BE_STRING: 'Nickname must be a string',
+    NICKNAME_LENGTH_MUST_GREATER_THAN_2_AND_LESS_THAN_31: 'Nickname length must greater than 2 and less than 31'
   }
 } as const
 
@@ -487,7 +594,9 @@ export const CLOUDINARY_MESSAGES = {
   CLOUDINARY_AVATAR_FOLDER: 'Folder that contain avatar images on cloudinary',
   CLOUDINARY_THUMBNAIL_FOLDER: 'Folder that contain thumbnail images on cloudinary',
   CLOUDINARY_BANNER_FOLDER: 'Folder that contain banner images on cloudinary',
-  CLOUDINARY_IMAGE_FOLDER: 'Folder that contain image images on cloudinary'
+  CLOUDINARY_IMAGE_FOLDER: 'Folder that contain image images on cloudinary',
+  CLOUDINARY_ROOM_AVATAR_FOLDER: 'Folder that contain room avatar images on cloudinary',
+  CLOUDINARY_ROOM_BACKGROUND_FOLDER: 'Folder that contain room background images on cloudinary'
 }
 
 export const AUTH_MESSAGES = {

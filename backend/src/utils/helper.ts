@@ -8,6 +8,11 @@ export const isValidDateOfBirth = (dateString: string): boolean => {
   return regex.test(dateString)
 }
 
+export const parseRoomName = (name: string) => {
+  const regex = new RegExp(/(\s{5,})/)
+  return name.replace(regex, '     ')
+}
+
 // Generate slug from name
 export const generateSlug = (name: string): string => {
   return slugify(name, {

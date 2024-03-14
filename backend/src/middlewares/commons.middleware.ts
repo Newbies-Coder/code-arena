@@ -9,7 +9,7 @@ import validate from '~/utils/validate'
 
 export const paginationValidator = validate(
   checkSchema({
-    pageIndex: {
+    page: {
       trim: true,
       isInt: {
         options: {
@@ -18,7 +18,7 @@ export const paginationValidator = validate(
         errorMessage: VALIDATION_MESSAGES.PAGINATION.PAGE_CAN_NOT_LESS_THAN_ZERO
       }
     },
-    pageSize: {
+    limit: {
       trim: true,
       isInt: {
         options: {

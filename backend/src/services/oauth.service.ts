@@ -43,11 +43,15 @@ class AuthService {
                 provider: 'facebook',
                 providerId: profile.id
               })
-              await databaseService.users.insertOne(newUser)
-              req.user = newUser
+              const result = await databaseService.users.insertOne(newUser)
+
+              req.user = {
+                ...newUser,
+                _id: result.insertedId.toString()
+              }
               return done(null, newUser)
             }
-            req.user = user
+            req.user = { ...user, _id: user._id.toString() }
             return done(null, user)
           } catch (error) {
             return done(error, null)
@@ -103,11 +107,15 @@ class AuthService {
                 provider: 'google',
                 providerId: profile.id
               })
-              await databaseService.users.insertOne(newUser)
-              req.user = newUser
+              const result = await databaseService.users.insertOne(newUser)
+
+              req.user = {
+                ...newUser,
+                _id: result.insertedId.toString()
+              }
               return done(null, newUser)
             }
-            req.user = user
+            req.user = { ...user, _id: user._id.toString() }
             return done(null, user)
           } catch (error) {
             return done(error, null)
@@ -133,11 +141,16 @@ class AuthService {
                 provider: 'linkedin',
                 providerId: profile.id
               })
-              await databaseService.users.insertOne(newUser)
-              req.user = newUser
+              const result = await databaseService.users.insertOne(newUser)
+
+              req.user = {
+                ...newUser,
+                _id: result.insertedId.toString()
+              }
+
               return done(null, newUser)
             }
-            req.user = user
+            req.user = { ...user, _id: user._id.toString() }
             return done(null, user)
           } catch (error) {
             return done(error, null)
@@ -168,11 +181,11 @@ class AuthService {
     const { _id, role, email, username } = req.user
     const refresh_token = await userServices.signRefreshToken(_id.toString(), email, username, role)
     // if user is logged in but still login again
-    await databaseService.refreshTokens.deleteOne({ user_id: _id })
+    await databaseService.refreshTokens.deleteOne({ user_id: new ObjectId(_id) })
     await databaseService.refreshTokens.insertOne(
       new RefreshToken({
         token: refresh_token,
-        user_id: _id
+        user_id: new ObjectId(_id)
       })
     )
 
@@ -268,17 +281,26 @@ class AuthService {
   }
 
   async update(id: ObjectId, payload: UpdateUserBody): Promise<void> {
-    try {
-      if (Object.keys(payload).length === 0) {
-        throw new ErrorWithStatus({ statusCode: StatusCodes.BAD_REQUEST, message: VALIDATION_MESSAGES.USER.USER_PROFILE.FIELD_UPDATE_IS_REQUIRED })
-      }
-      await databaseService.users.updateOne({ _id: id }, { $set: { ...payload, updated_at: new Date() } }, { upsert: false })
-    } catch (error) {
+    const user = await databaseService.users.findOne({ _id: id })
+    const { _destroy } = user
+    let { date_of_birth } = payload
+    const age = this.calculateAge(date_of_birth)
+    if (age < 12) {
       throw new ErrorWithStatus({
-        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: error.message || DEV_ERRORS_MESSAGES.UPDATE_USER_BY_ADMIN
+        statusCode: StatusCodes.FORBIDDEN,
+        message: VALIDATION_MESSAGES.USER.REGISTER.AGE_IS_NOT_ENOUGH
       })
     }
+    if (_destroy) {
+      throw new ErrorWithStatus({
+        statusCode: StatusCodes.NOT_FOUND,
+        message: VALIDATION_MESSAGES.ADMIN.CREATE_USER.ACCOUNT_NOT_EXISTS
+      })
+    }
+    if (Object.keys(payload).length === 0) {
+      throw new ErrorWithStatus({ statusCode: StatusCodes.BAD_REQUEST, message: VALIDATION_MESSAGES.USER.USER_PROFILE.FIELD_UPDATE_IS_REQUIRED })
+    }
+    await databaseService.users.updateOne({ _id: id }, { $set: { ...payload, date_of_birth: new Date(date_of_birth), age, updated_at: new Date() } }, { upsert: false })
   }
 
   async getUsersByRole(payload: ParsedGetUserByRoleUrlQuery): Promise<PaginationType<Partial<User>>> {

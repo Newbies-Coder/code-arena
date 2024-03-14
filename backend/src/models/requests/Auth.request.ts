@@ -17,7 +17,7 @@ export interface UpdateUserBody {
   fullName?: string
   username?: string
   phone?: string
-  date_of_birth?: Date
+  date_of_birth?: string
   role?: UserRole
   verify?: UserVerifyStatus
   address?: string

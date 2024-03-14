@@ -33,7 +33,7 @@ interface UserType {
 export default class User {
   _id?: ObjectId
   fullName: string
-  username?: string
+  username: string
   email: string
   phone: string
   date_of_birth?: Date
