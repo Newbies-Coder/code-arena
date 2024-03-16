@@ -43,4 +43,22 @@ export const ChatMessage: ChatType[] = [
     incoming: false,
     outgoing: true,
   },
+  {
+    type: 'msg',
+    message: 'Great',
+    incoming: true,
+    outgoing: false,
+  },
+  {
+    type: 'msg',
+    message: 'ok',
+    incoming: false,
+    outgoing: true,
+  },
+  {
+    type: 'msg',
+    message: 'Great',
+    incoming: true,
+    outgoing: false,
+  },
 ]

@@ -6,20 +6,14 @@ import HeaderItem from '@/components/HeaderItem'
 import {
   AddIcon,
   EmojiIcon,
-  FriendIcon,
   ImageIcon,
-  MessIcon,
   MessagePurpleIcon,
   MoreIcon,
   PhoneIcon,
   SendMessageIcon,
-  VideoIcon,
 } from '@/components/Icons'
 import { ChatMessage } from '@/mocks/chat.data'
 import Tabbar from '../../components/Tabbar/Tabbar'
-import { useState } from 'react'
-import data from '@emoji-mart/data'
-import { Picker } from 'emoji-mart'
 import { friendList } from '@/mocks/home.data'
 import { UserAddOutlined } from '@ant-design/icons'
 
@@ -34,7 +28,7 @@ const ChatPage = () => {
               <Row className="w-full">
                 <Col xl={{ span: 7 }} xs={{ span: 24 }} md={{ span: 8 }}>
                   <Sider width={'100%'} style={{ height: '100%' }}>
-                    <div className="w-full flex justify-around items-center bg-blue-900 md:h-20 xs:h-16 border-[1px] border-gray-opacity border-l-0 border-r-0">
+                    <div className="w-full flex justify-around items-center bg-blue-900 md:h-16 xs:h-16 border-[1px] border-gray-opacity border-l-0 border-r-0">
                       <Button className="border-none">
                         <Badge count={3} style={{ borderColor: '#F00' }}>
                           <MessagePurpleIcon />
@@ -43,16 +37,6 @@ const ChatPage = () => {
                       <Button className="border-none">
                         <Badge count={3} style={{ borderColor: '#F00' }}>
                           <PhoneIcon />
-                        </Badge>
-                      </Button>
-                      <Button className="border-none">
-                        <Badge count={3} style={{ borderColor: '#F00' }}>
-                          <MessIcon />
-                        </Badge>
-                      </Button>
-                      <Button className="border-none">
-                        <Badge count={3} style={{ borderColor: '#F00' }}>
-                          <FriendIcon />
                         </Badge>
                       </Button>
                       <Avatar src="https://images.unsplash.com/photo-1682687982501-1e58ab814714?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
@@ -74,8 +58,8 @@ const ChatPage = () => {
                   className="border-r-1 border-gray-opacity"
                 >
                   <Content>
-                    <div className=" bg-blue-900 border-[1px] border-gray-opacity h-full max-h-[calc(100vh-80px)]">
-                      <div className="flex justify-between items-center h-20">
+                    <div className=" bg-blue-900 border-[1px] border-gray-opacity h-full max-h-[calc(100vh-80px)] rounded-b-xl">
+                      <div className="flex justify-between items-center h-16">
                         <div className="flex justify-between items-center mx-4">
                           <Avatar
                             size={50}
@@ -88,21 +72,16 @@ const ChatPage = () => {
                         </div>
                         <div className="flex justify-between items-center mx-4 gap-4">
                           <Button className="border-0 h-12 w-12 m-0 p-0">
-                            <PhoneIcon />
-                          </Button>
-                          <Button className="border-0 h-12 w-12 m-0 p-0">
-                            <VideoIcon className="h-9 w-9" />
-                          </Button>
-                          <Button className="border-0 h-12 w-12 m-0 p-0">
                             <MoreIcon />
                           </Button>
                         </div>
                       </div>
-                      <div className="list-member xl:h-[510px] 3xl:h-[850px] flex flex-col justify-between bg-blue-900 border-gray-opacity border-t-[1px] overflow-y-auto">
-                        {ChatMessage.map((item) => {
+                      <div className="list-member py-2 xl:h-[510px] 3xl:h-[850px] flex flex-col bg-blue-900 border-gray-opacity border-t-[1px] overflow-y-auto">
+                        {ChatMessage.map((item, idx) => {
                           return (
                             <div
-                              className="flex flex-row p-5"
+                              key={idx}
+                              className="flex flex-row px-5 py-2"
                               style={{ justifyContent: item.incoming ? 'start' : 'end' }}
                             >
                               <div
@@ -113,12 +92,13 @@ const ChatPage = () => {
                                   borderBottomRightRadius: item.outgoing ? '0' : 'full',
                                 }}
                               >
-                                <h3>{item.message}</h3>
+                                <p className="px-2 py-[2px] m-0 text-base mb-[2px]">{item.message}</p>
                               </div>
                             </div>
                           )
                         })}
                       </div>
+
                       <div>
                         <Input
                           className="px-8 h-10 font-popins rounded-xl text-base w-full bg-blue-900 text-white border-White border-2 placeholder:text-gray-500 placeholder:font-popins"
@@ -149,7 +129,7 @@ const ChatPage = () => {
             <Sider width="100%" style={{ background: '#0e1820', height: '100%' }} className="bg-blue-900 px-2">
               <div>
                 <h2 className="font-popins text-white text-2xl">Notifications</h2>
-                <div className="list-member overflow-y-auto xl:h-[280px]  3xl:h-[450px] mt-2">
+                <div className="list-member overflow-y-auto xl:h-[270px]  3xl:h-[450px] mt-2">
                   <ul>
                     {friendList.map((friend) => (
                       <li className="mx-0 mt-2" key={friend.key}>
@@ -159,15 +139,15 @@ const ChatPage = () => {
                           style={{ width: '95%', marginLeft: '5px' }}
                           bodyStyle={{ padding: '10px' }}
                         >
-                          <div className="flex  p-0">
+                          <div className="flex p-0">
                             <Avatar
                               size={40}
-                              className="flex justify-center items-center bg-gray-300"
+                              className="bg-gray-300 flex-shrink-0"
                               src="https://studiovietnam.com/wp-content/uploads/2021/07/chup-anh-chan-dung-troi-nang-6.jpg"
                             ></Avatar>
 
-                            <div className="ml-2">
-                              <p className="m-0 text-white font-popins text-xs">
+                            <div className="ml-2 flex-grow">
+                              <p className="m-0 text-white font-popins text-xs flex-wrap">
                                 <span className="text-blue-600">@{friend.name}</span> mentioned you in 'trip to go'
                                 <span className="absolute text-gray-400 text-[10px] right-5 bottom-3">1 min ago</span>
                               </p>
@@ -180,7 +160,7 @@ const ChatPage = () => {
                 </div>
               </div>
               <div>
-                <h2 className="font-popins text-white text-2xl">Suggestions</h2>
+                <h2 className="font-popins text-white text-2xl mt-3">Suggestions</h2>
                 <div className="list-member overflow-y-auto xl:h-[280px]  3xl:h-[450px] mt-2">
                   <ul>
                     {friendList.map((friend) => (

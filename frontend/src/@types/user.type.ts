@@ -1,9 +1,10 @@
 export type userType = {
   _id: string
   username: string
-  email: string
-  access_token: string
-  refresh_token: string
+  email?: string
+  access_token?: string
+  refresh_token?: string
+  isOnline?: boolean
 }
 
 export type userState = {
@@ -15,6 +16,8 @@ export type userState = {
   isAuthenticated: boolean
   isAdmin: boolean
   email: string | null
+  notFollowList: userType[] | []
+  followList: userType[] | []
 }
 
 export type userLoginType = {

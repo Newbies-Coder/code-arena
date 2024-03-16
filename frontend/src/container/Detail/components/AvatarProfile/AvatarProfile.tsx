@@ -83,13 +83,13 @@ const AvatarProfile = () => {
         </div>
       </Col>
       <Col xs={0} md={24} lg={24} xl={24}>
-        <div className="flex justify-between items-center w-40 h-10 bg-blue-900 rounded-full border border-gray-500">
+        <div className="flex justify-between items-center w-auto h-10 bg-blue-900 rounded-full border border-gray-500">
           <Avatar size={37} className="flex justify-between items-center bg-gray-300" src={userData.avatar} />
           <div className="flex justify-between items-center pr-2">
             <Dropdown menu={{ items: menuItems }} placement="bottomRight" trigger={['click']} className="text-white">
               <a onClick={(e) => e.preventDefault()}>
                 <Space>
-                  <span className="text-xl">{userData.username}</span>
+                  <span className="text-xl ml-2">{userData.username}</span>
                   <DownOutlined />
                 </Space>
               </a>

@@ -5,6 +5,7 @@ import SliderItem from '@/components/SliderItem'
 import SidebarLeft from '@/components/SidebarLeft'
 import SidebarRight from '@/components/SidebarRight'
 import HeaderItem from '@/components/HeaderItem'
+import MemberList from '../../components/MemberList'
 const { Content } = Layout
 
 const MainHome = () => {
@@ -39,6 +40,9 @@ const MainHome = () => {
                   </div>
                   <div className="xs:mx-2 ">
                     <SliderItem />
+                  </div>
+                  <div>
+                    <MemberList />
                   </div>
                 </div>
               </Content>

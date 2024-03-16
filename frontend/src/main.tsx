@@ -41,6 +41,9 @@ root.render(
               Badge: {
                 indicatorHeight: 15,
               },
+              Modal: {
+                colorBgMask: '#87878712',
+              },
             },
           }}
         >

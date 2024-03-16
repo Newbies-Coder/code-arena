@@ -10,6 +10,8 @@ const initialState: userState = {
   isAuthenticated: false,
   isAdmin: false,
   email: null,
+  notFollowList: [],
+  followList: [],
 }
 
 const userReducer = createSlice({
@@ -48,6 +50,14 @@ const userReducer = createSlice({
     setEmailResendOTP: (state: userState, action: PayloadAction<string>) => {
       state.email = action.payload
     },
+    // Save other users that are not following
+    setNotFollowList: (state: userState, action: PayloadAction<userType[]>) => {
+      state.notFollowList = action.payload
+    },
+    // Save other users that are following
+    setFollowList: (state: userState, action: PayloadAction<userType[]>) => {
+      state.followList = action.payload
+    },
   },
 })
 
@@ -60,6 +70,8 @@ export const {
   setAdminStatus,
   setAuthenticationStatus,
   setEmailResendOTP,
+  setNotFollowList,
+  setFollowList,
 } = userReducer.actions
 
 export default userReducer.reducer

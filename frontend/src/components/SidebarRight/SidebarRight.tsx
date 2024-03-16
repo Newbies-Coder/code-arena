@@ -1,10 +1,27 @@
 import Sider from 'antd/es/layout/Sider'
 import { Avatar, Button, Card } from 'antd'
 import { HOME_ICON } from '@/constants/images'
-import { friendList } from '@/mocks/home.data'
 import { UserAddOutlined } from '@ant-design/icons'
 import './style.scss'
+import { useEffect } from 'react'
+import requestApi from '@/utils/interceptors'
+import { useDispatch, useSelector } from 'react-redux'
+import { DispatchType, RootState } from '@/redux/config'
+import { setNotFollowList } from '@/redux/userReducer/userReducer'
 const SidebarRight = () => {
+  const notFollowList = useSelector((state: RootState) => state.user.notFollowList)
+  const dispatch: DispatchType = useDispatch()
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const res = await requestApi('users/not-follows', 'GET', {})
+        dispatch(setNotFollowList(res.data.data))
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+  }, [])
+
   return (
     <Sider
       className="sider fixed mt-16 h-screen right-0 border-l"
@@ -50,15 +67,15 @@ const SidebarRight = () => {
         <div className="h-32 bg-gray-500"></div>
       </Card>
       <div className="flex justify-around items-center ">
-        <p className="text-gray-opacity self-auto m-0 my-2 mr-40">Your Friends</p>
+        <p className="text-gray-opacity self-auto m-0 my-2 mr-40">New Members</p>
       </div>
-      <div className="list-friend overflow-y-auto h-[280px]">
+      <div className="list-friend overflow-y-auto h-[260px]">
         <ul>
-          {friendList.map((friend) => (
-            <li className="mx-0 mt-2" key={friend.key}>
+          {notFollowList.map((user) => (
+            <li className="mx-0 mt-2" key={user._id}>
               <Card
                 size="small"
-                className="bg-blue-opacity mx-4 border-transparent hover:border hover:border-gray-opacity"
+                className="relative bg-blue-opacity mx-4 border-transparent hover:border hover:border-gray-opacity"
                 style={{ width: '95%', marginLeft: '5px' }}
                 bodyStyle={{ padding: '10px 12px' }}
               >
@@ -70,18 +87,18 @@ const SidebarRight = () => {
                   ></Avatar>
                   <span
                     className={
-                      friend.status === 'online'
+                      user.isOnline === true
                         ? 'absolute rounded-full h-3 w-3 border bg-green-400 bottom-3 left-10'
                         : 'absolute rounded-full h-3 w-3 border bg-gray-500 bottom-3 left-10'
                     }
                   ></span>
                   <div className="ml-2">
-                    <p className="m-0 text-white font-popins text-xs">{friend.name}</p>
-                    <span className="text-gray-opacity">{friend.status}</span>
+                    <p className="m-0 text-white font-popins text-xs">{user.username}</p>
+                    <span className="text-gray-opacity">{user.isOnline === true ? 'online' : 'offline'}</span>
                   </div>
-                  <div className="relative w-14">
+                  <div className="absolute w-14 right-10 bottom-3">
                     <Button
-                      className="absolute h-4 p-0 ml-8 w-full top-0 border-gray-opacity text-[10px] text-yellow-200"
+                      className=" h-4 p-0 ml-8 w-full border-gray-opacity text-[10px] text-yellow-200"
                       icon={<UserAddOutlined />}
                     >
                       Follow

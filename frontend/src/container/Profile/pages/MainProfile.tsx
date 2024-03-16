@@ -11,11 +11,13 @@ import { ProfileType } from '@/@types/form.type'
 import { StatusCodes } from 'http-status-codes'
 import { useNavigate } from 'react-router-dom'
 import Fancybox from '@/components/Fancybox'
+import { objectLength } from '@/utils/setting'
 
 const { Content } = Layout
 
 const MainProfile = () => {
   const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated)
+  const followList = useSelector((state: RootState) => state.user.followList)
   const navigate = useNavigate()
 
   const [userData, setUserData] = useState({
@@ -79,7 +81,7 @@ const MainProfile = () => {
         fetchUser()
       }
     })()
-  }, [isAuthenticated, userData.avatar, userData.cover_photo])
+  }, [isAuthenticated, userData.avatar, userData.cover_photo, followList])
 
   const inputRef = useRef<HTMLInputElement>(null)
   const coverRef = useRef<HTMLInputElement>(null)
@@ -183,7 +185,7 @@ const MainProfile = () => {
             <div className="absolute xs:-top-[85px] lg:-top-[95px] 3xl:-top-[180px] xl:-top-[95px] xs:left-28 lg:left-64 xl:left-64 3xl:left-72 z-10 font-popins text-white">
               <h2 className="text-xl">Ngoc Uyen</h2>
               <p>
-                <span>0 following</span>
+                <span>{objectLength(followList)} following</span>
                 <span className="ml-6">0 follower</span>
               </p>
             </div>

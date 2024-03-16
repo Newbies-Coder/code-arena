@@ -1,3 +1,5 @@
+import { userType } from '@/@types/user.type'
+
 export const config = {
   setCookie: (name: string, value: string, days: number) => {
     var expires = ''
@@ -46,6 +48,17 @@ export const config = {
   },
   ACCESS_TOKEN: 'ACCESS_TOKEN',
   REFRESH_TOKEN: 'REFRESH_TOKEN',
+
+  //count number of objects in an array
+  objectLength: (obj: userType[]) => {
+    var result = 0
+    for (var prop in obj) {
+      if (obj.hasOwnProperty(prop)) {
+        result++
+      }
+    }
+    return result
+  },
 }
 
 export const {
@@ -57,6 +70,7 @@ export const {
   setCookie,
   getCookie,
   clearCookie,
+  objectLength,
   ACCESS_TOKEN,
   REFRESH_TOKEN,
 } = config

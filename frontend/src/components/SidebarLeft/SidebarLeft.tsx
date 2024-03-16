@@ -4,8 +4,25 @@ import { friendList } from '@/mocks/home.data'
 import './style.scss'
 import { LiPurpleLineIcon, SettingIcon } from '../Icons'
 import Navbar from '../Navbar'
+import { useEffect } from 'react'
+import requestApi from '@/utils/interceptors'
+import { useDispatch } from 'react-redux'
+import { DispatchType } from '@/redux/config'
+import { setFollowList } from '@/redux/userReducer/userReducer'
 
 const SidebarLeft = () => {
+  const dispatch: DispatchType = useDispatch()
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const res = await requestApi('users/follows', 'GET', {})
+        dispatch(setFollowList(res.data.data))
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+  })
+
   return (
     <Sider
       className="sider-left mt-16 h-screen left-0 border-r lg:block z-10"
@@ -19,7 +36,7 @@ const SidebarLeft = () => {
       <div className="flex flex-col justify-between w-full pt-2">
         <Navbar />
         <div>
-          <p className="text-gray-opacity self-auto ml-2 mb-1">New Members</p>
+          <p className="text-gray-opacity self-auto ml-2 mb-1">Your Friends</p>
         </div>
         <div className="list-member overflow-y-auto h-[282px]">
           <ul>
