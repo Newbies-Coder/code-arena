@@ -621,16 +621,28 @@ class UserService {
     }
   }
 
-  async getUsersFollow({ _id }: AuthUser) {
+  async getUsersFollows({ _id }: AuthUser) {
     try {
-      const follows = await databaseService.follow.find({ followerId: new ObjectId(_id) }).toArray()
+      // Fetch the IDs of users who the current user has blocked
+      const blockedUsers = await databaseService.blocked_users.find({ blockerId: new ObjectId(_id) }).toArray()
+      const blockedUserIds = blockedUsers.map((doc) => doc.blockedId)
+
+      // Fetch the follows relationships, excluding blocked users
+      const follows = await databaseService.follow
+        .find({
+          followerId: new ObjectId(_id),
+          followedId: { $nin: blockedUserIds } // Exclude blocked users
+        })
+        .toArray()
+      // Map the results to extract the following user details
       const followedUsers = follows.map((follow) => follow.followedId)
-      const users = await databaseService.users
+
+      const followedUsersDetails = await databaseService.users
         .find({
           _id: { $in: followedUsers }
         })
         .toArray()
-      return _.map(users, (v) => _.omit(v, ['password', 'created_at', 'updated_at', 'forgot_password_token', 'verify', '_destroy', 'password_change_at', 'role']))
+      return _.map(followedUsersDetails, (v) => _.omit(v, ['password', 'created_at', 'updated_at', 'forgot_password_token', 'verify', '_destroy', 'password_change_at', 'role']))
     } catch (error) {
       throw new ErrorWithStatus({
         statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
@@ -641,14 +653,25 @@ class UserService {
 
   async getUsersNotFollow({ _id }: AuthUser) {
     try {
+      // Fetch IDs of users who the current user follows
       const follows = await databaseService.follow.find({ followerId: new ObjectId(_id) }).toArray()
-      const followedUsers = follows.map((follow) => follow.followedId)
-      const users = await databaseService.users
+      const followedUserIds = follows.map((follow) => follow.followedId)
+
+      // Optionally, fetch IDs of users who the current user has blocked
+      // If you're also considering block relationships
+      const blocks = await databaseService.blocked_users.find({ blockerId: new ObjectId(_id) }).toArray()
+      const blockedUserIds = blocks.map((block) => block.blockedId)
+
+      // Combine followedUserIds and blockedUserIds arrays, and include the userId to exclude them
+      const excludedUserIds = [...followedUserIds, ...blockedUserIds, new ObjectId(_id)]
+
+      // Fetch users that the current user does not follow, excluding blocked users and themselves
+      const notFollowedUsers = await databaseService.users
         .find({
-          _id: { $nin: followedUsers }
+          _id: { $nin: excludedUserIds }
         })
         .toArray()
-      return _.map(users, (v) => _.omit(v, ['password', 'created_at', 'updated_at', 'forgot_password_token', 'verify', '_destroy', 'password_change_at', 'role']))
+      return _.map(notFollowedUsers, (v) => _.omit(v, ['password', 'created_at', 'updated_at', 'forgot_password_token', 'verify', '_destroy', 'password_change_at', 'role']))
     } catch (error) {
       throw new ErrorWithStatus({
         statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
