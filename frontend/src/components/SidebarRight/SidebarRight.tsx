@@ -3,14 +3,19 @@ import { Avatar, Button, Card } from 'antd'
 import { HOME_ICON } from '@/constants/images'
 import { UserAddOutlined } from '@ant-design/icons'
 import './style.scss'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import requestApi from '@/utils/interceptors'
 import { useDispatch, useSelector } from 'react-redux'
 import { DispatchType, RootState } from '@/redux/config'
-import { setNotFollowList } from '@/redux/userReducer/userReducer'
+import { setIsFollow, setNotFollowList } from '@/redux/userReducer/userReducer'
+import { toast } from 'react-toastify'
+
 const SidebarRight = () => {
   const notFollowList = useSelector((state: RootState) => state.user.notFollowList)
+  const isFollow = useSelector((state: RootState) => state.user.isFollow)
   const dispatch: DispatchType = useDispatch()
+  // const [isFollow, SetIsFollow] = useState(false)
+
   useEffect(() => {
     ;(async () => {
       try {
@@ -20,7 +25,17 @@ const SidebarRight = () => {
         console.log(error)
       }
     })()
-  }, [])
+  }, [isFollow])
+
+  const handleFollowUser = async (_id: string) => {
+    try {
+      const res = await requestApi(`users/follow/${_id}`, 'POST', {})
+      toast.success(res.data.message)
+      dispatch(setIsFollow(true))
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <Sider
@@ -83,7 +98,11 @@ const SidebarRight = () => {
                   <Avatar
                     size={40}
                     className="flex justify-center items-center bg-gray-300 relative"
-                    src="https://studiovietnam.com/wp-content/uploads/2021/07/chup-anh-chan-dung-troi-nang-6.jpg"
+                    src={
+                      user.avatar === ''
+                        ? 'https://studiovietnam.com/wp-content/uploads/2021/07/chup-anh-chan-dung-troi-nang-6.jpg'
+                        : user.avatar
+                    }
                   ></Avatar>
                   <span
                     className={
@@ -98,8 +117,12 @@ const SidebarRight = () => {
                   </div>
                   <div className="absolute w-14 right-10 bottom-3">
                     <Button
-                      className=" h-4 p-0 ml-8 w-full border-gray-opacity text-[10px] text-yellow-200"
+                      className="btn-follow h-4 p-0 ml-8 w-auto border-gray-opacity text-[10px] text-yellow-200"
                       icon={<UserAddOutlined />}
+                      onClick={() => {
+                        handleFollowUser(user._id)
+                        dispatch(setIsFollow(false))
+                      }}
                     >
                       Follow
                     </Button>

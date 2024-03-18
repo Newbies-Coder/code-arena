@@ -12,6 +12,7 @@ const initialState: userState = {
   email: null,
   notFollowList: [],
   followList: [],
+  isFollow: false,
 }
 
 const userReducer = createSlice({
@@ -58,6 +59,10 @@ const userReducer = createSlice({
     setFollowList: (state: userState, action: PayloadAction<userType[]>) => {
       state.followList = action.payload
     },
+    // Save follow state of user
+    setIsFollow: (state: userState, action: PayloadAction<boolean>) => {
+      state.isFollow = action.payload
+    },
   },
 })
 
@@ -72,6 +77,7 @@ export const {
   setEmailResendOTP,
   setNotFollowList,
   setFollowList,
+  setIsFollow,
 } = userReducer.actions
 
 export default userReducer.reducer
