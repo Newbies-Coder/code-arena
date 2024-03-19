@@ -1650,8 +1650,8 @@ paths:
     get:
       tags:
         - user
-      summary: List of users a users followers
-      description: List of users a users followers
+      summary: List of user's followers
+      description: List of user's followers
       operationId: getAllUserFollowers
       security:
         - BearerAuth: []
