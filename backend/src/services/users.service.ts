@@ -642,11 +642,42 @@ class UserService {
           _id: { $in: followedUsers }
         })
         .toArray()
-      return _.map(followedUsersDetails, (v) => _.omit(v, ['password', 'created_at', 'updated_at', 'forgot_password_token', 'verify', '_destroy', 'password_change_at', 'role']))
+      return _.map(followedUsersDetails, (v) =>
+        _.omit(v, ['password', 'created_at', 'providerId', 'provider', 'updated_at', 'forgot_password_token', 'verify', '_destroy', 'password_change_at', 'role'])
+      )
     } catch (error) {
       throw new ErrorWithStatus({
         statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
         message: error.message || DEV_ERRORS_MESSAGES.GET_ALL_USER_FOLLOW
+      })
+    }
+  }
+
+  async getAllUserFollowers({ _id }: AuthUser) {
+    try {
+      const blocks = await databaseService.blocked_users.find({ blockerId: new ObjectId(_id) }).toArray()
+      const blockedUserIds = blocks.map((block) => block.blockedId)
+
+      const follows = await databaseService.follow
+        .find({
+          followedId: new ObjectId(_id),
+          followerId: { $nin: blockedUserIds }
+        })
+        .toArray()
+
+      const followerIds = follows.map((follow) => follow.followerId)
+
+      // Step 2: Fetch user information for each follower ID
+      const followersInfo = await databaseService.users
+        .find({
+          _id: { $in: followerIds }
+        })
+        .toArray()
+      return _.map(followersInfo, (v) => _.omit(v, ['password', 'providerId', 'provider', 'created_at', 'updated_at', 'forgot_password_token', 'verify', '_destroy', 'password_change_at', 'role']))
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.GET_ALL_USER_FOLLOWER
       })
     }
   }
@@ -671,7 +702,7 @@ class UserService {
           _id: { $nin: excludedUserIds }
         })
         .toArray()
-      return _.map(notFollowedUsers, (v) => _.omit(v, ['password', 'created_at', 'updated_at', 'forgot_password_token', 'verify', '_destroy', 'password_change_at', 'role']))
+      return _.map(notFollowedUsers, (v) => _.omit(v, ['password', 'created_at', 'providerId', 'provider', 'updated_at', 'forgot_password_token', 'verify', '_destroy', 'password_change_at', 'role']))
     } catch (error) {
       throw new ErrorWithStatus({
         statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,

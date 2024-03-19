@@ -260,4 +260,13 @@ userRouter.get('/follows', wrapRequestHandler(requireLoginMiddleware), wrapReque
  */
 userRouter.get('/not-follows', wrapRequestHandler(requireLoginMiddleware), wrapRequestHandler(userController.getAllUserNotFollow))
 
+/**
+ * Description: List of users a users followers
+ * Path: /followers
+ * Method: GET
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
+userRouter.get('/followers', wrapRequestHandler(requireLoginMiddleware), wrapRequestHandler(userController.getAllUserFollowers))
+
 export default userRouter
