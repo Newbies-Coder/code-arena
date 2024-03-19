@@ -192,10 +192,12 @@ export const updateRoomValidator = validate(
       isString: {
         errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_EMOTE_MUST_BE_A_STRING
       },
+      trim: true,
       matches: {
         options: /\p{Emoji}/gu,
         errorMessage: VALIDATION_MESSAGES.ROOM.EMOTE_MUST_BE_AN_EMOJI
-      }
+      },
+      isLength: { options: { min: 1, max: 1 }, errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_EMOTE_MUST_BE_1_CHARACTER }
     }
   })
 )
@@ -378,12 +380,28 @@ export const createInviteValidator = validate(
             })
           }
 
-          const member = await databaseService.members.find({ roomId: room._id, memberId: new ObjectId(req.user._id) })
+          const member = await databaseService.members.findOne({ roomId: room._id, memberId: new ObjectId(req.user._id) })
 
           if (!member) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.FORBIDDEN,
               message: VALIDATION_MESSAGES.ROOM.USER_NOT_IN_ROOM
+            })
+          }
+
+          if (room.owner.toString() !== req.user._id.toString()) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.FORBIDDEN,
+              message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
+            })
+          }
+
+          const invite = await databaseService.invites.findOne({ room: room._id, recipientId: new ObjectId(req.user._id) })
+
+          if (invite) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.INVITATION.INVITE_ALREADY_SENT
             })
           }
 
@@ -522,6 +540,15 @@ export const banMemberValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.FORBIDDEN,
               message: VALIDATION_MESSAGES.ROOM.MEMBER_NOT_FOUND
+            })
+          }
+
+          const bannedMember = await databaseService.bannedMembers.findOne({ roomId: new ObjectId(req.params.id), memberId: new ObjectId(value) })
+
+          if (bannedMember) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.USER_IS_BANNED_FROM_ROOM
             })
           }
 
@@ -693,7 +720,7 @@ export const makeRoomPrivateValidator = validate(
             })
           }
 
-          if (room.owner !== req.user._id) {
+          if (room.owner.toString() !== req.user._id.toString()) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.UNAUTHORIZED,
               message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
@@ -772,6 +799,7 @@ export const pinMessageValidator = validate(
           validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
 
           const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
+
           if (!room) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.NOT_FOUND,
@@ -786,7 +814,7 @@ export const pinMessageValidator = validate(
             })
           }
 
-          if (room.owner !== req.user._id) {
+          if (room.owner.toString() !== req.user._id.toString()) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.UNAUTHORIZED,
               message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
@@ -866,7 +894,7 @@ export const getMessageValidator = validate(
             })
           }
 
-          const member = await databaseService.members.find({ roomId: new ObjectId(value), memberId: new ObjectId(req.user._id) })
+          const member = await databaseService.members.findOne({ roomId: new ObjectId(value), memberId: new ObjectId(req.user._id) })
 
           if (!member) {
             throw new ErrorWithStatus({
@@ -907,7 +935,7 @@ export const createMessageValidator = validate(
             })
           }
 
-          const member = await databaseService.members.find({ roomId: new ObjectId(value), memberId: new ObjectId(req.user._id) })
+          const member = await databaseService.members.findOne({ roomId: new ObjectId(value), memberId: new ObjectId(req.user._id) })
 
           if (!member) {
             throw new ErrorWithStatus({
@@ -970,7 +998,7 @@ export const deleteMessageValidator = validate(
         options: async (value, { req }) => {
           validateObjectId(value, VALIDATION_MESSAGES.MESSAGE.MESSAGE_ID_IS_INVALID)
 
-          const message = await databaseService.messages.findOne({ _id: value })
+          const message = await databaseService.messages.findOne({ _id: new ObjectId(value) })
 
           if (!message) {
             throw new ErrorWithStatus({
@@ -1032,6 +1060,7 @@ export const dismissMessageValidator = validate(
       }
     },
     due_to: {
+      toDate: true,
       notEmpty: {
         errorMessage: VALIDATION_MESSAGES.ROOM.DUE_TO_IS_REQUIRED
       },
@@ -1081,19 +1110,19 @@ export const leaveRoomValidator = validate(
             })
           }
 
-          if (room.type === 'single') {
-            throw new ErrorWithStatus({
-              statusCode: StatusCodes.BAD_REQUEST,
-              message: VALIDATION_MESSAGES.ROOM.CAN_NOT_LEAVE_SINGLE_ROOM
-            })
-          }
-
           const member = await databaseService.members.findOne({ memberId: new ObjectId(req.user._id), roomId: new ObjectId(value) })
 
           if (!member) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.BAD_REQUEST,
               message: VALIDATION_MESSAGES.ROOM.USER_NOT_IN_ROOM
+            })
+          }
+
+          if (room.type === 'single') {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.CAN_NOT_LEAVE_SINGLE_ROOM
             })
           }
 
@@ -1112,7 +1141,7 @@ export const acceptInvitationValidator = validate(
       },
       custom: {
         options: async (value, { req }) => {
-          validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
+          validateObjectId(value, VALIDATION_MESSAGES.INVITATION.INVITE_ID_IS_INVALID)
 
           const invitation = await databaseService.invites.findOne({
             _id: new ObjectId(value)
@@ -1125,7 +1154,7 @@ export const acceptInvitationValidator = validate(
             })
           }
 
-          if (invitation.recipient.toString() !== req.user._id) {
+          if (invitation.recipient.toString() !== req.user._id.toString()) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.BAD_REQUEST,
               message: VALIDATION_MESSAGES.INVITATION.INVITATION_NOT_OWN
@@ -1160,7 +1189,7 @@ export const rejectInvitationValidator = validate(
       },
       custom: {
         options: async (value, { req }) => {
-          validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
+          validateObjectId(value, VALIDATION_MESSAGES.INVITATION.INVITE_ID_IS_INVALID)
 
           const invitation = await databaseService.invites.findOne({
             _id: new ObjectId(value)
@@ -1173,7 +1202,7 @@ export const rejectInvitationValidator = validate(
             })
           }
 
-          if (invitation.recipient.toString() !== req.user._id) {
+          if (invitation.recipient.toString() !== req.user._id.toString()) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.BAD_REQUEST,
               message: VALIDATION_MESSAGES.INVITATION.INVITATION_NOT_OWN
