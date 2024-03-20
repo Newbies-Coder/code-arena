@@ -3,7 +3,7 @@ import { Avatar, Button, Card } from 'antd'
 import { HOME_ICON } from '@/constants/images'
 import { UserAddOutlined } from '@ant-design/icons'
 import './style.scss'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import requestApi from '@/utils/interceptors'
 import { useDispatch, useSelector } from 'react-redux'
 import { DispatchType, RootState } from '@/redux/config'
@@ -13,8 +13,9 @@ import { toast } from 'react-toastify'
 const SidebarRight = () => {
   const notFollowList = useSelector((state: RootState) => state.user.notFollowList)
   const isFollow = useSelector((state: RootState) => state.user.isFollow)
+  const unfollow = useSelector((state: RootState) => state.user.unfollow)
+
   const dispatch: DispatchType = useDispatch()
-  // const [isFollow, SetIsFollow] = useState(false)
 
   useEffect(() => {
     ;(async () => {
@@ -25,12 +26,12 @@ const SidebarRight = () => {
         console.log(error)
       }
     })()
-  }, [isFollow])
+  }, [isFollow, unfollow])
 
   const handleFollowUser = async (_id: string) => {
     try {
       const res = await requestApi(`users/follow/${_id}`, 'POST', {})
-      toast.success(res.data.message)
+      toast.success(res.data.message, { autoClose: 3000 })
       dispatch(setIsFollow(true))
     } catch (error) {
       console.log(error)
@@ -100,7 +101,7 @@ const SidebarRight = () => {
                     className="flex justify-center items-center bg-gray-300 relative"
                     src={
                       user.avatar === ''
-                        ? 'https://studiovietnam.com/wp-content/uploads/2021/07/chup-anh-chan-dung-troi-nang-6.jpg'
+                        ? 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=1912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
                         : user.avatar
                     }
                   ></Avatar>

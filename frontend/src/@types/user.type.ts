@@ -6,6 +6,7 @@ export type userType = {
   refresh_token?: string
   isOnline?: boolean
   avatar?: string
+  cover_photo?: string
 }
 
 export type userState = {
@@ -20,6 +21,7 @@ export type userState = {
   notFollowList: userType[] | []
   followList: userType[] | []
   isFollow: boolean
+  unfollow: boolean
 }
 
 export type userLoginType = {

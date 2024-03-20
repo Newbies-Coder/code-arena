@@ -13,6 +13,7 @@ const initialState: userState = {
   notFollowList: [],
   followList: [],
   isFollow: false,
+  unfollow: false,
 }
 
 const userReducer = createSlice({
@@ -63,6 +64,10 @@ const userReducer = createSlice({
     setIsFollow: (state: userState, action: PayloadAction<boolean>) => {
       state.isFollow = action.payload
     },
+    // Save unfollow state of user
+    setUnFollow: (state: userState, action: PayloadAction<boolean>) => {
+      state.unfollow = action.payload
+    },
   },
 })
 
@@ -78,6 +83,7 @@ export const {
   setNotFollowList,
   setFollowList,
   setIsFollow,
+  setUnFollow,
 } = userReducer.actions
 
 export default userReducer.reducer

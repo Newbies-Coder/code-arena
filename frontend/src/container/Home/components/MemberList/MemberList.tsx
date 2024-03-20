@@ -4,29 +4,6 @@ import { LeftArrowIcon, RightArrowIcon } from '@/components/Icons'
 import { friendList } from '@/mocks/home.data'
 import { useState } from 'react'
 
-const SlickArrowLeft = ({ currentSlide, slideCount, ...props }: any) => (
-  <Button
-    {...props}
-    className={'slick-prev slick-arrow' + (currentSlide === 0 ? ' slick-disabled' : '')}
-    aria-hidden="true"
-    aria-disabled={currentSlide === 0 ? true : false}
-    type="button"
-  >
-    <LeftArrowIcon />
-  </Button>
-)
-const SlickArrowRight = ({ currentSlide, slideCount, ...props }: any) => (
-  <Button
-    {...props}
-    className={'slick-next slick-arrow' + (currentSlide === slideCount - 1 ? ' slick-disabled' : '')}
-    aria-hidden="true"
-    aria-disabled={currentSlide === slideCount - 1 ? true : false}
-    type="button"
-  >
-    <RightArrowIcon />
-  </Button>
-)
-
 const settings: CarouselProps = {
   autoplay: true,
   dots: false,
@@ -34,8 +11,6 @@ const settings: CarouselProps = {
   speed: 500,
   slidesToShow: 4,
   slidesToScroll: 4,
-  prevArrow: <SlickArrowLeft />,
-  nextArrow: <SlickArrowRight />,
   responsive: [
     {
       breakpoint: 1024,

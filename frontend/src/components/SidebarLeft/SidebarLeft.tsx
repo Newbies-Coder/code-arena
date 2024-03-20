@@ -1,4 +1,4 @@
-import { Avatar, Card } from 'antd'
+import { Avatar, Button, Card, Modal } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import './style.scss'
 import { LiPurpleLineIcon, SettingIcon } from '../Icons'
@@ -7,13 +7,18 @@ import { useEffect, useState } from 'react'
 import requestApi from '@/utils/interceptors'
 import { useDispatch, useSelector } from 'react-redux'
 import { DispatchType, RootState } from '@/redux/config'
-import { setFollowList } from '@/redux/userReducer/userReducer'
+import { setFollowList, setUnFollow } from '@/redux/userReducer/userReducer'
+import { userType } from '@/@types/user.type'
+import { MessageOutlined, UserAddOutlined } from '@ant-design/icons'
+import { toast } from 'react-toastify'
 
 const SidebarLeft = () => {
   //get follow list from store
   const followList = useSelector((state: RootState) => state.user.followList)
   const dispatch: DispatchType = useDispatch()
   const isFollow = useSelector((state: RootState) => state.user.isFollow)
+  const unfollow = useSelector((state: RootState) => state.user.unfollow)
+  const [buttonState, setButtonState] = useState(false)
 
   useEffect(() => {
     ;(async () => {
@@ -24,7 +29,37 @@ const SidebarLeft = () => {
         console.log(error)
       }
     })()
-  }, [isFollow])
+  }, [isFollow, unfollow])
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<userType>({ cover_photo: '', avatar: '', _id: '', username: '' })
+  const showModal = async (_id: string) => {
+    setIsModalOpen(true)
+    try {
+      const res = await requestApi(`users/profile/${_id}`, 'GET', {})
+      setSelectedUser(res.data.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleOk = () => {
+    setIsModalOpen(false)
+  }
+
+  const handleCancel = () => {
+    setIsModalOpen(false)
+  }
+
+  const handleUnfollow = async (_id: string) => {
+    try {
+      const res = await requestApi(`users/unfollow/${_id}`, 'DELETE', {})
+      toast.success(res.data.Message)
+      dispatch(setUnFollow(true))
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <Sider
@@ -48,8 +83,9 @@ const SidebarLeft = () => {
                 <Card
                   size="small"
                   className="bg-blue-opacity mx-4 border-transparent hover:border hover:border-gray-opacity"
-                  style={{ width: '95%', marginLeft: '5px' }}
+                  style={{ width: '95%', marginLeft: '5px', cursor: 'pointer' }}
                   bodyStyle={{ padding: '10px 12px' }}
+                  onClick={() => showModal(follower._id)}
                 >
                   <div className="flex items-center p-0">
                     <Avatar
@@ -57,7 +93,7 @@ const SidebarLeft = () => {
                       className="flex justify-center items-center bg-gray-300"
                       src={
                         follower.avatar === ''
-                          ? 'https://studiovietnam.com/wp-content/uploads/2021/07/chup-anh-chan-dung-troi-nang-6.jpg'
+                          ? 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=1912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
                           : follower.avatar
                       }
                     ></Avatar>
@@ -74,6 +110,53 @@ const SidebarLeft = () => {
                     </div>
                   </div>
                 </Card>
+                <Modal
+                  className="p-0"
+                  styles={{ body: { height: '500px' } }}
+                  open={isModalOpen}
+                  onOk={handleOk}
+                  onCancel={handleCancel}
+                  footer={null}
+                >
+                  <div className="w-full">
+                    <img
+                      className="object-cover h-56 w-full"
+                      src={
+                        selectedUser.cover_photo === ''
+                          ? 'https://images.unsplash.com/photo-1589656966895-2f33e7653819?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                          : selectedUser.cover_photo
+                      }
+                      alt="cover"
+                    />
+                    <Avatar
+                      size={150}
+                      src={
+                        selectedUser.avatar === ''
+                          ? 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=1912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                          : selectedUser.avatar
+                      }
+                      className="-mt-20 ml-4 border-1 border-black"
+                    />
+                    <h2 className="font-popins text-lg -mt-[72px] ml-44">{selectedUser.username}</h2>
+                    <Button
+                      className="absolute font-popins -mt-[74px] right-32 bg-blue-900 text-white"
+                      icon={<MessageOutlined />}
+                    >
+                      Message
+                    </Button>
+                    <Button
+                      className="absolute font-popins -mt-[74px] right-2 bg-blue-900 text-white"
+                      icon={<UserAddOutlined />}
+                      onClick={() => {
+                        handleUnfollow(selectedUser._id)
+                        dispatch(setUnFollow(false))
+                        setButtonState(true)
+                      }}
+                    >
+                      {buttonState === false ? 'Unfollow' : 'Follow'}
+                    </Button>
+                  </div>
+                </Modal>
               </li>
             ))}
           </ul>

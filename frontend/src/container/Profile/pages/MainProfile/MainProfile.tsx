@@ -185,8 +185,8 @@ const MainProfile = () => {
             <div className="absolute xs:-top-[85px] lg:-top-[95px] 3xl:-top-[180px] xl:-top-[95px] xs:left-28 lg:left-64 xl:left-64 3xl:left-72 z-10 font-popins text-white">
               <h2 className="text-xl">Ngoc Uyen</h2>
               <p>
-                <span>{objectLength(followList)} following</span>
-                <span className="ml-6">0 follower</span>
+                <span className="cursor-pointer">{objectLength(followList)} following</span>
+                <span className="ml-6 cursor-pointer">0 follower</span>
               </p>
             </div>
             <input name="image" style={{ display: 'none' }} ref={inputRef} type="file" onChange={handleFileChange} />
