@@ -152,6 +152,7 @@ const SidebarLeft = () => {
                         handleUnfollow(selectedUser._id)
                         dispatch(setUnFollow(false))
                         setButtonState(true)
+                        setIsModalOpen(false)
                       }}
                     >
                       {buttonState === false ? 'Unfollow' : 'Follow'}

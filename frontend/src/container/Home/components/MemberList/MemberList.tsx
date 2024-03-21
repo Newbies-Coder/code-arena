@@ -5,24 +5,24 @@ import { useDispatch, useSelector } from 'react-redux'
 import { DispatchType, RootState } from '@/redux/config'
 import requestApi from '@/utils/interceptors'
 import { toast } from 'react-toastify'
-import { setIsFollow, setNotFollowList } from '@/redux/userReducer/userReducer'
+import { setIsFollow } from '@/redux/userReducer/userReducer'
 import { useEffect } from 'react'
 import { userType } from '@/@types/user.type'
-
-const settings: CarouselProps = {
-  autoplay: true,
-  dots: false,
-  infinite: true,
-  speed: 500,
-  slidesToShow: 4,
-  slidesToScroll: 4,
-}
 
 const MemberList = () => {
   const notFollowList = useSelector((state: RootState) => state.user.notFollowList)
   const isFollow = useSelector((state: RootState) => state.user.isFollow)
   const unfollow = useSelector((state: RootState) => state.user.unfollow)
   const dispatch: DispatchType = useDispatch()
+  const slidesToShow = Math.min(4, notFollowList.length)
+  const settings: CarouselProps = {
+    autoplay: true,
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: slidesToShow,
+    slidesToScroll: slidesToShow,
+  }
   const handleFollowUser = async (_id: string) => {
     try {
       const res = await requestApi(`users/follow/${_id}`, 'POST', {})
@@ -32,26 +32,14 @@ const MemberList = () => {
       console.log(error)
     }
   }
-
-  const getNotFollowUser = async () => {
-    try {
-      const res = await requestApi('users/not-follows', 'GET', {})
-      dispatch(setNotFollowList(res.data.data))
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  useEffect(() => {
-    getNotFollowUser()
-  }, [isFollow, unfollow])
+  useEffect(() => {}, [isFollow, unfollow, notFollowList])
 
   return (
     <Carousel {...settings} style={{ width: '100%' }} arrows={false} draggable>
       {notFollowList.map((user: userType) => (
-        <div className="p-3 flex justify-center items-center w-full rounded-lg shadow-md" key={user._id}>
+        <div className="slide-item p-3 flex justify-center items-center rounded-lg shadow-md" key={user._id}>
           <Card
-            className="border-2 bg-blue-900 border-gray-opacity w-56 hover:border-gray-500 rounded-lg"
+            className=" border-2 bg-blue-900 border-gray-opacity w-56 hover:border-gray-500 rounded-lg"
             style={{ width: '100%', height: '100%' }}
             bodyStyle={{ height: '100%', padding: 0 }}
           >

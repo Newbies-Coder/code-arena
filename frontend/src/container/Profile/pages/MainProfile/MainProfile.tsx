@@ -180,9 +180,7 @@ const MainProfile = () => {
     setIsModalFollowerOpen(true)
     try {
       const res = await requestApi('users/followers', 'GET', {})
-      console.log(res.data.data)
-
-      // dispatch(setFollowerList(res.data.data))
+      dispatch(setFollowerList(res.data.data))
     } catch (error) {
       console.log(error)
     }
