@@ -514,6 +514,7 @@ export const VALIDATION_MESSAGES = {
     COURSE_CATEGORY_IS_REQUIRED: 'Course name is required'
   },
   ROOM: {
+    ROOM_EMOTE_MUST_BE_1_CHARACTER: 'Room emote must be 1 character',
     ROOM_NAME_CAN_NOT_CONTAIN_NEWLINE: 'Room name can not contains new line',
     ROOM_NEED_AT_LEAST_3_MEMBERS: 'Room  need at least 3 members',
     ROOM_IS_DELETED: 'Room is deleted',
@@ -581,7 +582,9 @@ export const VALIDATION_MESSAGES = {
     INVITATION_NOT_FOUND: 'Invitation not found',
     INVITATION_IS_ACCEPTED: 'Invitation already accepted',
     INVITATION_IS_REJECTED: 'Invitation already rejected',
-    INVITATION_NOT_OWN: 'Invitation is not your'
+    INVITATION_NOT_OWN: 'Invitation is not your',
+    INVITE_ID_IS_INVALID: 'Invite id is invalid',
+    INVITE_ALREADY_SENT: 'Invite already sent'
   },
   MEMBER: {
     NICKNAME_IS_REQUIRED: 'Nickname is required',
