@@ -37,10 +37,10 @@ const MemberList = () => {
   return (
     <Carousel {...settings} style={{ width: '100%' }} arrows={false} draggable>
       {notFollowList.map((user: userType) => (
-        <div className="slide-item p-3 flex justify-center items-center rounded-lg shadow-md" key={user._id}>
+        <div className="slide-item p-3 rounded-lg shadow-md" key={user._id}>
           <Card
             className=" border-2 bg-blue-900 border-gray-opacity w-56 hover:border-gray-500 rounded-lg"
-            style={{ width: '100%', height: '100%' }}
+            style={{ height: '100%' }}
             bodyStyle={{ height: '100%', padding: 0 }}
           >
             <Fancybox>
