@@ -35,6 +35,7 @@ const SidebarLeft = () => {
   const [selectedUser, setSelectedUser] = useState<userType>({ cover_photo: '', avatar: '', _id: '', username: '' })
   const showModal = async (_id: string) => {
     setIsModalOpen(true)
+    setButtonState(false)
     try {
       const res = await requestApi(`users/profile/${_id}`, 'GET', {})
       setSelectedUser(res.data.data)
@@ -54,7 +55,7 @@ const SidebarLeft = () => {
   const handleUnfollow = async (_id: string) => {
     try {
       const res = await requestApi(`users/unfollow/${_id}`, 'DELETE', {})
-      toast.success(res.data.Message)
+      toast.success(res.data.message)
       dispatch(setUnFollow(true))
     } catch (error) {
       console.log(error)

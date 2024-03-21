@@ -35,12 +35,6 @@ const MainHome = () => {
                   <div className="xs:mx-2 ">
                     <SliderItem />
                   </div>
-                  <div className="xs:mx-2 ">
-                    <SliderItem />
-                  </div>
-                  <div className="xs:mx-2 ">
-                    <SliderItem />
-                  </div>
                   <div>
                     <MemberList />
                   </div>

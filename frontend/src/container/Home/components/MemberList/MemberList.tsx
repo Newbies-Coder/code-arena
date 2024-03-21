@@ -1,8 +1,13 @@
-import { Avatar, Button, Carousel, CarouselProps, Modal } from 'antd'
+import { Avatar, Button, Card, Carousel, CarouselProps } from 'antd'
 import './style.scss'
-import { LeftArrowIcon, RightArrowIcon } from '@/components/Icons'
-import { friendList } from '@/mocks/home.data'
-import { useState } from 'react'
+import Fancybox from '@/components/Fancybox'
+import { useDispatch, useSelector } from 'react-redux'
+import { DispatchType, RootState } from '@/redux/config'
+import requestApi from '@/utils/interceptors'
+import { toast } from 'react-toastify'
+import { setIsFollow, setNotFollowList } from '@/redux/userReducer/userReducer'
+import { useEffect } from 'react'
+import { userType } from '@/@types/user.type'
 
 const settings: CarouselProps = {
   autoplay: true,
@@ -11,61 +16,78 @@ const settings: CarouselProps = {
   speed: 500,
   slidesToShow: 4,
   slidesToScroll: 4,
-  responsive: [
-    {
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 4,
-        slidesToScroll: 4,
-      },
-    },
-    {
-      breakpoint: 800,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 2,
-        initialSlide: 2,
-      },
-    },
-    {
-      breakpoint: 480,
-      settings: {
-        slidesToShow: 1,
-        slidesToScroll: 1,
-      },
-    },
-  ],
 }
 
 const MemberList = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const showModal = () => {
-    setIsModalOpen(true)
+  const notFollowList = useSelector((state: RootState) => state.user.notFollowList)
+  const isFollow = useSelector((state: RootState) => state.user.isFollow)
+  const unfollow = useSelector((state: RootState) => state.user.unfollow)
+  const dispatch: DispatchType = useDispatch()
+  const handleFollowUser = async (_id: string) => {
+    try {
+      const res = await requestApi(`users/follow/${_id}`, 'POST', {})
+      toast.success(res.data.message, { autoClose: 3000 })
+      dispatch(setIsFollow(true))
+    } catch (error) {
+      console.log(error)
+    }
   }
 
-  const handleOk = () => {
-    setIsModalOpen(false)
+  const getNotFollowUser = async () => {
+    try {
+      const res = await requestApi('users/not-follows', 'GET', {})
+      dispatch(setNotFollowList(res.data.data))
+    } catch (error) {
+      console.log(error)
+    }
   }
 
-  const handleCancel = () => {
-    setIsModalOpen(false)
-  }
+  useEffect(() => {
+    getNotFollowUser()
+  }, [isFollow, unfollow])
+
   return (
-    <Carousel {...settings} style={{ width: '100%' }} arrows={true} draggable>
-      {friendList.map((course) => (
-        <div className="p-3 flex justify-center items-center" key={course.key}>
-          <Avatar
-            size={150}
-            shape="square"
-            src="https://images.unsplash.com/photo-1710002211454-7fc2f66931f5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            onClick={showModal}
-            className="cursor-pointer"
-          ></Avatar>
-          <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-            <p>Some contents...</p>
-            <p>Some contents...</p>
-            <p>Some contents...</p>
-          </Modal>
+    <Carousel {...settings} style={{ width: '100%' }} arrows={false} draggable>
+      {notFollowList.map((user: userType) => (
+        <div className="p-3 flex justify-center items-center w-full rounded-lg shadow-md" key={user._id}>
+          <Card
+            className="border-2 bg-blue-900 border-gray-opacity w-56 hover:border-gray-500 rounded-lg"
+            style={{ width: '100%', height: '100%' }}
+            bodyStyle={{ height: '100%', padding: 0 }}
+          >
+            <Fancybox>
+              <a
+                href={
+                  user.avatar === ''
+                    ? 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=1912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                    : user.avatar
+                }
+                data-fancybox="gallery"
+              >
+                <Avatar
+                  shape="square"
+                  src={
+                    user.avatar === ''
+                      ? 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=1912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                      : user.avatar
+                  }
+                  className="cursor-pointer w-full h-40"
+                />
+              </a>
+            </Fancybox>
+            <div className="p-3">
+              <h3 className="text-white font-popins text-base">{user.username}</h3>
+              <Button
+                className="text-white font-popins w-full bg-gray-opacity border-0"
+                onClick={() => {
+                  handleFollowUser(user._id)
+                  dispatch(setIsFollow(false))
+                }}
+              >
+                Follow
+              </Button>
+            </div>
+          </Card>
         </div>
       ))}
     </Carousel>

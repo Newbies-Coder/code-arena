@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { DispatchType, RootState } from '@/redux/config'
 import { setIsFollow, setNotFollowList } from '@/redux/userReducer/userReducer'
 import { toast } from 'react-toastify'
+import { userType } from '@/@types/user.type'
 
 const SidebarRight = () => {
   const notFollowList = useSelector((state: RootState) => state.user.notFollowList)
@@ -16,16 +17,17 @@ const SidebarRight = () => {
   const unfollow = useSelector((state: RootState) => state.user.unfollow)
 
   const dispatch: DispatchType = useDispatch()
+  const getNotFollowUser = async () => {
+    try {
+      const res = await requestApi('users/not-follows', 'GET', {})
+      dispatch(setNotFollowList(res.data.data))
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
-    ;(async () => {
-      try {
-        const res = await requestApi('users/not-follows', 'GET', {})
-        dispatch(setNotFollowList(res.data.data))
-      } catch (error) {
-        console.log(error)
-      }
-    })()
+    getNotFollowUser()
   }, [isFollow, unfollow])
 
   const handleFollowUser = async (_id: string) => {
@@ -87,7 +89,7 @@ const SidebarRight = () => {
       </div>
       <div className="list-friend overflow-y-auto h-[260px]">
         <ul>
-          {notFollowList.map((user) => (
+          {notFollowList.map((user: userType) => (
             <li className="mx-0 mt-2" key={user._id}>
               <Card
                 size="small"

@@ -1,10 +1,10 @@
-import { Alert, Avatar, Button, Form, Input, Layout, Radio, RadioChangeEvent } from 'antd'
+import { Alert, Avatar, Button, Form, Input, Layout, Modal, Radio, RadioChangeEvent, Typography } from 'antd'
 import './style.scss'
 import { useEffect, useRef, useState } from 'react'
 import TextArea from 'antd/es/input/TextArea'
 import { CameraOutlined } from '@ant-design/icons'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/redux/config'
+import { useDispatch, useSelector } from 'react-redux'
+import { DispatchType, RootState } from '@/redux/config'
 import requestApi from '@/utils/interceptors'
 import { toast } from 'react-toastify'
 import { ProfileType } from '@/@types/form.type'
@@ -12,13 +12,18 @@ import { StatusCodes } from 'http-status-codes'
 import { useNavigate } from 'react-router-dom'
 import Fancybox from '@/components/Fancybox'
 import { objectLength } from '@/utils/setting'
+import { userType } from '@/@types/user.type'
+import Title from 'antd/es/typography/Title'
+import { setFollowerList } from '@/redux/userReducer/userReducer'
 
 const { Content } = Layout
 
 const MainProfile = () => {
-  const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated)
-  const followList = useSelector((state: RootState) => state.user.followList)
+  const isAuthenticated: boolean = useSelector((state: RootState) => state.user.isAuthenticated)
+  const followList: userType[] = useSelector((state: RootState) => state.user.followList)
+  const followerList: userType[] = useSelector((state: RootState) => state.user.followerList)
   const navigate = useNavigate()
+  const dispatch: DispatchType = useDispatch()
 
   const [userData, setUserData] = useState({
     username: '',
@@ -30,12 +35,13 @@ const MainProfile = () => {
     avatar: '',
     cover_photo: '',
   })
-
+  //state of radio button gender
   const [gender, setGender] = useState()
-
   const onChange = (e: RadioChangeEvent) => {
     setGender(e.target.value)
   }
+
+  //function inplement updating information of user
   const onFinish = async (values: ProfileType) => {
     const user = { ...values, gender }
     const loadingToast = toast.loading('Updating...')
@@ -64,6 +70,7 @@ const MainProfile = () => {
     }
   }
 
+  //get information of user
   const fetchUser = async () => {
     try {
       const res = await requestApi('users/@me/profile', 'GET', {})
@@ -152,6 +159,43 @@ const MainProfile = () => {
     }
   }
 
+  //for modal of list following
+  const [isModalFollowingOpen, setIsModalFollowingOpen] = useState(false)
+  const showModalFollowing = async () => {
+    setIsModalFollowingOpen(true)
+  }
+
+  const handleFollowingOk = () => {
+    setIsModalFollowingOpen(false)
+  }
+
+  const handleFollowingCancel = () => {
+    setIsModalFollowingOpen(false)
+  }
+
+  //for modal of list follower
+  const [isModalFollowerOpen, setIsModalFollowerOpen] = useState(false)
+  //state list of users that are following me
+  const showModalFollower = async () => {
+    setIsModalFollowerOpen(true)
+    try {
+      const res = await requestApi('users/followers', 'GET', {})
+      console.log(res.data.data)
+
+      // dispatch(setFollowerList(res.data.data))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleFollowerOk = () => {
+    setIsModalFollowerOpen(false)
+  }
+
+  const handleFollowerCancel = () => {
+    setIsModalFollowerOpen(false)
+  }
+
   return (
     <Layout className="min-h-screen overflow-hidden">
       <Layout>
@@ -185,8 +229,80 @@ const MainProfile = () => {
             <div className="absolute xs:-top-[85px] lg:-top-[95px] 3xl:-top-[180px] xl:-top-[95px] xs:left-28 lg:left-64 xl:left-64 3xl:left-72 z-10 font-popins text-white">
               <h2 className="text-xl">Ngoc Uyen</h2>
               <p>
-                <span className="cursor-pointer">{objectLength(followList)} following</span>
-                <span className="ml-6 cursor-pointer">0 follower</span>
+                <span className="cursor-pointer" onClick={showModalFollowing}>
+                  {objectLength(followList)} following
+                </span>
+                <Modal
+                  className="p-0"
+                  styles={{
+                    body: { maxHeight: '500px', background: '#ffffff33', borderRadius: 'inherit' },
+                    content: { height: '100%', overflowY: 'auto' },
+                  }}
+                  open={isModalFollowingOpen}
+                  onOk={handleFollowingOk}
+                  onCancel={handleFollowingCancel}
+                  footer={null}
+                >
+                  <div className="py-3 px-5">
+                    <Title level={2}>Following</Title>
+                    {followList.map((user: userType) => (
+                      <div
+                        key={user._id}
+                        className="flex justify-between items-center my-2 rounded-lg border-2 py-2 px-4 cursor-pointer"
+                      >
+                        <div>
+                          <Avatar
+                            size={60}
+                            src={
+                              user.avatar === ''
+                                ? 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=1912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                                : user.avatar
+                            }
+                          />
+                          <span className="font-popins text-lg ml-4">{user.username}</span>
+                        </div>
+                        <Button className="font-popins text-white bg-blue-900 border-0">Following</Button>
+                      </div>
+                    ))}
+                  </div>
+                </Modal>
+                <span className="ml-6 cursor-pointer" onClick={showModalFollower}>
+                  {objectLength(followerList) > 1 ? `${objectLength(followerList)} ` + 'followers' : 'follower'}
+                </span>
+                <Modal
+                  className="p-0"
+                  styles={{
+                    body: { maxHeight: '500px', background: '#ffffff33', borderRadius: 'inherit' },
+                    content: { height: '100%', overflowY: 'auto' },
+                  }}
+                  open={isModalFollowerOpen}
+                  onOk={handleFollowerOk}
+                  onCancel={handleFollowerCancel}
+                  footer={null}
+                >
+                  <div className="py-3 px-5">
+                    <Title level={2}>Followers</Title>
+                    {followerList.map((user: userType) => (
+                      <div
+                        key={user._id}
+                        className="flex justify-between items-center my-2 rounded-lg border-2 py-2 px-4 cursor-pointer"
+                      >
+                        <div>
+                          <Avatar
+                            size={60}
+                            src={
+                              user.avatar === ''
+                                ? 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=1912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                                : user.avatar
+                            }
+                          />
+                          <span className="font-popins text-lg ml-4">{user.username}</span>
+                        </div>
+                        <Button className="font-popins text-white bg-blue-900 border-0">Following</Button>
+                      </div>
+                    ))}
+                  </div>
+                </Modal>
               </p>
             </div>
             <input name="image" style={{ display: 'none' }} ref={inputRef} type="file" onChange={handleFileChange} />
@@ -259,23 +375,7 @@ const MainProfile = () => {
                     <h3 className="absolute -top-3 left-3 px-2 mb-0 text-white bg-blue-900 z-10 rounded-md">
                       Full name
                     </h3>
-                    <Form.Item
-                      name="fullname"
-                      // rules={[
-                      //   {
-                      //     required: true,
-                      //     message: (
-                      //       <Alert
-                      //         className="bg-transparent xs:text-xs lg:text-base text-red-700"
-                      //         message="Please input your fullname"
-                      //         banner
-                      //         type="error"
-                      //       />
-                      //     ),
-                      //   },
-                      // ]}
-                      className="border-2 rounded-lg border-white w-full mb-8 flex flex-col"
-                    >
+                    <Form.Item name="fullname" className="border-2 rounded-lg border-white w-full mb-8 flex flex-col">
                       <Input className="h-12 bg-transparent border-none text-white text-base focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none " />
                     </Form.Item>
                   </div>
