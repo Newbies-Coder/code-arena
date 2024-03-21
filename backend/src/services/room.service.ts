@@ -109,6 +109,9 @@ class RoomService {
         }
       }
     )
+    await databaseService.invites.deleteMany({
+      room: new ObjectId(id)
+    })
   }
 
   async makeRoomPrivate(id: ObjectId, { password }: MakeRoomPrivateBody) {
@@ -244,7 +247,7 @@ class RoomService {
   }
 
   async leaveRoom(roomId: ObjectId, memberId: ObjectId) {
-    await databaseService.members.deleteOne({ roomId, memberId: memberId })
+    await databaseService.members.deleteOne({ roomId, memberId })
   }
 
   async acceptInvite(inviteId: ObjectId, userId: ObjectId) {

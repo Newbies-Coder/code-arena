@@ -682,6 +682,113 @@ class UserService {
     }
   }
 
+  async getUserFollowers(payload: ParamsDictionary) {
+    try {
+      const { id } = payload
+      const blocks = await databaseService.blocked_users.find({ blockerId: new ObjectId(id) }).toArray()
+      const blockedUserIds = blocks.map((block) => block.blockedId)
+
+      const follows = await databaseService.follow
+        .find({
+          followedId: new ObjectId(id),
+          followerId: { $nin: blockedUserIds }
+        })
+        .toArray()
+      const followerUserIds = follows.map((follow) => follow.followerId)
+      // Step 2: Fetch user information for each follower ID
+      const followersInfo = await databaseService.users
+        .find({
+          _id: { $in: followerUserIds }
+        })
+        .toArray()
+      return _.map(followersInfo, (v) => _.omit(v, ['password', 'providerId', 'provider', 'created_at', 'updated_at', 'forgot_password_token', 'verify', '_destroy', 'password_change_at', 'role']))
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.GET_ALL_USER_FOLLOWER
+      })
+    }
+  }
+
+  async getMutualFollows(payload: ParamsDictionary) {
+    try {
+      const { id } = payload
+      // Find all users followed by the specified user
+      const followedUsers = await databaseService.follow.find({ followerId: new ObjectId(id) }).toArray()
+      const followedUserIds = followedUsers.map((follow) => follow.followedId)
+
+      // Find all users who follow the specified user and are also followed by them (mutual follows)
+      const mutualFollows = await databaseService.follow
+        .aggregate([
+          {
+            $match: {
+              followedId: new ObjectId(id),
+              followerId: { $in: followedUserIds }
+            }
+          },
+          {
+            $lookup: {
+              from: 'users',
+              localField: 'followerId',
+              foreignField: '_id',
+              as: 'followerDetails'
+            }
+          },
+          {
+            $unwind: '$followerDetails'
+          },
+          {
+            $project: {
+              _id: '$followerId',
+              fullName: '$followerDetails.fullName',
+              username: '$followerDetails.username',
+              email: '$followerDetails.email',
+              phone: '$followerDetails.phone',
+              gender: '$followerDetails.gender',
+              date_of_birth: '$followerDetails.date_of_birth',
+              avatar: '$followerDetails.avatar',
+              cover_photo: '$followerDetails.cover_photo'
+            }
+          }
+        ])
+        .toArray()
+      return mutualFollows
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.GET_ALL_USER_FOLLOW
+      })
+    }
+  }
+
+  async getUserFollowings(payload: ParamsDictionary) {
+    try {
+      const { id } = payload
+      const blocks = await databaseService.blocked_users.find({ blockerId: new ObjectId(id) }).toArray()
+      const blockedUserIds = blocks.map((block) => block.blockedId)
+
+      const follows = await databaseService.follow
+        .find({
+          followerId: new ObjectId(id),
+          followedId: { $nin: blockedUserIds }
+        })
+        .toArray()
+      const followedUserIds = follows.map((follow) => follow.followedId)
+      // Step 2: Fetch user information for each follower ID
+      const followedInfo = await databaseService.users
+        .find({
+          _id: { $in: followedUserIds }
+        })
+        .toArray()
+      return _.map(followedInfo, (v) => _.omit(v, ['password', 'providerId', 'provider', 'created_at', 'updated_at', 'forgot_password_token', 'verify', '_destroy', 'password_change_at', 'role']))
+    } catch (error) {
+      throw new ErrorWithStatus({
+        statusCode: error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+        message: error.message || DEV_ERRORS_MESSAGES.GET_ALL_USER_FOLLOW
+      })
+    }
+  }
+
   async getUsersNotFollow({ _id }: AuthUser) {
     try {
       // Fetch IDs of users who the current user follows

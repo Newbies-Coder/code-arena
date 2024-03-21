@@ -821,6 +821,49 @@ export const unfollowUserValidator = validate(
   )
 )
 
+export const userFollowValidator = validate(
+  checkSchema(
+    {
+      id: {
+        trim: true,
+        notEmpty: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_CAN_NOT_BE_EMPTY
+        },
+        isString: {
+          errorMessage: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_MUST_BE_A_STRING
+        },
+        custom: {
+          options: async (value) => {
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_ID_IS_INVALID
+              })
+            }
+            const user = await userServices.isUserExist(value)
+            if (!user) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_WITH_ID_IS_NOT_EXIST
+              })
+            }
+            const userBlocked = await databaseService.blocked_users.findOne({ blockedId: new ObjectId(value) })
+            if (userBlocked) {
+              throw new ErrorWithStatus({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: VALIDATION_MESSAGES.USER.COMMONS.USER_BLOCKED
+              })
+            }
+            await userServices.validateWithIDAccountAccessibility(value)
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
 export const userProfileValidator = validate(
   checkSchema(
     {

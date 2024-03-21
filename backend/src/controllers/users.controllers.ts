@@ -156,6 +156,19 @@ const userController = {
   getAllUserFollowers: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
     let users = await userServices.getAllUserFollowers(req.user)
     return sendResponse.success(res, users, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_USERS_FOLLOWERS)
+  },
+  getUserFollowers: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    let users = await userServices.getUserFollowers(req.params)
+    return sendResponse.success(res, users, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_USERS_FOLLOWER_BY_ID)
+  },
+
+  getUserFollowings: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    let users = await userServices.getUserFollowings(req.params)
+    return sendResponse.success(res, users, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_USERS_FOLLOWING_BY_ID)
+  },
+  getMutualFollows: async (req: Request<ParamsDictionary, any, any>, res: Response, next: NextFunction) => {
+    let users = await userServices.getMutualFollows(req.params)
+    return sendResponse.success(res, users, RESULT_RESPONSE_MESSAGES.USER_SUCCESS.GET_MULTUAL_FOLLOWS)
   }
 }
 

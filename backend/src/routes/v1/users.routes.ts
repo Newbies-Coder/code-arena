@@ -18,6 +18,7 @@ import {
   resetPasswordValidator,
   unfollowUserValidator,
   updateProfileValidator,
+  userFollowValidator,
   userProfileValidator,
   verifyForgotpasswordValidator,
   verifyOTPValidator
@@ -266,7 +267,35 @@ userRouter.get('/not-follows', wrapRequestHandler(requireLoginMiddleware), wrapR
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
  */
-
 userRouter.get('/followers', wrapRequestHandler(requireLoginMiddleware), wrapRequestHandler(userController.getAllUserFollowers))
+
+/**
+ * Description: Get a user's followers list
+ * Path: /:id/follower
+ * Method: GET
+ * Header: { Authorization: Bearer <access_token> }
+ * Params: { id: string }
+ */
+userRouter.get('/:id/followers', wrapRequestHandler(requireLoginMiddleware), userFollowValidator, wrapRequestHandler(userController.getUserFollowers))
+
+/**
+ * Description: Get a user's following list
+ * Path: /:id/following
+ * Method: GET
+ * Header: { Authorization: Bearer <access_token> }
+ * Params: {id: string}
+ */
+
+userRouter.get('/:id/following', wrapRequestHandler(requireLoginMiddleware), userFollowValidator, wrapRequestHandler(userController.getUserFollowings))
+
+/**
+ * Description: Get mutual follow
+ * Path: /mutual-follows/:id
+ * Method: GET
+ * Header: { Authorization: Bearer <access_token> }
+ * Params: {id: string}
+ */
+
+userRouter.get('/mutual-follows/:id', wrapRequestHandler(requireLoginMiddleware), userFollowValidator, wrapRequestHandler(userController.getMutualFollows))
 
 export default userRouter
