@@ -94,7 +94,7 @@ const roomController = {
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.ACCEPT_INVITE)
   },
   rejectInvite: async (req: Request<ParamsDictionary, any, any, ParsedUrlQuery>, res: Response, next: NextFunction) => {
-    const result = await roomService.rejectInvite(new ObjectId(req.params.id))
+    const result = await roomService.rejectInvite(new ObjectId(req.params.inviteId))
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.REJECT_INVITE)
   },
   reactMessage: async (req: Request<ParamsDictionary, any, ReactMessageBody, ParsedUrlQuery>, res: Response, next: NextFunction) => {

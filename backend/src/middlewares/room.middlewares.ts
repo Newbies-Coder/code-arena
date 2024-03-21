@@ -153,7 +153,7 @@ export const updateRoomValidator = validate(
           }
 
           if (room.type === 'multiple') {
-            if (room.owner.toString() !== req.user._id) {
+            if (room.owner.toString() !== req.user._id.toString()) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.FORBIDDEN,
                 message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
@@ -185,7 +185,18 @@ export const updateRoomValidator = validate(
         },
         errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_NAME_LENGTH_MUST_BE_FROM_1_TO_20
       },
-      trim: true
+      trim: true,
+      custom: {
+        options: (value) => {
+          if (containsNewline(value)) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_NAME_CAN_NOT_CONTAIN_NEWLINE
+            })
+          }
+          return true
+        }
+      }
     },
     emote: {
       optional: true,
@@ -229,7 +240,7 @@ export const changeRoomAvatarValidator = validate(
           }
 
           if (room.type === 'multiple') {
-            if (room.owner.toString() !== req.user._id) {
+            if (room.owner.toString() !== req.user._id.toString()) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.FORBIDDEN,
                 message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
@@ -237,7 +248,7 @@ export const changeRoomAvatarValidator = validate(
             }
           }
 
-          if (room.owner !== req.user._id) {
+          if (room.owner.toString() !== req.user._id.toString()) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.UNAUTHORIZED,
               message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
@@ -278,7 +289,7 @@ export const changeRoomBackgroundValidator = validate(
           }
 
           if (room.type === 'multiple') {
-            if (room.owner.toString() !== req.user._id) {
+            if (room.owner.toString() !== req.user._id.toString()) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.FORBIDDEN,
                 message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
@@ -286,7 +297,7 @@ export const changeRoomBackgroundValidator = validate(
             }
           }
 
-          if (room.owner !== req.user._id) {
+          if (room.owner.toString() !== req.user._id.toString()) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.UNAUTHORIZED,
               message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
@@ -327,7 +338,7 @@ export const deleteRoomValidator = validate(
           }
 
           if (room.type === 'multiple') {
-            if (room.owner.toString() !== req.user._id) {
+            if (room.owner.toString() !== req.user._id.toString()) {
               throw new ErrorWithStatus({
                 statusCode: StatusCodes.FORBIDDEN,
                 message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
@@ -380,9 +391,9 @@ export const createInviteValidator = validate(
             })
           }
 
-          const member = await databaseService.members.findOne({ roomId: room._id, memberId: new ObjectId(req.user._id) })
+          const selfMember = await databaseService.members.findOne({ roomId: room._id, memberId: new ObjectId(req.user._id) })
 
-          if (!member) {
+          if (!selfMember) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.FORBIDDEN,
               message: VALIDATION_MESSAGES.ROOM.USER_NOT_IN_ROOM
@@ -393,15 +404,6 @@ export const createInviteValidator = validate(
             throw new ErrorWithStatus({
               statusCode: StatusCodes.FORBIDDEN,
               message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
-            })
-          }
-
-          const invite = await databaseService.invites.findOne({ room: room._id, recipientId: new ObjectId(req.user._id) })
-
-          if (invite) {
-            throw new ErrorWithStatus({
-              statusCode: StatusCodes.BAD_REQUEST,
-              message: VALIDATION_MESSAGES.INVITATION.INVITE_ALREADY_SENT
             })
           }
 
@@ -434,12 +436,22 @@ export const createInviteValidator = validate(
               message: VALIDATION_MESSAGES.ROOM.USER_ALREADY_IN_ROOM
             })
           }
+
           const bannedMember = await databaseService.bannedMembers.findOne({ roomId: new ObjectId(req.params.id), memberId: new ObjectId(value) })
 
           if (bannedMember) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.BAD_REQUEST,
               message: VALIDATION_MESSAGES.ROOM.USER_IS_BANNED_FROM_ROOM
+            })
+          }
+
+          const invite = await databaseService.invites.findOne({ room: new ObjectId(req.params.id), recipient: new ObjectId(value) })
+
+          if (invite) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.INVITATION.INVITE_ALREADY_SENT
             })
           }
 
@@ -483,14 +495,14 @@ export const banMemberValidator = validate(
             })
           }
 
-          if (room.owner.toString() !== req.user._id) {
+          if (room.owner.toString() !== req.user._id.toString()) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.FORBIDDEN,
               message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
             })
           }
 
-          if (room.owner.toString() === req.body.memberId) {
+          if (room.owner.toString() === req.body.memberId.toString()) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.BAD_REQUEST,
               message: VALIDATION_MESSAGES.ROOM.CAN_NOT_BAN_OWNER
@@ -543,7 +555,7 @@ export const banMemberValidator = validate(
             })
           }
 
-          const bannedMember = await databaseService.bannedMembers.findOne({ roomId: new ObjectId(req.params.id), memberId: new ObjectId(value) })
+          const bannedMember = await databaseService.bannedMembers.findOne({ room: new ObjectId(req.params.id), user: new ObjectId(value) })
 
           if (bannedMember) {
             throw new ErrorWithStatus({
@@ -613,14 +625,14 @@ export const kickMemberValidator = validate(
             })
           }
 
-          if (room.owner.toString() !== req.user._id) {
+          if (room.owner.toString() !== req.user._id.toString()) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.FORBIDDEN,
               message: VALIDATION_MESSAGES.ROOM.NOT_OWNER
             })
           }
 
-          if (room.owner.toString() === req.body.memberId) {
+          if (room.owner.toString() === req.body.memberId.toString()) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.BAD_REQUEST,
               message: VALIDATION_MESSAGES.ROOM.CAN_NOT_KICK_OWNER
@@ -1007,7 +1019,7 @@ export const deleteMessageValidator = validate(
             })
           }
 
-          if (message.sender !== req.user._id) {
+          if (message.sender.toString() !== req.user._id.toString()) {
             throw new ErrorWithStatus({
               statusCode: StatusCodes.FORBIDDEN,
               message: VALIDATION_MESSAGES.MESSAGE.MESSAGE_NOT_OWN
@@ -1359,10 +1371,10 @@ export const changeNicknameValidator = validate(
         errorMessage: VALIDATION_MESSAGES.MEMBER.NICKNAME_MUST_BE_STRING
       },
       isLength: {
-        errorMessage: VALIDATION_MESSAGES.MEMBER.NICKNAME_LENGTH_MUST_GREATER_THAN_2_AND_LESS_THAN_31,
+        errorMessage: VALIDATION_MESSAGES.MEMBER.NICKNAME_LENGTH_MUST_FROM_1_TO_20,
         options: {
-          min: 3,
-          max: 30
+          min: 1,
+          max: 20
         }
       }
     }
