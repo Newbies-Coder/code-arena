@@ -289,7 +289,7 @@ userRouter.get('/:id/followers', wrapRequestHandler(requireLoginMiddleware), use
 userRouter.get('/:id/following', wrapRequestHandler(requireLoginMiddleware), userFollowValidator, wrapRequestHandler(userController.getUserFollowings))
 
 /**
- * Description:
+ * Description: Get mutual follow
  * Path: /mutual-follows/:id
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
