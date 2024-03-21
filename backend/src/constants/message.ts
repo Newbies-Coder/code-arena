@@ -540,7 +540,7 @@ export const VALIDATION_MESSAGES = {
     CAN_NOT_BAN_OWNER: 'Can not ban owner',
     ROOM_MEMBERS_IS_NOT_UNIQUE: 'Room members must be unique',
     CAN_NOT_LEAVE_SINGLE_ROOM: 'Can not leave direct chat room',
-    USER_IS_BANNED_FROM_ROOM: 'Can not invite user that is banned from room'
+    USER_IS_BANNED_FROM_ROOM: 'User is banned from room'
   },
   MESSAGE: {
     INDEX_IS_OUT_OF_BOUND: 'Index is out of bound',
@@ -578,7 +578,7 @@ export const VALIDATION_MESSAGES = {
   MEMBER: {
     NICKNAME_IS_REQUIRED: 'Nickname is required',
     NICKNAME_MUST_BE_STRING: 'Nickname must be a string',
-    NICKNAME_LENGTH_MUST_GREATER_THAN_2_AND_LESS_THAN_31: 'Nickname length must greater than 2 and less than 31'
+    NICKNAME_LENGTH_MUST_FROM_1_TO_20: 'Nickname length must from 1 to 20 characters',
   }
 } as const
 

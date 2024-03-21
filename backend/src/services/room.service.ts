@@ -37,11 +37,14 @@ class RoomService {
     const limit = Number(payload.limit) || 10
     const skipCount = (page - 1) * limit
 
-    const rooms = await databaseService.members.find({ memberId: new ObjectId(memberId) }).toArray()
+    const rooms = await databaseService.members
+      .find({ memberId: new ObjectId(memberId) })
+      .map(({ roomId }) => new ObjectId(roomId))
+      .toArray()
 
     const result = await databaseService.rooms
       .find({
-        _id: { $in: rooms.map(({ roomId }) => new ObjectId(roomId)) }
+        _id: { $in: rooms }
       })
       .skip(skipCount)
       .limit(limit)
