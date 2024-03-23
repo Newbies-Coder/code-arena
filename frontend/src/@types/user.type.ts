@@ -23,6 +23,7 @@ export type userState = {
   isFollow: boolean
   unfollow: boolean
   followerList: userType[] | []
+  isLiked: boolean
 }
 
 export type userLoginType = {

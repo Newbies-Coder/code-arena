@@ -15,6 +15,7 @@ const initialState: userState = {
   isFollow: false,
   unfollow: false,
   followerList: [],
+  isLiked: false,
 }
 
 const userReducer = createSlice({
@@ -73,6 +74,10 @@ const userReducer = createSlice({
     setFollowerList: (state: userState, action: PayloadAction<userType[]>) => {
       state.followerList = action.payload
     },
+    // save favorite user state
+    addToFavorite: (state: userState, action: PayloadAction<boolean>) => {
+      state.isLiked = action.payload
+    },
   },
 })
 
@@ -90,6 +95,7 @@ export const {
   setIsFollow,
   setUnFollow,
   setFollowerList,
+  addToFavorite,
 } = userReducer.actions
 
 export default userReducer.reducer

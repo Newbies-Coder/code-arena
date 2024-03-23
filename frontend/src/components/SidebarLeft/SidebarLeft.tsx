@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, Modal } from 'antd'
+import { Avatar, Button, Card, Modal, Space, Tooltip } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import './style.scss'
 import { LiPurpleLineIcon, SettingIcon } from '../Icons'
@@ -7,10 +7,11 @@ import { useEffect, useState } from 'react'
 import requestApi from '@/utils/interceptors'
 import { useDispatch, useSelector } from 'react-redux'
 import { DispatchType, RootState } from '@/redux/config'
-import { setFollowList, setUnFollow } from '@/redux/userReducer/userReducer'
+import { addToFavorite, setFollowList, setUnFollow } from '@/redux/userReducer/userReducer'
 import { userType } from '@/@types/user.type'
-import { MessageOutlined, UserAddOutlined } from '@ant-design/icons'
+import { MessageOutlined, StarFilled, StarOutlined, UserAddOutlined } from '@ant-design/icons'
 import { toast } from 'react-toastify'
+import { objectLength } from '@/utils/setting'
 
 const SidebarLeft = () => {
   //get follow list from store
@@ -33,15 +34,27 @@ const SidebarLeft = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<userType>({ cover_photo: '', avatar: '', _id: '', username: '' })
+  const [followingUserList, setFollowingUserList] = useState([])
+  const [followedUserList, setFollowedUserList] = useState([])
   const showModal = async (_id: string) => {
     setIsModalOpen(true)
     setButtonState(false)
-    try {
-      const res = await requestApi(`users/profile/${_id}`, 'GET', {})
-      setSelectedUser(res.data.data)
-    } catch (error) {
-      console.log(error)
-    }
+    Promise.all([
+      requestApi(`users/profile/${_id}`, 'GET', {}),
+      requestApi(`users/${_id}/followers`, 'GET', {}),
+      requestApi(`users/${_id}/following`, 'GET', {}),
+    ])
+      .then(async ([resProfile, resFollower, resFollowing]) => {
+        const resultProfile = await resProfile.data
+        const resultFollower = await resFollower.data
+        const resultFollowing = await resFollowing.data
+        setSelectedUser(resultProfile.data)
+        setFollowedUserList(resultFollower.data)
+        setFollowingUserList(resultFollowing.data)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   const handleOk = () => {
@@ -59,6 +72,33 @@ const SidebarLeft = () => {
       dispatch(setUnFollow(true))
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  //get favorite state from redux store
+  const isLiked = useSelector((state: RootState) => state.user.isLiked)
+
+  //function of adding user to favorite following list
+  const handleLikeUser = async (_id: string) => {
+    try {
+      const res = await requestApi('users/favorite', 'POST', { friendId: _id })
+      console.log(res)
+      toast.success(res.data.message)
+      dispatch(addToFavorite(true))
+    } catch (error: any) {
+      toast.error(error.response.data.message)
+    }
+  }
+
+  //function of removing user to favorite following list
+  const handleUnlikeUser = async (_id: string) => {
+    try {
+      const res = await requestApi(`users/favorite/${_id}`, 'DELETE', {})
+      console.log(res)
+      toast.success(res.data.message)
+      dispatch(addToFavorite(false))
+    } catch (error: any) {
+      toast.error(error.response.data.message)
     }
   }
 
@@ -138,15 +178,25 @@ const SidebarLeft = () => {
                       }
                       className="-mt-20 ml-4 border-1 border-black"
                     />
-                    <h2 className="font-popins text-lg -mt-[72px] ml-44">{selectedUser.username}</h2>
+                    <h2 className="font-popins text-lg -mt-[72px] ml-44 mb-0">{selectedUser.username}</h2>
+                    <Tooltip title="Add to favorite list">
+                      <Button
+                        className="absolute -mt-16 right-64 bg-black text-yellow-300"
+                        shape="circle"
+                        icon={isLiked === true ? <StarFilled /> : <StarOutlined />}
+                        onClick={() => {
+                          isLiked === true ? handleUnlikeUser(selectedUser._id) : handleLikeUser(selectedUser._id)
+                        }}
+                      />
+                    </Tooltip>
                     <Button
-                      className="absolute font-popins -mt-[74px] right-32 bg-blue-900 text-white"
+                      className="absolute font-popins -mt-16 right-32 bg-blue-900 text-white"
                       icon={<MessageOutlined />}
                     >
                       Message
                     </Button>
                     <Button
-                      className="absolute font-popins -mt-[74px] right-2 bg-blue-900 text-white"
+                      className="absolute font-popins -mt-16 right-2 bg-blue-900 text-white"
                       icon={<UserAddOutlined />}
                       onClick={() => {
                         handleUnfollow(selectedUser._id)
@@ -157,6 +207,10 @@ const SidebarLeft = () => {
                     >
                       {buttonState === false ? 'Unfollow' : 'Follow'}
                     </Button>
+                    <Space className="-mt-4">
+                      <span className="font-popins text-sm ml-44">{objectLength(followedUserList)} follower</span>
+                      <span className="font-popins text-sm">{objectLength(followingUserList)} following</span>
+                    </Space>
                   </div>
                 </Modal>
               </li>
