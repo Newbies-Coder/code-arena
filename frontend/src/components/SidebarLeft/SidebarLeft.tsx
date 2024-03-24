@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, Modal, Space, Tooltip } from 'antd'
+import { Avatar, Button, Card, Modal, Space, Tabs, TabsProps, Tooltip } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import './style.scss'
 import { LiPurpleLineIcon, SettingIcon } from '../Icons'
@@ -12,6 +12,28 @@ import { userType } from '@/@types/user.type'
 import { MessageOutlined, StarFilled, StarOutlined, UserAddOutlined } from '@ant-design/icons'
 import { toast } from 'react-toastify'
 import { objectLength } from '@/utils/setting'
+
+const onChange = (key: string) => {
+  console.log(key)
+}
+
+const items: TabsProps['items'] = [
+  {
+    key: '1',
+    label: 'Tab 1',
+    children: 'Content of Tab Pane 1',
+  },
+  {
+    key: '2',
+    label: 'Tab 2',
+    children: 'Content of Tab Pane 2',
+  },
+  {
+    key: '3',
+    label: 'Tab 3',
+    children: 'Content of Tab Pane 3',
+  },
+]
 
 const SidebarLeft = () => {
   //get follow list from store
@@ -36,6 +58,7 @@ const SidebarLeft = () => {
   const [selectedUser, setSelectedUser] = useState<userType>({ cover_photo: '', avatar: '', _id: '', username: '' })
   const [followingUserList, setFollowingUserList] = useState([])
   const [followedUserList, setFollowedUserList] = useState([])
+  const [favoriteList, setFavoriteList] = useState<userType[]>([])
   const showModal = async (_id: string) => {
     setIsModalOpen(true)
     setButtonState(false)
@@ -43,14 +66,17 @@ const SidebarLeft = () => {
       requestApi(`users/profile/${_id}`, 'GET', {}),
       requestApi(`users/${_id}/followers`, 'GET', {}),
       requestApi(`users/${_id}/following`, 'GET', {}),
+      requestApi('users/favorite', 'GET', {}),
     ])
-      .then(async ([resProfile, resFollower, resFollowing]) => {
+      .then(async ([resProfile, resFollower, resFollowing, resFavoriteList]) => {
         const resultProfile = await resProfile.data
         const resultFollower = await resFollower.data
         const resultFollowing = await resFollowing.data
+        const resultFavoriteList = await resFavoriteList.data
         setSelectedUser(resultProfile.data)
         setFollowedUserList(resultFollower.data)
         setFollowingUserList(resultFollowing.data)
+        setFavoriteList(resultFavoriteList.data.items)
       })
       .catch((error) => {
         console.log(error)
@@ -74,9 +100,6 @@ const SidebarLeft = () => {
       console.log(error)
     }
   }
-
-  //get favorite state from redux store
-  const isLiked = useSelector((state: RootState) => state.user.isLiked)
 
   //function of adding user to favorite following list
   const handleLikeUser = async (_id: string) => {
@@ -102,6 +125,11 @@ const SidebarLeft = () => {
     }
   }
 
+  const isLike = (list: userType[], id: string) => {
+    const hadFollowed = list.some((obj: userType) => obj._id === id)
+    return hadFollowed
+  }
+
   return (
     <Sider
       className="sider-left mt-16 h-screen left-0 border-r lg:block z-10"
@@ -119,7 +147,7 @@ const SidebarLeft = () => {
         </div>
         <div className="list-member overflow-y-auto h-[282px]">
           <ul>
-            {followList.map((follower) => (
+            {followList.map((follower: userType) => (
               <li className="mx-0 mt-2" key={follower._id}>
                 <Card
                   size="small"
@@ -183,9 +211,11 @@ const SidebarLeft = () => {
                       <Button
                         className="absolute -mt-16 right-64 bg-black text-yellow-300"
                         shape="circle"
-                        icon={isLiked === true ? <StarFilled /> : <StarOutlined />}
+                        icon={isLike(favoriteList, selectedUser._id) === true ? <StarFilled /> : <StarOutlined />}
                         onClick={() => {
-                          isLiked === true ? handleUnlikeUser(selectedUser._id) : handleLikeUser(selectedUser._id)
+                          isLike(favoriteList, selectedUser._id) === true
+                            ? handleUnlikeUser(selectedUser._id)
+                            : handleLikeUser(selectedUser._id)
                         }}
                       />
                     </Tooltip>
@@ -212,6 +242,7 @@ const SidebarLeft = () => {
                       <span className="font-popins text-sm">{objectLength(followingUserList)} following</span>
                     </Space>
                   </div>
+                  <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
                 </Modal>
               </li>
             ))}

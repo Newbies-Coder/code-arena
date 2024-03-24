@@ -7,6 +7,7 @@ export type userType = {
   isOnline?: boolean
   avatar?: string
   cover_photo?: string
+  like?: boolean
 }
 
 export type userState = {
