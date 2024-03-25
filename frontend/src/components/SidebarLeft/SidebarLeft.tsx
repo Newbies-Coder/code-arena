@@ -13,8 +13,7 @@ import { MessageOutlined, StarFilled, StarOutlined, UserAddOutlined } from '@ant
 import { toast } from 'react-toastify'
 import { objectLength } from '@/utils/setting'
 import Title from 'antd/es/typography/Title'
-
-const onChange = (key: string) => {}
+import UserVerticalList from '../UserVerticalList'
 
 const SidebarLeft = () => {
   //get follow list from store
@@ -195,7 +194,7 @@ const SidebarLeft = () => {
                     <h2 className="font-popins text-lg -mt-[72px] ml-44 mb-0">{selectedUser.username}</h2>
                     <Tooltip title="Add to favorite list">
                       <Button
-                        className="absolute -mt-16 right-64 bg-black text-yellow-300"
+                        className="absolute -mt-16 right-[250px] bg-black text-yellow-300"
                         shape="circle"
                         icon={isLike(favorite, selectedUser._id) ? <StarFilled /> : <StarOutlined />}
                         onClick={() => {
@@ -226,7 +225,7 @@ const SidebarLeft = () => {
                     <Space className="-mt-4">
                       <span className="font-popins text-sm ml-44">{objectLength(followedUserList)} follower</span>
                       <span className="font-popins text-sm">{objectLength(followingUserList)} following</span>
-                      <span className="font-popins text-sm">{objectLength(mutual)} mutual-following</span>
+                      <span className="font-popins text-sm">{objectLength(mutual)} mutual</span>
                     </Space>
                   </div>
                   <Tabs
@@ -241,27 +240,7 @@ const SidebarLeft = () => {
                           </Title>
                         ),
                         children: (
-                          <>
-                            {followedUserList.map((user: userType) => (
-                              <div
-                                key={user._id}
-                                className="flex justify-between items-center my-2 rounded-lg border-2 py-2 px-4 cursor-pointer"
-                              >
-                                <div>
-                                  <Avatar
-                                    size={60}
-                                    src={
-                                      user.avatar === ''
-                                        ? 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=1912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-                                        : user.avatar
-                                    }
-                                  />
-                                  <span className="font-popins text-lg ml-4">{user.username}</span>
-                                </div>
-                              </div>
-                            ))}
-                            ,
-                          </>
+                          <UserVerticalList list={followedUserList} buttonText="Follow" buttonDisplay="hidden" />
                         ),
                       },
                       {
@@ -272,27 +251,7 @@ const SidebarLeft = () => {
                           </Title>
                         ),
                         children: (
-                          <>
-                            {followingUserList.map((user: userType) => (
-                              <div
-                                key={user._id}
-                                className="flex justify-between items-center my-2 rounded-lg border-2 py-2 px-4 cursor-pointer"
-                              >
-                                <div>
-                                  <Avatar
-                                    size={60}
-                                    src={
-                                      user.avatar === ''
-                                        ? 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=1912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-                                        : user.avatar
-                                    }
-                                  />
-                                  <span className="font-popins text-lg ml-4">{user.username}</span>
-                                </div>
-                              </div>
-                            ))}
-                            ,
-                          </>
+                          <UserVerticalList list={followingUserList} buttonText="Following" buttonDisplay="hidden" />
                         ),
                       },
                       {
@@ -302,35 +261,10 @@ const SidebarLeft = () => {
                             Mutual Following
                           </Title>
                         ),
-                        children: (
-                          <>
-                            {mutual.map((user: userType) => (
-                              <div
-                                key={user._id}
-                                className="flex justify-between items-center my-2 rounded-lg border-2 py-2 px-4 cursor-pointer"
-                              >
-                                <div>
-                                  <Avatar
-                                    size={60}
-                                    src={
-                                      user.avatar === ''
-                                        ? 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=1912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-                                        : user.avatar
-                                    }
-                                  />
-                                  <span className="font-popins text-lg ml-4">{user.username}</span>
-                                </div>
-                                <Button className="font-popins text-white bg-blue-900 border-0">Following</Button>
-                              </div>
-                            ))}
-                            ,
-                          </>
-                        ),
+                        children: <UserVerticalList list={mutual} buttonText="Following" />,
                       },
                     ]}
-                    // onChange={onChange}
                   />
-                  ;
                 </Modal>
               </li>
             ))}
