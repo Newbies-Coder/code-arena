@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, Modal, Space, Tabs, TabsProps, Tooltip } from 'antd'
+import { Avatar, Button, Card, Modal, Space, Tabs, Tooltip } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import './style.scss'
 import { LiPurpleLineIcon, SettingIcon } from '../Icons'
@@ -12,28 +12,11 @@ import { userType } from '@/@types/user.type'
 import { MessageOutlined, StarFilled, StarOutlined, UserAddOutlined } from '@ant-design/icons'
 import { toast } from 'react-toastify'
 import { objectLength } from '@/utils/setting'
+import Title from 'antd/es/typography/Title'
 
 const onChange = (key: string) => {
   console.log(key)
 }
-
-const items: TabsProps['items'] = [
-  {
-    key: '1',
-    label: 'Tab 1',
-    children: 'Content of Tab Pane 1',
-  },
-  {
-    key: '2',
-    label: 'Tab 2',
-    children: 'Content of Tab Pane 2',
-  },
-  {
-    key: '3',
-    label: 'Tab 3',
-    children: 'Content of Tab Pane 3',
-  },
-]
 
 const SidebarLeft = () => {
   //get follow list from store
@@ -181,7 +164,7 @@ const SidebarLeft = () => {
                 </Card>
                 <Modal
                   className="p-0"
-                  styles={{ body: { height: '500px' } }}
+                  styles={{ body: { height: '500px' }, content: { overflowY: 'auto' } }}
                   open={isModalOpen}
                   onOk={handleOk}
                   onCancel={handleCancel}
@@ -211,9 +194,9 @@ const SidebarLeft = () => {
                       <Button
                         className="absolute -mt-16 right-64 bg-black text-yellow-300"
                         shape="circle"
-                        icon={isLike(favoriteList, selectedUser._id) === true ? <StarFilled /> : <StarOutlined />}
+                        icon={isLike(favoriteList, selectedUser._id) ? <StarFilled /> : <StarOutlined />}
                         onClick={() => {
-                          isLike(favoriteList, selectedUser._id) === true
+                          isLike(favoriteList, selectedUser._id)
                             ? handleUnlikeUser(selectedUser._id)
                             : handleLikeUser(selectedUser._id)
                         }}
@@ -242,7 +225,78 @@ const SidebarLeft = () => {
                       <span className="font-popins text-sm">{objectLength(followingUserList)} following</span>
                     </Space>
                   </div>
-                  <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
+                  <Tabs
+                    className="p-4"
+                    defaultActiveKey="1"
+                    items={[
+                      {
+                        key: '1',
+                        label: (
+                          <Title level={5} style={{ margin: 0 }}>
+                            Follower
+                          </Title>
+                        ),
+                        children: (
+                          <>
+                            {followedUserList.map((user: userType) => (
+                              <div
+                                key={user._id}
+                                className="flex justify-between items-center my-2 rounded-lg border-2 py-2 px-4 cursor-pointer"
+                              >
+                                <div>
+                                  <Avatar
+                                    size={60}
+                                    src={
+                                      user.avatar === ''
+                                        ? 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=1912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                                        : user.avatar
+                                    }
+                                  />
+                                  <span className="font-popins text-lg ml-4">{user.username}</span>
+                                </div>
+                                <Button className="font-popins text-white bg-blue-900 border-0">Following</Button>
+                              </div>
+                            ))}
+                            ,
+                          </>
+                        ),
+                      },
+                      {
+                        key: '2',
+                        label: (
+                          <Title level={5} style={{ margin: 0 }}>
+                            Following
+                          </Title>
+                        ),
+                        children: (
+                          <>
+                            {followingUserList.map((user: userType) => (
+                              <div
+                                key={user._id}
+                                className="flex justify-between items-center my-2 rounded-lg border-2 py-2 px-4 cursor-pointer"
+                              >
+                                <div>
+                                  <Avatar
+                                    size={60}
+                                    src={
+                                      user.avatar === ''
+                                        ? 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=1912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                                        : user.avatar
+                                    }
+                                  />
+                                  <span className="font-popins text-lg ml-4">{user.username}</span>
+                                </div>
+                                <Button className="font-popins text-white bg-blue-900 border-0">Following</Button>
+                              </div>
+                            ))}
+                            ,
+                          </>
+                        ),
+                      },
+                    ]}
+                    onChange={onChange}
+                  />
+                  ;
                 </Modal>
               </li>
             ))}

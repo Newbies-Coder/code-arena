@@ -159,39 +159,53 @@ const MainProfile = () => {
     }
   }
 
-  //for modal of list following
-  const [isModalFollowingOpen, setIsModalFollowingOpen] = useState(false)
-  const showModalFollowing = async () => {
-    setIsModalFollowingOpen(true)
+  //custom hook useModal handle open/close state of modal
+  const useModal = () => {
+    const [isOpen, setIsOpen] = useState(false)
+
+    const showModal = () => {
+      setIsOpen(true)
+    }
+
+    const handleOk = () => {
+      setIsOpen(false)
+    }
+
+    const handleCancel = () => {
+      setIsOpen(false)
+    }
+
+    return {
+      isOpen,
+      showModal,
+      handleOk,
+      handleCancel,
+    }
   }
 
-  const handleFollowingOk = () => {
-    setIsModalFollowingOpen(false)
-  }
+  const {
+    isOpen: isModalFollowingOpen,
+    showModal: showModalFollowing,
+    handleOk: handleFollowingOk,
+    handleCancel: handleFollowingCancel,
+  } = useModal()
 
-  const handleFollowingCancel = () => {
-    setIsModalFollowingOpen(false)
-  }
+  const {
+    isOpen: isModalFollowerOpen,
+    showModal: showModalFollower,
+    handleOk: handleFollowerOk,
+    handleCancel: handleFollowerCancel,
+  } = useModal()
 
-  //for modal of list follower
-  const [isModalFollowerOpen, setIsModalFollowerOpen] = useState(false)
-  //state list of users that are following me
-  const showModalFollower = async () => {
-    setIsModalFollowerOpen(true)
+  //get my follower
+  const handleFollowerModalOpen = async () => {
+    showModalFollower()
     try {
       const res = await requestApi('users/followers', 'GET', {})
       dispatch(setFollowerList(res.data.data))
     } catch (error) {
       console.log(error)
     }
-  }
-
-  const handleFollowerOk = () => {
-    setIsModalFollowerOpen(false)
-  }
-
-  const handleFollowerCancel = () => {
-    setIsModalFollowerOpen(false)
   }
 
   return (
@@ -264,7 +278,7 @@ const MainProfile = () => {
                     ))}
                   </div>
                 </Modal>
-                <span className="ml-6 cursor-pointer" onClick={showModalFollower}>
+                <span className="ml-6 cursor-pointer" onClick={handleFollowerModalOpen}>
                   {objectLength(followerList) > 1 ? `${objectLength(followerList)} ` + 'followers' : 'follower'}
                 </span>
                 <Modal
