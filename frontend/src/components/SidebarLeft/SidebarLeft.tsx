@@ -14,9 +14,7 @@ import { toast } from 'react-toastify'
 import { objectLength } from '@/utils/setting'
 import Title from 'antd/es/typography/Title'
 
-const onChange = (key: string) => {
-  console.log(key)
-}
+const onChange = (key: string) => {}
 
 const SidebarLeft = () => {
   //get follow list from store
@@ -41,7 +39,9 @@ const SidebarLeft = () => {
   const [selectedUser, setSelectedUser] = useState<userType>({ cover_photo: '', avatar: '', _id: '', username: '' })
   const [followingUserList, setFollowingUserList] = useState([])
   const [followedUserList, setFollowedUserList] = useState([])
-  const [favoriteList, setFavoriteList] = useState<userType[]>([])
+  const [favorite, setFavorite] = useState<userType[]>([])
+  const [mutual, setMutual] = useState<userType[]>([])
+
   const showModal = async (_id: string) => {
     setIsModalOpen(true)
     setButtonState(false)
@@ -50,16 +50,19 @@ const SidebarLeft = () => {
       requestApi(`users/${_id}/followers`, 'GET', {}),
       requestApi(`users/${_id}/following`, 'GET', {}),
       requestApi('users/favorite', 'GET', {}),
+      requestApi(`users/mutual-follows/${_id}`, 'GET', {}),
     ])
-      .then(async ([resProfile, resFollower, resFollowing, resFavoriteList]) => {
+      .then(async ([resProfile, resFollower, resFollowing, resFavorite, resMutual]) => {
         const resultProfile = await resProfile.data
         const resultFollower = await resFollower.data
         const resultFollowing = await resFollowing.data
-        const resultFavoriteList = await resFavoriteList.data
+        const resultFavorite = await resFavorite.data
+        const resultMutual = await resMutual.data
         setSelectedUser(resultProfile.data)
         setFollowedUserList(resultFollower.data)
         setFollowingUserList(resultFollowing.data)
-        setFavoriteList(resultFavoriteList.data.items)
+        setFavorite(resultFavorite.data.items)
+        setMutual(resultMutual.data)
       })
       .catch((error) => {
         console.log(error)
@@ -194,9 +197,9 @@ const SidebarLeft = () => {
                       <Button
                         className="absolute -mt-16 right-64 bg-black text-yellow-300"
                         shape="circle"
-                        icon={isLike(favoriteList, selectedUser._id) ? <StarFilled /> : <StarOutlined />}
+                        icon={isLike(favorite, selectedUser._id) ? <StarFilled /> : <StarOutlined />}
                         onClick={() => {
-                          isLike(favoriteList, selectedUser._id)
+                          isLike(favorite, selectedUser._id)
                             ? handleUnlikeUser(selectedUser._id)
                             : handleLikeUser(selectedUser._id)
                         }}
@@ -223,6 +226,7 @@ const SidebarLeft = () => {
                     <Space className="-mt-4">
                       <span className="font-popins text-sm ml-44">{objectLength(followedUserList)} follower</span>
                       <span className="font-popins text-sm">{objectLength(followingUserList)} following</span>
+                      <span className="font-popins text-sm">{objectLength(mutual)} mutual-following</span>
                     </Space>
                   </div>
                   <Tabs
@@ -254,7 +258,6 @@ const SidebarLeft = () => {
                                   />
                                   <span className="font-popins text-lg ml-4">{user.username}</span>
                                 </div>
-                                <Button className="font-popins text-white bg-blue-900 border-0">Following</Button>
                               </div>
                             ))}
                             ,
@@ -286,6 +289,37 @@ const SidebarLeft = () => {
                                   />
                                   <span className="font-popins text-lg ml-4">{user.username}</span>
                                 </div>
+                              </div>
+                            ))}
+                            ,
+                          </>
+                        ),
+                      },
+                      {
+                        key: '3',
+                        label: (
+                          <Title level={5} style={{ margin: 0 }}>
+                            Mutual Following
+                          </Title>
+                        ),
+                        children: (
+                          <>
+                            {mutual.map((user: userType) => (
+                              <div
+                                key={user._id}
+                                className="flex justify-between items-center my-2 rounded-lg border-2 py-2 px-4 cursor-pointer"
+                              >
+                                <div>
+                                  <Avatar
+                                    size={60}
+                                    src={
+                                      user.avatar === ''
+                                        ? 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=1912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                                        : user.avatar
+                                    }
+                                  />
+                                  <span className="font-popins text-lg ml-4">{user.username}</span>
+                                </div>
                                 <Button className="font-popins text-white bg-blue-900 border-0">Following</Button>
                               </div>
                             ))}
@@ -294,7 +328,7 @@ const SidebarLeft = () => {
                         ),
                       },
                     ]}
-                    onChange={onChange}
+                    // onChange={onChange}
                   />
                   ;
                 </Modal>

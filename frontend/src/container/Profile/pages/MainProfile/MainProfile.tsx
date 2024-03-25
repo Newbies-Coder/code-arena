@@ -15,6 +15,7 @@ import { objectLength } from '@/utils/setting'
 import { userType } from '@/@types/user.type'
 import Title from 'antd/es/typography/Title'
 import { setFollowerList } from '@/redux/userReducer/userReducer'
+import { useModal } from '@/hooks/useModal'
 
 const { Content } = Layout
 
@@ -156,30 +157,6 @@ const MainProfile = () => {
       toast.update(uploadCover, { render: message, isLoading: false, type: 'success', autoClose: 3000 })
     } catch (error) {
       console.log(error)
-    }
-  }
-
-  //custom hook useModal handle open/close state of modal
-  const useModal = () => {
-    const [isOpen, setIsOpen] = useState(false)
-
-    const showModal = () => {
-      setIsOpen(true)
-    }
-
-    const handleOk = () => {
-      setIsOpen(false)
-    }
-
-    const handleCancel = () => {
-      setIsOpen(false)
-    }
-
-    return {
-      isOpen,
-      showModal,
-      handleOk,
-      handleCancel,
     }
   }
 
