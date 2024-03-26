@@ -1,6 +1,7 @@
 import { userType } from '@/@types/user.type'
 import { Avatar, Button } from 'antd'
 import React from 'react'
+import './style.scss'
 
 type listItemType = {
   user: userType
@@ -25,19 +26,19 @@ const UserItem: React.FC<listItemType> = ({ user, buttonText, buttonDisplay }) =
             : user.avatar
         }
       />
-      <span className="font-popins text-lg ml-4">{user.username}</span>
+      <span className="font-popins text-lg ml-4 text-white">{user.username}</span>
     </div>
-    <Button className={`font-popins text-white bg-blue-900 border-0 ${buttonDisplay}`}>{buttonText}</Button>
+    <Button className={`font-popins text-blue-900 bg-white border-0 ${buttonDisplay}`}>{buttonText}</Button>
   </div>
 )
 
 const UserVerticalList: React.FC<listType> = ({ list, buttonText, buttonDisplay }) => {
   return (
-    <>
+    <div className="list-member overflow-y-auto h-[180px]">
       {list.map((user: userType) => (
         <UserItem key={user._id} user={user} buttonText={buttonText} buttonDisplay={buttonDisplay} />
       ))}
-    </>
+    </div>
   )
 }
 

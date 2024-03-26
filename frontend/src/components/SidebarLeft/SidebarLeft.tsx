@@ -79,7 +79,6 @@ const SidebarLeft = () => {
   const handleUnfollow = async (_id: string) => {
     try {
       const res = await requestApi(`users/unfollow/${_id}`, 'DELETE', {})
-      toast.success(res.data.message)
       dispatch(setUnFollow(true))
     } catch (error) {
       console.log(error)
@@ -90,8 +89,6 @@ const SidebarLeft = () => {
   const handleLikeUser = async (_id: string) => {
     try {
       const res = await requestApi('users/favorite', 'POST', { friendId: _id })
-      console.log(res)
-      toast.success(res.data.message)
       dispatch(addToFavorite(true))
     } catch (error: any) {
       toast.error(error.response.data.message)
@@ -102,8 +99,6 @@ const SidebarLeft = () => {
   const handleUnlikeUser = async (_id: string) => {
     try {
       const res = await requestApi(`users/favorite/${_id}`, 'DELETE', {})
-      console.log(res)
-      toast.success(res.data.message)
       dispatch(addToFavorite(false))
     } catch (error: any) {
       toast.error(error.response.data.message)
@@ -114,6 +109,8 @@ const SidebarLeft = () => {
     const hadFollowed = list.some((obj: userType) => obj._id === id)
     return hadFollowed
   }
+
+  const [likeState, setLikeState] = useState(false)
 
   return (
     <Sider
@@ -166,7 +163,7 @@ const SidebarLeft = () => {
                 </Card>
                 <Modal
                   className="p-0"
-                  styles={{ body: { height: '500px' }, content: { overflowY: 'auto' } }}
+                  styles={{ body: { height: '550px' }, content: { background: '#0e1820', color: '#fff' } }}
                   open={isModalOpen}
                   onOk={handleOk}
                   onCancel={handleCancel}
@@ -197,6 +194,7 @@ const SidebarLeft = () => {
                         className="absolute -mt-16 right-[250px] bg-black text-yellow-300"
                         shape="circle"
                         icon={isLike(favorite, selectedUser._id) ? <StarFilled /> : <StarOutlined />}
+                        // icon={likeState ? <StarFilled /> : <StarOutlined />}
                         onClick={() => {
                           isLike(favorite, selectedUser._id)
                             ? handleUnlikeUser(selectedUser._id)
@@ -235,7 +233,7 @@ const SidebarLeft = () => {
                       {
                         key: '1',
                         label: (
-                          <Title level={5} style={{ margin: 0 }}>
+                          <Title level={5} style={{ margin: 0, color: '#fff' }}>
                             Follower
                           </Title>
                         ),
@@ -246,7 +244,7 @@ const SidebarLeft = () => {
                       {
                         key: '2',
                         label: (
-                          <Title level={5} style={{ margin: 0 }}>
+                          <Title level={5} style={{ margin: 0, color: '#fff' }}>
                             Following
                           </Title>
                         ),
@@ -257,7 +255,7 @@ const SidebarLeft = () => {
                       {
                         key: '3',
                         label: (
-                          <Title level={5} style={{ margin: 0 }}>
+                          <Title level={5} style={{ margin: 0, color: '#fff' }}>
                             Mutual Following
                           </Title>
                         ),

@@ -1,4 +1,4 @@
-import { Alert, Avatar, Button, Form, Input, Layout, Modal, Radio, RadioChangeEvent, Typography } from 'antd'
+import { Alert, Avatar, Button, Form, Input, Layout, Modal, Radio, RadioChangeEvent } from 'antd'
 import './style.scss'
 import { useEffect, useRef, useState } from 'react'
 import TextArea from 'antd/es/input/TextArea'
@@ -16,6 +16,7 @@ import { userType } from '@/@types/user.type'
 import Title from 'antd/es/typography/Title'
 import { setFollowerList } from '@/redux/userReducer/userReducer'
 import { useModal } from '@/hooks/useModal'
+import UserVerticalList from '@/components/UserVerticalList'
 
 const { Content } = Layout
 
@@ -224,8 +225,8 @@ const MainProfile = () => {
                 <Modal
                   className="p-0"
                   styles={{
-                    body: { maxHeight: '500px', background: '#ffffff33', borderRadius: 'inherit' },
-                    content: { height: '100%', overflowY: 'auto' },
+                    body: { maxHeight: '500px', borderRadius: 'inherit' },
+                    content: { height: '100%', background: '#0e1820', color: '#fff' },
                   }}
                   open={isModalFollowingOpen}
                   onOk={handleFollowingOk}
@@ -233,26 +234,10 @@ const MainProfile = () => {
                   footer={null}
                 >
                   <div className="py-3 px-5">
-                    <Title level={2}>Following</Title>
-                    {followList.map((user: userType) => (
-                      <div
-                        key={user._id}
-                        className="flex justify-between items-center my-2 rounded-lg border-2 py-2 px-4 cursor-pointer"
-                      >
-                        <div>
-                          <Avatar
-                            size={60}
-                            src={
-                              user.avatar === ''
-                                ? 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=1912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-                                : user.avatar
-                            }
-                          />
-                          <span className="font-popins text-lg ml-4">{user.username}</span>
-                        </div>
-                        <Button className="font-popins text-white bg-blue-900 border-0">Following</Button>
-                      </div>
-                    ))}
+                    <Title level={2} style={{ color: '#fff' }}>
+                      Following
+                    </Title>
+                    <UserVerticalList list={followList} buttonText="Following" />
                   </div>
                 </Modal>
                 <span className="ml-6 cursor-pointer" onClick={handleFollowerModalOpen}>
@@ -261,8 +246,8 @@ const MainProfile = () => {
                 <Modal
                   className="p-0"
                   styles={{
-                    body: { maxHeight: '500px', background: '#ffffff33', borderRadius: 'inherit' },
-                    content: { height: '100%', overflowY: 'auto' },
+                    body: { maxHeight: '500px', borderRadius: 'inherit' },
+                    content: { height: '100%', background: '#0e1820', color: '#fff' },
                   }}
                   open={isModalFollowerOpen}
                   onOk={handleFollowerOk}
@@ -270,26 +255,10 @@ const MainProfile = () => {
                   footer={null}
                 >
                   <div className="py-3 px-5">
-                    <Title level={2}>Followers</Title>
-                    {followerList.map((user: userType) => (
-                      <div
-                        key={user._id}
-                        className="flex justify-between items-center my-2 rounded-lg border-2 py-2 px-4 cursor-pointer"
-                      >
-                        <div>
-                          <Avatar
-                            size={60}
-                            src={
-                              user.avatar === ''
-                                ? 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?q=80&w=1912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-                                : user.avatar
-                            }
-                          />
-                          <span className="font-popins text-lg ml-4">{user.username}</span>
-                        </div>
-                        <Button className="font-popins text-white bg-blue-900 border-0">Following</Button>
-                      </div>
-                    ))}
+                    <Title level={2} style={{ color: '#fff' }}>
+                      Followers
+                    </Title>
+                    <UserVerticalList list={followerList} buttonText="Follow" buttonDisplay="hidden" />
                   </div>
                 </Modal>
               </p>
