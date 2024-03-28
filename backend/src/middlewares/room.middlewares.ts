@@ -208,7 +208,17 @@ export const updateRoomValidator = validate(
         options: /\p{Emoji}/gu,
         errorMessage: VALIDATION_MESSAGES.ROOM.EMOTE_MUST_BE_AN_EMOJI
       },
-      isLength: { options: { min: 1, max: 1 }, errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_EMOTE_MUST_BE_1_CHARACTER }
+      isLength: { options: { min: 1, max: 1 }, errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_EMOTE_MUST_BE_1_CHARACTER },
+      custom: {
+        options: (value) => {
+          if (containsNewline(value)) {
+            throw new ErrorWithStatus({
+              message: VALIDATION_MESSAGES.ROOM.ROOM_EMOTE_CAN_NOT_CONTAIN_NEW_LINE_CHARACTER,
+              statusCode: StatusCodes.BAD_REQUEST
+            })
+          }
+        }
+      }
     }
   })
 )
@@ -932,6 +942,13 @@ export const createMessageValidator = validate(
         options: async (value, { req }) => {
           validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
 
+          if (containsNewline(value)) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.MESSAGE.MESSAGE_CAN_NOT_CONTAIN_NEW_LINE_CHARACTER
+            })
+          }
+
           const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
           if (!room) {
             throw new ErrorWithStatus({
@@ -984,9 +1001,16 @@ export const createMessageValidator = validate(
       notEmpty: {
         errorMessage: VALIDATION_MESSAGES.MESSAGE.ATTACHMENT_TYPE_IS_REQUIRED
       },
-      isIn: {
-        options: attachmentTypes,
-        errorMessage: VALIDATION_MESSAGES.MESSAGE.INVALID_ATTACHMENT_TYPE
+      custom: {
+        options: (value) => {
+          if (!attachmentTypes.includes(value)) {
+            throw new ErrorWithStatus({
+              message: VALIDATION_MESSAGES.MESSAGE.INVALID_ATTACHMENT_TYPE,
+              statusCode: StatusCodes.BAD_REQUEST
+            })
+          }
+          return true
+        }
       }
     },
     'attachments.*.content': {

@@ -540,9 +540,11 @@ export const VALIDATION_MESSAGES = {
     CAN_NOT_BAN_OWNER: 'Can not ban owner',
     ROOM_MEMBERS_IS_NOT_UNIQUE: 'Room members must be unique',
     CAN_NOT_LEAVE_SINGLE_ROOM: 'Can not leave direct chat room',
-    USER_IS_BANNED_FROM_ROOM: 'User is banned from room'
+    USER_IS_BANNED_FROM_ROOM: 'User is banned from room',
+    ROOM_EMOTE_CAN_NOT_CONTAIN_NEW_LINE_CHARACTER: 'Room emote can not contain new line character'
   },
   MESSAGE: {
+    MESSAGE_CAN_NOT_CONTAIN_NEW_LINE_CHARACTER: 'Message can not contain new line character',
     INDEX_IS_OUT_OF_BOUND: 'Index is out of bound',
     MESSAGE_NOT_FOUND: 'Message not found',
     MESSAGE_LENGTH_MUST_GREATER_THAN_2_AND_LESS_THAN_100: 'Message length must be greater than 2 and less than 100',
@@ -578,7 +580,7 @@ export const VALIDATION_MESSAGES = {
   MEMBER: {
     NICKNAME_IS_REQUIRED: 'Nickname is required',
     NICKNAME_MUST_BE_STRING: 'Nickname must be a string',
-    NICKNAME_LENGTH_MUST_FROM_1_TO_20: 'Nickname length must from 1 to 20 characters',
+    NICKNAME_LENGTH_MUST_FROM_1_TO_20: 'Nickname length must from 1 to 20 characters'
   }
 } as const
 
