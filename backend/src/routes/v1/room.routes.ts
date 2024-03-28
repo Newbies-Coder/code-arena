@@ -14,6 +14,7 @@ import {
   deleteRoomValidator,
   dismissMessageValidator,
   getMessageValidator,
+  getRoomMemberValidator,
   getRoomsValidator,
   kickMemberValidator,
   leaveRoomValidator,
@@ -222,6 +223,15 @@ roomRouter.post('/:id/messages/:messageId/react', wrapRequestHandler(requireLogi
  */
 
 roomRouter.put('/:id/members/@me', wrapRequestHandler(requireLoginMiddleware), changeNicknameValidator, wrapRequestHandler(roomController.changeNickname))
+
+/**
+ * Description: Get room members
+ * Path: /:id/members
+ * Method: GET
+ * Header: { Authorization: Bearer <access_token> }
+ */
+
+roomRouter.get('/:id/members', wrapRequestHandler(requireLoginMiddleware), getRoomMemberValidator, wrapRequestHandler(roomController.getMembers))
 
 /* Description: Kick members
  * Path: /:id/kick

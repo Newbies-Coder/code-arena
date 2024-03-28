@@ -472,6 +472,48 @@ export const createInviteValidator = validate(
   })
 )
 
+export const getRoomMemberValidator = validate(
+  checkSchema({
+    id: {
+      notEmpty: {
+        errorMessage: VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_REQUIRED
+      },
+      custom: {
+        options: async (value, { req }) => {
+          validateObjectId(value, VALIDATION_MESSAGES.ROOM.ROOM_ID_IS_INVALID)
+
+          const room = await databaseService.rooms.findOne({ _id: new ObjectId(value) })
+
+          if (!room) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.NOT_FOUND,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_WITH_ID_IS_NOT_EXIST
+            })
+          }
+
+          if (room.isDeleted) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.BAD_REQUEST,
+              message: VALIDATION_MESSAGES.ROOM.ROOM_IS_DELETED
+            })
+          }
+
+          const member = await databaseService.members.findOne({ roomId: new ObjectId(value), memberId: new ObjectId(req.user._id) })
+
+          if (!member) {
+            throw new ErrorWithStatus({
+              statusCode: StatusCodes.FORBIDDEN,
+              message: VALIDATION_MESSAGES.ROOM.USER_NOT_IN_ROOM
+            })
+          }
+
+          return true
+        }
+      }
+    }
+  })
+)
+
 export const banMemberValidator = validate(
   checkSchema({
     id: {

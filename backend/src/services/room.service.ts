@@ -146,6 +146,10 @@ class RoomService {
     return invites
   }
 
+  async getRoomMembers(roomId: ObjectId) {
+    return await databaseService.members.find({ roomId }).toArray()
+  }
+
   async banMember(roomId: ObjectId, payload: BanMemberBody) {
     await databaseService.bannedMembers.insertOne(
       new BannedMember({

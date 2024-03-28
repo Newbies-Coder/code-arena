@@ -65,6 +65,10 @@ const roomController = {
     const result = await roomService.pinMessage(new ObjectId(req.params.id), new ObjectId(req.params.messageId))
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.PIN_MESSAGE)
   },
+  getMembers: async (req: Request<ParamsDictionary, any, any, ParsedUrlQuery>, res: Response, next: NextFunction) => {
+    const result = await roomService.getRoomMembers(new ObjectId(req.params.id))
+    return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.GET_MEMBERS)
+  },
   kickMember: async (req: Request<ParamsDictionary, any, KickMemberBody, ParsedUrlQuery>, res: Response, next: NextFunction) => {
     const result = await roomService.kickMember(new ObjectId(req.params.id), req.body)
     return sendResponse.success(res, result, RESULT_RESPONSE_MESSAGES.ROOM.KICK_MEMBER)
