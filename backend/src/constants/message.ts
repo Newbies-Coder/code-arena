@@ -188,7 +188,8 @@ export const RESULT_RESPONSE_MESSAGES = {
     REACT_MESSAGE: 'React message successfully',
     CHANGE_NICKNAME: 'Change nickname successfully',
     FIND_MESSAGE: 'Find message successfully',
-    GET_MEMBERS: 'Get members successfully'
+    GET_MEMBERS: 'Get members successfully',
+    GET_INVITES: 'Get invitees successfully'
   }
 } as const
 
