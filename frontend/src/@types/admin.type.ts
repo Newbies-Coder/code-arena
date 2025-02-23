@@ -11,15 +11,45 @@ export type MenuItemType = {
   color: string
 }
 
+export enum UserRole {
+  Admin = 'Admin',
+  Moderator = 'Moderator',
+  User = 'User',
+}
+
+export enum UserVerifyStatus {
+  Unverified = 'Unverified',
+  Verified = 'Verified',
+  Celerity = 'Celerity',
+  Banned = 'Banned',
+}
+
+export enum UserGenderType {
+  Male = 'Male',
+  Female = 'Female',
+  Other = 'Other',
+}
+
 export type UserDataType = {
-  key: React.Key
-  id: string
-  name: string
+  key?: React.Key
+  _id: string
+  fullName: string
+  username: string
   phone: string
   email: string
-  dateOfBirth: string
-  role: string
-  status: React.ReactElement | string
+  role: UserRole
+  verify: UserVerifyStatus
+  date_of_birth: string
+  address: string
+  gender: UserGenderType
+  bio: string
+  website: string
+  _destroy: boolean
+}
+
+export type AccountType = UserDataType & {
+  password: string
+  confirm_password: string
 }
 
 export type LoginInfoDataType = {
@@ -30,4 +60,23 @@ export type LoginInfoDataType = {
   role: string
   loginTime: string
   logoutTime: string
+}
+
+export type ProfileDataType = {
+  fullName: string
+  username: string
+  phone: string
+  date_of_birth: string
+  address: string
+  gender: string
+  avatar: string
+  cover_photo: string
+}
+
+export type BannerDataType = {
+  _id: string
+  user_id: string
+  url: string
+  slug: string
+  description: string
 }

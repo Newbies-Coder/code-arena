@@ -1,5 +1,5 @@
 import { DownOutlined } from '@ant-design/icons'
-import { Button, Dropdown, MenuProps, Space, message } from 'antd'
+import { Button, Dropdown, MenuProps, Row, Space, message } from 'antd'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -81,10 +81,10 @@ export const data = {
 
 export default function Statistic() {
   return (
-    <div className="px-4 border border-white rounded-lg mt-6">
-      <div className="text-white flex justify-between ">
+    <Row className="mx-4 border border-white rounded-lg mt-6">
+      <div className="text-white flex justify-between w-full mx-4">
         <div>
-          <h3 className="text-xl font-bold font-popins leading-8 mb-0">Statistics table by day</h3>
+          <h3 className="text-sm mt-1 lg:text-xl font-bold font-popins lg:leading-8 mb-0">Statistics table by day</h3>
           <p className="text-[#A9A9B0] text-sm font-popins">11 / 2023</p>
         </div>
         <div className="flex items-center gap-2">
@@ -100,6 +100,6 @@ export default function Statistic() {
         </div>
       </div>
       <Line options={options} data={data} className="bg-transparent" />
-    </div>
+    </Row>
   )
 }

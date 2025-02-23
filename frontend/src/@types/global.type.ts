@@ -25,4 +25,7 @@ export type routeAdminTypes = {
   course: string
   message: string
   loginInfo: string
+  banner: string
+  addBanner: string
+  updateBanner: string
 }

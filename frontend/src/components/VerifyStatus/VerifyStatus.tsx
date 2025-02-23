@@ -3,9 +3,9 @@ type VerifyStatusProps = {
 }
 
 const StatusColor = {
-  Verify: '#34CD26',
+  Verified: '#34CD26',
   Banned: '#EC3740',
-  Unverify: '#E8FC00',
+  Unverified: '#E8FC00',
   Celebrity: '#007AD9',
 }
 

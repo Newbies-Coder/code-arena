@@ -1,49 +1,62 @@
 import { Button, Calendar, Col, Row } from 'antd'
 import Progression from '../../components/Progression'
 import Statistic from '../../components/Statistic'
+import './style.scss'
 import Overview from '../../components/Overview'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import { format } from 'date-fns'
-import './style.scss'
+import { Header } from 'antd/es/layout/layout'
+import { NoNotiIcon } from '@/components/Icons'
+import AvatarProfile from '@/container/Detail/components/AvatarProfile'
 
 const MainHome = () => {
   return (
-    <Row className="border-t border-[#949a9f]">
-      <Col xs={24} lg={18} xl={18} className="p-2">
-        <h2 className="ml-2 text-3xl font-bold font-popins leading-9 text-orange-500">Number progression chart</h2>
-        <Progression />
-        <Statistic />
-      </Col>
-      <Col xs={24} lg={6} xl={6} className="p-2 mb-20 flex flex-col gap-10">
-        <Overview />
-        <Calendar
-          className="border border-white"
-          fullscreen={false}
-          mode="month"
-          headerRender={({ value, onChange }) => {
-            return (
-              <div className="p-4 flex justify-around items-center text-orange-500 font-bold bg-[#001529] rounded-t-lg">
-                <Button
-                  icon={<LeftOutlined color="#f37007" className="text-[#f37007]" />}
-                  onClick={() => {
-                    const now = value.clone().month(value.month() - 1)
-                    onChange(now)
-                  }}
-                />
-                <span>{format(new Date(value.toDate()), 'MMM d yyyy')}</span>
-                <Button
-                  icon={<RightOutlined className="text-[#f37007]" />}
-                  onClick={() => {
-                    const now = value.clone().month(value.month() + 1)
-                    onChange(now)
-                  }}
-                />
-              </div>
-            )
-          }}
-        />
-      </Col>
-    </Row>
+    <>
+      <Header className="flex justify-between sticky top-0 z-50">
+        <h3 className="text-white text-xl">Dashboard</h3>
+        <div className="flex items-center">
+          <Button className="h-10 w-10 px-2 mx-1 rounded-full border-yellow-400 flex justify-center items-center">
+            <NoNotiIcon />
+          </Button>
+          <AvatarProfile />
+        </div>
+      </Header>
+      <Row className="py-2 overflow-y-auto no-scrollbar">
+        <Col xs={24} lg={24} xl={18}>
+          <Progression />
+          <Statistic />
+        </Col>
+        <Col xs={24} lg={0} xl={6} className="py-2 mb-20 hidden xl:flex flex-col gap-2 w-[332px] fixed top-16 right-0">
+          <Overview />
+          <Calendar
+            className="border border-white"
+            fullscreen={false}
+            mode="month"
+            headerRender={({ value, onChange }) => {
+              return (
+                <div className="p-4 flex justify-around items-center text-orange-500 font-bold bg-[#001529] rounded-t-lg">
+                  <Button
+                    icon={<LeftOutlined color="#f37007" className="text-[#f37007]" />}
+                    onClick={() => {
+                      const now = value.clone().month(value.month() - 1)
+                      onChange(now)
+                    }}
+                  />
+                  <span>{format(new Date(value.toDate()), 'MMM d yyyy')}</span>
+                  <Button
+                    icon={<RightOutlined className="text-[#f37007]" />}
+                    onClick={() => {
+                      const now = value.clone().month(value.month() + 1)
+                      onChange(now)
+                    }}
+                  />
+                </div>
+              )
+            }}
+          />
+        </Col>
+      </Row>
+    </>
   )
 }
 

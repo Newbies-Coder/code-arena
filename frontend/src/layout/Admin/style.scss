@@ -1,0 +1,25 @@
+.ant-picker-body {
+  background-color: #001529;
+  border-bottom-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+  padding: 8px 16px !important;
+
+  thead {
+    tr {
+      th {
+        color: #725bed !important;
+        font-weight: bold !important;
+        margin-bottom: 2px !important;
+      }
+    }
+  }
+  tbody {
+    .ant-picker-cell {
+      color: #535261 !important;
+    }
+    .ant-picker-cell.ant-picker-cell-in-view {
+      color: #7e7d88 !important;
+      font-weight: 600 !important;
+    }
+  }
+}

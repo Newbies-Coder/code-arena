@@ -1,32 +1,224 @@
 import { SYS } from '@/constants/images'
-import { CameraOutlined } from '@ant-design/icons'
-import { Alert, Button, Form, Input } from 'antd'
+import { CameraOutlined, EditFilled } from '@ant-design/icons'
+import { Alert, Button, Form, Input, Radio } from 'antd'
 import './style.scss'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { ProfileDataType } from '@/@types/admin.type'
+import requestApi from '@/utils/interceptors'
+import { format } from 'date-fns'
+import { toast } from 'react-toastify'
+import { handleApiError } from '@/utils/handleApiError'
+import axios from 'axios'
+import { ACCESS_TOKEN, getStore } from '@/utils/setting'
 
 export default function MainProfile() {
+  const [profileData, setProfileData] = useState<ProfileDataType>({
+    fullName: '',
+    username: '',
+    phone: '',
+    date_of_birth: '',
+    address: '',
+    gender: '',
+    avatar: '',
+    cover_photo: '',
+  })
+  const [maleCheck, setMaleCheck] = useState<boolean>(true)
+  const [formDisable, setFormDisable] = useState<boolean>(true)
+  const token = getStore(ACCESS_TOKEN)
+  const avatarRef = useRef<HTMLInputElement>(null)
+  const coverRef = useRef<HTMLInputElement>(null)
+
+  const handleChangeAvatarClick = () => {
+    if (avatarRef.current) {
+      avatarRef.current.click()
+    }
+  }
+
+  const handleChangeCoverClick = () => {
+    if (coverRef.current) {
+      coverRef.current.click()
+    }
+  }
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const res = await requestApi('users/@me/profile', 'GET', {})
+        const { username, fullName, phone, date_of_birth, address, gender, avatar, cover_photo } = res.data.data
+        if (gender === 'Male') setMaleCheck(true)
+        else setMaleCheck(false)
+        setProfileData({ username, fullName, phone, date_of_birth, address, gender, avatar, cover_photo })
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+  }, [])
+
+  const onFinish = async (values: ProfileDataType) => {
+    const { username, fullName, address, date_of_birth, phone, gender } = values
+    const loadingToast = toast.loading('Updating...')
+    try {
+      const res = await requestApi('users/@me/profile', 'PUT', {
+        fullName,
+        username,
+        address,
+        date_of_birth,
+        phone,
+        gender,
+      })
+      const { message } = res.data
+      toast.update(loadingToast, {
+        render: message,
+        type: 'success',
+        isLoading: false,
+        autoClose: 3000,
+      })
+    } catch (error) {
+      handleApiError(error)
+      toast.clearWaitingQueue()
+    }
+  }
+
+  //upload avatar
+  const handleFileAvatarChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const fileObj = event.target.files && event.target.files[0]
+    if (!fileObj) {
+      return
+    }
+    //  reset file input
+    event.target.files = null
+
+    const formData = new FormData()
+    formData.append('image', fileObj)
+    const uploadAvatar = toast.loading('Updating...')
+    try {
+      const res = await axios.post('http://localhost:8080/api/v1/users/@me/avatar', formData, {
+        //config header for file data
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      const { message } = res.data
+      const { avatarUrl } = res.data.data
+      setProfileData((pre) => ({ ...pre, avatar: avatarUrl }))
+      toast.update(uploadAvatar, { render: message, isLoading: false, type: 'success', autoClose: 3000 })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  //upload cover photo
+  const handleFileThumbnailChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const fileObj = event.target.files && event.target.files[0]
+    if (!fileObj) {
+      return
+    }
+    //  reset file input
+    event.target.files = null
+
+    const formData = new FormData()
+    formData.append('image', fileObj)
+    const uploadCover = toast.loading('Updating...')
+    try {
+      const res = await axios.post('http://localhost:8080/api/v1/users/@me/thumbnail', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      const { message } = res.data
+      const { thumbnailUrl } = res.data.data
+      setProfileData((prev) => ({ ...prev, cover_photo: thumbnailUrl }))
+      toast.update(uploadCover, { render: message, isLoading: false, type: 'success', autoClose: 3000 })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
-    <div className="main-profile relative">
-      <img src={SYS.IMAGE.BG_PROFILE} alt="" className="w-full h-44 object-fill" />
-      <Button icon={<CameraOutlined />} className="absolute top-8 right-8 text-white">
-        Change Cover
-      </Button>
+    <div className="main-profile">
+      <div className="relative w-full h-64">
+        <img
+          src={profileData.cover_photo ? profileData.cover_photo : SYS.IMAGE.BG_PROFILE}
+          alt=""
+          className="w-full object-fill h-64"
+          key={profileData.avatar}
+        />
+        <input style={{ display: 'none' }} ref={coverRef} type="file" onChange={handleFileThumbnailChange} />
+        <Button
+          icon={<CameraOutlined />}
+          className="absolute top-8 right-8 text-white"
+          onClick={handleChangeCoverClick}
+        >
+          Change Cover
+        </Button>
+      </div>
       <div className="flex flex-col items-center w-full h-full lg:flex-row p-4">
         <div className="w-full lg:justify-center lg:w-2/5 lg:flex lg:flex-col lg:items-center">
           <div className="relative flex justify-center">
-            <img src="https://i.imgur.com/en3BKmy.png" alt="" className="w-64 h-64 rounded-full" />
-            <CameraOutlined className="text-2xl bg-[#7b61ff] p-3 rounded-full text-white absolute bottom-0 ml-24 border border-black" />
+            <img
+              src={profileData.avatar ? profileData.avatar : 'https://i.imgur.com/en3BKmy.png'}
+              alt=""
+              className="w-64 h-64 rounded-full"
+              key={profileData.avatar}
+            />
+            <input style={{ display: 'none' }} ref={avatarRef} type="file" onChange={handleFileAvatarChange} />
+            <CameraOutlined
+              className="text-2xl bg-[#7b61ff] p-3 rounded-full text-white absolute bottom-0 ml-24 border border-black cursor-pointer"
+              onClick={handleChangeAvatarClick}
+            />
           </div>
-          <h3 className="mt-4 text-4xl text-center">Alex Jordan</h3>
+          <h3 className="mt-4 text-4xl text-center text-white">{profileData.fullName}</h3>
         </div>
         <div className="w-full lg:w-3/5">
+          <div className="float-right mb-2 ">
+            <Button
+              className="border-none text-white  flex items-center justify-center"
+              onClick={() => setFormDisable((pre) => !pre)}
+            >
+              <EditFilled />
+              <span className="text-lg">{formDisable ? 'Edit' : 'Not Edit'}</span>
+            </Button>
+          </div>
           <Form
             name="basic"
             initialValues={{ remember: true }}
-            className="w-full flex flex-col items-center relative mt-4"
+            className="w-full flex flex-col items-center relative mt-4 text-white"
+            disabled={formDisable}
+            onFinish={onFinish}
+            fields={[
+              {
+                name: ['name'],
+                value: profileData.fullName,
+              },
+              {
+                name: ['username'],
+                value: profileData.username,
+              },
+              {
+                name: ['phone'],
+                value: profileData.phone,
+              },
+              {
+                name: ['date_of_birth'],
+                value: profileData.date_of_birth ? format(profileData.date_of_birth, 'yyyy-MM-dd') : '',
+              },
+              {
+                name: ['address'],
+                value: profileData.address,
+              },
+              {
+                name: ['gender'],
+                value: profileData.gender,
+              },
+            ]}
           >
-            <div className="flex flex-col w-full lg:flex-row lg:gap-2">
+            <div className="flex flex-col w-full lg:flex-row lg:gap-6">
               <div className="w-full relative">
-                <h3 className="absolute -top-2 left-3 px-2 mb-0 text-white bg-black z-10 rounded-md">Name</h3>
+                <h3 className="absolute -top-2 left-3 px-2 mb-0 text-white bg-[#001529] z-10 rounded-md">Name</h3>
                 <Form.Item
                   name="name"
                   rules={[
@@ -42,19 +234,17 @@ export default function MainProfile() {
                       ),
                     },
                   ]}
-                  className="border-2 rounded-lg border-black w-full mb-10 flex flex-col"
+                  className="border-2 rounded-lg border-white w-full mb-10 flex flex-col"
                 >
                   <Input
-                    className="h-12 bg-transparent border-none text-black text-xl focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
-                    placeholder="Alex Jordan"
+                    className="h-12 bg-transparent border-none text-white text-md focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
+                    placeholder={profileData.fullName}
+                    style={{ color: 'white' }}
                   />
                 </Form.Item>
               </div>
-
               <div className="w-full relative">
-                <h3 className="absolute -top-2 left-3 lg:-top-2 lg:left-3 px-2 mb-0 text-white bg-black z-10 rounded-md">
-                  Username
-                </h3>
+                <h3 className="absolute -top-2 left-3 px-2 mb-0 text-white bg-[#001529] z-10 rounded-md">Username</h3>
                 <Form.Item
                   name="username"
                   rules={[
@@ -70,21 +260,19 @@ export default function MainProfile() {
                       ),
                     },
                   ]}
-                  className="border-2 rounded-lg border-black w-full mb-10 flex flex-col"
+                  className="border-2 rounded-lg border-white w-full mb-10 flex flex-col"
                 >
                   <Input
-                    className="h-12 bg-transparent border-none text-black text-xl focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
-                    placeholder="AlexJordan01"
+                    className="h-12 bg-transparent border-none text-white text-md focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
+                    placeholder={profileData.username}
+                    style={{ color: 'white' }}
                   />
                 </Form.Item>
               </div>
             </div>
-
-            <div className="flex flex-col w-full lg:flex-row lg:gap-2">
+            <div className="flex flex-col w-full lg:flex-row lg:gap-6">
               <div className="w-full relative">
-                <h3 className="absolute -top-2 left-3 lg:-top-2 lg:left-3 px-2 mb-0 text-white bg-black z-10 rounded-md">
-                  Phone number
-                </h3>
+                <h3 className="absolute -top-2 left-3 px-2 mb-0 text-white bg-[#001529] z-10 rounded-md">Phone</h3>
                 <Form.Item
                   name="phone"
                   rules={[
@@ -99,29 +287,41 @@ export default function MainProfile() {
                         />
                       ),
                     },
+                    {
+                      pattern: /^0\d{9}$/g,
+                      message: (
+                        <Alert
+                          className="bg-transparent text-base text-red-700"
+                          message="Phone not valid!"
+                          banner
+                          type="error"
+                        />
+                      ),
+                    },
                   ]}
-                  className="border-2 rounded-lg border-black w-full mb-10 flex flex-col"
+                  className="border-2 rounded-lg border-white w-full mb-10 flex flex-col"
                 >
                   <Input
                     type="number"
-                    className="h-12 bg-transparent border-none text-black text-xl focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
-                    placeholder="0123456789"
+                    className="h-12 bg-transparent border-none text-white text-md focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
+                    placeholder={profileData.phone}
+                    style={{ color: 'white' }}
                   />
                 </Form.Item>
               </div>
               <div className="w-full relative">
-                <h3 className="absolute -top-2 left-3 lg:-top-2 lg:left-3 px-2 mb-0 text-white bg-black z-10 rounded-md">
-                  Password
+                <h3 className="absolute -top-2 left-3 px-2 mb-0 text-white bg-[#001529] z-10 rounded-md">
+                  Date Of Birth
                 </h3>
                 <Form.Item
-                  name="password"
+                  name="date_of_birth"
                   rules={[
                     {
-                      pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$/,
+                      type: 'date',
                       message: (
                         <Alert
                           className="bg-transparent text-base text-red-700"
-                          message="Invalid password"
+                          message="Format date of birth is not valid"
                           banner
                           type="error"
                         />
@@ -132,86 +332,103 @@ export default function MainProfile() {
                       message: (
                         <Alert
                           className="bg-transparent text-base text-red-700"
-                          message="Please input your password"
+                          message="Please input your date of birth"
                           banner
                           type="error"
                         />
                       ),
                     },
                   ]}
-                  className="border-2 rounded-lg border-black w-full mb-10 flex flex-col"
+                  className="border-2 rounded-lg border-white w-full mb-10 flex flex-col"
+                  style={{ color: 'white' }}
                 >
                   <Input
-                    type="password"
-                    className="h-12 bg-transparent border-none text-black text-xl focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
-                    placeholder="Alex@123"
+                    className="h-12 bg-transparent border-none text-white text-md focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
+                    placeholder={
+                      profileData.date_of_birth !== '' ? format(profileData.date_of_birth, 'yyyy-MM-dd') : ''
+                    }
+                    style={{ color: 'white' }}
                   />
                 </Form.Item>
               </div>
             </div>
-            <div className="flex flex-col w-full lg:flex-row lg:gap-2">
+            <div className="flex flex-col w-full lg:flex-row lg:gap-6">
               <div className="w-full relative">
-                <h3 className="absolute -top-2 left-3 lg:-top-2 lg:left-3 px-2 mb-0 text-white bg-black z-10 rounded-md">
-                  Email
-                </h3>
+                <h3 className="absolute -top-2 left-3 px-2 mb-0 text-white bg-[#001529] z-10 rounded-md">Address</h3>
                 <Form.Item
-                  name="email"
+                  name="address"
                   rules={[
                     {
                       required: true,
                       message: (
                         <Alert
                           className="bg-transparent text-base text-red-700"
-                          message="Please input your email"
+                          message="Please input your address"
+                          banner
+                          type="error"
+                        />
+                      ),
+                    },
+                    {
+                      pattern: /^.{10,255}$/g,
+                      message: (
+                        <Alert
+                          className="bg-transparent text-base text-red-700"
+                          message="Address is not valid"
                           banner
                           type="error"
                         />
                       ),
                     },
                   ]}
-                  className="border-2 rounded-lg border-black w-full mb-10 flex flex-col"
+                  className="border-2 rounded-lg border-white w-full mb-10 flex flex-col"
                 >
                   <Input
-                    className="h-12 bg-transparent border-none text-black text-xl focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
-                    placeholder="johnpham@gamil.com"
+                    type="text"
+                    className="h-12 bg-transparent border-none text-white text-md focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
+                    placeholder={profileData.address}
+                    style={{ color: 'white' }}
                   />
                 </Form.Item>
               </div>
               <div className="w-full relative">
-                <h3 className="absolute -top-2 left-3 lg:-top-2 lg:left-3 sm:left-[362px] px-2 mb-0 text-white bg-black z-10 rounded-md">
-                  Role
-                </h3>
+                <h3 className="absolute -top-2 left-3 px-2 mb-0 text-white bg-[#001529] z-10 rounded-md">Gender</h3>
                 <Form.Item
-                  name="role"
+                  name="gender"
                   rules={[
                     {
                       required: true,
                       message: (
                         <Alert
                           className="bg-transparent text-base text-red-700"
-                          message="Please input your role"
+                          message="Please select a gender"
                           banner
                           type="error"
                         />
                       ),
                     },
                   ]}
-                  className="border-2 rounded-lg border-black w-full mb-10 flex flex-col"
+                  className=""
                 >
-                  <Input
-                    className="h-12 bg-transparent border-none text-black text-xl focus:shadow-none focus:border-none focus:outline-none focus-visible:shadow-none focus-visible:border-none focus-visible:outline-none placeholder:text-[#7b7878]"
-                    placeholder="admin"
-                  />
+                  <Radio.Group className="mt-5 text-white ml-5">
+                    <Radio value="Male" className="text-white text-xl" checked={maleCheck}>
+                      Male
+                    </Radio>
+                    <Radio value="Female" className="text-white text-xl" checked={!maleCheck}>
+                      Female
+                    </Radio>
+                  </Radio.Group>
                 </Form.Item>
               </div>
             </div>
-            <Form.Item className="w-2/3 mt-2">
+
+            <Form.Item className="w-full flex justify-center mt-2">
               <Button
                 type="primary"
                 htmlType="submit"
-                className="flex items-center justify-center bg-gradient-to-tr --tw-gradient-stops from-[#6A5AF9] to-[#D66EFD] py-4 px-8 text-xl md:text-3xl font-bold h-10 md:h-16 w-full border-none rounded-tl-[30px] rounded-bl-[50px] rounded-tr-[50px] rounded-br-[30px] hover:bg-gradient-to-l hover:bg-white"
+                className="flex items-center justify-center bg-gradient-to-tr --tw-gradient-stops from-[#6A5AF9] to-[#D66EFD] py-4 px-4 text-lg md:text-2xl font-bold h-10 md:h-16 w-[280px] border-none rounded-tl-[30px] rounded-bl-[50px] rounded-tr-[50px] rounded-br-[30px] hover:bg-gradient-to-l hover:bg-white"
               >
-                Continue
+                Update
               </Button>
             </Form.Item>
           </Form>

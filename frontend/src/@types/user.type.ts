@@ -17,6 +17,16 @@ export type userState = {
   email: string | null
 }
 
+export type UserDecodeType = {
+  email: string
+  exp: string
+  iat: string
+  role: string
+  token_type: string
+  username: string
+  _id: string
+}
+
 export type userLoginType = {
   _id: string
   username: string

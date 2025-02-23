@@ -1,30 +1,26 @@
 import { MenuItemType } from '@/@types/admin.type'
 import DarkMode from '@/components/DarkMode'
-import {
-  CourserIcon,
-  DashboardIcon,
-  LogoutIcon,
-  MessageIcon,
-  NoNotiIcon,
-  SettingIcon,
-  UsersIcon,
-} from '@/components/Icons'
+import { CourserIcon, DashboardIcon, LogoutIcon, MessageIcon, SettingIcon, UsersIcon } from '@/components/Icons'
 import Menu from '@/components/Menu'
 import { HOME_ICON, LOGO } from '@/constants/images'
-import AvatarProfile from '@/container/Detail/components/AvatarProfile'
-import { DispatchType } from '@/redux/config'
-import { authAction } from '@/redux/userReducer/userReducer'
 import { ACCESS_TOKEN, clearStore } from '@/utils/setting'
-import { Button, Layout } from 'antd'
+import { Button } from 'antd'
 import Sider from 'antd/es/layout/Sider'
-import { Content, Header } from 'antd/es/layout/layout'
+import { Content } from 'antd/es/layout/layout'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import './style.scss'
+import { ArrowRightOutlined } from '@ant-design/icons'
 
 const items: MenuItemType[] = [
-  { label: 'Dashboard', icon: <DashboardIcon color="#00D1FF" />, link: '/admin', active: false, color: '#00D1FF' },
+  {
+    label: 'Dashboard',
+    icon: <DashboardIcon color="#00D1FF" />,
+    link: '/admin/dashboard',
+    active: false,
+    color: '#00D1FF',
+  },
   { label: 'User', icon: <UsersIcon color="#F449F4" />, link: '/admin/user', active: false, color: '#F449F4' },
   { label: 'Course', icon: <CourserIcon color="#FFE500" />, link: '/admin/course', active: false, color: '#FFE500' },
   { label: 'Message', icon: <MessageIcon color="#5F3EBC" />, link: '/admin/message', active: false, color: '#5F3EBC' },
@@ -33,23 +29,7 @@ const items: MenuItemType[] = [
 export default function LayoutAdmin({ children }: { children: JSX.Element }) {
   const [collapsed, setCollapsed] = useState(false)
   const [windowSize, setWindowSize] = useState([window.innerWidth, window.innerHeight])
-  const href = window.location.href
-  const [title, setTitle] = useState('')
-  const dispatch: DispatchType = useDispatch()
   const navigate = useNavigate()
-
-  useEffect(() => {
-    const url = href.slice(href.indexOf('/admin', 1)) as keyof typeof titles
-    const titles = {
-      '/admin': 'Dashboard',
-      '/admin/user': 'User',
-      '/admin/course': 'Course',
-      '/admin/message': 'Message',
-      '/admin/profile': 'Personal information',
-    }
-
-    setTitle(titles[url] || '')
-  }, [href])
 
   useEffect(() => {
     const handleWindowResize = () => {
@@ -70,33 +50,31 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
   }, [windowSize])
 
   const handleLogout = () => {
-    dispatch(authAction(false))
     clearStore(ACCESS_TOKEN)
     navigate('/admin/login')
   }
 
   return (
-    <Layout className="min-h-screen bg-[#001529]">
+    <div className="bg-[#001529]">
       <Sider
-        collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
-        className="border-r border-[#6e7479]"
+        className={clsx(
+          'border-r border-[#6e7479] fixed top-0 left-0 bottom-0 flex flex-col text-white',
+          !collapsed ? 'w-[180px]' : 'w-[60px]',
+        )}
       >
-        <Link to={'/admin'} className={`fixed top-0 flex justify-center mb-2 ${collapsed && 'w-20'}`}>
-          {!collapsed ? (
-            <img src={HOME_ICON.LOGO_TEXT} alt="logo" />
-          ) : (
-            <img src={LOGO.APP_LOGO} alt="logo" className="mt-1 p-2 bg-gray-300 rounded-full" />
-          )}
-        </Link>
-        <Menu items={items} collapsed={collapsed} />
-        <div
-          className={clsx([
-            'flex flex-col items-center fixed bottom-14 left-2 gap-2',
-            !collapsed ? 'w-[180px]' : 'w-[60px]',
-          ])}
-        >
+        <div>
+          <Link to={'/admin'} className={`flex justify-center mb-2 w-full`}>
+            {!collapsed ? (
+              <img src={HOME_ICON.LOGO_TEXT} alt="logo" />
+            ) : (
+              <img src={LOGO.APP_LOGO} alt="logo" className="mt-1 p-2 bg-gray-300 rounded-full" />
+            )}
+          </Link>
+          <Menu items={items} collapsed={collapsed} />
+        </div>
+        <div className={clsx('flex flex-col gap-2 px-2 fixed bottom-2', !collapsed ? 'w-[200px]' : 'w-[80px]')}>
           <div className="w-full h-8 flex items-center justify-between px-2">
             {!collapsed && <span className="text-sm font-semibold text-white">Theme</span>}
             <DarkMode />
@@ -113,32 +91,14 @@ export default function LayoutAdmin({ children }: { children: JSX.Element }) {
           >
             {!collapsed ? 'Log out' : <LogoutIcon />}
           </Button>
+          <Button className="text-white w-full h-10" onClick={() => setCollapsed((prev) => !prev)}>
+            <ArrowRightOutlined />
+          </Button>
         </div>
       </Sider>
-      <Layout className="w-full md:w-9/12 h-full">
-        <Header
-          className={clsx(
-            'flex justify-between fixed top-0 right-0 h-16 border-bottom border-[#6e7479]',
-            !collapsed ? 'left-[200px]' : 'left-[80px]',
-          )}
-        >
-          <h3 className="text-white text-xl">{title}</h3>
-          <div className="flex items-center">
-            <Button className="h-10 w-10 px-2 mx-1 rounded-full border-yellow-400 flex justify-center items-center">
-              <NoNotiIcon />
-            </Button>
-            <AvatarProfile />
-          </div>
-        </Header>
-        <Content
-          className={clsx(
-            'fixed top-16 bottom-0 right-0 overflow-y-auto no-scrollbar',
-            !collapsed ? 'left-[200px]' : 'left-[80px]',
-          )}
-        >
-          {children}
-        </Content>
-      </Layout>
-    </Layout>
+      <div className={clsx('fixed top-0 right-0 bottom-0', !collapsed ? 'left-[200px]' : 'left-[80px]')}>
+        <Content className="w-full h-full overflow-y-auto no-scrollbar">{children}</Content>
+      </div>
+    </div>
   )
 }

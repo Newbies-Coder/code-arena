@@ -1,11 +1,13 @@
 import { LoginFieldType } from '@/@types/form.type'
-import { userLoginType } from '@/@types/user.type'
-import { useLoginMutation } from '@/apis/api'
+import { UserDecodeType } from '@/@types/user.type'
+import { LOGO, SYS } from '@/constants/images'
 import { DispatchType } from '@/redux/config'
-import { authAction } from '@/redux/userReducer/userReducer'
-import { ACCESS_TOKEN, setStore } from '@/utils/setting'
-import { LOGO, SYS } from '@constants/images'
+import { setAdminStatus, setAuthenticationStatus } from '@/redux/userReducer/userReducer'
+import { handleApiError } from '@/utils/handleApiError'
+import requestApi from '@/utils/interceptors'
+import { ACCESS_TOKEN, REFRESH_TOKEN, setCookie, setStore } from '@/utils/setting'
 import { Alert, Button, Checkbox, Form, Input } from 'antd'
+import { jwtDecode } from 'jwt-decode'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -19,32 +21,29 @@ type FieldType = {
 
 const Login = () => {
   const navigate = useNavigate()
-  const [login, { isLoading }] = useLoginMutation()
   const dispatch: DispatchType = useDispatch()
+  const TIME_CLOSING_MESSAGE = 2000
+  const REFRESH_TOKEN_EXPIRED_TIME = 7
 
   const onFinish = async (values: LoginFieldType) => {
+    const { email, password } = values
     try {
-      const { email, password } = values
-      const res = await login({ email: email, password: password })
+      const res = await requestApi('users/login', 'POST', { email, password })
+      const { access_token, refresh_token } = res.data.data
+      setStore(ACCESS_TOKEN, access_token)
+      setCookie(REFRESH_TOKEN, refresh_token, REFRESH_TOKEN_EXPIRED_TIME)
+      dispatch(setAuthenticationStatus(true))
 
-      if ('data' in res) {
-        const { access_token } = res.data.data as userLoginType
-        setStore(ACCESS_TOKEN, access_token)
-        dispatch(authAction(true))
-        toast.success('Login successfully')
+      const { role } = jwtDecode<UserDecodeType>(access_token)
+      if (role === 'Admin') {
+        toast.success(res.data.message, { autoClose: TIME_CLOSING_MESSAGE })
+        dispatch(setAdminStatus(true))
         navigate('/admin')
+      } else {
+        navigate('/')
       }
-
-      if ('error' in res) {
-        if (res.error && 'data' in res.error) {
-          console.log(res.error.data)
-          toast.error(res.error.data.message)
-        } else {
-          console.log(res.error)
-        }
-      }
-    } catch (error) {
-      console.log(error)
+    } catch (err) {
+      handleApiError(err)
     }
   }
 
@@ -154,7 +153,7 @@ const Login = () => {
                   htmlType="submit"
                   className="flex items-center justify-center bg-gradient-to-tr --tw-gradient-stops from-[#6A5AF9] to-[#D66EFD] py-4 px-8 text-3xl font-bold h-16 w-full border-none rounded-tl-[30px] rounded-bl-[50px] rounded-tr-[50px] rounded-br-[30px] hover:bg-gradient-to-l hover:bg-white hover:duration-500 hover:ease-linear"
                 >
-                  {isLoading ? 'Wait...' : 'Sign-in'}
+                  Sign-in
                 </Button>
               </Form.Item>
             </Form>
